@@ -1,3 +1,5 @@
+import { soundToFormant } from './formant.js';
+
 var stream = null;
 try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -17,7 +19,7 @@ async function init() {
     recorderNode = new AudioWorkletNode(audioCtx, 'recorder-processor');
     recorderNode.port.onmessage = (event) => {
         const inputData = event.data;
-        audioBufferData.push(new Float32Array(inputData));
+        audioBufferData.push(...inputData);
     };
 }
 
@@ -39,19 +41,6 @@ function stopRecording() {
     source.disconnect();
     recordingIndicator.style.display = 'none';
     recording = false;
-
-    // // Concatenate all recorded audio chunks
-    // const totalLength = audioBufferData.reduce((total, chunk) => total + chunk.length, 0);
-    // const audioBuffer = audioCtx.createBuffer(1, totalLength, audioCtx.sampleRate);
-    // const channelData = audioBuffer.getChannelData(0);
-
-    // let offset = 0;
-    // for (const chunk of audioBufferData) {
-    //     channelData.set(chunk, offset);
-    //     offset += chunk.length;
-    // }
-
-    // console.log('AudioBuffer:', audioBuffer);
 }
 
 var recordButton = document.querySelector('.record-button');
@@ -86,9 +75,7 @@ function draw() {
         return;
     }
 
-    for (let i = 1; i <= bufferLength; i++) {
-        dataArray[bufferLength - i] = audioBufferData[Math.floor(audioBufferData.length - i / 128)][(128 - i + 2**15) % 128];
-    }
+    dataArray.set(audioBufferData.slice(audioBufferData.length - bufferLength, audioBufferData.length));
     canvasCtx.fillStyle = "rgb(200, 200, 200)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
