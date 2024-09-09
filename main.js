@@ -22,6 +22,7 @@ async function init() {
 }
 
 async function startRecording() {
+    if (recording) return;
     audioBufferData = [];
     if (!initialized) {
         await init();
@@ -35,6 +36,7 @@ async function startRecording() {
 }
 
 function stopRecording() {
+    if (!recording) return;
     recorderNode.disconnect();
     source.disconnect();
     recordingIndicator.style.display = 'none';
@@ -59,7 +61,7 @@ var recordButton = document.querySelector('.record-button');
 recordButton.addEventListener('mousedown', startRecording);
 recordButton.addEventListener('touchstart', startRecording);
 addEventListener('keydown', (event) => {
-    if (event.code === 'Space' && !recording) {
+    if (event.code === 'Space') {
         startRecording();
     }
 });
