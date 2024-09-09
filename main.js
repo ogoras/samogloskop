@@ -54,4 +54,57 @@ function stopRecording() {
 
 var recordButton = document.querySelector('.record-button');
 recordButton.addEventListener('mousedown', startRecording);
+recordButton.addEventListener('touchstart', startRecording);
 recordButton.addEventListener('mouseup', stopRecording);
+recordButton.addEventListener('touchend', stopRecording);
+
+// visualizer based on code from https://github.com/mdn/dom-examples/blob/main/media/web-dictaphone/scripts/app.js
+var canvas = document.querySelector("canvas");
+var canvasCtx = canvas.getContext("2d");
+const bufferLength = 1024;
+const dataArray = new Float32Array(bufferLength);
+
+function draw() {
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+
+    if (audioBufferData.length < bufferLength / 128) {
+        requestAnimationFrame(draw);
+        return;
+    }
+
+    for (let i = 1; i <= bufferLength; i++) {
+        dataArray[bufferLength - i] = audioBufferData[Math.floor(audioBufferData.length - i / 128)][(128 - i + 2**15) % 128];
+    }
+    canvasCtx.fillStyle = "rgb(200, 200, 200)";
+    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+    canvasCtx.lineWidth = 2;
+    canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+
+    canvasCtx.beginPath();
+
+    let sliceWidth = (WIDTH * 1.0) / bufferLength;
+    let x = 0;
+
+    for (let i = 0; i < bufferLength; i++) {
+        let v = dataArray[i];
+        let y = (v * HEIGHT) / 2;
+        y += HEIGHT / 2;
+
+        if (i === 0) {
+        canvasCtx.moveTo(x, y);
+        } else {
+        canvasCtx.lineTo(x, y);
+        }
+
+        x += sliceWidth;
+    }
+
+    canvasCtx.lineTo(canvas.width, canvas.height / 2);
+    canvasCtx.stroke();
+
+    requestAnimationFrame(draw);
+}
+
+draw();
