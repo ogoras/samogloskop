@@ -6,11 +6,18 @@
   <body>
     <h1>Nagrywanie dźwięku</h1>
     <button class="record-button">Nagrywaj</button>
-    <button class="stop-button">Zatrzymaj</button>
-    <button class="play-button">Odtwórz</button>
-    <button class="cancel-button">Anuluj</button>
-    <audio controls class="audio-element" style="display: none"></audio>
     <canvas class="visualizer" width="800" height="100"></canvas>
+    <div class="recording-indicator">
+      <style>
+        .recording-indicator {
+          width: 20px;
+          height: 20px;
+          background-color: red;
+          border-radius: 50%;
+          display: none;
+        }
+      </style>
+    </div>
     <script type="module" src="main.js"></script>
   </body>
 </html>

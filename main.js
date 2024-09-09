@@ -1,98 +1,57 @@
-// Audio recording based on:
-// https://ralzohairi.medium.com/audio-recording-in-javascript-96eed45b75ee
-import { audioRecorder } from './audio-recorder.js';
-
-var recordButton = document.getElementsByClassName("record-button")[0];
-var stopButton = document.getElementsByClassName("stop-button")[0];
-var cancelButton = document.getElementsByClassName("cancel-button")[0];
-var playButton = document.getElementsByClassName("play-button")[0];
-var audioElement = document.getElementsByClassName("audio-element")[0];
-var audioElementSource = document.getElementsByClassName("audio-element")[0].getElementsByTagName("source")[0];
-
-recordButton.addEventListener("click", startAudioRecording);
-stopButton.addEventListener("click", stopAudioRecording);
-cancelButton.addEventListener("click", cancelAudioRecording);
-playButton.addEventListener("click", playAudioRecording);
-
-recordButton.style.display = "block";
-stopButton.style.display = "none";
-cancelButton.style.display = "none";
-playButton.style.display = "none";
-
-function startAudioRecording() {
-    audioRecorder.start()
-        .then(() => {
-            console.log("Recording Audio...")    
-        })    
-        .catch(error => {
-            if (error.message.includes("mediaDevices API or getUserMedia method is not supported in this browser.")) {       
-                console.log("To record audio, use browsers like Chrome and Firefox.");
-                alert("To record audio, use browsers like Chrome and Firefox.");
-            }
-        });
-    // hide record button and show stop button
-    recordButton.style.display = "none";
-    stopButton.style.display = "block";
-    cancelButton.style.display = "block";
-    playButton.style.display = "none";
+var stream = null;
+try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 }
-
-function stopAudioRecording() {
-    console.log("Stopping Audio Recording...")
-    audioRecorder.stop()
-        .then(audioAsblob => { 
-            console.log("stopped with audio Blob:", audioAsblob);
-            playButton.style.display = "block";
-            audioRecorder.blob = audioAsblob;
-        })
-        .catch(error => {
-            switch (error.name) {
-                case 'InvalidStateError':
-                    console.log("An InvalidStateError has occured.");
-                    break;
-                default:
-                    console.log("An error occured with the error name " + error.name);
-            };
- 
-        });
-    // hide stop button and show record button
-    recordButton.style.display = "block";
-    stopButton.style.display = "none";
-    cancelButton.style.display = "none";
+catch (error) {
+    console.log("An error occured: " + error);
 }
+var audioCtx = null, source = null, audioBufferData = [], recorderNode = null;
+var initialized = false;
 
-function cancelAudioRecording() {
-    console.log("Cancelling Audio Recording...")
-    audioRecorder.cancel();
-    // hide stop button and show record button
-    recordButton.style.display = "block";
-    stopButton.style.display = "none";
-    cancelButton.style.display = "none";
-    playButton.style.display = "none";
-}
+var recordingIndicator = document.querySelector('.recording-indicator');
 
-function playAudioRecording() {
-    var recorderAudioAsBlob = audioRecorder.blob;
-    let reader = new FileReader();
-    reader.onload = (e) => {
-        var recorderAudioAsBlob = audioRecorder.blob;
-        let base64URL = e.target.result;
-        if (!audioElementSource) createSourceForAudioElement();
-        audioElementSource.src = base64URL;
-        let BlobType = recorderAudioAsBlob.type.includes(";") ?
-            recorderAudioAsBlob.type.substr(0, recorderAudioAsBlob.type.indexOf(';')) : recorderAudioAsBlob.type;
-        audioElementSource.type = BlobType
-        audioElement.load();
-        console.log("Playing audio...");
-        audioElement.play();
+async function init() {
+    audioCtx = new AudioContext();
+    source = audioCtx.createMediaStreamSource(stream);
+    await audioCtx.audioWorklet.addModule('recorder-worklet-processor.js');
+    recorderNode = new AudioWorkletNode(audioCtx, 'recorder-processor');
+    recorderNode.port.onmessage = (event) => {
+        const inputData = event.data;
+        audioBufferData.push(new Float32Array(inputData));
     };
-    reader.readAsDataURL(recorderAudioAsBlob);
 }
 
-/** Creates a source element for the the audio element in the HTML document*/
-function createSourceForAudioElement() {
-    let sourceElement = document.createElement("source");
-    audioElement.appendChild(sourceElement);
-
-    audioElementSource = sourceElement;
+async function startRecording() {
+    audioBufferData = [];
+    if (!initialized) {
+        await init();
+        initialized = true;
+    }
+    // Step 7: Connect the source to the AudioWorkletNode and the node to the destination
+    source.connect(recorderNode);
+    recorderNode.connect(audioCtx.destination);
+    recordingIndicator.style.display = 'block';
 }
+
+function stopRecording() {
+    recorderNode.disconnect();
+    source.disconnect();
+    recordingIndicator.style.display = 'none';
+
+    // Concatenate all recorded audio chunks
+    const totalLength = audioBufferData.reduce((total, chunk) => total + chunk.length, 0);
+    const audioBuffer = audioCtx.createBuffer(1, totalLength, audioCtx.sampleRate);
+    const channelData = audioBuffer.getChannelData(0);
+
+    let offset = 0;
+    for (const chunk of audioBufferData) {
+        channelData.set(chunk, offset);
+        offset += chunk.length;
+    }
+
+    console.log('AudioBuffer:', audioBuffer);
+}
+
+var recordButton = document.querySelector('.record-button');
+recordButton.addEventListener('mousedown', startRecording);
+recordButton.addEventListener('mouseup', stopRecording);
