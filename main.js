@@ -1,4 +1,4 @@
-import { soundToFormant } from './formant.js';
+import { soundToFormant } from './sound_to_formant/formant.js';
 
 var stream = null;
 try {
@@ -74,6 +74,13 @@ function draw() {
         requestAnimationFrame(draw);
         return;
     }
+
+    const dt = 0; // if 0 is passed, the function will calculate it based on window size
+    const nFormants = 5;
+    const maximumFrequency = 5000;
+    const halfdt_window = 0.025;
+    const preemphasisFrequency = 50;
+    const formants = soundToFormant(audioBufferData, audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
 
     dataArray.set(audioBufferData.slice(audioBufferData.length - bufferLength, audioBufferData.length));
     canvasCtx.fillStyle = "rgb(200, 200, 200)";
