@@ -30,30 +30,28 @@ async function startRecording() {
     }
     // Step 7: Connect the source to the AudioWorkletNode and the node to the destination
     source.connect(recorderNode);
-    recorderNode.connect(audioCtx.destination);
     recordingIndicator.style.display = 'block';
     recording = true;
 }
 
 function stopRecording() {
     if (!recording) return;
-    recorderNode.disconnect();
     source.disconnect();
     recordingIndicator.style.display = 'none';
     recording = false;
 
-    // Concatenate all recorded audio chunks
-    const totalLength = audioBufferData.reduce((total, chunk) => total + chunk.length, 0);
-    const audioBuffer = audioCtx.createBuffer(1, totalLength, audioCtx.sampleRate);
-    const channelData = audioBuffer.getChannelData(0);
+    // // Concatenate all recorded audio chunks
+    // const totalLength = audioBufferData.reduce((total, chunk) => total + chunk.length, 0);
+    // const audioBuffer = audioCtx.createBuffer(1, totalLength, audioCtx.sampleRate);
+    // const channelData = audioBuffer.getChannelData(0);
 
-    let offset = 0;
-    for (const chunk of audioBufferData) {
-        channelData.set(chunk, offset);
-        offset += chunk.length;
-    }
+    // let offset = 0;
+    // for (const chunk of audioBufferData) {
+    //     channelData.set(chunk, offset);
+    //     offset += chunk.length;
+    // }
 
-    console.log('AudioBuffer:', audioBuffer);
+    // console.log('AudioBuffer:', audioBuffer);
 }
 
 var recordButton = document.querySelector('.record-button');
