@@ -1,4 +1,4 @@
-function dradf2(ido, l1, cc, ch, wa1, waoffset)
+export function dradf2(ido, l1, cc, ch, wa1, waoffset)
 {
 	var t1 = 0;
 	var t2, t0 = (t2 = l1 * ido);

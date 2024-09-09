@@ -1,6 +1,6 @@
-import { dradf2 } from './forward/dradf2.js';
-import { dradf4 } from './forward/dradf4.js';
-import { dradfg } from './forward/dradfg.js';
+import { dradf2 } from './dradf2.js';
+import { dradf4 } from './dradf4.js';
+import { dradfg } from './dradfg.js';
 
 // drftf1 in Praat
 export function drftf1(n, c, ch, ifac, waoffset) {

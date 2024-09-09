@@ -20,11 +20,11 @@ export function resample(samples, oldSampleRate, newSampleRate) {
             const data = new Float64Array(nfft);
             const filtered = new Float32Array(nx);
             data.set(samples, antiTurnAround);
-            data = fft(data);    // go to the frequency domain
-            for (var i = Math.floor(upfactor * nfft); i <= nfft; i ++) data [i] = 0.0;   // filter away high frequencies
-            data = ifft(data);   // return to the time domain
+            fft(data);    // go to the frequency domain
+            for (var i = Math.floor(upfactor * nfft); i < nfft; i ++) data [i] = 0.0;   // filter away high frequencies
+            ifft(data);   // return to the time domain
             var factor = 1.0 / nfft;
-            for (var i = 1; i <= nx; i ++)
+            for (var i = 0; i < nx; i ++)
 				filtered [i] = data [i + antiTurnAround] * factor;
             samples = filtered;
         }
@@ -34,19 +34,19 @@ export function resample(samples, oldSampleRate, newSampleRate) {
         const new_x1 = 0.5 / newSampleRate;
         const new_dx = 1 / newSampleRate;
         if (precision <= 1) {
-            for (var i = 1; i <= numberOfSamples; i++) {
-				const x = new_x1 + (i - 1) * new_dx;
-				const index = (x - old_x1) / old_dx + 1;
+            for (var i = 0; i < numberOfSamples; i++) {
+				const x = new_x1 + i * new_dx;
+				const index = (x - old_x1) / old_dx;
 				const leftSample = Math.floor(index);
 				const fraction = index - leftSample;
 				newSamples [i] = ( leftSample < 1 || leftSample >= nx ? 0.0 :
-						(1 - fraction) * samples [ichan] [leftSample] + fraction * samples [ichan] [leftSample + 1] );
+						(1 - fraction) * samples [leftSample] + fraction * samples [leftSample + 1] );
             }
         }
         else {
-            for (var i = 1; i <= numberOfSamples; i ++) {
-				const x = new_x1 + (i - 1) * new_dx;
-				const index = (x - old_x1) / old_dx + 1;
+            for (var i = 0; i < numberOfSamples; i ++) {
+				const x = new_x1 + i * new_dx;
+				const index = (x - old_x1) / old_dx;
 				newSamples [i] = NUM_interpolate_sinc (samples, index, precision);
             }
         }

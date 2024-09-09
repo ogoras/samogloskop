@@ -1,18 +1,19 @@
 export function NUM_interpolate_sinc (y, x, maxDepth) {
+	const NUMpi = Math.PI;
 	const midleft = Math.floor (x), midright = midleft + 1;
 	var result = 0.0;
 	if (y.length < 1)
 		return undefined;   // there exists no best guess
-	if (x < 1)
-		return y [1];   // offleft: constant extrapolation
-	if (x > y.size)
-		return y [y.size];   // offright: constant extrapolation
+	if (x < 0)
+		return y [0];   // offleft: constant extrapolation
+	if (x > y.length - 1)
+		return y [y.length - 1];   // offright: constant extrapolation
 	if (x == midleft)
 		return y [midleft];   // the interpolated curve goes through the points
 	/*
-		1 < x < y.size && x not var: interpolate.
+		1 < x < y.length && x not var: interpolate.
 	*/
-	maxDepth = Math.min(maxDepth, midright - 1, y.size - midleft);
+	maxDepth = Math.min(maxDepth, midright, y.length - midleft - 1);
 	if (maxDepth <= 0)  // nearest
 		return y [Math.floor (x + 0.5)];
 	if (maxDepth == 1)  // linear
@@ -29,14 +30,14 @@ export function NUM_interpolate_sinc (y, x, maxDepth) {
 	const left = midright - maxDepth;
 	const right = midleft + maxDepth;
 	var a = NUMpi * (x - midleft);
-	var halfsina = 0.5 * sin (a);
+	var halfsina = 0.5 * Math.sin (a);
 	var aa = a / (x - left + 1.0);
 	var daa = NUMpi / (x - left + 1.0);
 
-    var cosaa = cos (aa);
-    var sinaa = sin (aa);
-    var cosdaa = cos (daa);
-    var sindaa = sin (daa);
+    var cosaa = Math.cos (aa);
+    var sinaa = Math.sin (aa);
+    var cosdaa = Math.cos (daa);
+    var sindaa = Math.sin (daa);
 
 	for (var ix = midleft; ix >= left; ix --) {
 
@@ -52,14 +53,14 @@ export function NUM_interpolate_sinc (y, x, maxDepth) {
 		halfsina = - halfsina;
 	}
 	a = NUMpi * (midright - x);
-	halfsina = 0.5 * sin (a);
+	halfsina = 0.5 * Math.sin (a);
 	aa = a / (right - x + 1.0);
 	daa = NUMpi / (right - x + 1.0);
 
-    cosaa = cos (aa);
-    sinaa = sin (aa);
-    cosdaa = cos (daa);
-    sindaa = sin (daa);
+    cosaa = Math.cos (aa);
+    sinaa = Math.sin (aa);
+    cosdaa = Math.cos (daa);
+    sindaa = Math.sin (daa);
 
 	for (var ix = midright; ix <= right; ix ++) {
 		const d = halfsina / a * (1.0 + cosaa);

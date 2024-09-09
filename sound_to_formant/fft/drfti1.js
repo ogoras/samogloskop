@@ -14,7 +14,7 @@ export function drfti1(n, wa, ifac, waoffset = 0) {
 	}
 
 	function L104() {
-		const nq = Math.floor(n / ntry);
+		const nq = Math.floor(nl / ntry);
 		const nr = nl - ntry * nq;
 		if (nr !== 0) return L101();
 		nf++;

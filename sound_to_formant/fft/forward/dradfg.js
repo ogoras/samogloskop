@@ -1,5 +1,5 @@
 // NUMfft_core.h in Praat
-function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
+export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 {
 	const tpi = 6.28318530717958647692528676655900577;
 	var is;
