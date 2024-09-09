@@ -6,7 +6,7 @@ catch (error) {
     console.log("An error occured: " + error);
 }
 var audioCtx = null, source = null, audioBufferData = [], recorderNode = null;
-var initialized = false;
+var initialized = false, recording = false;
 
 var recordingIndicator = document.querySelector('.recording-indicator');
 
@@ -31,12 +31,14 @@ async function startRecording() {
     source.connect(recorderNode);
     recorderNode.connect(audioCtx.destination);
     recordingIndicator.style.display = 'block';
+    recording = true;
 }
 
 function stopRecording() {
     recorderNode.disconnect();
     source.disconnect();
     recordingIndicator.style.display = 'none';
+    recording = false;
 
     // Concatenate all recorded audio chunks
     const totalLength = audioBufferData.reduce((total, chunk) => total + chunk.length, 0);
@@ -53,10 +55,21 @@ function stopRecording() {
 }
 
 var recordButton = document.querySelector('.record-button');
+// mouse, touch, or spacebar
 recordButton.addEventListener('mousedown', startRecording);
 recordButton.addEventListener('touchstart', startRecording);
+addEventListener('keydown', (event) => {
+    if (event.code === 'Space' && !recording) {
+        startRecording();
+    }
+});
 recordButton.addEventListener('mouseup', stopRecording);
 recordButton.addEventListener('touchend', stopRecording);
+addEventListener('keyup', (event) => {
+    if (event.code === 'Space') {
+        stopRecording();
+    }
+});
 
 // visualizer based on code from https://github.com/mdn/dom-examples/blob/main/media/web-dictaphone/scripts/app.js
 var canvas = document.querySelector("canvas");
