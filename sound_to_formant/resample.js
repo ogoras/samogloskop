@@ -10,7 +10,7 @@ export function resample(samples, oldSampleRate, newSampleRate) {
     try {
         const nx = samples.length;
         const duration = nx / oldSampleRate;
-        const numberOfSamples = duration * newSampleRate;
+        const numberOfSamples = Math.round(duration * newSampleRate);
         if (numberOfSamples < 1) throw new Error("The resampled sound would have no samples.");
         const weNeedAnAntiAliasingFilter = upfactor < 1;
         if (weNeedAnAntiAliasingFilter) {

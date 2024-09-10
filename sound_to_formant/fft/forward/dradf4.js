@@ -1,3 +1,5 @@
+// something is wrong with this function... TO BE DEBUGGED
+
 export function dradf4 (ido, l1, cc, ch, wa, wa1offset, wa2offset, wa3offset)
 {
 	const hsqt2 = .70710678118654752440084436210485;
