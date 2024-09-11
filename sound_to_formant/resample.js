@@ -30,7 +30,7 @@ export function resample(samples, oldSampleRate, newSampleRate, precision = 50) 
         const newSamples = new Float32Array(numberOfSamples);
         const old_x1 = 0.5 / oldSampleRate;
         const old_dx = 1 / oldSampleRate;
-        const new_x1 = 0.5 / newSampleRate;
+        const new_x1 = 0.5 * (duration - (numberOfSamples - 1) / newSampleRate)
         const new_dx = 1 / newSampleRate;
         if (precision <= 1) {
             for (var i = 0; i < numberOfSamples; i++) {
@@ -38,7 +38,7 @@ export function resample(samples, oldSampleRate, newSampleRate, precision = 50) 
 				const index = (x - old_x1) / old_dx;
 				const leftSample = Math.floor(index);
 				const fraction = index - leftSample;
-				newSamples [i] = ( leftSample < 1 || leftSample >= nx ? 0.0 :
+				newSamples [i] = ( leftSample < 0 || leftSample >= nx - 1 ? 0.0 :
 						(1 - fraction) * samples [leftSample] + fraction * samples [leftSample + 1] );
             }
         }
