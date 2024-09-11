@@ -4,7 +4,7 @@
 import { resample } from "./resample.js";
 import { Sound_preEmphasize_inplace } from "./preemphasize.js";
 
-export function soundToFormant(samples, sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency) {
+export function soundToFormant(samples, sampleRate, dt = 0, nFormants = 5, maximumFrequency = 5000, halfdt_window = 0.025, preemphasisFrequency = 50) {
     const nyquist = sampleRate / 2;
     if (!(maximumFrequency <= 0.0 || Math.abs(maximumFrequency / nyquist - 1) < 1e-12)) {
         const newSampleRate = maximumFrequency * 2;
@@ -34,5 +34,5 @@ export function soundToFormant(samples, sampleRate, dt, nFormants, maximumFreque
 
     //console.log("Formant analysis...");
 
-    Sound_preEmphasize_inplace(samples, sampleRate, preemphasisFrequency);
+    Sound_preEmphasize_inplace(samples, dx, preemphasisFrequency);
 }
