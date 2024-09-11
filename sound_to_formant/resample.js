@@ -23,8 +23,7 @@ export function resample(samples, oldSampleRate, newSampleRate, precision = 50) 
             for (var i = Math.floor(upfactor * nfft) - 2; i < nfft; i ++) data [i] = 0.0;   // filter away high frequencies
             ifft(data);   // return to the time domain
             var factor = 1.0 / nfft;
-            for (var i = 0; i < nx; i ++)
-				filtered [i] = data [i + antiTurnAround] * factor;
+            for (var i = 0; i < nx; i ++) filtered [i] = data [i + antiTurnAround] * factor;
             samples = filtered;
         }
         const newSamples = new Float32Array(numberOfSamples);
@@ -51,14 +50,45 @@ export function resample(samples, oldSampleRate, newSampleRate, precision = 50) 
         }
         return newSamples;
     }
-    catch {
-        throw new Error("Sound not resampled: " + oldSampleRate + " -> " + newSampleRate);
+    catch (error) {
+        throw new Error("Sound not resampled: " + oldSampleRate + " -> " + newSampleRate + ": " + error.message);
     }
 }
 
 // Sound_upsample in Praat
 function upsample(samples) {
-    // TODO
+    try {
+        const nx = samples.length;
+		const antiTurnAround = 1000;
+		const sampleRateFactor = 2;
+		const numberOfPaddingSides = 2;   // namely beginning and end
+		const nfft = iroundUpToPowerOfTwo (nx + antiTurnAround * numberOfPaddingSides);
+        const numberOfSamples  = nx * sampleRateFactor;
+		/*
+			The computation of the new x1 relies on the idea that the left edge
+			of the old first sample should coincide with the left edge of the new first sample
+			(typically, e.g. if the old first sample starts at zero, which is usual,
+			then the new first sample should also start at zero):
+			old x1 - 0.5 * old dx == new x1 - 0.5 * new dx
+			==>
+			new x1 == old x1 - 0.5 * (old dx - new dx)
+		*/
+		const newSamples = new Float32Array(nx * sampleRateFactor);
+        const data = new Float64Array(sampleRateFactor * nfft);   // zeroing is important...
+        data.set(samples, antiTurnAround);
+        data.splice(0, nfft, ...fft(data.slice(0, nfft)));
+        const imin = Math.floor (nfft * 0.95);
+        for (var i = imin; i < nfft; i ++)
+            data [i] *= (nfft - i - 2) / (nfft - imin);
+        data[nfft - 1] = 0;
+        ifft (data);
+        const factor = 1.0 / nfft;
+        for (var i = 0; i < numberOfSamples; i ++) newSamples [i] = data [i + sampleRateFactor * antiTurnAround] * factor;
+
+		return newSamples;
+	} catch (error) {
+        throw new Error("Not upsampled: " + error.message);
+    }
 }
 
 // Melder_iroundUpToPowerOfTwo in Praat

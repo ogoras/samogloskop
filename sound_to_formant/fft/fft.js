@@ -19,6 +19,7 @@ export function fft(data) {
 	// 		data [i] = data [i - 1];
 	// 	data [2] = tmp;
 	// }
+	return data;
 }
 
 // NUMreverseRealFastFourierTransform in Praat
@@ -38,4 +39,5 @@ export function ifft(data) {
     if (n === 1) return;
     drfti1(n, trigcache, splitcache, n);
 	drftb1(n, data, trigcache, splitcache, n);
+	return data;
 }
