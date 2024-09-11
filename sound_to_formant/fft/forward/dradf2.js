@@ -1,9 +1,9 @@
 export function dradf2(ido, l1, cc, ch, wa1, waoffset)
 {
-	var t1 = 0;
-	var t2, t0 = (t2 = l1 * ido);
-	var t3 = ido << 1;
-	for (var k = 0; k < l1; k++)
+	let t1 = 0;
+	let t2, t0 = (t2 = l1 * ido);
+	let t3 = ido << 1;
+	for (let k = 0; k < l1; k++)
 	{
 		ch [t1 << 1] = cc [t1] + cc [t2];
 		ch [(t1 << 1) + t3 - 1] = cc [t1] - cc [t2];
@@ -18,13 +18,13 @@ export function dradf2(ido, l1, cc, ch, wa1, waoffset)
 
 	t1 = 0;
 	t2 = t0;
-	for (var k = 0; k < l1; k++)
+	for (let k = 0; k < l1; k++)
 	{
 		t3 = t2;
-		var t4 = (t1 << 1) + (ido << 1);
-		var t5 = t1;
-		var t6 = t1 + t1;
-		for (var i = 2; i < ido; i += 2)
+		let t4 = (t1 << 1) + (ido << 1);
+		let t5 = t1;
+		let t6 = t1 + t1;
+		for (let i = 2; i < ido; i += 2)
 		{
 			t3 += 2;
 			t4 -= 2;
@@ -48,7 +48,7 @@ export function dradf2(ido, l1, cc, ch, wa1, waoffset)
     function L105() {
         t3 = (t2 = (t1 = ido) - 1);
         t2 += t0;
-        for (var k = 0; k < l1; k++)
+        for (let k = 0; k < l1; k++)
         {
             ch [t1] = -cc [t2];
             ch [t1 - 1] = cc [t3];

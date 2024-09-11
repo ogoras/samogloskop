@@ -1,7 +1,7 @@
 export function NUM_interpolate_sinc (y, x, maxDepth) {
 	const NUMpi = Math.PI;
 	const midleft = Math.floor (x), midright = midleft + 1;
-	var result = 0.0;
+	let result = 0.0;
 	if (y.length < 1)
 		return undefined;   // there exists no best guess
 	if (x < 0)
@@ -11,7 +11,7 @@ export function NUM_interpolate_sinc (y, x, maxDepth) {
 	if (x == midleft)
 		return y [midleft];   // the interpolated curve goes through the points
 	/*
-		1 < x < y.length && x not var: interpolate.
+		1 < x < y.length && x not let: interpolate.
 	*/
 	maxDepth = Math.min(maxDepth, midright, y.length - midleft - 1);
 	if (maxDepth <= 0)  // nearest
@@ -29,17 +29,17 @@ export function NUM_interpolate_sinc (y, x, maxDepth) {
 	*/
 	const left = midright - maxDepth;
 	const right = midleft + maxDepth;
-	var a = NUMpi * (x - midleft);
-	var halfsina = 0.5 * Math.sin (a);
-	var aa = a / (x - left + 1.0);
-	var daa = NUMpi / (x - left + 1.0);
+	let a = NUMpi * (x - midleft);
+	let halfsina = 0.5 * Math.sin (a);
+	let aa = a / (x - left + 1.0);
+	let daa = NUMpi / (x - left + 1.0);
 
-    var cosaa = Math.cos (aa);
-    var sinaa = Math.sin (aa);
-    var cosdaa = Math.cos (daa);
-    var sindaa = Math.sin (daa);
+    let cosaa = Math.cos (aa);
+    let sinaa = Math.sin (aa);
+    let cosdaa = Math.cos (daa);
+    let sindaa = Math.sin (daa);
 
-	for (var ix = midleft; ix >= left; ix --) {
+	for (let ix = midleft; ix >= left; ix --) {
 
 		const d = halfsina / a * (1.0 + cosaa);
 
@@ -62,7 +62,7 @@ export function NUM_interpolate_sinc (y, x, maxDepth) {
     cosdaa = Math.cos (daa);
     sindaa = Math.sin (daa);
 
-	for (var ix = midright; ix <= right; ix ++) {
+	for (let ix = midright; ix <= right; ix ++) {
 		const d = halfsina / a * (1.0 + cosaa);
 		result += y [ix] * d;
 		a += NUMpi;

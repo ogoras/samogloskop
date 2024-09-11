@@ -2,10 +2,10 @@ export function dradb2 (ido, l1, cc, ch, wa1, waoffset)
 {
 	const t0 = l1 * ido;
 
-	var t1 = 0;
-	var t2 = 0;
-	var t3 = (ido << 1) - 1;
-	for (var k = 0; k < l1; k++)
+	let t1 = 0;
+	let t2 = 0;
+	let t3 = (ido << 1) - 1;
+	for (let k = 0; k < l1; k++)
 	{
 		ch [t1] = cc [t2] + cc [t3 + t2];
 		ch [t1 + t0] = cc [t2] - cc [t3 + t2];
@@ -19,12 +19,12 @@ export function dradb2 (ido, l1, cc, ch, wa1, waoffset)
 
 	t1 = 0;
 	t2 = 0;
-	for (var k = 0; k < l1; k++)
+	for (let k = 0; k < l1; k++)
 	{
 		t3 = t1;
-		var t4, t5 = (t4 = t2) + (ido << 1);
-		var t6 = t0 + t1;
-		for (var i = 2; i < ido; i += 2)
+		let t4, t5 = (t4 = t2) + (ido << 1);
+		let t6 = t0 + t1;
+		for (let i = 2; i < ido; i += 2)
 		{
 			t3 += 2;
 			t4 += 2;
@@ -47,7 +47,7 @@ export function dradb2 (ido, l1, cc, ch, wa1, waoffset)
     function L105() {
         t1 = ido - 1;
         t2 = ido - 1;
-        for (var k = 0; k < l1; k++)
+        for (let k = 0; k < l1; k++)
         {
             ch [t1] = cc [t2] + cc [t2];
             ch [t1 + t0] = -(cc [t2 + 1] + cc [t2 + 1]);

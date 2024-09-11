@@ -4,11 +4,11 @@ export function dradb4 (ido, l1, cc, ch, wa, wa1offset, wa2offset, wa3offset)
 
 	const t0 = l1 * ido;
 
-	var t1 = 0;
-	var t2 = ido << 2;
-	var t3 = 0, t4, t5, t8;
+	let t1 = 0;
+	let t2 = ido << 2;
+	let t3 = 0, t4, t5, t8;
 	const t6 = ido << 1;
-	for (var k = 0; k < l1; k++)
+	for (let k = 0; k < l1; k++)
 	{
 		t4 = t3 + t6;
 		t5 = t1;
@@ -30,11 +30,11 @@ export function dradb4 (ido, l1, cc, ch, wa, wa1offset, wa2offset, wa3offset)
 		return L105();
 
 	t1 = 0;
-	for (var k = 0; k < l1; k++)
+	for (let k = 0; k < l1; k++)
 	{
-		var t5 = (t4 = (t3 = (t2 = t1 << 2) + t6)) + t6;
-		var t7 = t1;
-		for (var i = 2; i < ido; i += 2)
+		let t5 = (t4 = (t3 = (t2 = t1 << 2) + t6)) + t6;
+		let t7 = t1;
+		for (let i = 2; i < ido; i += 2)
 		{
 			t2 += 2;
 			t3 += 2;
@@ -77,7 +77,7 @@ export function dradb4 (ido, l1, cc, ch, wa, wa1offset, wa2offset, wa3offset)
         t2 = ido << 2;
         t3 = ido - 1;
         t4 = ido + (ido << 1);
-        for (var k = 0; k < l1; k++)
+        for (let k = 0; k < l1; k++)
         {
             t5 = t3;
             const ti1 = cc [t1] + cc [t4];

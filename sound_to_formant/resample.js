@@ -20,10 +20,10 @@ export function resample(samples, oldSampleRate, newSampleRate, precision = 50) 
             const filtered = new Float32Array(nx);
             data.set(samples, antiTurnAround);
             fft(data);    // go to the frequency domain
-            for (var i = Math.floor(upfactor * nfft) - 2; i < nfft; i ++) data [i] = 0.0;   // filter away high frequencies
+            for (let i = Math.floor(upfactor * nfft) - 2; i < nfft; i ++) data [i] = 0.0;   // filter away high frequencies
             ifft(data);   // return to the time domain
-            var factor = 1.0 / nfft;
-            for (var i = 0; i < nx; i ++) filtered [i] = data [i + antiTurnAround] * factor;
+            let factor = 1.0 / nfft;
+            for (let i = 0; i < nx; i ++) filtered [i] = data [i + antiTurnAround] * factor;
             samples = filtered;
         }
         const newSamples = new Float32Array(numberOfSamples);
@@ -32,7 +32,7 @@ export function resample(samples, oldSampleRate, newSampleRate, precision = 50) 
         const new_x1 = 0.5 * (duration - (numberOfSamples - 1) / newSampleRate)
         const new_dx = 1 / newSampleRate;
         if (precision <= 1) {
-            for (var i = 0; i < numberOfSamples; i++) {
+            for (let i = 0; i < numberOfSamples; i++) {
 				const x = new_x1 + i * new_dx;
 				const index = (x - old_x1) / old_dx;
 				const leftSample = Math.floor(index);
@@ -42,7 +42,7 @@ export function resample(samples, oldSampleRate, newSampleRate, precision = 50) 
             }
         }
         else {
-            for (var i = 0; i < numberOfSamples; i ++) {
+            for (let i = 0; i < numberOfSamples; i ++) {
 				const x = new_x1 + i * new_dx;
 				const index = (x - old_x1) / old_dx;
 				newSamples [i] = NUM_interpolate_sinc (samples, index, precision);
@@ -78,12 +78,12 @@ function upsample(samples) {
         data.set(samples, antiTurnAround);
         data.splice(0, nfft, ...fft(data.slice(0, nfft)));
         const imin = Math.floor (nfft * 0.95);
-        for (var i = imin; i < nfft; i ++)
+        for (let i = imin; i < nfft; i ++)
             data [i] *= (nfft - i - 2) / (nfft - imin);
         data[nfft - 1] = 0;
         ifft (data);
         const factor = 1.0 / nfft;
-        for (var i = 0; i < numberOfSamples; i ++) newSamples [i] = data [i + sampleRateFactor * antiTurnAround] * factor;
+        for (let i = 0; i < numberOfSamples; i ++) newSamples [i] = data [i + sampleRateFactor * antiTurnAround] * factor;
 
 		return newSamples;
 	} catch (error) {

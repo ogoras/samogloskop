@@ -14,8 +14,8 @@ export function fft(data) {
 	// 	/*
 	// 		To be compatible with old behaviour.
 	// 	*/
-	// 	var tmp = data [data.length];
-	// 	for (var i = data.length; i > 2; i --)
+	// 	let tmp = data [data.length];
+	// 	for (let i = data.length; i > 2; i --)
 	// 		data [i] = data [i - 1];
 	// 	data [2] = tmp;
 	// }
@@ -28,8 +28,8 @@ export function ifft(data) {
 	// 	/*
 	// 		To be compatible with old behaviour.
 	// 	*/
-	// 	var tmp = data [2];
-	// 	for (var i = 2; i < data.length; i ++)
+	// 	let tmp = data [2];
+	// 	for (let i = 2; i < data.length; i ++)
 	// 		data [i] = data [i + 1];
 	// 	data [data.size] = tmp;
 	// }

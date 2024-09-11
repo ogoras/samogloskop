@@ -11,4 +11,23 @@ export function soundToFormant(samples, sampleRate, dt, nFormants, maximumFreque
         sampleRate = newSampleRate;
     }
 
+    const numberOfPoles = Math.round(nFormants * 2);
+
+    dt = ( dt > 0.0 ? dt : halfdt_window / 4.0 );
+    const nx = samples.length;
+    const dx = 1.0 / sampleRate;
+    const physicalDuration = nx * dx;
+    let dt_window = 2.0 * halfdt_window;
+    let nFrames = 1 + Math.floor((physicalDuration - dt_window) / dt);
+    let nsamp_window = Math.floor(dt_window / dx), halfnsamp_window = nsamp_window / 2;
+
+    if (nsamp_window < numberOfPoles + 1) throw new Error("Window too short.");
+    const x1 = 0.5 / sampleRate;
+    let t1 = x1 + 0.5 * (physicalDuration - dx - (nFrames - 1) * dt);   // centre of first frame
+    if (nFrames < 1) {
+        nFrames = 1;
+        t1 = x1 + 0.5 * physicalDuration;
+        dt_window = physicalDuration;
+        nsamp_window = nx;
+    }
 }

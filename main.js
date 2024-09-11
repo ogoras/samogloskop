@@ -1,16 +1,16 @@
 import { soundToFormant } from './sound_to_formant/formant.js';
 
-var stream = null;
+let stream = null;
 try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 }
 catch (error) {
     console.log("An error occured: " + error);
 }
-var audioCtx = null, source = null, audioBufferData = [], recorderNode = null;
-var initialized = false, recording = false;
+let audioCtx = null, source = null, audioBufferData = [], recorderNode = null;
+let initialized = false, recording = false;
 
-var recordingIndicator = document.querySelector('.recording-indicator');
+let recordingIndicator = document.querySelector('.recording-indicator');
 
 async function init() {
     audioCtx = new AudioContext();
@@ -43,7 +43,7 @@ function stopRecording() {
     recording = false;
 }
 
-var recordButton = document.querySelector('.record-button');
+let recordButton = document.querySelector('.record-button');
 // mouse, touch, or spacebar
 recordButton.addEventListener('mousedown', startRecording);
 recordButton.addEventListener('touchstart', startRecording);
@@ -61,8 +61,8 @@ addEventListener('keyup', (event) => {
 });
 
 // visualizer based on code from https://github.com/mdn/dom-examples/blob/main/media/web-dictaphone/scripts/app.js
-var canvas = document.querySelector("canvas");
-var canvasCtx = canvas.getContext("2d");
+let canvas = document.querySelector("canvas");
+let canvasCtx = canvas.getContext("2d");
 const bufferLength = 1024;
 const dataArray = new Float32Array(bufferLength);
 

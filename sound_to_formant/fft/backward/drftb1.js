@@ -7,17 +7,17 @@ import { dradb4 } from './dradb4.js';
 export function drftb1 (n, c, ch, ifac, waoffset) // wa[0] = ch[waoffset]
 {
 	const nf = ifac [1];
-	var na = 0;
-	var l1 = 1;
-	var iw = 1;
+	let na = 0;
+	let l1 = 1;
+	let iw = 1;
 
-	for (var k1 = 0; k1 < nf; k1++)
+	for (let k1 = 0; k1 < nf; k1++)
 	{
 		const ip = ifac [k1 + 2];
 		const l2 = ip * l1;
 		const ido = n / l2;
 		const idl1 = ido * l1;
-		var ix2, ix3;
+		let ix2, ix3;
         loop();
 
         function loop() {
@@ -84,5 +84,5 @@ export function drftb1 (n, c, ch, ifac, waoffset) // wa[0] = ch[waoffset]
 
 	if (na == 0) return;
 
-	for (var i = 0; i < n; i++) c [i] = ch [i];
+	for (let i = 0; i < n; i++) c [i] = ch [i];
 }

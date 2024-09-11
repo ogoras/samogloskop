@@ -3,14 +3,14 @@ export function dradb3 (ido, l1, cc, ch, wa, wa1offset, wa2offset)
 	const taur = -.5;
 	const taui = .86602540378443864676372317075293618;
 
-	var t0 = l1 * ido;
+	let t0 = l1 * ido;
 
-	var t1 = 0;
-	var t2 = t0 << 1;
-	var t3 = ido << 1;
-	var t4 = ido + (ido << 1);
-	var t5 = 0;
-	for (var k = 0; k < l1; k++)
+	let t1 = 0;
+	let t2 = t0 << 1;
+	let t3 = ido << 1;
+	let t4 = ido + (ido << 1);
+	let t5 = 0;
+	for (let k = 0; k < l1; k++)
 	{
 		const tr2 = cc [t3 - 1] + cc [t3 - 1];
 		const cr2 = cc [t5] + (taur * tr2);
@@ -28,14 +28,14 @@ export function dradb3 (ido, l1, cc, ch, wa, wa1offset, wa2offset)
 
 	t1 = 0;
 	t3 = ido << 1;
-	for (var k = 0; k < l1; k++)
+	for (let k = 0; k < l1; k++)
 	{
-		var t7 = t1 + (t1 << 1);
-		var t6 = (t5 = t7 + t3);
-		var t8 = t1;
-		var t9, t10 = (t9 = t1 + t0) + t0;
+		let t7 = t1 + (t1 << 1);
+		let t6 = (t5 = t7 + t3);
+		let t8 = t1;
+		let t9, t10 = (t9 = t1 + t0) + t0;
 
-		for (var i = 2; i < ido; i += 2)
+		for (let i = 2; i < ido; i += 2)
 		{
 			t5 += 2;
 			t6 -= 2;

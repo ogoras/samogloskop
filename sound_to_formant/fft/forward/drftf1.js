@@ -5,17 +5,17 @@ import { dradfg } from './dradfg.js';
 // drftf1 in Praat
 export function drftf1(n, c, ch, ifac, waoffset) {
 	const nf = ifac[1];
-	var na = 1;
-	var l2 = n;
-	var iw = n;
+	let na = 1;
+	let l2 = n;
+	let iw = n;
 
-	for (var k1 = 0; k1 < nf; k1++) {
+	for (let k1 = 0; k1 < nf; k1++) {
 		const kh = nf - k1;
 		const ip = ifac[kh + 1];
 		const l1 = Math.floor(l2 / ip);
 		const ido = Math.floor(n / l2);
 		const idl1 = ido * l1;
-		var ix2, ix3;
+		let ix2, ix3;
 		loop();
 
 		function loop() {
@@ -70,5 +70,5 @@ export function drftf1(n, c, ch, ifac, waoffset) {
 	if (na == 1)
 		return;
 
-	for (var i = 0; i < n; i++) c[i] = ch[i];
+	for (let i = 0; i < n; i++) c[i] = ch[i];
 }

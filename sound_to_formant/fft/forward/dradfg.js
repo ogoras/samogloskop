@@ -2,8 +2,8 @@
 export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 {
 	const tpi = 6.28318530717958647692528676655900577;
-	var is;
-	var t1, t2, t3, t4, t5, t6, t7, t8, t9;
+	let is;
+	let t1, t2, t3, t4, t5, t6, t7, t8, t9;
 
 	const arg = tpi / ip;
 	const dcp = Math.cos (arg);
@@ -17,15 +17,15 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 
 	if (ido == 1)
 		return L119();
-	for (var ik = 0; ik < idl1; ik++)
+	for (let ik = 0; ik < idl1; ik++)
 		ch2 [ik] = c2 [ik];
 
 	t1 = 0;
-	for (var j = 1; j < ip; j++)
+	for (let j = 1; j < ip; j++)
 	{
 		t1 += t0;
 		t2 = t1;
-		for (var k = 0; k < l1; k++)
+		for (let k = 0; k < l1; k++)
 		{
 			ch [t2] = c1 [t2];
 			t2 += ido;
@@ -36,17 +36,17 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 	t1 = 0;
 	if (nbd > l1)
 	{
-		for (var j = 1; j < ip; j++)
+		for (let j = 1; j < ip; j++)
 		{
 			t1 += t0;
 			is += ido;
 			t2 = -ido + t1;
-			for (var k = 0; k < l1; k++)
+			for (let k = 0; k < l1; k++)
 			{
-				var idij = is - 1;
+				let idij = is - 1;
 				t2 += ido;
 				t3 = t2;
-				for (var i = 2; i < ido; i += 2)
+				for (let i = 2; i < ido; i += 2)
 				{
 					idij += 2;
 					t3 += 2;
@@ -59,18 +59,18 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 	else
 	{
 
-		for (var j = 1; j < ip; j++)
+		for (let j = 1; j < ip; j++)
 		{
 			is += ido;
-			var idij = is - 1;
+			let idij = is - 1;
 			t1 += t0;
 			t2 = t1;
-			for (var i = 2; i < ido; i += 2)
+			for (let i = 2; i < ido; i += 2)
 			{
 				idij += 2;
 				t2 += 2;
 				t3 = t2;
-				for (var k = 0; k < l1; k++)
+				for (let k = 0; k < l1; k++)
 				{
 					ch [t3 - 1] = wa [waoffset + idij - 1] * c1 [t3 - 1] + wa [waoffset + idij] * c1 [t3];
 					ch [t3] = wa [waoffset + idij - 1] * c1 [t3] - wa [waoffset + idij] * c1 [t3 - 1];
@@ -84,19 +84,19 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 	t2 = ipp2 * t0;
 	if (nbd < l1)
 	{
-		for (var j = 1; j < ipph; j++)
+		for (let j = 1; j < ipph; j++)
 		{
 			t1 += t0;
 			t2 -= t0;
 			t3 = t1;
 			t4 = t2;
-			for (var i = 2; i < ido; i += 2)
+			for (let i = 2; i < ido; i += 2)
 			{
 				t3 += 2;
 				t4 += 2;
 				t5 = t3 - ido;
 				t6 = t4 - ido;
-				for (var k = 0; k < l1; k++)
+				for (let k = 0; k < l1; k++)
 				{
 					t5 += ido;
 					t6 += ido;
@@ -110,17 +110,17 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 	}
 	else
 	{
-		for (var j = 1; j < ipph; j++)
+		for (let j = 1; j < ipph; j++)
 		{
 			t1 += t0;
 			t2 -= t0;
 			t3 = t1;
 			t4 = t2;
-			for (var k = 0; k < l1; k++)
+			for (let k = 0; k < l1; k++)
 			{
 				t5 = t3;
 				t6 = t4;
-				for (var i = 2; i < ido; i += 2)
+				for (let i = 2; i < ido; i += 2)
 				{
 					t5 += 2;
 					t6 += 2;
@@ -137,18 +137,18 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
     L119();
 
     function L119() {
-        for (var ik = 0; ik < idl1; ik++)
+        for (let ik = 0; ik < idl1; ik++)
             c2 [ik] = ch2 [ik];
 
         t1 = 0;
         t2 = ipp2 * idl1;
-        for (var j = 1; j < ipph; j++)
+        for (let j = 1; j < ipph; j++)
         {
             t1 += t0;
             t2 -= t0;
             t3 = t1 - ido;
             t4 = t2 - ido;
-            for (var k = 0; k < l1; k++)
+            for (let k = 0; k < l1; k++)
             {
                 t3 += ido;
                 t4 += ido;
@@ -157,12 +157,12 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
             }
         }
 
-        var ar1 = 1.;
-        var ai1 = 0.;
+        let ar1 = 1.;
+        let ai1 = 0.;
         t1 = 0;
         t2 = ipp2 * idl1;
         t3 = (ip - 1) * idl1;
-        for (var l = 1; l < ipph; l++)
+        for (let l = 1; l < ipph; l++)
         {
             t1 += idl1;
             t2 -= idl1;
@@ -174,7 +174,7 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
             t6 = t3;
             t7 = idl1;
 
-            for (var ik = 0; ik < idl1; ik++)
+            for (let ik = 0; ik < idl1; ik++)
             {
                 ch2 [t4++] = c2 [ik] + ar1 * c2 [t7++];
                 ch2 [t5++] = ai1 * c2 [t6++];
@@ -182,12 +182,12 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 
             const dc2 = ar1;
             const ds2 = ai1;
-            var ar2 = ar1;
-            var ai2 = ai1;
+            let ar2 = ar1;
+            let ai2 = ai1;
 
             t4 = idl1;
             t5 = (ipp2 - 1) * idl1;
-            for (var j = 2; j < ipph; j++)
+            for (let j = 2; j < ipph; j++)
             {
                 t4 += idl1;
                 t5 -= idl1;
@@ -200,7 +200,7 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
                 t7 = t2;
                 t8 = t4;
                 t9 = t5;
-                for (var ik = 0; ik < idl1; ik++)
+                for (let ik = 0; ik < idl1; ik++)
                 {
                     ch2 [t6++] += ar2 * c2 [t8++];
                     ch2 [t7++] += ai2 * c2 [t9++];
@@ -209,11 +209,11 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
         }
 
         t1 = 0;
-        for (var j = 1; j < ipph; j++)
+        for (let j = 1; j < ipph; j++)
         {
             t1 += idl1;
             t2 = t1;
-            for (var ik = 0; ik < idl1; ik++)
+            for (let ik = 0; ik < idl1; ik++)
                 ch2 [ik] += c2 [t2++];
         }
 
@@ -222,11 +222,11 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 
         t1 = 0;
         t2 = 0;
-        for (var k = 0; k < l1; k++)
+        for (let k = 0; k < l1; k++)
         {
             t3 = t1;
             t4 = t2;
-            for (var i = 0; i < ido; i++)
+            for (let i = 0; i < ido; i++)
                 cc [t4++] = ch [t3++];
             t1 += ido;
             t2 += t10;
@@ -236,11 +236,11 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
     }
 
     function L132() {
-        for (var i = 0; i < ido; i++)
+        for (let i = 0; i < ido; i++)
         {
             t1 = i;
             t2 = i;
-            for (var k = 0; k < l1; k++)
+            for (let k = 0; k < l1; k++)
             {
                 cc [t2] = ch [t1];
                 t1 += ido;
@@ -255,7 +255,7 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
         t2 = ido << 1;
         t3 = 0;
         t4 = ipp2 * t0;
-        for (var j = 1; j < ipph; j++)
+        for (let j = 1; j < ipph; j++)
         {
 
             t1 += t2;
@@ -266,7 +266,7 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
             t6 = t3;
             t7 = t4;
 
-            for (var k = 0; k < l1; k++)
+            for (let k = 0; k < l1; k++)
             {
                 cc [t5 - 1] = ch [t6];
                 cc [t5] = ch [t7];
@@ -285,7 +285,7 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
         t3 = 0;
         t4 = 0;
         t5 = ipp2 * t0;
-        for (var j = 1; j < ipph; j++)
+        for (let j = 1; j < ipph; j++)
         {
             t1 += t2;
             t3 += t2;
@@ -295,9 +295,9 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
             t7 = t3;
             t8 = t4;
             t9 = t5;
-            for (var k = 0; k < l1; k++)
+            for (let k = 0; k < l1; k++)
             {
-                for (var i = 2; i < ido; i += 2)
+                for (let i = 2; i < ido; i += 2)
                 {
                     const ic = idp2 - i;
                     cc [i + t7 - 1] = ch [i + t8 - 1] + ch [i + t9 - 1];
@@ -319,19 +319,19 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
         t3 = 0;
         t4 = 0;
         t5 = ipp2 * t0;
-        for (var j = 1; j < ipph; j++)
+        for (let j = 1; j < ipph; j++)
         {
             t1 += t2;
             t3 += t2;
             t4 += t0;
             t5 -= t0;
-            for (var i = 2; i < ido; i += 2)
+            for (let i = 2; i < ido; i += 2)
             {
                 t6 = idp2 + t1 - i;
                 t7 = i + t3;
                 t8 = i + t4;
                 t9 = i + t5;
-                for (var k = 0; k < l1; k++)
+                for (let k = 0; k < l1; k++)
                 {
                     cc [t7 - 1] = ch [t8 - 1] + ch [t9 - 1];
                     cc [t6 - 1] = ch [t8 - 1] - ch [t9 - 1];

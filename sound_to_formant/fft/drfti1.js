@@ -2,7 +2,7 @@
 export function drfti1(n, wa, ifac, waoffset = 0) {
 	const ntryh = [4, 2, 3, 5];
 	const tpi = 6.28318530717958647692528676655900577;
-	var ntry = 0, j = -1, nl = n, nf = 0;
+	let ntry = 0, j = -1, nl = n, nf = 0;
 
 	L101();
 
@@ -22,7 +22,7 @@ export function drfti1(n, wa, ifac, waoffset = 0) {
 		nl = nq;
 		if (ntry !== 2 || nf == 1) return L107();
 
-		for (var i = 1; i < nf; i++) {
+		for (let i = 1; i < nf; i++) {
 			const ib = nf - i + 1;
 			ifac[ib + 1] = ifac[ib];
 		}
@@ -35,26 +35,26 @@ export function drfti1(n, wa, ifac, waoffset = 0) {
 		ifac[0] = n;
 		ifac[1] = nf;
 		const argh = tpi / n;
-		var is = 0;
+		let is = 0;
 		const nfm1 = nf - 1;
-		var l1 = 1;
+		let l1 = 1;
 
 		if (nfm1 === 0)
 			return;
-		for (var k1 = 0; k1 < nfm1; k1++) {
+		for (let k1 = 0; k1 < nfm1; k1++) {
 			const ip = ifac[k1 + 2];
-			var ld = 0;
+			let ld = 0;
 			const l2 = l1 * ip;
 			const ido = Math.floor(n / l2);
 			const ipm = ip - 1;
 
 			for (j = 0; j < ipm; j++) {
 				ld += l1;
-				var i = is;
+				let i = is;
 				const argld = ld * argh;
 
-				var fi = 0.0;
-				for (var ii = 2; ii < ido; ii += 2) {
+				let fi = 0.0;
+				for (let ii = 2; ii < ido; ii += 2) {
 					fi += 1.0;
 					const arg = fi * argld;
 					wa[(i++) + waoffset] = Math.cos(arg);
