@@ -80,9 +80,11 @@ function draw() {
     const maximumFrequency = 5000;
     const halfdt_window = 0.025;
     const preemphasisFrequency = 50;
-    const formants = soundToFormant(audioBufferData, audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
+    const samples = [...audioBufferData];
+    audioBufferData = [];
+    const formants = soundToFormant([...samples], audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
 
-    dataArray.set(audioBufferData.slice(audioBufferData.length - bufferLength, audioBufferData.length));
+    dataArray.set(samples.slice(samples.length - bufferLength, samples.length));
     canvasCtx.fillStyle = "rgb(200, 200, 200)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 

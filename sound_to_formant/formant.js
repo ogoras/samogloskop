@@ -2,6 +2,7 @@
 // https://github.com/praat/praat
 
 import { resample } from "./resample.js";
+import { Sound_preEmphasize_inplace } from "./preemphasize.js";
 
 export function soundToFormant(samples, sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency) {
     const nyquist = sampleRate / 2;
@@ -30,4 +31,8 @@ export function soundToFormant(samples, sampleRate, dt, nFormants, maximumFreque
         dt_window = physicalDuration;
         nsamp_window = nx;
     }
+
+    //console.log("Formant analysis...");
+
+    Sound_preEmphasize_inplace(samples, sampleRate, preemphasisFrequency);
 }
