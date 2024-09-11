@@ -2,8 +2,7 @@ import { fft, ifft } from "./fft/fft.js";
 import { NUM_interpolate_sinc } from "./num/interpolate_sinc.js";
 
 // Sound_resample in Praat
-export function resample(samples, oldSampleRate, newSampleRate) {
-    const precision = 50;
+export function resample(samples, oldSampleRate, newSampleRate, precision = 50) {
     const upfactor = newSampleRate / oldSampleRate;
     if (Math.abs(upfactor - 2) < 1e-6) return upsample(samples);
     if (Math.abs(upfactor - 1) < 1e-6) return samples;
@@ -21,7 +20,7 @@ export function resample(samples, oldSampleRate, newSampleRate) {
             const filtered = new Float32Array(nx);
             data.set(samples, antiTurnAround);
             fft(data);    // go to the frequency domain
-            for (var i = Math.floor(upfactor * nfft); i < nfft; i ++) data [i] = 0.0;   // filter away high frequencies
+            for (var i = Math.floor(upfactor * nfft) - 2; i < nfft; i ++) data [i] = 0.0;   // filter away high frequencies
             ifft(data);   // return to the time domain
             var factor = 1.0 / nfft;
             for (var i = 0; i < nx; i ++)
