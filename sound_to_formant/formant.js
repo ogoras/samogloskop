@@ -3,8 +3,11 @@
 
 import { resample } from "./resample.js";
 import { Sound_preEmphasize_inplace } from "./preemphasize.js";
+import { burg } from "./burg.js";
 
 export function soundToFormant(samples, sampleRate, dt = 0, nFormants = 5, maximumFrequency = 5000, halfdt_window = 0.025, preemphasisFrequency = 50) {
+    const safetyMargin = 50;  // set to 0 to keep all formants (expect trash values)
+
     const nyquist = sampleRate / 2;
     if (!(maximumFrequency <= 0.0 || Math.abs(maximumFrequency / nyquist - 1) < 1e-12)) {
         const newSampleRate = maximumFrequency * 2;
@@ -32,7 +35,50 @@ export function soundToFormant(samples, sampleRate, dt = 0, nFormants = 5, maxim
         nsamp_window = nx;
     }
 
-    //console.log("Formant analysis...");
-
+    /* Pre-emphasis. */
     Sound_preEmphasize_inplace(samples, dx, preemphasisFrequency);
+
+    /* Gaussian window. */
+    const window = new Float64Array(nsamp_window);
+    for (let i = 0; i < nsamp_window; i ++) {
+        const imid = 0.5 * (nsamp_window + 1), edge = Math.exp (-12.0);
+        window [i] = (Math.exp (-48.0 * (i + 1 - imid) * (i + 1 - imid) / (nsamp_window + 1) / (nsamp_window + 1)) - edge) / (1.0 - edge);
+    }
+
+    let maximumFrameLength = nsamp_window;
+    const frameBuffer = new Float64Array(maximumFrameLength);
+    const coefficients = new Float64Array(numberOfPoles);   // superfluous if which==2, but nobody uses that anyway
+    const intensities = new Float64Array(nFrames);
+    const formantFrames = [];
+    for (let iframe = 0; iframe < nFrames; iframe++) {
+        const t = t1 + iframe * dt;
+        const leftSample = Math.floor((t - x1) / dx);
+        const rightSample = leftSample + 1;
+        let startSample = rightSample - halfnsamp_window;
+        let endSample = leftSample + halfnsamp_window;
+        let maximumIntensity = 0.0;
+        startSample = Math.max(0, startSample);
+        endSample = Math.min(nx - 1, endSample);
+        for (let i = startSample; i <= endSample; i ++) {
+            const value = samples [i];
+            if (value * value > maximumIntensity)
+                maximumIntensity = value * value;
+        }
+        intensities[iframe] = maximumIntensity;
+        if (maximumIntensity == 0.0) continue;   // Burg cannot stand all zeroes
+
+        /* Copy a pre-emphasized window to a frame. */
+        const actualFrameLength = endSample - startSample + 1;   // should rarely be less than nsamp_window
+        const offset = startSample;
+        for (let isamp = 0; isamp < actualFrameLength; isamp++) frameBuffer [isamp] = samples[offset + isamp] * window [isamp];
+
+        const frame = frameBuffer.slice(0, actualFrameLength);
+        formantFrames.push(burg(frame, coefficients, maximumIntensity, 0.5 / dx, safetyMargin));
+    }
+    Formant_sort (formantFrames);
+    return formantFrames;
+}
+
+function Formant_sort(formantFrames) {
+    // TODO
 }
