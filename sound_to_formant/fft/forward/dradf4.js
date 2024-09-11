@@ -79,6 +79,7 @@ export function dradf4 (ido, l1, cc, ch, wa, wa1offset, wa2offset, wa3offset)
 	}
 	if (ido % 2 == 1)
 		return;
+	L105();
 
 
     function L105() {

@@ -42,6 +42,7 @@ export function dradb2 (ido, l1, cc, ch, wa1, waoffset)
 
 	if (ido % 2 == 1)
 		return;
+	L105();
 
     function L105() {
         t1 = ido - 1;

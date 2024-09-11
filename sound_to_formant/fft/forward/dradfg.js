@@ -134,6 +134,7 @@ export function dradfg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 			}
 		}
 	}
+    L119();
 
     function L119() {
         for (var ik = 0; ik < idl1; ik++)
