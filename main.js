@@ -85,9 +85,7 @@ function draw() {
     const formants = soundToFormant([...samples], audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
     
     if (bufferLength > samples.length) {
-        console.log("Before: " + samples.length);
         samples.splice(0, 0, ...dataArray.slice(samples.length, bufferLength));
-        console.log("After: " + samples.length);
     }
     dataArray.set(samples.slice(samples.length - bufferLength, samples.length));
     canvasCtx.fillStyle = "rgb(200, 200, 200)";
