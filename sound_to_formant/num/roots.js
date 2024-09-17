@@ -1,3 +1,5 @@
+import { dhseqr_ } from "./lapack/dhseqr";
+
 // Roots.cpp in Praat
 export function Polynomial_to_Roots(polynomial) {
     try {
