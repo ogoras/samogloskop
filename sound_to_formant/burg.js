@@ -32,8 +32,8 @@ export function burg(samples, coefficients, frame_intensity, nyquistFrequency, s
 	for (let iroot = 0; iroot < roots.numberOfRoots; iroot ++)
 		if (roots.roots [iroot].im >= 0.0) {
 			const f = Math.abs (Math.atan2 (roots.roots [iroot].im, roots.roots [iroot].re)) * nyquistFrequency / NUMpi;
-			if (f >= safetyMargin && f <= nyquistFrequency - safetyMargin)
-				frame.numberOfFormants ++;
+			if (f >= safetyMargin && f <= nyquistFrequency - safetyMargin) frame.numberOfFormants ++;
+			//else console.log(iroot, f)
 		}
 
 	/*
