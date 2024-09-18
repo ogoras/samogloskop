@@ -1,4 +1,5 @@
 import { soundToFormant } from './sound_to_formant/formant.js';
+import { exampleSamples } from './sound_to_formant/example_samples.js';
 
 let stream = null;
 try {
@@ -82,7 +83,8 @@ function draw() {
     const preemphasisFrequency = 50;
     const samples = [...audioBufferData];
     audioBufferData = [];
-    const formants = soundToFormant([...samples], audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
+    //const formants = soundToFormant([...samples], audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
+    const formants = soundToFormant(exampleSamples, audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
     //if (formants.length > 0 && formants[0].numberOfFormants > 0) console.log(formants[0].formant);
 
     if (bufferLength > samples.length) {
