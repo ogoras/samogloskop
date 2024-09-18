@@ -48,7 +48,7 @@ export function VECburg(a, x) {
 		// (5)
 
 		for (let j = 0; j <= i - 1; j ++)
-			a [j] = aa [j] - a [i] * aa [i - j];
+			a [j] = aa [j] - a [i] * aa [i - j - 1];
 
 		if (i < m - 1) {
 
@@ -56,7 +56,7 @@ export function VECburg(a, x) {
 
 			for (let j = 0; j <= i; j ++)
 				aa [j] = a [j];
-			for (let j = 0; j < n - i - 1; j ++) {
+			for (let j = 0; j <= n - i - 3; j ++) {
 				b1 [j] -= aa [i] * b2 [j];
 				b2 [j] = b2 [j + 1] - aa [i] * b1 [j + 1];
 			}

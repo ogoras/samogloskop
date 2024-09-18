@@ -85,7 +85,7 @@ function draw() {
     audioBufferData = [];
     //const formants = soundToFormant([...samples], audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
     const formants = soundToFormant(exampleSamples, audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
-    //if (formants.length > 0 && formants[0].numberOfFormants > 0) console.log(formants[0].formant);
+    if (formants.length > 0 && formants[0].numberOfFormants > 0) console.log(formants[0].formant);
 
     if (bufferLength > samples.length) {
         samples.splice(0, 0, ...dataArray.slice(samples.length, bufferLength));

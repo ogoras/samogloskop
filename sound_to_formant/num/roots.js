@@ -104,7 +104,7 @@ export function Polynomial_to_Roots(polynomial) {
         emlapack._free(pinfo);
         emlapack._free(pwork);
 
-        //Roots_Polynomial_polish(thee, polynomial);
+        Roots_Polynomial_polish(thee, polynomial);
         return thee;
     } catch (error) {
         throw new Error(polynomial + ": no roots can be calculated.\nError info: " + error);
