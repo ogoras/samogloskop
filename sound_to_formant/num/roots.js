@@ -32,10 +32,10 @@ export function Polynomial_to_Roots(polynomial) {
         // MATVU uh_CM (upperHessenberg.get());
         // uh_CM.rowStride = 1; uh_CM.colStride = n;
 
-        upperHessenberg[n - 1] = - (polynomial.coefficients[0] / polynomial.coefficients[np1 - 1]);
+        upperHessenberg[(n - 1) * n] = - (polynomial.coefficients[0] / polynomial.coefficients[np1 - 1]);
         for (let irow = 1; irow < n; irow++) {
-            upperHessenberg[irow * n + n - 1] = - (polynomial.coefficients[irow] / polynomial.coefficients[np1 - 1]);
-            upperHessenberg[irow * n + irow - 1] = 1.0;
+            upperHessenberg[irow + n * (n - 1)] = - (polynomial.coefficients[irow] / polynomial.coefficients[np1 - 1]);
+            upperHessenberg[irow + n * (irow - 1)] = 1.0;
         }
         /*
             Find out the working storage needed
@@ -51,11 +51,11 @@ export function Polynomial_to_Roots(polynomial) {
         lwork = Math.ceil(wtmp);
         emlapack.setValue(plwork, lwork, 'i32');
         let pwork = emlapack._malloc(lwork * 8);
-        const work = new Float64Array(emlapack.HEAPF64.buffer, pwork, lwork);
         /*
             Find eigenvalues/roots.
         */
         dhseqr("E", "N", pn, p1, pn, ph, pn, pwr, pwi, null, pn, pwork, plwork, pinfo);
+        // if not all wi values are zero:
 
         // let eigenvalues;
         // try {
@@ -89,9 +89,22 @@ export function Polynomial_to_Roots(polynomial) {
             roots: new Array(numberOfEigenvaluesFound)
         }
         for (let i = 0; i < numberOfEigenvaluesFound; i++) {
-            thee.roots[i] = math.complex(wr[ioffset + i], wi[ioffset + i]);
+            thee.roots[i] = math.complex(
+                wr[ioffset + i],
+                wi[ioffset + i]
+            );
         }
-        Roots_Polynomial_polish(thee, polynomial);
+        emlapack._free(pn);
+        emlapack._free(p1);
+        emlapack._free(ph);
+        emlapack._free(pwr);
+        emlapack._free(pwi);
+        emlapack._free(pwtmp);
+        emlapack._free(plwork);
+        emlapack._free(pinfo);
+        emlapack._free(pwork);
+
+        //Roots_Polynomial_polish(thee, polynomial);
         return thee;
     } catch (error) {
         throw new Error(polynomial + ": no roots can be calculated.\nError info: " + error);

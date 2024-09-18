@@ -39,7 +39,7 @@ export function burg(samples, coefficients, frame_intensity, nyquistFrequency, s
 	/*
 		Create space for formant data.
 	 */
-	if (frame.numberOfFormants > 0) frame.formant = Array(frame.numberOfFormants).fill({});
+	if (frame.numberOfFormants > 0) frame.formant = Array(frame.numberOfFormants).fill(0).map(() => ({}));
 
 	/*
 		Second pass: fill in the formants.
@@ -55,6 +55,6 @@ export function burg(samples, coefficients, frame_intensity, nyquistFrequency, s
 			}
 		}
 	if (iformant != frame.numberOfFormants) throw new Eroor("Error in burg: iformant != frame.numberOfFormants");   // may fail if some frequency is NaN
-    
+
     return frame;
 }
