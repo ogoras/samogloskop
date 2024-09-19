@@ -28,7 +28,7 @@ export function Polynomial_to_Roots(polynomial) {
             pinfo = emlapack._malloc(4);
         const wr = new Float64Array(emlapack.HEAPF64.buffer, pwr, n);
         const wi = new Float64Array(emlapack.HEAPF64.buffer, pwi, n);
-        const upperHessenberg = new Float64Array(emlapack.HEAPF64.buffer, ph, n * n);
+        const upperHessenberg = new Float64Array(emlapack.HEAPF64.buffer, ph, n * n).fill(0);
         // MATVU uh_CM (upperHessenberg.get());
         // uh_CM.rowStride = 1; uh_CM.colStride = n;
 
@@ -151,7 +151,7 @@ function Polynomial_polish_complexroot_nr(me, roots, i, maxit) {
         if (math.abs(dy) == 0.0)
             return;
         const dz = math.divide(y, dy);   // Newton-Raphson
-        roots[i] -= dz;
+        roots[i] = math.subtract(roots[i], dz);
     }
     // Melder_throw (U"Maximum number of iterations exceeded.");
 }
