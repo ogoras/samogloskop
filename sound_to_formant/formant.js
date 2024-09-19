@@ -81,5 +81,24 @@ export function soundToFormant(samples, sampleRate, dt = 0, nFormants = 5, maxim
 }
 
 function Formant_sort(formantFrames) {
-    // TODO
+    for (let iframe = 0; iframe < formantFrames.length; iframe ++) {
+        let frame = formantFrames[iframe];
+        let n = frame.numberOfFormants;
+        for (let i = 0; i < n - 1; i ++) {
+            let min = frame.formant [i]. frequency;
+            let imin = i;
+            for (let j = i + 1; j < n; j ++)
+                if (frame.formant[j].frequency < min) {
+                    min = frame.formant[j].frequency;
+                    imin = j;
+                }
+            if (imin != i) {
+                const min_bandwidth = frame.formant [imin]. bandwidth;
+                frame.formant [imin]. frequency = frame.formant [i]. frequency;
+                frame.formant [imin]. bandwidth = frame.formant [i]. bandwidth;
+                frame.formant [i]. frequency = min;
+                frame.formant [i]. bandwidth = min_bandwidth;
+            }
+        }
+    }
 }
