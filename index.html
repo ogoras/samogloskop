@@ -5,19 +5,23 @@
   </head>
   <body>
     <h1>Nagrywanie dźwięku</h1>
-    <button class="record-button">Nagrywaj</button>
-    <canvas class="visualizer" width="800" height="100"></canvas>
-    <div class="recording-indicator">
-      <style>
-        .recording-indicator {
-          width: 20px;
-          height: 20px;
-          background-color: red;
-          border-radius: 50%;
-          display: none;
-        }
-      </style>
+    <div style="float: left;">
+      <button class="record-button">Nagrywaj</button>
+      <div class="recording-indicator"></div>
+        <style>
+          .recording-indicator {
+            width: 20px;
+            height: 20px;
+            background-color: #ff000000;
+            border-radius: 50%;
+            margin-left: 10px;
+            margin-right: 10px;
+          }
+        </style>
+      </div>
     </div>
+    <canvas class="formants" width="600" height="600" style="float: left;"></canvas>
+    <canvas class="visualizer" width="800" height="100" style="float: left;"></canvas>
     <script src="https://unpkg.com/mathjs@13.1.1/lib/browser/math.js" type="text/javascript"></script>
     <script> 
       var module = {};

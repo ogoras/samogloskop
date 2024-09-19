@@ -1,3 +1,5 @@
+import { drawWaveform } from './drawWaveform.js';
+import { drawFormants } from './drawFormants.js';
 import { soundToFormant } from './sound_to_formant/formant.js';
 //import { exampleSamples } from './sound_to_formant/example_samples.js';
 
@@ -33,14 +35,14 @@ async function startRecording() {
     }
     // Step 7: Connect the source to the AudioWorkletNode and the node to the destination
     source.connect(recorderNode);
-    recordingIndicator.style.display = 'block';
+    recordingIndicator.style.backgroundColor = 'red';
     recording = true;
 }
 
 function stopRecording() {
     if (!recording) return;
     source.disconnect();
-    recordingIndicator.style.display = 'none';
+    recordingIndicator.style.backgroundColor = '#ff000000';
     recording = false;
 }
 
@@ -61,16 +63,10 @@ addEventListener('keyup', (event) => {
     }
 });
 
-// visualizer based on code from https://github.com/mdn/dom-examples/blob/main/media/web-dictaphone/scripts/app.js
-let canvas = document.querySelector("canvas");
-let canvasCtx = canvas.getContext("2d");
 const bufferLength = 1024;
 const dataArray = new Float32Array(bufferLength);
 
 function draw() {
-    const WIDTH = canvas.width;
-    const HEIGHT = canvas.height;
-
     if (audioBufferData.length < bufferLength / 128) {
         requestAnimationFrame(draw);
         return;
@@ -85,47 +81,22 @@ function draw() {
     audioBufferData = [];
     const formants = soundToFormant([...samples], audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
     //const formants = soundToFormant(exampleSamples, audioCtx.sampleRate, dt, nFormants, maximumFrequency, halfdt_window, preemphasisFrequency);
-    if (formants.length > 0 && formants[0].numberOfFormants > 0) {
-        let formantFrequencies = [];
-        for (let i = 0; i < formants[0].numberOfFormants; i++) {
-            formantFrequencies.push(formants[0].formant[i].frequency);
+    for (let i = 0; i < formants.length; i++) {
+        if (formants[i].formant.length >= 2) {
+            drawFormants(formants[i].formant[0].frequency, formants[i].formant[1].frequency);
         }
-        console.log(formantFrequencies);
     }
 
     if (bufferLength > samples.length) {
         samples.splice(0, 0, ...dataArray.slice(samples.length, bufferLength));
     }
     dataArray.set(samples.slice(samples.length - bufferLength, samples.length));
-    canvasCtx.fillStyle = "rgb(200, 200, 200)";
-    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-    canvasCtx.lineWidth = 2;
-    canvasCtx.strokeStyle = "rgb(0, 0, 0)";
-
-    canvasCtx.beginPath();
-
-    let sliceWidth = (WIDTH * 1.0) / bufferLength;
-    let x = 0;
-
-    for (let i = 0; i < bufferLength; i++) {
-        let v = dataArray[i];
-        let y = (v * HEIGHT) / 2;
-        y += HEIGHT / 2;
-
-        if (i === 0) {
-        canvasCtx.moveTo(x, y);
-        } else {
-        canvasCtx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
-    }
-
-    canvasCtx.lineTo(canvas.width, canvas.height / 2);
-    canvasCtx.stroke();
+    drawWaveform(dataArray, bufferLength);
 
     requestAnimationFrame(draw);
 }
 
 draw();
+
+
