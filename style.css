@@ -65,9 +65,22 @@ p {
     border-color: rgba(0, 0, 0, 1);
 }
 
-.record-button:hover {
-    cursor: pointer;
-    opacity: 1;
+@media (hover: hover) {
+    .record-button:hover {
+        cursor: pointer;
+        opacity: 0.9;
+    }
+
+    .record-button:active {
+        opacity: 1;
+
+    }
+}
+
+@media (hover: none) {
+    .record-button:active {
+        opacity: 1;
+    }
 }
 
 .recording-container {
