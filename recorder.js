@@ -10,6 +10,10 @@ export class AudioRecorder {
         return this.audioCtx ? this.audioCtx.sampleRate : null;
     }
 
+    get samplesCollected() {
+        return this.audioBufferData ? this.audioBufferData.length : 0;
+    }
+
     constructor() {
         let startCallback = this.startRecording.bind(this);
         this.recordButton.addEventListener('mousedown', startCallback);
@@ -71,7 +75,9 @@ export class AudioRecorder {
         this.recording = false;
     }
 
-    flush() {
+    dump() {
+        let tmp = this.audioBufferData;
         this.audioBufferData = [];
+        return tmp;
     }
 }
