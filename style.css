@@ -113,7 +113,7 @@ p {
     }
 }
 
-@media only screen and (max-width: 768px) and (orientation: portrait) {
+/* @media only screen and (max-width: 768px) {
     .record-button {
         font-size: 6rem;
     }
@@ -134,4 +134,4 @@ p {
     .visualizer {
         height: 12rem;
     }
-}
+} */
