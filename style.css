@@ -112,26 +112,3 @@ p {
         flex-direction: column;
     }
 }
-
-/* @media only screen and (max-width: 768px) {
-    .record-button {
-        font-size: 6rem;
-    }
-
-    .h1 {
-        font-size: 2em;
-    }
-
-    p {
-        font-size: 1.8em;
-    }
-
-    .recording-indicator {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
-
-    .visualizer {
-        height: 12rem;
-    }
-} */
