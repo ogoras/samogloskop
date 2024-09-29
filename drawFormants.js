@@ -1,7 +1,7 @@
 let canvas = document.getElementsByClassName("formants")[0];
-let canvasCtx = canvas.getContext("2d");
-const WIDTH = canvas.width;
-const HEIGHT = canvas.height;
+let canvasCtx, width, height;
+onResize();
+
 let trail = [];
 let vowels = {
     a : { F1: 800, F2: 1300, color: "rgb(255, 0, 0)" },
@@ -13,8 +13,9 @@ let vowels = {
 }
 
 export function drawFormants(F1, F2) {
+    if (Math.abs(canvas.clientWidth - width) > 1 || Math.abs(canvas.clientHeight !== height) > 1) onResize();
     canvasCtx.fillStyle = "rgb(255, 240, 255)";
-    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+    canvasCtx.fillRect(0, 0, width, height);
     trail.push({ F1, F2 })
     if (trail.length > 20) {
         trail.shift();
@@ -55,5 +56,16 @@ function formantsToXY(formants) {
     F1 /= 2;
     F2 -= 400;
     F2 /= 4;
-    return { x: WIDTH - F2, y: F1 }
+    let x = 600 - F2;
+    let y = F1;
+    return { x: x / 600 * width, y: y / 600 * height };
+}
+
+function onResize() {
+    canvas.style.aspectRatio = "1/1";
+    width = canvas.clientWidth;
+    height = canvas.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
+    canvasCtx = canvas.getContext("2d");
 }

@@ -5,16 +5,22 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <div class="formants-container">
+      <canvas class="formants"></canvas>
+    </div>
     <div class="main-container">
       <h1 class="title">Samogłoskop</h1>
-      <div class="fl">
+      <div class="recording-container">
         <div class="record-button">🎙️</div>
         <div class="recording-indicator"></div>
+        <div class="record-press-me">
+          <h5><b>←</b></h5><p>Przytrzymaj mnie, żeby nagrywać</p>
+        </div>
       </div>
-      <canvas class="formants fl" width="600" height="600"></canvas>
       <canvas class="visualizer fl" width="800" height="100"></canvas>
     </div>
     <script src="https://unpkg.com/mathjs@13.1.1/lib/browser/math.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script> 
       var module = {};
     </script>

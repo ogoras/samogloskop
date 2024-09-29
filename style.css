@@ -1,3 +1,21 @@
+body {
+    max-height: 100vh;
+    max-width: 100vw;
+    height: calc(100vh - 4px);
+    width: calc(100vw - 4px);
+    margin: auto;
+    padding: 0;
+    display: flex;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+* {
+    box-sizing: border-box;
+}
+
 .title {
     font-family: 'Helvetica', sans-serif;
     letter-spacing: 0.05em;
@@ -7,8 +25,22 @@
     margin-right: auto;
 }
 
+p {
+    font-family: 'Helvetica', sans-serif;
+    font-size: 0.9em;
+    color: gray;
+}
+
+.record-press-me {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .main-container {
     margin: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .recording-indicator {
@@ -16,8 +48,8 @@
     height: 20px;
     background-color: #ff000000;
     border-radius: 50%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 5px;
+    margin-right: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -41,7 +73,45 @@
     opacity: 1;
 }
 
+.recording-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .fl {
     float: left;
     margin: 5px;
+}
+
+.formants {
+    height: 100%;
+    width: 100%;
+}
+
+.visualizer {
+    height: 100px;
+    width: 100%;
+}
+
+@media (orientation: landscape) {
+    .formants-container {
+        height: 100%;
+        aspect-ratio: 1 / 1;
+    }
+
+    body {
+        flex-direction: row;
+    }
+}
+
+@media (orientation: portrait) {
+    .formants-container {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+    }
+
+    body {
+        flex-direction: column;
+    }
 }

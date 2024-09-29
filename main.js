@@ -27,6 +27,11 @@ async function init() {
 }
 
 async function startRecording() {
+    let hintElements = document.getElementsByClassName("record-press-me");
+    for (let i = 0; i < hintElements.length; i++) {
+        hintElements[i].style.display = "none";
+    }
+
     if (recording) return;
     audioBufferData = [];
     if (!initialized) {
