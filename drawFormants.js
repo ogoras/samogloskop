@@ -3,14 +3,7 @@ let canvasCtx, width, height;
 onResize();
 
 let trail = [];
-let vowels = {
-    a : { F1: 800, F2: 1300, color: "rgb(255, 0, 0)" },
-    e : { F1: 660, F2: 1600, color: "rgb(250, 165, 0)" },
-    i : { F1: 300, F2: 2300, color: "rgb(0, 255, 0)" },
-    o : { F1: 580, F2: 900, color: "rgb(255, 0, 255)" },
-    u : { F1: 320, F2: 630, color: "rgb(0, 0, 255)"  },
-    y : { F1: 480, F2: 1750, color: "rgb(150, 75, 0)" }
-}
+
 
 export function drawFormants(F1, F2) {
     if (Math.abs(canvas.clientWidth - width) > 1 || Math.abs(canvas.clientHeight !== height) > 1) onResize();
@@ -48,17 +41,6 @@ export function drawFormants(F1, F2) {
         let { x, y } = formantsToXY(trail[i]);
         canvasCtx.fillRect(x, y, weight * 5, weight * 5);
     }
-}
-
-function formantsToXY(formants) {
-    let F1 = formants.F1;
-    let F2 = formants.F2;
-    F1 /= 2;
-    F2 -= 400;
-    F2 /= 4;
-    let x = 600 - F2;
-    let y = F1;
-    return { x: x / 600 * width, y: y / 600 * height };
 }
 
 function onResize() {
