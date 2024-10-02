@@ -13,7 +13,15 @@ export class ScatterPlot {
         g: null
     };
 
-    constructor(elementId) {
+    constructor(elementId, flip = false) {
+        let [flipX, flipY] = [ this.flipX, this.flipY ] = parseFlipParameter(flip);
+        this.margin = {
+            top: flipY ? 30 : 10,
+            right: flipX ? 60 : 30,
+            bottom: flipY ? 10 : 30,
+            left: flipX ? 30 : 60
+        }
+        
         this.parent = document.getElementById(elementId);
         this.width = this.parent.clientWidth - this.margin.left - this.margin.right;
         this.height = this.parent.clientHeight - this.margin.top - this.margin.bottom;
@@ -26,16 +34,17 @@ export class ScatterPlot {
 
         this.x.scale = d3.scaleLinear()
             .domain(this.x.domain)
-            .range([0, this.width]);
+            .range(flipX ? [this.width, 0] : [0, this.width]);
         this.x.g = this.svg.append("g")
-            .attr("transform", `translate(0, ${this.height})`)
-            .call(d3.axisBottom(this.x.scale));
+            .attr("transform", `translate(0, ${flipY ? 0 : this.height})`)
+            .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
         
         this.y.scale = d3.scaleLinear()
             .domain(this.y.domain)
-            .range([this.height, 0]);
+            .range(flipY ? [0, this.height] : [this.height, 0]);
         this.y.g = this.svg.append("g")
-            .call(d3.axisLeft(this.y.scale));
+            .attr("transform", `translate(${flipX ? this.width : 0}, 0)`)
+            .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
 
         this.g = this.svg.append("g");
     }
@@ -98,11 +107,15 @@ export class ScatterPlot {
             changed = true;
         }
         if (changed) {
+            let [flipX, flipY] = [ this.flipX, this.flipY ];
             let axisScale = axis.scale;
             axisScale.domain(domain);
             axis.g.transition()
                 .duration(animationMs)
-                .call(axisId ? d3.axisLeft(axisScale) : d3.axisBottom(axisScale));
+                .call(axisId ? 
+                    (flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale)) :
+                    (flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale))
+                );
 
             for (let series of this.series) {
                 for (let point of series.points) {
@@ -117,4 +130,24 @@ export class ScatterPlot {
     feed(point) {
         this.addPoint(point, this.series.length - 1);
     }
+}
+
+function parseFlipParameter(flip) {
+    let flipX, flipY;
+    if (Array.isArray(flip)) {
+        if (flip.length == 0) flipX = flipY = false;
+        else if (flip.length == 1) flipX = flipY = !!flip[0];
+        else {
+            flipX = !!flip[0];
+            flipY = !!flip[1];
+        }
+    }
+    else if (flip.x !== undefined && flip.y !== undefined) {
+        flipX = !!flip.x;
+        flipY = !!flip.y;
+    }
+    else {
+        flipX = flipY = !!flip;
+    }
+    return [ flipX, flipY ];
 }
