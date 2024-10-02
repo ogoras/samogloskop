@@ -11,7 +11,7 @@ let vowels = {
 }
 
 export class FormantVisualizer {
-    scatterPlot = new ScatterPlot("formants", true);
+    scatterPlot = new ScatterPlot("formants", true, "Hz");
 
     constructor(sampleRate) {
         this.sampleRate = sampleRate;

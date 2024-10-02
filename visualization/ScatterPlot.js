@@ -12,8 +12,11 @@ export class ScatterPlot {
         scale: null,
         g: null
     };
+    svg = null;
+    g = null;
+    plotArea = null;
 
-    constructor(elementId, flip = false) {
+    constructor(elementId, flip = false, unit = null) {
         let [flipX, flipY] = [ this.flipX, this.flipY ] = parseFlipParameter(flip);
         this.margin = {
             top: flipY ? 30 : 10,
@@ -21,32 +24,57 @@ export class ScatterPlot {
             bottom: flipY ? 10 : 30,
             left: flipX ? 30 : 60
         }
+        this.unit = unit ? {
+            element: null,
+            text: unit
+        } : null;
         
         this.parent = document.getElementById(elementId);
+        this.drawAxes();
+
+        window.addEventListener("resize", () => {
+            this.svg.attr("display", "none");
+            this.drawAxes();
+            this.svg.attr("display", "block");
+            this.rescalePoints(0, 0);
+            this.rescalePoints(0, 1);
+        });
+    }
+
+    drawAxes() {
+        let [flipX, flipY] = [ this.flipX, this.flipY ];
         this.width = this.parent.clientWidth - this.margin.left - this.margin.right;
         this.height = this.parent.clientHeight - this.margin.top - this.margin.bottom;
-        this.svg = d3.select(`#${elementId}`)
-            .append("svg")
-            .attr("width", this.parent.clientWidth)
-            .attr("height", this.parent.clientHeight)
-            .append("g")
-            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
-
-        this.x.scale = d3.scaleLinear()
-            .domain(this.x.domain)
-            .range(flipX ? [this.width, 0] : [0, this.width]);
-        this.x.g = this.svg.append("g")
-            .attr("transform", `translate(0, ${flipY ? 0 : this.height})`)
-            .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
         
-        this.y.scale = d3.scaleLinear()
-            .domain(this.y.domain)
-            .range(flipY ? [0, this.height] : [this.height, 0]);
-        this.y.g = this.svg.append("g")
-            .attr("transform", `translate(${flipX ? this.width : 0}, 0)`)
+        if (!this.svg) this.svg = d3.select(`#${this.parent.id}`).append("svg");
+        this.svg.attr("width", this.parent.clientWidth)
+            .attr("height", this.parent.clientHeight)
+
+        if (!this.g) this.g = this.svg.append("g");
+        this.g.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
+
+        if (!this.x.scale) this.x.scale = d3.scaleLinear().domain(this.x.domain)
+        this.x.scale.range(flipX ? [this.width, 0] : [0, this.width]);
+
+        if (!this.x.g) this.x.g = this.g.append("g")
+        this.x.g.attr("transform", `translate(0, ${flipY ? 0 : this.height})`)
+            .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
+
+        if (!this.y.scale) this.y.scale = d3.scaleLinear().domain(this.y.domain)
+        this.y.scale.range(flipY ? [0, this.height] : [this.height, 0]);
+
+        if (!this.y.g) this.y.g = this.g.append("g");
+        this.y.g.attr("transform", `translate(${flipX ? this.width : 0}, 0)`)
             .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
 
-        this.g = this.svg.append("g");
+        if (!this.plotArea) this.plotArea = this.g.append("g");
+
+        if (!this.unit) return;
+
+        if (!this.unit.element) this.unit.element = this.g.append("text")
+            .attr("font-family", "Helvetica, sans-serif")
+            .text(this.unit.text);
+        this.unit.element.attr("transform", `translate(${flipX ? this.width + 5 : -5}, ${flipY ? -5 : this.height + 5})`)
     }
 
     addSeries(series, growSize = false, capacity = undefined) {
@@ -67,14 +95,14 @@ export class ScatterPlot {
         this.domainDefined = true;
         let series = this.series[seriesId];
         series.points.push({
-            element: this.g.append("circle")
+            element: this.plotArea.append("circle")
                 .attr("cx", this.x.scale(point.x))
                 .attr("cy", this.y.scale(point.y))
                 .attr("r", point.size ? point.size : 5)
                 .attr("fill", point.color ? point.color : "black"),
             x: point.x,
             y: point.y,
-            label: point.label ? this.g.append("text")
+            label: point.label ? this.plotArea.append("text")
                 .attr("font-weight", "bold")
                 .attr("font-family", "Helvetica, sans-serif")
                 .text(point.label)
@@ -125,16 +153,22 @@ export class ScatterPlot {
                     (flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale))
                 );
 
-            for (let series of this.series) {
-                for (let point of series.points) {
-                    point.element.transition()
+            this.rescalePoints(animationMs, axisId);
+        }
+    }
+
+    rescalePoints(animationMs, axisId) {
+        let axis = axisId ? this.y : this.x;
+        let axisScale = axis.scale;
+        for (let series of this.series) {
+            for (let point of series.points) {
+                point.element.transition()
+                    .duration(animationMs)
+                    .attr(axisId ? "cy" : "cx", axisScale(axisId ? point.y : point.x));
+                if (point.label) {
+                    point.label.transition()
                         .duration(animationMs)
-                        .attr(axisId ? "cy" : "cx", axisScale(axisId ? point.y : point.x));
-                    if (point.label) {
-                        point.label.transition()
-                            .duration(animationMs)
-                            .attr(axisId ? "y" : "x", axisScale(axisId ? point.y : point.x) - (axisId ? 10 : 0));
-                    }
+                        .attr(axisId ? "y" : "x", axisScale(axisId ? point.y : point.x) - (axisId ? 10 : 0));
                 }
             }
         }
