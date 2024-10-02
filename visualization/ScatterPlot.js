@@ -44,7 +44,8 @@ export class ScatterPlot {
         let seriesId = this.series.length;
         this.series.push({
             points: [],
-            growSize
+            growSize,
+            capacity
         })
         for (let point of series) {
             this.addPoint(point, seriesId, 0);
@@ -55,7 +56,8 @@ export class ScatterPlot {
         this.resizeIfNeeded(0, point.x, animationMs);
         this.resizeIfNeeded(1, point.y, animationMs);
         this.domainDefined = true;
-        this.series[seriesId].points.push({
+        let series = this.series[seriesId];
+        series.points.push({
             element: this.g.append("circle")
                 .attr("cx", this.x.scale(point.x))
                 .attr("cy", this.y.scale(point.y))
@@ -64,6 +66,17 @@ export class ScatterPlot {
             x: point.x,
             y: point.y
         });
+        if (series.capacity && series.points.length > series.capacity) {
+            let removed = series.points.shift();
+            removed.element.remove();
+        }
+        let pointCount = series.points.length;
+        if (series.growSize) {
+            for (let i = 0; i < pointCount; i++) {
+                let point = series.points[i];
+                point.element.attr("r", (i + 1) / pointCount * 5);
+            }
+        }
     }
 
     resizeIfNeeded(axisId, value, animationMs = 200) {
