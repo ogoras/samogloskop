@@ -73,8 +73,16 @@ export class ScatterPlot {
                 .attr("r", point.size ? point.size : 5)
                 .attr("fill", point.color ? point.color : "black"),
             x: point.x,
-            y: point.y
+            y: point.y,
+            label: point.label ? this.g.append("text")
+                .attr("font-weight", "bold")
+                .attr("font-family", "Helvetica, sans-serif")
+                .text(point.label)
+                .attr("x", this.x.scale(point.x))
+                .attr("y", this.y.scale(point.y) - 10)
+                .attr("fill", point.color ? point.color : "black") : null,
         });
+        
         if (series.capacity && series.points.length > series.capacity) {
             let removed = series.points.shift();
             removed.element.remove();
@@ -94,10 +102,10 @@ export class ScatterPlot {
         let changed = false;
         if (this.domainDefined) {
             if (value < domain[0]) {
-                domain[0] = value;
+                domain[0] = value - 0.1 * (domain[1] - domain[0]);
                 changed = true;
             } else if (value > domain[1]) {
-                domain[1] = value;
+                domain[1] = value + 0.1 * (domain[1] - domain[0]);
                 changed = true;
             }
         }
@@ -122,6 +130,11 @@ export class ScatterPlot {
                     point.element.transition()
                         .duration(animationMs)
                         .attr(axisId ? "cy" : "cx", axisScale(axisId ? point.y : point.x));
+                    if (point.label) {
+                        point.label.transition()
+                            .duration(animationMs)
+                            .attr(axisId ? "y" : "x", axisScale(axisId ? point.y : point.x) - (axisId ? 10 : 0));
+                    }
                 }
             }
         }
