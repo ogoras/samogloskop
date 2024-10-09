@@ -62,7 +62,6 @@ export class AudioRecorder {
             await this.init();
             this.initialized = true;
         }
-        // Step 7: Connect the source to the AudioWorkletNode and the node to the destination
         this.source.connect(this.recorderNode);
         this.recordingIndicator.style.backgroundColor = 'red';
         this.recording = true;

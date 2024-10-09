@@ -11,6 +11,7 @@ let vowels = {
 }
 
 export class FormantVisualizer {
+    samplesBuffer = [];
     scatterPlot = new ScatterPlot("formants", true, "Hz");
 
     constructor(sampleRate) {
@@ -42,7 +43,11 @@ export class FormantVisualizer {
     // }
 
     feed(samples) {
-        const formants = soundToFormant([...samples], this.sampleRate);
+        this.samplesBuffer.push(...samples);
+        if (this.samplesBuffer.length > this.sampleRate / 20) {
+            this.samplesBuffer.splice(0, this.samplesBuffer.length - this.sampleRate / 20);
+        }
+        const formants = soundToFormant([...this.samplesBuffer], this.sampleRate);
         for (let i = 0; i < formants.length; i++) {
             if (formants[i].formant.length >= 2) {
                 this.scatterPlot.feed({
