@@ -17,4 +17,8 @@ export class WaveformVisualizer {
     
         drawWaveform(this.dataArray, bufferLength);
     }
+
+    reset() {
+        this.dataArray.fill(0);
+    }
 }

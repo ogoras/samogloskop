@@ -1,5 +1,6 @@
 import { soundToFormant } from './sound_to_formant/formant.js';
 import { ScatterPlot } from './visualization/ScatterPlot.js';
+import { Buffer } from './util/Buffer.js';
 
 let vowels = {
     a : { F1: 800, F2: 1300, color: "rgb(255, 0, 0)" },
@@ -10,19 +11,21 @@ let vowels = {
     y : { F1: 480, F2: 1750, color: "rgb(150, 75, 0)" }
 }
 
+const formantCount = 20;
 export class FormantVisualizer {
-    samplesBuffer = [];
+    formantsBuffer = new Buffer(formantCount);
     scatterPlot = new ScatterPlot("formants", true, "Hz");
 
     constructor(sampleRate) {
         this.sampleRate = sampleRate;
+        this.samplesBuffer = new Buffer(this.sampleRate / 20);
         this.scatterPlot.addSeries(Object.entries(vowels).map(this.vowelToScatterPlotEntry.bind(this)));
-        this.scatterPlot.addSeries([], true, 20);
+        this.scatterPlot.addSeries([], true, formantCount);
+        this.scatterPlot.addSeries([]);
     }
 
     vowelToScatterPlotEntry(vowel) {
         let [key, value] = vowel;
-        // let { x, y } = this.formantsToXY(value);
         return {
             label: key,
             x : value.F2,
@@ -31,30 +34,46 @@ export class FormantVisualizer {
         };
     }
 
-    // formantsToXY(formants) {
-    //     let F1 = formants.F1;
-    //     let F2 = formants.F2;
-    //     F1 /= 2;
-    //     F2 -= 400;
-    //     F2 /= 4;
-    //     let x = 600 - F2;
-    //     let y = F1;
-    //     return { x: x / 600 * this.scatterPlot.width, y: y / 600 * this.scatterPlot.height };
-    // }
-
     feed(samples) {
-        this.samplesBuffer.push(...samples);
-        if (this.samplesBuffer.length > this.sampleRate / 20) {
-            this.samplesBuffer.splice(0, this.samplesBuffer.length - this.sampleRate / 20);
-        }
-        const formants = soundToFormant([...this.samplesBuffer], this.sampleRate);
+        this.samplesBuffer.pushMultiple(samples);
+        const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate);
         for (let i = 0; i < formants.length; i++) {
             if (formants[i].formant.length >= 2) {
-                this.scatterPlot.feed({
+                let formantsEntry = {
+                    x: formants[i].formant[1].frequency,
                     y: formants[i].formant[0].frequency,
-                    x: formants[i].formant[1].frequency
-                });
+                    color: "#00000044"
+                }
+                this.formantsBuffer.push(formantsEntry);
+                this.scatterPlot.feed(formantsEntry, -2);
             }
         }
+        if (formants.length > 0) this.updateScatterPlot();
+    }
+
+    updateScatterPlot() {
+        const ratio = 0.5;
+        let weightSum = 0;
+        let xSum = 0;
+        let ySum = 0;
+        let weight = 1;
+        for (let formants of this.formantsBuffer.buffer) {
+            xSum += formants.x * weight;
+            ySum += formants.y * weight;
+            weightSum += weight;
+            weight *= ratio;
+        }
+        this.scatterPlot.setSeriesSingle({
+            x: xSum / weightSum,
+            y: ySum / weightSum,
+            size: 10
+        }, -1, 50);
+    }
+
+    reset() {
+        this.samplesBuffer.clear();
+        this.formantsBuffer.clear();
+        this.scatterPlot.clearSeries(-1);
+        this.scatterPlot.clearSeries(-2);
     }
 }

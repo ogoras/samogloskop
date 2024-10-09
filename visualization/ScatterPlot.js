@@ -80,6 +80,7 @@ export class ScatterPlot {
     addSeries(series, growSize = false, capacity = undefined) {
         let seriesId = this.series.length;
         this.series.push({
+            g: this.plotArea.append("g"),
             points: [],
             growSize,
             capacity
@@ -90,20 +91,17 @@ export class ScatterPlot {
     }
 
     addPoint(point, seriesId, animationMs = 200) {
-        let xChanged = this.resizeDomain(0, point.x);
-        let yChanged = this.resizeDomain(1, point.y);
-        if (xChanged || yChanged) this.transition(xChanged, yChanged, animationMs);
-        this.domainDefined = true;
+        this.resizeIfNeeded(point, animationMs);
         let series = this.series[seriesId];
         series.points.push({
-            element: this.plotArea.append("circle")
+            element: series.g.append("circle")
                 .attr("cx", this.x.scale(point.x))
                 .attr("cy", this.y.scale(point.y))
                 .attr("r", point.size ? point.size : 5)
                 .attr("fill", point.color ? point.color : "black"),
             x: point.x,
             y: point.y,
-            label: point.label ? this.plotArea.append("text")
+            label: point.label ? series.g.append("text")
                 .attr("font-weight", "bold")
                 .attr("font-family", "Helvetica, sans-serif")
                 .text(point.label)
@@ -120,9 +118,29 @@ export class ScatterPlot {
         if (series.growSize) {
             for (let i = 0; i < pointCount; i++) {
                 let point = series.points[i];
-                point.element.attr("r", (i + 1) / pointCount * 5);
+                point.element.attr("r", (i + 1) / pointCount * 3);
             }
         }
+    }
+
+    setSeriesSingle(point, seriesId = this.series.length - 1, animationMs = 50) {
+        if (seriesId < 0) seriesId = this.series.length + seriesId;
+        this.resizeIfNeeded(point, animationMs);
+        let series = this.series[seriesId];
+        if (!series.points.length) return this.addPoint(point, seriesId, 0);
+        series.points[0].element.transition()
+            .duration(animationMs)
+            .attr("cx", this.x.scale(point.x))
+            .attr("cy", this.y.scale(point.y))
+            .attr("r", point.size ? point.size : 5)
+            .attr("fill", point.color ? point.color : "black");
+    }
+
+    resizeIfNeeded(point, animationMs = 200) {
+        let xChanged = this.resizeDomain(0, point.x);
+        let yChanged = this.resizeDomain(1, point.y);
+        if (xChanged || yChanged) this.transition(xChanged, yChanged, animationMs);
+        this.domainDefined = true;
     }
 
     resizeDomain(axisId, value) {
@@ -173,8 +191,19 @@ export class ScatterPlot {
         }
     }
 
-    feed(point) {
-        this.addPoint(point, this.series.length - 1);
+    feed(point, seriesId = this.series.length - 1) {
+        if (seriesId < 0) seriesId = this.series.length + seriesId;
+        this.addPoint(point, seriesId);
+    }
+
+    clearSeries(seriesId) {
+        if (seriesId < 0) seriesId = this.series.length + seriesId;
+        if (!this.series[seriesId]) return;
+        for (let point of this.series[seriesId].points) {
+            point.element.remove();
+            if (point.label) point.label.remove();
+        }
+        this.series[seriesId].points = [];
     }
 }
 

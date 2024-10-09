@@ -6,6 +6,10 @@ const audioRecorder = new AudioRecorder();
 await audioRecorder.init();
 const formantVisualizer = new FormantVisualizer(audioRecorder.sampleRate);
 const waveformVisualizer = new WaveformVisualizer();
+audioRecorder.onStart = () => {
+    formantVisualizer.reset();
+    waveformVisualizer.reset();
+};
 
 function draw() {
     if (audioRecorder.samplesCollected < WaveformVisualizer.bufferLength / 128) {

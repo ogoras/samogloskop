@@ -41,13 +41,7 @@ export class AudioRecorder {
             console.log("An error occured: " + error);
         }
         this.audioCtx = new AudioContext();
-        this.source = this.audioCtx.createMediaStreamSource(this.stream);
         await this.audioCtx.audioWorklet.addModule('recorder-worklet-processor.js');
-        this.recorderNode = new AudioWorkletNode(this.audioCtx, 'recorder-processor');
-        this.recorderNode.port.onmessage = (event) => {
-            const inputData = event.data;
-            this.audioBufferData.push(...inputData);
-        };
     }
 
     async startRecording() {
@@ -62,9 +56,16 @@ export class AudioRecorder {
             await this.init();
             this.initialized = true;
         }
+        this.source = this.audioCtx.createMediaStreamSource(this.stream);
+        this.recorderNode = new AudioWorkletNode(this.audioCtx, 'recorder-processor');
+        this.recorderNode.port.onmessage = (event) => {
+            const inputData = event.data;
+            this.audioBufferData.push(...inputData);
+        };
         this.source.connect(this.recorderNode);
         this.recordingIndicator.style.backgroundColor = 'red';
         this.recording = true;
+        this.onStart();
     }
 
     stopRecording() {
@@ -72,6 +73,7 @@ export class AudioRecorder {
         this.source.disconnect();
         this.recordingIndicator.style.backgroundColor = '#ff000000';
         this.recording = false;
+        this.onStop();
     }
 
     dump() {
@@ -79,4 +81,7 @@ export class AudioRecorder {
         this.audioBufferData = [];
         return tmp;
     }
+
+    onStop() {}
+    onStart() {}
 }
