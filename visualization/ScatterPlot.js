@@ -90,8 +90,9 @@ export class ScatterPlot {
     }
 
     addPoint(point, seriesId, animationMs = 200) {
-        this.resizeIfNeeded(0, point.x, animationMs);
-        this.resizeIfNeeded(1, point.y, animationMs);
+        let xChanged = this.resizeDomain(0, point.x);
+        let yChanged = this.resizeDomain(1, point.y);
+        if (xChanged || yChanged) this.transition(xChanged, yChanged, animationMs);
         this.domainDefined = true;
         let series = this.series[seriesId];
         series.points.push({
@@ -124,7 +125,7 @@ export class ScatterPlot {
         }
     }
 
-    resizeIfNeeded(axisId, value, animationMs = 200) {
+    resizeDomain(axisId, value) {
         let axis = axisId ? this.y : this.x;
         let domain = axis.domain;
         let changed = false;
@@ -143,33 +144,31 @@ export class ScatterPlot {
             changed = true;
         }
         if (changed) {
-            let [flipX, flipY] = [ this.flipX, this.flipY ];
             let axisScale = axis.scale;
             axisScale.domain(domain);
-            axis.g.transition()
-                .duration(animationMs)
-                .call(axisId ? 
-                    (flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale)) :
-                    (flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale))
-                );
-
-            this.rescalePoints(animationMs, axisId);
         }
+        return changed;
     }
 
-    rescalePoints(animationMs, axisId) {
-        let axis = axisId ? this.y : this.x;
-        let axisScale = axis.scale;
+    transition(xChanged, yChanged, animationMs) {
+        let [flipX, flipY] = [ this.flipX, this.flipY ];
+        let t = d3.transition().duration(animationMs);
+        if (xChanged) this.x.g.transition(t)
+                .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
+        if (yChanged) this.y.g.transition(t)
+                .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
+        this.rescalePoints(t);
+    }
+
+    rescalePoints(t) {
         for (let series of this.series) {
             for (let point of series.points) {
-                point.element.transition()
-                    .duration(animationMs)
-                    .attr(axisId ? "cy" : "cx", axisScale(axisId ? point.y : point.x));
-                if (point.label) {
-                    point.label.transition()
-                        .duration(animationMs)
-                        .attr(axisId ? "y" : "x", axisScale(axisId ? point.y : point.x) - (axisId ? 10 : 0));
-                }
+                point.element.transition(t)
+                    .attr("cx", this.x.scale(point.x))
+                    .attr("cy", this.y.scale(point.y));
+                if (point.label) point.label.transition(t)
+                        .attr("x", this.x.scale(point.x))
+                        .attr("y", this.y.scale(point.y) - 10);
             }
         }
     }
