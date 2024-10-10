@@ -43,6 +43,10 @@ p {
     flex-direction: column;
 }
 
+#formants-options {
+    text-align: right;
+}
+
 .recording-indicator {
     width: 1.3rem;
     height: 1.3rem;

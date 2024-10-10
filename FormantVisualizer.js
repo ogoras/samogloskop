@@ -15,10 +15,17 @@ const formantCount = 20;
 export class FormantVisualizer {
     formantsBuffer = new Buffer(formantCount);
     scatterPlot = new ScatterPlot("formants", true, "Hz");
+    parameters = {
+        dt: 0,
+        nFormants: 5,
+        maximumFrequency: 5000,
+        halfdt_window: 0.025,
+        preemphasisFrequency: 50
+    }
 
     constructor(sampleRate) {
         this.sampleRate = sampleRate;
-        this.samplesBuffer = new Buffer(this.sampleRate / 20);
+        this.samplesBuffer = new Buffer(this.sampleRate * this.parameters.halfdt_window * 2);
         this.scatterPlot.addSeries(Object.entries(vowels).map(this.vowelToScatterPlotEntry.bind(this)));
         this.scatterPlot.addSeries([], true, formantCount);
         this.scatterPlot.addSeries([]);
@@ -36,7 +43,7 @@ export class FormantVisualizer {
 
     feed(samples) {
         this.samplesBuffer.pushMultiple(samples);
-        const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate);
+        const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate, ...Object.values(this.parameters));
         for (let i = 0; i < formants.length; i++) {
             if (formants[i].formant.length >= 2) {
                 let formantsEntry = {
@@ -52,7 +59,7 @@ export class FormantVisualizer {
     }
 
     updateScatterPlot() {
-        const ratio = 0.5;
+        const ratio = 0.5        ;
         let weightSum = 0;
         let xSum = 0;
         let ySum = 0;
@@ -68,6 +75,13 @@ export class FormantVisualizer {
             y: ySum / weightSum,
             size: 10
         }, -1, 50);
+    }
+
+    updateParameter(parameter, value) {
+        this.parameters[parameter] = value;
+        if (parameter == "halfdt_window") {
+            this.samplesBuffer = new Buffer(this.sampleRate * value * 2);
+        }
     }
 
     reset() {
