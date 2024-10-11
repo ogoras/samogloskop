@@ -6,14 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <div class="formants-container" id="formants"></div>
+    <div class="formants-container" id="formants">
+      <div class="center">
+        <div class="stack">
+          <h2 class="center">Witaj! Na początek, w celu kalibracji, włącz mikrofon i nagraj 10 sekund ciszy lub dźwięków z otoczenia.</h2>
+          <p>Aplikacja może nie działać dobrze w miejscach, gdzie jest dużo hałasu.</p>
+        </div>
+      </div>
+    </div>
     <div class="main-container">
-      <h1 class="title">Samogłoskop</h1>
+      <h1>Samogłoskop</h1>
       <div class="recording-container">
         <div class="record-button">🎙️</div>
         <div class="recording-indicator"></div>
         <div class="record-press-me">
-          <h5><b>←</b></h5><p>Naciśnij przycisk, żeby włączyć nasłuchiwanie</p>
+          <h5><b>←</b></h5><p class="gray">Naciśnij przycisk, żeby włączyć nasłuchiwanie</p>
         </div>
       </div>
       <canvas class="visualizer fl" width="800" height="100"></canvas>

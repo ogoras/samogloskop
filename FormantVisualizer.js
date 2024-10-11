@@ -12,16 +12,58 @@ let vowels = {
 }
 
 const formantCount = 20;
+const statsStep = 0.1;    // 100 ms
+const silenceRequired = 10; // 10 s
+const STATES = {
+    NO_SAMPLES_YET: 0,
+    GATHERING_SILENCE: 1,
+    MEASURING_SPEECH: 2,
+    GATHERING_VOWELS: 3,
+    DONE: 4
+}
 export class FormantVisualizer {
     formantsBuffer = new Buffer(formantCount);
-    scatterPlot = new ScatterPlot("formants", true, "Hz");
+    state = STATES.NO_SAMPLES_YET;
+    time = 0;
+    div = document.getElementById("formants");
+    silenceStats = {
+        time: {
+            text: "Nagrano: ",
+            unit: "s",
+            stepsElapsed: 0,
+            roundFunction: (x) => x.toFixed(1),
+        },
+        min: {
+            text: "Minimum: ",
+            roundFunction: (x) => x.toExponential(2),
+            color: "rgb(80, 0, 80)"
+        },
+        max: {
+            text: "Maksimum: ",
+            roundFunction: (x) => x.toExponential(2),
+            color: "rgb(128, 0, 0)"
+        },
+        mean: {
+            text: "Średnia: ",
+            roundFunction: (x) => x.toExponential(2),
+            color: "rgb(104, 0, 40)"
+        },
+        range: {
+            text: "Różnica: ",
+            unit: "dB",
+            roundFunction: (x) => x.toFixed(2),
+            color: "rgb(0, 0, 180)"
+        }
+    }
+    silenceStatsBuffer = new Buffer(Math.ceil(20 / statsStep)) // each element gathers stats for statsStep seconds
+    //scatterPlot = new ScatterPlot("formants", true, "Hz");
 
     constructor(sampleRate) {
         this.sampleRate = sampleRate;
         this.samplesBuffer = new Buffer(this.sampleRate / 20);
-        this.scatterPlot.addSeries(Object.entries(vowels).map(this.vowelToScatterPlotEntry.bind(this)));
-        this.scatterPlot.addSeries([], true, formantCount);
-        this.scatterPlot.addSeries([]);
+        //this.scatterPlot.addSeries(Object.entries(vowels).map(this.vowelToScatterPlotEntry.bind(this)));
+        //this.scatterPlot.addSeries([], true, formantCount);
+        //this.scatterPlot.addSeries([]);
     }
 
     vowelToScatterPlotEntry(vowel) {
@@ -35,8 +77,93 @@ export class FormantVisualizer {
     }
 
     feed(samples) {
+        if (this.state === STATES.NO_SAMPLES_YET) {
+            this.state = STATES.GATHERING_SILENCE;
+            let divStack = this.div.querySelector(".center").querySelector(".stack");
+            let h2 = divStack.querySelector("h2");
+            h2.innerHTML = "Nagrywanie ciszy, nie odzywaj się...";
+            // remove the p element
+            divStack.querySelector("p").remove();
+            let progressBar = document.createElement("div");
+            progressBar.classList.add("progress-bar");
+            divStack.appendChild(progressBar);
+            let progress = document.createElement("div");
+            progress.classList.add("progress");
+            progressBar.appendChild(progress);
+            this.progress = progress;
+            // add multiple div.center elements to the stack
+            for (let key in this.silenceStats) {
+                let object = this.silenceStats[key];
+                let element = object.element = document.createElement("div");
+                element.classList.add("center");
+                divStack.appendChild(element);
+                let h3 = document.createElement("h3");
+                h3.innerHTML = object.text;
+                element.appendChild(h3);
+                element.appendChild(document.createElement("hr"));
+                let span = document.createElement("span");
+                if (object.color) span.style.color = object.color
+                element.appendChild(span);
+                object.span = span;
+                if (object.unit) {
+                    element.appendChild(document.createElement("hr"));
+                    let unit = document.createElement("span");
+                    if (object.color) unit.style.color = object.color
+                    unit.innerHTML = object.unit;
+                    element.appendChild(unit);
+                }
+            }
+        }
         this.samplesBuffer.pushMultiple(samples);
         const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate);
+        // if no formants were found, probably the samples are trash, so we should ignore them
+        if (formants.length === 0) return;
+        this.time += samples.length / this.sampleRate;
+        switch (this.state) {
+            case STATES.GATHERING_SILENCE:
+                this.progress.style.width = 100 * this.time / silenceRequired + "%";
+                if (this.time >= silenceRequired) {
+                    this.progress.style.width = "100%"; // just in case
+                    this.state = STATES.MEASURING_SPEECH;
+                }
+                for (let formant of formants) {
+                    this.formantsBuffer.push({
+                        endTime: this.time,
+                        length: this.samplesBuffer.length,
+                        intensity: formant.intensity
+                    });
+                }
+                if (this.time < this.silenceStats.time.value + statsStep) return;
+                let min = Infinity;
+                let max = -Infinity;
+                let sum = 0;
+                for (let formant of this.formantsBuffer.buffer) {
+                    min = Math.min(min, formant.intensity);
+                    max = Math.max(max, formant.intensity);
+                    sum += formant.intensity;
+                }
+                let mean = sum / this.formantsBuffer.length;
+                this.silenceStatsBuffer.push({
+                    min, max, mean
+                });
+                this.updateSilenceStats();
+                this.formantsBuffer.clear();
+                return;
+            case STATES.MEASURING_SPEECH:
+                // TODO
+                return;
+            case STATES.GATHERING_VOWELS:
+                // TODO
+                return;
+            case STATES.DONE:
+                feedPlot(formants);
+                return;
+            default:
+                throw new Error("Unknown state: " + this.state);
+        }
+    }
+
+    feedPlot(formants) {
         for (let i = 0; i < formants.length; i++) {
             if (formants[i].formant.length >= 2) {
                 let formantsEntry = {
@@ -49,6 +176,27 @@ export class FormantVisualizer {
             }
         }
         if (formants.length > 0) this.updateScatterPlot();
+    }
+
+    updateSilenceStats() {
+        this.silenceStats.time.stepsElapsed++;
+        this.silenceStats.time.value = this.silenceStats.time.stepsElapsed * statsStep;
+        let min = Infinity;
+        let max = -Infinity;
+        let sum = 0;
+        for (let stats of this.silenceStatsBuffer.buffer) {
+            min = Math.min(min, stats.min);
+            max = Math.max(max, stats.max);
+            sum += stats.mean;
+        }
+        this.silenceStats.min.value = min;
+        this.silenceStats.max.value = max;
+        this.silenceStats.mean.value = sum / this.silenceStatsBuffer.length;
+        this.silenceStats.range.value = 10 * Math.log10(max / min);
+        for (let key in this.silenceStats) {
+            let object = this.silenceStats[key];
+            object.span.innerHTML = object.roundFunction(object.value);
+        }
     }
 
     updateScatterPlot() {
@@ -73,7 +221,9 @@ export class FormantVisualizer {
     reset() {
         this.samplesBuffer.clear();
         this.formantsBuffer.clear();
-        this.scatterPlot.clearSeries(-1);
-        this.scatterPlot.clearSeries(-2);
+        if (this.state === STATES.DONE) {
+            this.scatterPlot.clearSeries(-1);
+            this.scatterPlot.clearSeries(-2);
+        }
     }
 }
