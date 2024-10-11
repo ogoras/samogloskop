@@ -1,4 +1,4 @@
-import { AudioRecorder } from './recorder.js';
+import { AudioRecorder } from './Recorder.js';
 import { FormantVisualizer } from './FormantVisualizer.js';
 import { WaveformVisualizer } from './WaveformVisualizer.js';
 

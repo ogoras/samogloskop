@@ -63,6 +63,25 @@ p {
     border-style: solid;
     border-width: 0.15rem;
     border-color: rgba(0, 0, 0, 1);
+    position: relative; /* Required for the ::before pseudo-element to be positioned relative to the button */
+}
+
+.record-button::before {
+    content: '';
+    position: absolute;
+    top: 50%; /* Places the line across the middle */
+    left: 0;
+    width: 140%;
+    height: 0.15rem; /* Adjust thickness of the line */
+    background-color: black; /* Color of the strikethrough */
+    transform: translateX(-15%) rotate(-50deg); /* Centers the line vertically */
+    transform-origin: center;
+    opacity: 1; /* Initially visible */
+    transition: opacity 0.3s ease; /* Smooth transition */
+}
+
+.record-button.hide-strikethrough::before {
+    opacity: 0;
 }
 
 @media (hover: hover) {

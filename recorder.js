@@ -15,31 +15,23 @@ export class AudioRecorder {
     }
 
     constructor() {
-        let startCallback = this.startRecording.bind(this);
-        this.recordButton.addEventListener('mousedown', startCallback);
-        this.recordButton.addEventListener('touchstart', startCallback);
+        function toggleCallback() {
+            if (this.recording) {
+                this.stopRecording();
+            } else {
+                this.startRecording();
+            }
+        } 
+        this.recordButton.addEventListener('mousedown', toggleCallback.bind(this));
+        this.recordButton.addEventListener('touchstart', toggleCallback.bind(this));
         addEventListener('keydown', (event) => {
             if (event.code === 'Space') {
-                startCallback();
-            }
-        });
-        let stopCallback = this.stopRecording.bind(this);
-        this.recordButton.addEventListener('mouseup', stopCallback);
-        this.recordButton.addEventListener('touchend', stopCallback);
-        addEventListener('keyup', (event) => {
-            if (event.code === 'Space') {
-                stopCallback();
+                toggleCallback.bind(this)();
             }
         });
     }
 
     async init() {
-        try {
-            this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        }
-        catch (error) {
-            console.log("An error occured: " + error);
-        }
         this.audioCtx = new AudioContext();
         await this.audioCtx.audioWorklet.addModule('recorder-worklet-processor.js');
     }
@@ -49,9 +41,18 @@ export class AudioRecorder {
         for (let i = 0; i < hintElements.length; i++) {
             hintElements[i].style.display = "none";
         }
+        document.querySelector('.record-button').classList.add('hide-strikethrough');
 
         if (this.recording) return;
         this.audioBufferData = [];
+
+        try {
+            this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
+        catch (error) {
+            console.log("An error occured: " + error);
+        }
+
         if (!this.initialized) {
             await this.init();
             this.initialized = true;
@@ -69,8 +70,11 @@ export class AudioRecorder {
     }
 
     stopRecording() {
+        document.querySelector('.record-button').classList.remove('hide-strikethrough');
         if (!this.recording) return;
         this.source.disconnect();
+        this.recorderNode.disconnect();
+        this.stream.getTracks().forEach(track => track.stop());
         this.recordingIndicator.style.backgroundColor = '#ff000000';
         this.recording = false;
         this.onStop();
