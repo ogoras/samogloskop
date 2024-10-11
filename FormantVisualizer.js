@@ -35,7 +35,7 @@ export class FormantVisualizer {
         },
         min: {
             text: "Minimum: ",
-            roundFunction: (x) => x.toExponential(2),
+            roundFunction: (x) => x ? x.toExponential(2) : "0",
             color: "rgb(80, 0, 80)"
         },
         max: {
@@ -49,7 +49,7 @@ export class FormantVisualizer {
             color: "rgb(104, 0, 40)"
         },
         range: {
-            text: "Różnica: ",
+            text: "Rozpiętość: ",
             unit: "dB",
             roundFunction: (x) => x.toFixed(2),
             color: "rgb(0, 0, 180)"
@@ -116,8 +116,6 @@ export class FormantVisualizer {
         }
         this.samplesBuffer.pushMultiple(samples);
         const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate);
-        // if no formants were found, probably the samples are trash, so we should ignore them
-        if (formants.length === 0) return;
         this.time += samples.length / this.sampleRate;
         switch (this.state) {
             case STATES.GATHERING_SILENCE:
@@ -143,6 +141,26 @@ export class FormantVisualizer {
                     sum += formant.intensity;
                 }
                 let mean = sum / this.formantsBuffer.length;
+                if (min === Infinity) {
+                    // calculate based on samples
+                    let zeroReached = false;
+                    min = this.samplesBuffer.buffer.reduce((acc, val) => {
+                        if (val) return Math.min(acc, val * val)
+                        else {
+                            zeroReached = true;
+                            return acc;
+                        }
+                    }, Infinity);
+                    if (min === Infinity && zeroReached) {
+                        min = 0;
+                        max = 0;
+                        mean = 0;
+                    }
+                    else {
+                        max = this.samplesBuffer.buffer.reduce((acc, val) => Math.max(acc, val * val), -Infinity);
+                        mean = this.samplesBuffer.buffer.reduce((acc, val) => acc + val * val, 0) / this.samplesBuffer.length;
+                    }
+                }
                 this.silenceStatsBuffer.push({
                     min, max, mean
                 });
@@ -184,14 +202,19 @@ export class FormantVisualizer {
         let min = Infinity;
         let max = -Infinity;
         let sum = 0;
+        let count = 0;
+        let zeroReached = false;
         for (let stats of this.silenceStatsBuffer.buffer) {
-            min = Math.min(min, stats.min);
+            if (stats.min === Infinity) continue;
+            if (stats.min) min = Math.min(min, stats.min)
+            else zeroReached = true;
             max = Math.max(max, stats.max);
             sum += stats.mean;
+            count++;
         }
-        this.silenceStats.min.value = min;
+        this.silenceStats.min.value = zeroReached ? 0 : min;
         this.silenceStats.max.value = max;
-        this.silenceStats.mean.value = sum / this.silenceStatsBuffer.length;
+        this.silenceStats.mean.value = sum / count;
         this.silenceStats.range.value = 10 * Math.log10(max / min);
         for (let key in this.silenceStats) {
             let object = this.silenceStats[key];
