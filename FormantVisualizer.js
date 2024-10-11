@@ -80,8 +80,8 @@ export class FormantVisualizer {
         if (this.state === STATES.NO_SAMPLES_YET) {
             this.state = STATES.GATHERING_SILENCE;
             let divStack = this.div.querySelector(".center").querySelector(".stack");
-            let h2 = divStack.querySelector("h2");
-            h2.innerHTML = "Nagrywanie ciszy, nie odzywaj się...";
+            this.h2 = divStack.querySelector("h2");
+            this.recordingStarted();
             // remove the p element
             divStack.querySelector("p").remove();
             let progressBar = document.createElement("div");
@@ -248,5 +248,14 @@ export class FormantVisualizer {
             this.scatterPlot.clearSeries(-1);
             this.scatterPlot.clearSeries(-2);
         }
+    }
+
+    recordingStarted() {
+        this.reset();
+        if (this.state === STATES.GATHERING_SILENCE && this.h2) this.h2.innerHTML = "Nagrywanie ciszy, nie odzywaj się...";
+    }
+
+    recordingStopped() {
+        if (this.state === STATES.GATHERING_SILENCE && this.h2) this.h2.innerHTML = "Nagrywanie ciszy wstrzymane.";
     }
 }
