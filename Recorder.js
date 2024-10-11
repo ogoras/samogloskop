@@ -16,7 +16,6 @@ export class AudioRecorder {
 
     constructor() {
         function toggleCallback() {
-            console.log("toggleCallback");
             if (this.recording) {
                 this.stopRecording();
             } else {
