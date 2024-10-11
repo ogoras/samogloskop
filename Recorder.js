@@ -16,6 +16,7 @@ export class AudioRecorder {
 
     constructor() {
         function toggleCallback() {
+            console.log("toggleCallback");
             if (this.recording) {
                 this.stopRecording();
             } else {
@@ -23,7 +24,6 @@ export class AudioRecorder {
             }
         } 
         this.recordButton.addEventListener('mousedown', toggleCallback.bind(this));
-        this.recordButton.addEventListener('touchstart', toggleCallback.bind(this));
         addEventListener('keydown', (event) => {
             if (event.code === 'Space') {
                 toggleCallback.bind(this)();
