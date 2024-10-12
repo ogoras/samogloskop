@@ -9,6 +9,6 @@ export let tonguetwisters = [
     "Ząb, zupa zębowa, dąb, zupa dębowa",
     "To cóż, że ze Szwecji",
     "Konstantynopolitańczykowianeczkówna",
-    "Leży Jerzy na wieży i nie wierzy, że w tej wieży jest gniazdo jeży",
+    "Leży Jerzy na wieży i nie wierzy, że w tej wieży leży gniazdo nietoperzy",
     "Krtań krztusiła krztyną rtęci"
 ];

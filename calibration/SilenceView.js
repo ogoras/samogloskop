@@ -1,4 +1,6 @@
-export class SilenceView {
+import { StatsView } from "./StatsView.js";
+
+export class SilenceView extends StatsView {
     silenceStats = {
         time: {
             text: "Nagrano: ",
@@ -31,9 +33,10 @@ export class SilenceView {
     }
 
     constructor(div, timeRequired) {
+        super();
         this.div = div;
         this.timeRequired = timeRequired;
-        let divStack = div.querySelector(".center").querySelector(".stack");
+        let divStack = this.divStack = div.querySelector(".center").querySelector(".stack");
         this.h2 = divStack.querySelector("h2");
         this.recordingStarted();
         // remove the p element
@@ -44,34 +47,7 @@ export class SilenceView {
         let progress = this.progress = document.createElement("div");
         progress.classList.add("progress");
         progressBar.appendChild(progress);
-        // add multiple div.center elements to the stack
-        for (let key in this.silenceStats) {
-            let object = this.silenceStats[key];
-            let element = object.element = document.createElement("div");
-            element.classList.add("center");
-            divStack.appendChild(element);
-            let h3 = document.createElement("h3");
-            h3.innerHTML = object.text;
-            element.appendChild(h3);
-            element.appendChild(document.createElement("hr"));
-            let span = document.createElement("span");
-            if (object.color) span.style.color = object.color
-            element.appendChild(span);
-            object.span = span;
-            if (object.unit) {
-                element.appendChild(document.createElement("hr"));
-                let unit = document.createElement("span");
-                if (object.color) unit.style.color = object.color
-                unit.innerHTML = object.unit;
-                element.appendChild(unit);
-            }
-        }
-    }
-
-    updateProgress(timeElapsed) {
-        this.progress.style.width = timeElapsed >= this.timeRequired 
-            ? "100%" 
-            : (timeElapsed / this.timeRequired * 100) + "%";
+        this.addStatsElements();
     }
 
     recordingStarted() {
@@ -80,17 +56,5 @@ export class SilenceView {
 
     recordingStopped() {
         this.h2.innerHTML = "Nagrywanie ciszy wstrzymane.";
-    }
-
-    update(intenistyStats) {
-        this.silenceStats.time.value = intenistyStats.time;
-        this.silenceStats.min.value = intenistyStats.zeroReached ? 0 : intenistyStats.min;
-        this.silenceStats.max.value = intenistyStats.max;
-        this.silenceStats.mean.value = intenistyStats.mean;
-        this.silenceStats.range.value = intenistyStats.range;
-        for (let key in this.silenceStats) {
-            let object = this.silenceStats[key];
-            object.span.innerHTML = object.roundFunction(object.value);
-        }
     }
 }
