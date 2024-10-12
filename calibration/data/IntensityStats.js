@@ -1,4 +1,4 @@
-import { Buffer } from '../util/Buffer.js';
+import { Buffer } from '../../util/Buffer.js';
 
 export class IntensityStats {
     min = Infinity;
@@ -26,14 +26,19 @@ export class IntensityStats {
         return this.step - this.startStep;
     }
 
+    get silenceDuration() {
+        return this.buffer.getLastElements(this.stepsElapsed)
+            .reduce((acc, val) => this.isSilence(val) ? acc + this.stepDuration : 0, 0);
+    }
+
     constructor(timeRequired, statsStep) {
         this.timeRequired = timeRequired;
-        this.statsStep = statsStep;
+        this.stepDuration = statsStep;
         this.buffer = new Buffer(Math.ceil(2 * timeRequired / statsStep));
     }
 
     update(time, formants, samples) {
-        if (time < this.time + this.statsStep) return false;
+        if (time < this.time + this.stepDuration) return false;
         let min = Infinity;
         let max = -Infinity;
         let sum = 0;
@@ -68,7 +73,7 @@ export class IntensityStats {
         });
         // update global stats
         this.step++;
-        this.time = this.step * this.statsStep;
+        this.time = this.step * this.stepDuration;
         this.min = Infinity;
         this.max = -Infinity;
         sum = 0;
@@ -99,10 +104,14 @@ export class IntensityStats {
     detectSpeech() {
         let val = this.max > this.silenceStats.max;
         if (val) {
-            this.startTime = this.time;
-            this.startStep = this.step;
+            this.resetStart();
         }
         return val;
+    }
+
+    resetStart() {
+        this.startTime = this.time;
+        this.startStep = this.step;
     }
 
     isCalibrationFinished(time) {
@@ -121,4 +130,12 @@ export class IntensityStats {
                 return this.SNR;
         }
     }
+
+    isSilence(stats) {
+        return stats.mean < adjustdB(this.speechStats.max, -30);
+    }
+}
+
+function adjustdB(value, dB) {
+    return value * Math.pow(10, dB / 10);
 }

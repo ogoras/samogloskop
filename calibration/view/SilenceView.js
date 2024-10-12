@@ -1,4 +1,5 @@
 import { StatsView } from "./StatsView.js";
+import { ProgressBar } from "../../visualization/ProgressBar.js";
 
 export class SilenceView extends StatsView {
     silenceStats = {
@@ -41,12 +42,7 @@ export class SilenceView extends StatsView {
         this.recordingStarted();
         // remove the p element
         divStack.querySelector("p").remove();
-        let progressBar = this.progressBar = document.createElement("div");
-        progressBar.classList.add("progress-bar");
-        divStack.appendChild(progressBar);
-        let progress = this.progress = document.createElement("div");
-        progress.classList.add("progress");
-        progressBar.appendChild(progress);
+        this.progressBar = new ProgressBar(divStack);
         this.addStatsElements();
     }
 

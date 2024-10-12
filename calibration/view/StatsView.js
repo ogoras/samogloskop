@@ -28,12 +28,17 @@ export class StatsView extends FormantsView {
         }
     }
 
-    updateProgress(time) {
-        if (this.startTime === undefined) throw new Error("startTime is not set");
-        let timeElapsed = time - this.startTime;
-        this.progress.style.width = timeElapsed >= this.timeRequired 
-            ? "100%" 
-            : (timeElapsed / this.timeRequired * 100) + "%";
+    updateProgress(value, isTime = true) {
+        if (isTime) {
+            if (this.startTime === undefined) throw new Error("startTime is not set");
+            let timeElapsed = value - this.startTime;
+            this.progressBar.progress = timeElapsed >= this.timeRequired 
+                ? 100 
+                : timeElapsed / this.timeRequired * 100;
+        }
+        else {
+            this.progressBar.progress = value * 100;
+        }
     }
 
     update(intensityStats) {
