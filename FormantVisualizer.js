@@ -1,8 +1,10 @@
 import { soundToFormant } from './sound_to_formant/formant.js';
 import { SilenceView } from './calibration/SilenceView.js';
+import { MeasuringSpeechView } from './calibration/MeasuringSpeechView.js';
 import { IntensityStats } from './calibration/IntensityStats.js';
 import { ScatterPlot } from './visualization/ScatterPlot.js';
 import { Buffer } from './util/Buffer.js';
+import { GatheringVowelsView } from './calibration/GatheringVowelsView.js';
 
 let vowels = {
     a : { F1: 800, F2: 1300, color: "rgb(255, 0, 0)" },
@@ -15,7 +17,7 @@ let vowels = {
 
 const formantCount = 20;
 const statsStep = 0.1;    // 100 ms
-const silenceRequired = 10; // 10 s
+const calibrationTime = 10; // 10 s
 const STATES = {
     NO_SAMPLES_YET: 0,
     GATHERING_SILENCE: 1,
@@ -29,7 +31,7 @@ export class FormantVisualizer {
     state = STATES.NO_SAMPLES_YET;
     time = 0;
     div = document.getElementById("formants");
-    intensityStats = new IntensityStats(silenceRequired, statsStep);
+    intensityStats = new IntensityStats(calibrationTime, statsStep);
     //scatterPlot = new ScatterPlot("formants", true, "Hz");
 
     constructor(sampleRate) {
@@ -53,33 +55,52 @@ export class FormantVisualizer {
     feed(samples) {
         if (this.state === STATES.NO_SAMPLES_YET) {
             this.state = STATES.GATHERING_SILENCE;
-            this.view = new SilenceView(this.div, silenceRequired);
+            this.view = new SilenceView(this.div, calibrationTime);
         }
         this.samplesBuffer.pushMultiple(samples);
         const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate);
+        for (let formant of formants) {
+            this.formantsBuffer.push({
+                F1: formant.formant.length >= 1 ? formant.formant[0].frequency : null,
+                F2: formant.formant.length >= 2 ? formant.formant[1].frequency : null,
+                endTime: this.time,
+                length: this.samplesBuffer.length,
+                intensity: formant.intensity
+            });
+        }
         this.time += samples.length / this.sampleRate;
         switch (this.state) {
             case STATES.GATHERING_SILENCE:
                 this.view.updateProgress(this.time);
-                if (this.time >= silenceRequired) {
+                if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
+                    this.view.update(this.intensityStats);
+                    this.formantsBuffer.clear();
+                }
+                if (this.intensityStats.isCalibrationFinished(this.time)) {
                     this.state = STATES.WAITING_FOR_SPEECH;
+                    this.intensityStats.saveStats("silence");
+                    this.view = new MeasuringSpeechView(this.view);
                 }
-                for (let formant of formants) {
-                    this.formantsBuffer.push({
-                        endTime: this.time,
-                        length: this.samplesBuffer.length,
-                        intensity: formant.intensity
-                    });
-                }
-                if (!this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) return;
-                this.view.update(this.intensityStats);
-                this.formantsBuffer.clear();
                 return;
             case STATES.WAITING_FOR_SPEECH:
-                // TODO
+                if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer) 
+                    && this.intensityStats.detectSpeech()) {
+                    this.state = STATES.MEASURING_SPEECH;
+                    this.view.speechDetected = true;
+                    this.view.startTime = this.time;
+                }
                 return;
             case STATES.MEASURING_SPEECH:
-                // TODO
+                this.view.updateProgress(this.time);
+                if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
+                    this.view.update(this.intensityStats);
+                    this.formantsBuffer.clear();
+                }
+                if (this.intensityStats.isCalibrationFinished(this.time)) {
+                    this.state = STATES.GATHERING_VOWELS;
+                    this.intensityStats.saveStats("speech");
+                    this.view = new GatheringVowelsView(this.view);
+                }
                 return;
             case STATES.GATHERING_VOWELS:
                 // TODO

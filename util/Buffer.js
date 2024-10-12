@@ -11,7 +11,13 @@ export class Buffer {
     }
 
     pushMultiple(data) {
-        this.buffer.push(...data);
+        try {
+            this.buffer.push(...data);
+        } 
+        catch (err) {
+            if (!(err instanceof RangeError)) throw err;
+            for (let d of data) this.buffer.push(d);
+        }
         if (this.buffer.length > this.capacity) this.buffer.splice(0, this.buffer.length - this.capacity);
     }
 
@@ -25,5 +31,9 @@ export class Buffer {
 
     clear() {
         this.buffer = [];
+    }
+
+    getLastElements(n) {
+        return this.buffer.slice(-n);
     }
 }

@@ -31,19 +31,19 @@ export class SilenceView {
     }
 
     constructor(div, timeRequired) {
+        this.div = div;
         this.timeRequired = timeRequired;
         let divStack = div.querySelector(".center").querySelector(".stack");
         this.h2 = divStack.querySelector("h2");
         this.recordingStarted();
         // remove the p element
         divStack.querySelector("p").remove();
-        let progressBar = document.createElement("div");
+        let progressBar = this.progressBar = document.createElement("div");
         progressBar.classList.add("progress-bar");
         divStack.appendChild(progressBar);
-        let progress = document.createElement("div");
+        let progress = this.progress = document.createElement("div");
         progress.classList.add("progress");
         progressBar.appendChild(progress);
-        this.progress = progress;
         // add multiple div.center elements to the stack
         for (let key in this.silenceStats) {
             let object = this.silenceStats[key];
@@ -80,10 +80,6 @@ export class SilenceView {
 
     recordingStopped() {
         this.h2.innerHTML = "Nagrywanie ciszy wstrzymane.";
-    }
-
-    isNewStep(timeElapsed) {
-        return 
     }
 
     update(intenistyStats) {

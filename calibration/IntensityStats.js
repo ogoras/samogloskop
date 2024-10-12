@@ -4,12 +4,26 @@ export class IntensityStats {
     min = Infinity;
     max = -Infinity;
     mean = 0;
+    startTime = 0;
     time = 0;
-    stepsElapsed = 0;
+    startStep = 0;
+    step = 0;
     zeroReached = false;
 
     get range() {
         return 10 * Math.log10(this.max / this.min);
+    }
+
+    get SNR() {
+        return 10 * Math.log10(this.max / this.silenceStats.max);
+    }
+
+    get timeElapsed() {
+        return this.time - this.startTime;
+    }
+
+    get stepsElapsed() {
+        return this.step - this.startStep;
     }
 
     constructor(timeRequired, statsStep) {
@@ -53,14 +67,14 @@ export class IntensityStats {
             min, max, mean
         });
         // update global stats
-        this.stepsElapsed++;
-        this.time = this.stepsElapsed * this.statsStep;
+        this.step++;
+        this.time = this.step * this.statsStep;
         this.min = Infinity;
         this.max = -Infinity;
         sum = 0;
         let count = 0;
         this.zeroReached = false;
-        for (let stats of this.buffer.buffer) {
+        for (let stats of this.buffer.getLastElements(this.stepsElapsed)) {
             if (stats.min === Infinity) continue;
             if (stats.min) this.min = Math.min(this.min, stats.min)
             else this.zeroReached = true;
@@ -70,5 +84,41 @@ export class IntensityStats {
         }
         this.mean = sum / count;
         return true;
+    }
+
+    saveStats(name) {
+        this[`${name}Stats`] = {
+            min: this.min,
+            max: this.max,
+            mean: this.mean,
+            range: this.range,
+            zeroReached: this.zeroReached
+        };
+    }
+
+    detectSpeech() {
+        let val = this.max > this.silenceStats.max;
+        if (val) {
+            this.startTime = this.time;
+            this.startStep = this.step;
+        }
+        return val;
+    }
+
+    isCalibrationFinished(time) {
+        return time - this.startTime >= this.timeRequired;
+    }
+    
+    diff(index) {
+        switch(index) {
+            case 0:
+                return 10 * Math.log10(this.min / this.silenceStats.min);
+            case 1:
+                return 10 * Math.log10(this.max / this.silenceStats.max);
+            case 2:
+                return 10 * Math.log10(this.mean / this.silenceStats.mean);
+            default:
+                return this.SNR;
+        }
     }
 }
