@@ -87,9 +87,30 @@ h3 {
     margin: 0.3rem;
 }
 
+button {
+    /* sizeable padding, big text, and no edges */
+    padding: 1rem;
+    margin: 0.2rem;
+    font-size: 1rem;
+    border-style: none;
+    border-radius: 0.2rem;
+    opacity: 0.8;
+}
+
+#deny {
+    background-color: #ff0000;
+    color: white;
+}
+
+#accept {
+    background-color: #00aa00;
+    color: white;
+}
+
 .record-button {
     display: inline-block;
     margin: 0.3rem;
+    padding: 0;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none;
@@ -121,19 +142,19 @@ h3 {
 }
 
 @media (hover: hover) {
-    .record-button:hover {
+    button:hover {
         cursor: pointer;
         opacity: 0.9;
     }
 
-    .record-button:active {
+    .button:active {
         opacity: 1;
 
     }
 }
 
 @media (hover: none) {
-    .record-button:active {
+    button:active {
         opacity: 1;
     }
 }
