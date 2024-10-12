@@ -2,7 +2,6 @@ import { soundToFormant } from './sound_to_formant/formant.js';
 import { SilenceView } from './calibration/view/SilenceView.js';
 import { MeasuringSpeechView } from './calibration/view/MeasuringSpeechView.js';
 import { IntensityStats } from './calibration/data/IntensityStats.js';
-import { ScatterPlot } from './visualization/ScatterPlot.js';
 import { Buffer } from './util/Buffer.js';
 import { GatheringVowelsView } from './calibration/view/GatheringVowelsView.js';
 import { UserVowels } from './calibration/data/UserVowels.js';
@@ -116,15 +115,21 @@ export class FormantVisualizer {
                     if (this.intensityStats.silenceDuration >= silenceRequired) {
                         this.view.updateProgress(1, false);
                         this.state = STATES.WAITING_FOR_VOWELS;
-                        this.view = new GatheringVowelsView(this.view);
+                        this.view = new GatheringVowelsView(this.view, this.userVowels);
                     }
                 }
                 return;
             case STATES.WAITING_FOR_VOWELS:
-                // TODO
+                if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
+                    if (this.intensityStats.detectSpeech()) {
+                        this.state = STATES.GATHERING_VOWELS;
+                        this.view.speechDetected = true;
+                    }
+                }
                 return;
             case STATES.GATHERING_VOWELS:
-                // TODO
+                this.view.feed(this.formantsBuffer.buffer);
+                this.formantsBuffer.clear();
                 return;
             case STATES.DONE:
                 feedPlot(formants);

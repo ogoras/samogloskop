@@ -36,4 +36,8 @@ export class Buffer {
     getLastElements(n) {
         return this.buffer.slice(-n);
     }
+
+    getLastElement() {
+        return this.buffer[this.buffer.length - 1];
+    }
 }

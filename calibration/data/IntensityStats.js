@@ -102,6 +102,9 @@ export class IntensityStats {
     }
 
     detectSpeech() {
+        if (this.speechStats !== undefined) {
+            return !this.isSilence();
+        }
         let val = this.max > this.silenceStats.max;
         if (val) {
             this.resetStart();
@@ -131,7 +134,7 @@ export class IntensityStats {
         }
     }
 
-    isSilence(stats) {
+    isSilence(stats = this.buffer.getLastElement()) {
         return stats.mean < adjustdB(this.speechStats.max, -30);
     }
 }
