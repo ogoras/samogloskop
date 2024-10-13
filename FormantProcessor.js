@@ -118,6 +118,11 @@ export class FormantProcessor {
                 }
                 return ret;
             case STATES.GATHERING_VOWELS:
+                this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer);
+                if (!this.intensityStats.detectSpeech()) {
+                    this.formantsBuffer.clear();
+                    return ret;
+                }
                 ret.formants = this.formantsBuffer.buffer;
                 this.formantsBuffer.clear();
                 return ret;
