@@ -6,3 +6,8 @@ export const PRESET_NAMES = [
     "CHILD"
 ];
 export const PRESETS = arrToObj(PRESET_NAMES);
+export const PRESET_FREQUENCIES = [
+    5000,
+    5500,
+    8000
+]

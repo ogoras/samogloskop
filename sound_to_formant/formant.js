@@ -5,7 +5,7 @@ import { resample } from "./resample.js";
 import { Sound_preEmphasize_inplace } from "./preemphasize.js";
 import { burg } from "./burg.js";
 
-export function soundToFormant(samples, sampleRate, dt = 0, nFormants = 5, maximumFrequency = 5000, halfdt_window = 0.05, preemphasisFrequency = 50) {
+export function soundToFormant(samples, sampleRate, maximumFrequency = 5000, dt = 0, nFormants = 5, halfdt_window = 0.05, preemphasisFrequency = 50) {
     const safetyMargin = 50;  // set to 0 to keep all formants (expect trash values)
 
     const nyquist = sampleRate / 2;

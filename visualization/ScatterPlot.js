@@ -132,7 +132,7 @@ export class ScatterPlot {
             .duration(animationMs)
             .attr("cx", this.x.scale(point.x))
             .attr("cy", this.y.scale(point.y))
-            .attr("r", point.size ? point.size : 5)
+            .attr("r", point.size ? point.size : 3)
             .attr("fill", point.color ? point.color : "black");
     }
 

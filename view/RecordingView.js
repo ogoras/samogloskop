@@ -100,6 +100,8 @@ export class RecordingView extends View {
         if (formants) this.view.feed(formants);
         let formantsSmoothed = updates.formantsSmoothed;
         if (formantsSmoothed) this.view.feedSmoothed(formantsSmoothed);
+        let formantsSaved = updates.formantsSaved;
+        if (formantsSaved) this.view.saveFormants(formantsSaved);
 
         let progressTime = updates.progressTime;
         if (progressTime !== undefined  && this.view.updateProgress) this.view.updateProgress(progressTime);

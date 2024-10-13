@@ -3,7 +3,7 @@ import { IntensityStats } from './calibration/data/IntensityStats.js';
 import { Buffer } from './util/Buffer.js';
 import { UserVowels } from './calibration/data/UserVowels.js';
 import { STATES, STATE_NAMES } from './definitions/states.js';
-import { PRESETS, PRESET_NAMES } from './definitions/presets.js';
+import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from './definitions/presets.js';
 
 let vowels = {
     a : { F1: 800, F2: 1300, color: "rgb(255, 0, 0)" },
@@ -15,6 +15,7 @@ let vowels = {
 }
 
 export const formantCount = 20;
+const minimumSmoothingCount = 20;
 const statsStep = 0.1;    // 100 ms
 const calibrationTime = 10; // 10 s
 
@@ -59,7 +60,7 @@ export class FormantProcessor {
             ret.newState = this.state = STATES.GATHERING_SILENCE;
         }
         this.samplesBuffer.pushMultiple(samples);
-        const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate);
+        const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate, PRESET_FREQUENCIES[this.preset]);
         for (let formant of formants) {
             this.formantsBuffer.push({
                 F1: formant.formant.length >= 1 ? formant.formant[0].frequency : null,
@@ -111,6 +112,7 @@ export class FormantProcessor {
                     if (this.intensityStats.silenceDuration >= silenceRequired) {
                         ret.progress = 1;
                         ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
+                        this.smoothedFormantsBuffer = new Buffer(minimumSmoothingCount);
                     }
                 }
                 return ret;
@@ -118,6 +120,8 @@ export class FormantProcessor {
                 if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
                     if (this.intensityStats.detectSpeech()) {
                         ret.newState = this.state = STATES.GATHERING_VOWELS;
+                        this.formantsBuffer.clear();
+                        this.smoothedFormantsBuffer.clear();
                     }
                 }
                 return ret;
@@ -125,6 +129,7 @@ export class FormantProcessor {
                 this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer);
                 if (!this.intensityStats.detectSpeech()) {
                     this.formantsBuffer.clear();
+                    this.smoothedFormantsBuffer.clear();
                     return ret;
                 }
                 ret.formants = [];
@@ -139,6 +144,7 @@ export class FormantProcessor {
                     }
                 }
                 ret.formantsSmoothed = this.smoothedFormants;
+                ret.formantsSaved = this.formantsToSave;
                 return ret;
             case STATES.DONE:
                 feedPlot(formants);
@@ -149,7 +155,7 @@ export class FormantProcessor {
     }
 
     get smoothedFormants() {
-        if (this.formantsBuffer.length < 10) return undefined;
+        if (this.formantsBuffer.length < minimumSmoothingCount) return undefined;
         const ratio = 0.5;
         let weightSum = 0;
         let xSum = 0;
@@ -161,11 +167,13 @@ export class FormantProcessor {
             weightSum += weight;
             weight *= ratio;
         }
-        return ({
+        let smoothedFormants = {
             x: xSum / weightSum,
             y: ySum / weightSum,
             size: 10
-        });
+        };
+        this.formantsToSave = this.smoothedFormantsBuffer.push(smoothedFormants)
+        return smoothedFormants;
     }
 
     reset() {

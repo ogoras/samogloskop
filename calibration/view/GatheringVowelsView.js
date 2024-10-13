@@ -17,6 +17,7 @@ export class GatheringVowelsView extends FormantsView {
             this.div.removeChild(this.div.firstChild);
         }
         this.scatterPlot = new ScatterPlot("formants", true, "Hz");
+        this.scatterPlot.addSeries([]);
         this.scatterPlot.addSeries([], true, formantCount);
         this.scatterPlot.addSeries([]);
         this.recordingStarted();
@@ -51,6 +52,14 @@ export class GatheringVowelsView extends FormantsView {
         if (!this.#speechDetected) throw new Error("Given formants without speech detected");
         
         this.scatterPlot.setSeriesSingle(formants, -1, 50);
+    }
+
+    saveFormants(formants) {
+        if (!this.#speechDetected) throw new Error("Given formants without speech detected");
+
+        formants.color = "red";
+        formants.size = 5;
+        this.scatterPlot.feed(formants, -3);
     }
 
     recordingStarted() {

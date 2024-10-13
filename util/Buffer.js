@@ -7,7 +7,8 @@ export class Buffer {
 
     push(data) {
         this.buffer.push(data);
-        if (this.buffer.length > this.capacity) this.buffer.shift();
+        if (this.buffer.length > this.capacity) return this.buffer.shift();
+        else return null;
     }
 
     pushMultiple(data) {
