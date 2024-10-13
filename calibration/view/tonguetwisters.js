@@ -10,5 +10,7 @@ export let tonguetwisters = [
     "To cóż, że ze Szwecji",
     "Konstantynopolitańczykowianeczkówna",
     "Leży Jerzy na wieży i nie wierzy, że w tej wieży leży gniazdo nietoperzy",
-    "Krtań krztusiła krztyną rtęci"
+    "Krtań krztusiła krztyną rtęci",
+    "Wlazł kotek na płotek i mruga, ładna to piosenka niedługa",
+    "Niedługa, niekrótka, lecz w sam raz, zaśpiewaj koteczku, jeszcze raz",
 ];

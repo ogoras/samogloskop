@@ -1,6 +1,8 @@
 import { tonguetwisters } from "./tonguetwisters.js";
 import { choose } from "../../util/choose.js";
 import { StatsView } from "./StatsView.js";
+import { STATE_NAMES, STATES } from "../../definitions/states.js";
+import { ProgressBar } from "../../visualization/ProgressBar.js";
 
 export class MeasuringSpeechView extends StatsView {
     #speechDetected = false;
@@ -12,33 +14,46 @@ export class MeasuringSpeechView extends StatsView {
         this.resetStatsElements();
     }
 
-    constructor(view, formantProcessor) {
+    constructor(arg, formantProcessor, state) {
         super();
-        this.silenceStats.min.diff = 0;
-        this.silenceStats.max.diff = 0;
-        this.silenceStats.mean.diff = 0;
-        this.silenceStats.time.text = "Nagrano głosu: ";
+        if (state === undefined) {
+            let view = arg;
+            this.silenceStats.min.diff = 0;
+            this.silenceStats.max.diff = 0;
+            this.silenceStats.mean.diff = 0;
+            this.silenceStats.time.text = "Nagrano głosu: ";
 
-        this.timeRequired = view.timeRequired;
+            this.timeRequired = view.timeRequired;
 
-        this.div = view.div;
-        let divStack = this.divStack = view.divStack;
-        this.h2 = view.h2;
-        let progressBar = this.progressBar = view.progressBar;
-        progressBar.color = "lightblue";
-        progressBar.reset();
-        this.h2.innerHTML = "Nagranie ciszy zakończone. Teraz mów cokolwiek, głośno i wyraźnie, do mikrofonu przez 10 sekund..."
-        // add a p element to the divStack between h2 and progressBar
-        let p = document.createElement("p");
-        p.innerHTML = "<b>Jeśli nie wiesz, co powiedzieć, spróbuj tych łamańców językowych:</b>";
-        divStack.insertBefore(p, this.progressBar.element);
-        // add two random tongue twisters after the p element
-        let choices = choose(tonguetwisters, 2);
-        for (let choice of choices) {
+            this.div = view.div;
+            let divStack = this.divStack = view.divStack;
+            this.h2 = view.h2;
+            let progressBar = this.progressBar = view.progressBar;
+            progressBar.color = "lightblue";
+            progressBar.reset();
+            this.h2.innerHTML = "Nagranie ciszy zakończone. Teraz mów cokolwiek, głośno i wyraźnie, do mikrofonu przez 10 sekund..."
+            // add a p element to the divStack between h2 and progressBar
             let p = document.createElement("p");
-            p.innerHTML = choice;
+            p.innerHTML = "<b>Jeśli nie wiesz, co powiedzieć, spróbuj tych łamańców językowych:</b>";
             divStack.insertBefore(p, this.progressBar.element);
+            // add two random tongue twisters after the p element
+            let choices = choose(tonguetwisters, 2);
+            for (let choice of choices) {
+                let p = document.createElement("p");
+                p.innerHTML = choice;
+                divStack.insertBefore(p, this.progressBar.element);
+            }
         }
+        else if (state === STATES.SPEECH_MEASURED) {
+            let div = this.div = arg;
+            let divStack = this.divStack = div.querySelector(".stack");
+            this.h2 = document.createElement("h2");
+            divStack.appendChild(this.h2);
+            this.progressBar = new ProgressBar(divStack);
+            this.finish();
+            this.recordingStopped();
+        }
+        else throw new Error("Restoring MeasuringSpeechView with state " + STATE_NAMES[state] + " is not supported");
     }
 
     recordingStarted() {

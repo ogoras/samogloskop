@@ -42,7 +42,7 @@ export class StatsView extends FormantsView {
     }
 
     update(intensityStats) {
-        this.silenceStats.time.value = intensityStats.timeElapsed;
+        this.silenceStats.time.value = intensityStats.isCalibrated ? this.timeRequired : intensityStats.timeElapsed;
         this.silenceStats.min.value = intensityStats.zeroReached ? 0 : intensityStats.min;
         if (this.silenceStats.min.diff !== undefined) this.silenceStats.min.diff = intensityStats.diff(0);
         this.silenceStats.max.value = intensityStats.max;

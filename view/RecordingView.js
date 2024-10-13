@@ -67,7 +67,7 @@ export class RecordingView extends View {
         if (Constructor) {
             if (this.view) {
                 if (Constructor !== this.view.constructor) {
-                    this.view = new Constructor(this.view, this.formantProcessor, true);
+                    this.view = new Constructor(this.view, this.formantProcessor);
                 }
                 else if (state === STATES.SPEECH_MEASURED) {
                     this.view.finish();
@@ -79,7 +79,7 @@ export class RecordingView extends View {
                     this.view.speechDetected = true;
                 }
             }
-            else this.view = new Constructor(this.formantsContainer, this.formantProcessor);
+            else this.view = new Constructor(this.formantsContainer, this.formantProcessor, state);
         }
     }
 
@@ -106,7 +106,7 @@ export class RecordingView extends View {
 
         let newState = updates.newState;
         if (newState !== undefined) {
-            this.onStateChange({ newState }, false);
+            this.onStateChange({ newState, calibration: updates.intensityStatsString  }, false);
             this.updateView(newState);
         }
 

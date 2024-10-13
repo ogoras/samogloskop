@@ -31,10 +31,14 @@ export class IntensityStats {
             .reduce((acc, val) => this.isSilence(val) ? acc + this.stepDuration : 0, 0);
     }
 
-    constructor(timeRequired, statsStep) {
+    get isCalibrated() {
+        return this.silenceStats !== undefined && this.speechStats !== undefined;
+    }
+
+    constructor(timeRequired, stepDuration) {
         this.timeRequired = timeRequired;
-        this.stepDuration = statsStep;
-        this.buffer = new Buffer(Math.ceil(2 * timeRequired / statsStep));
+        this.stepDuration = stepDuration;
+        this.buffer = new Buffer(Math.ceil(2 * timeRequired / stepDuration));
     }
 
     update(time, formants, samples) {
@@ -136,6 +140,24 @@ export class IntensityStats {
 
     isSilence(stats = this.buffer.getLastElement()) {
         return stats.mean < adjustdB(this.speechStats.max, -30);
+    }
+
+    toString() {
+        let object = {
+            speechStats: this.speechStats,
+            silenceStats: this.silenceStats,
+            timeRequired: this.timeRequired,
+            stepDuration: this.stepDuration
+        }
+        return JSON.stringify(object);
+    }
+
+    static fromString(string) {
+        let object = JSON.parse(string);
+        let stats = new IntensityStats(object.timeRequired, object.stepDuration);
+        stats.speechStats = object.speechStats;
+        stats.silenceStats = object.silenceStats;
+        return stats;
     }
 }
 

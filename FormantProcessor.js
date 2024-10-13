@@ -29,11 +29,14 @@ export class FormantProcessor {
     userVowels = new UserVowels();
     //scatterPlot = new ScatterPlot("formants", true, "Hz");
 
-    constructor(sampleRate, state = STATES.NO_SAMPLES_YET, preset) {
+    constructor(sampleRate, state = STATES.NO_SAMPLES_YET, preset = PRESETS.FEMALE) {
         this.sampleRate = sampleRate;
         this.samplesBuffer = new Buffer(this.sampleRate / 20);
         this.state = state;
         this.preset = preset;
+        if (state >= STATES.SPEECH_MEASURED) {
+            this.intensityStats = IntensityStats.fromString(Cookies.get("calibration"));
+        }
         //this.scatterPlot.addSeries(Object.entries(vowels).map(this.vowelToScatterPlotEntry.bind(this)));
         //this.scatterPlot.addSeries([], true, formantCount);
         //this.scatterPlot.addSeries([]);
@@ -95,6 +98,7 @@ export class FormantProcessor {
                 if (this.intensityStats.isCalibrationFinished(this.time)) {
                     ret.newState = this.state = STATES.SPEECH_MEASURED;
                     this.intensityStats.saveStats("speech");
+                    ret.intensityStatsString = this.intensityStats.toString();
                     this.intensityStats.resetStart();
                 }
                 return ret;
