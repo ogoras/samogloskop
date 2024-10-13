@@ -14,7 +14,7 @@ let vowels = {
     y : { F1: 480, F2: 1750, color: "rgb(150, 75, 0)" }
 }
 
-const formantCount = 20;
+export const formantCount = 20;
 const statsStep = 0.1;    // 100 ms
 const calibrationTime = 10; // 10 s
 
@@ -127,8 +127,18 @@ export class FormantProcessor {
                     this.formantsBuffer.clear();
                     return ret;
                 }
-                ret.formants = this.formantsBuffer.buffer;
-                this.formantsBuffer.clear();
+                ret.formants = [];
+                for (let formant of formants) {
+                    if (formant.formant.length >= 2) {
+                        ret.formants.push({
+                            x: formant.formant[1].frequency,
+                            y: formant.formant[0].frequency,
+                            color: "#00000044",
+                            size: 3
+                        });
+                    }
+                }
+                ret.formantsSmoothed = this.smoothedFormants;
                 return ret;
             case STATES.DONE:
                 feedPlot(formants);
@@ -138,38 +148,24 @@ export class FormantProcessor {
         }
     }
 
-    feedPlot(formants) {
-        for (let i = 0; i < formants.length; i++) {
-            if (formants[i].formant.length >= 2) {
-                let formantsEntry = {
-                    x: formants[i].formant[1].frequency,
-                    y: formants[i].formant[0].frequency,
-                    color: "#00000044"
-                }
-                this.formantsBuffer.push(formantsEntry);
-                this.scatterPlot.feed(formantsEntry, -2);
-            }
-        }
-        if (formants.length > 0) this.updateScatterPlot();
-    }
-
-    updateScatterPlot() {
+    get smoothedFormants() {
+        if (this.formantsBuffer.length < 10) return undefined;
         const ratio = 0.5;
         let weightSum = 0;
         let xSum = 0;
         let ySum = 0;
         let weight = 1;
         for (let formants of this.formantsBuffer.buffer) {
-            xSum += formants.x * weight;
-            ySum += formants.y * weight;
+            xSum += formants.F2 * weight;
+            ySum += formants.F1 * weight;
             weightSum += weight;
             weight *= ratio;
         }
-        this.scatterPlot.setSeriesSingle({
+        return ({
             x: xSum / weightSum,
             y: ySum / weightSum,
             size: 10
-        }, -1, 50);
+        });
     }
 
     reset() {

@@ -1,5 +1,6 @@
 import { FormantsView } from './FormantsView.js';
 import { ScatterPlot } from '../../visualization/ScatterPlot.js';
+import { formantCount } from '../../FormantProcessor.js';
 
 export class GatheringVowelsView extends FormantsView {
     #speechDetected = false;
@@ -16,6 +17,7 @@ export class GatheringVowelsView extends FormantsView {
             this.div.removeChild(this.div.firstChild);
         }
         this.scatterPlot = new ScatterPlot("formants", true, "Hz");
+        this.scatterPlot.addSeries([], true, formantCount);
         this.scatterPlot.addSeries([]);
         this.recordingStarted();
     }
@@ -41,15 +43,14 @@ export class GatheringVowelsView extends FormantsView {
     feed(formants) {
         if (!this.#speechDetected) throw new Error("Given formants without speech detected");
         for (let formant of formants) {
-            if (formant.F1 === undefined || formant.F2 === undefined) continue;
-            let formantsEntry = {
-                x: formant.F2,
-                y: formant.F1,
-                color: "#00000044",
-                size: 3
-            }
-            this.scatterPlot.feed(formantsEntry);
+            this.scatterPlot.feed(formant, -2);
         }
+    }
+
+    feedSmoothed(formants) {
+        if (!this.#speechDetected) throw new Error("Given formants without speech detected");
+        
+        this.scatterPlot.setSeriesSingle(formants, -1, 50);
     }
 
     recordingStarted() {

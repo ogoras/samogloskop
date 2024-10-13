@@ -96,8 +96,10 @@ export class RecordingView extends View {
         let intensityStats = updates.intensityStats;
         if (intensityStats) this.view.update(intensityStats);
 
-        let buffer = updates.formants;
-        if (buffer) this.view.feed(buffer);
+        let formants = updates.formants;
+        if (formants) this.view.feed(formants);
+        let formantsSmoothed = updates.formantsSmoothed;
+        if (formantsSmoothed) this.view.feedSmoothed(formantsSmoothed);
 
         let progressTime = updates.progressTime;
         if (progressTime !== undefined  && this.view.updateProgress) this.view.updateProgress(progressTime);
