@@ -2,7 +2,9 @@ import { ChoiceView } from "./ChoiceView.js";
 
 const noticeText = `Ta strona używa plików <b>ciasteczek</b>, by zapamiętywać dane o twoim głosie.
     Jeżeli nie wyrażasz na to zgody, korzystanie z aplikacji może być utrudnione.
-    Twoja zgoda i inne dane będą zapamiętane i przechowywane, wyłącznie na Twoim urządzeniu, przez 365 dni.`
+    Twoja zgoda i inne dane będą zapamiętane i przechowywane, wyłącznie na Twoim urządzeniu, przez 365 dni.
+    <br>
+    <a href ="privacy.html" target=”_blank”> Polityka prywatności </a>`
 const choices = [
     {
         text: "Nie wyrażam zgody",

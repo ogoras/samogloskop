@@ -17,6 +17,7 @@ export class GatheringVowelsView extends FormantsView {
         }
         this.scatterPlot = new ScatterPlot("formants", true, "Hz");
         this.scatterPlot.addSeries([]);
+        this.recordingStarted();
     }
 
     constructor(view, formantProcessor) {
@@ -34,6 +35,7 @@ export class GatheringVowelsView extends FormantsView {
             divStack.removeChild(divStack.lastChild);
         }
         this.recordingStarted();
+        this.h2.innerHTML = "Kalibracja samogłosek:<br>" + this.h2.innerHTML;
     }
 
     feed(formants) {
