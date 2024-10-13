@@ -19,11 +19,11 @@ export class GatheringVowelsView extends FormantsView {
         this.scatterPlot.addSeries([]);
     }
 
-    constructor(view, userVowels) {
+    constructor(view, formantProcessor) {
         super();
 
-        this.userVowels = userVowels;
-        this.currentVowel = userVowels.nextVowel();
+        this.userVowels = formantProcessor.userVowels;
+        this.currentVowel = this.userVowels.nextVowel();
 
         this.div = view.div;
         let divStack = this.divStack = view.divStack;

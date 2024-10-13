@@ -49,11 +49,13 @@ export class RecordingView extends View {
         this.waveformVisualizer = new WaveformVisualizer();
         this.audioRecorder.onStart = () => {
             this.formantProcessor.recordingStarted();
+            if (this.view) this.view.recordingStarted();
             this.waveformVisualizer.reset();
         };
 
         this.audioRecorder.onStop = () => {
-            this.formantProcessor.recordingStopped();
+            if (this.view) this.formantProcessor.recordingStopped();
+            this.view.recordingStopped();
         }
 
         this.updateView(state);
@@ -63,8 +65,21 @@ export class RecordingView extends View {
     updateView(state) {
         let Constructor = FORMANT_VIEWS[state];
         if (Constructor) {
-            if (this.view) this.view = new Constructor(this.view, true);
-            else this.view = new Constructor(this.formantsContainer);
+            if (this.view) {
+                if (Constructor !== this.view.constructor) {
+                    this.view = new Constructor(this.view, this.formantProcessor, true);
+                }
+                else if (state === STATES.SPEECH_MEASURED) {
+                    this.view.finish();
+                }
+                else if (state === STATES.MEASURING_SPEECH) {
+                    this.view.speechDetected = true;
+                }
+                else if (state === STATES.GATHERING_VOWELS) {
+                    this.view.speechDetected = true;
+                }
+            }
+            else this.view = new Constructor(this.formantsContainer, this.formantProcessor);
         }
     }
 
@@ -76,7 +91,27 @@ export class RecordingView extends View {
 
         const samples = this.audioRecorder.dump();
 
-        this.formantProcessor.feed(samples);
+        let updates = this.formantProcessor.feed(samples);
+
+        let intensityStats = updates.intensityStats;
+        if (intensityStats) this.view.update(intensityStats);
+
+        let buffer = updates.formants;
+        if (buffer) this.view.feed(buffer);
+
+        let newState = updates.newState;
+        if (newState !== undefined) {
+            this.onStateChange({ newState }, false);
+            this.updateView(newState);
+        }
+
+        let startTime = updates.startTime;
+        if (startTime !== undefined) this.view.startTime = startTime;
+        let progressTime = updates.progressTime;
+        if (progressTime !== undefined  && this.view.updateProgress) this.view.updateProgress(progressTime);
+        let progress = updates.progress;
+        if (progress !== undefined && this.view.updateProgress) this.view.updateProgress(progress, false);
+
         this.waveformVisualizer.feed(samples);
 
         requestAnimationFrame(this.draw.bind(this));

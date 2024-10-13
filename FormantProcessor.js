@@ -1,9 +1,6 @@
 import { soundToFormant } from './sound_to_formant/formant.js';
-import { SilenceView } from './calibration/view/SilenceView.js';
-import { MeasuringSpeechView } from './calibration/view/MeasuringSpeechView.js';
 import { IntensityStats } from './calibration/data/IntensityStats.js';
 import { Buffer } from './util/Buffer.js';
-import { GatheringVowelsView } from './calibration/view/GatheringVowelsView.js';
 import { UserVowels } from './calibration/data/UserVowels.js';
 import { STATES, STATE_NAMES } from './definitions/states.js';
 import { PRESETS, PRESET_NAMES } from './definitions/presets.js';
@@ -22,6 +19,9 @@ const statsStep = 0.1;    // 100 ms
 const calibrationTime = 10; // 10 s
 
 export class FormantProcessor {
+    get calibrationTime() {
+        return calibrationTime;
+    }
     formantsBuffer = new Buffer(formantCount);
     time = 0;
     div = document.getElementById("formants");
@@ -50,9 +50,10 @@ export class FormantProcessor {
     }
 
     feed(samples) {
+        let ret = {};
+
         if (this.state === STATES.NO_SAMPLES_YET) {
-            this.state = STATES.GATHERING_SILENCE;
-            this.view = new SilenceView(this.div, calibrationTime);
+            ret.newState = this.state = STATES.GATHERING_SILENCE;
         }
         this.samplesBuffer.pushMultiple(samples);
         const formants = soundToFormant(this.samplesBuffer.getCopy(), this.sampleRate);
@@ -68,66 +69,61 @@ export class FormantProcessor {
         this.time += samples.length / this.sampleRate;
         switch (this.state) {
             case STATES.GATHERING_SILENCE:
-                this.view.updateProgress(this.time);
+                ret.progressTime = this.time;
                 if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
-                    this.view.update(this.intensityStats);
+                    ret.intensityStats = this.intensityStats;
                     this.formantsBuffer.clear();
                 }
                 if (this.intensityStats.isCalibrationFinished(this.time)) {
-                    this.state = STATES.WAITING_FOR_SPEECH;
+                    ret.newState = this.state = STATES.WAITING_FOR_SPEECH;
                     this.intensityStats.saveStats("silence");
-                    this.view = new MeasuringSpeechView(this.view);
                 }
-                return;
+                return ret;
             case STATES.WAITING_FOR_SPEECH:
                 if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer) 
                     && this.intensityStats.detectSpeech()) {
-                    this.state = STATES.MEASURING_SPEECH;
-                    this.view.speechDetected = true;
-                    this.view.startTime = this.time;
+                    ret.newState = this.state = STATES.MEASURING_SPEECH;
+                    ret.startTime = this.time;
                 }
-                return;
+                return ret;
             case STATES.MEASURING_SPEECH:
-                this.view.updateProgress(this.time);
+                ret.progressTime = this.time;
                 if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
-                    this.view.update(this.intensityStats);
+                    ret.intensityStats = this.intensityStats;
                     this.formantsBuffer.clear();
                 }
                 if (this.intensityStats.isCalibrationFinished(this.time)) {
-                    this.state = STATES.SPEECH_MEASURED;
+                    ret.newState = this.state = STATES.SPEECH_MEASURED;
                     this.intensityStats.saveStats("speech");
                     this.intensityStats.resetStart();
-                    this.view.finish();
                 }
-                return;
+                return ret;
             case STATES.SPEECH_MEASURED:
                 // wait for 2 seconds of silence
                 const silenceRequired = 2;
                 if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
                     let length = this.intensityStats.silenceDuration;
-                    this.view.updateProgress(length / silenceRequired, false);
+                    ret.progress = length / silenceRequired;
                     if (this.intensityStats.silenceDuration >= silenceRequired) {
-                        this.view.updateProgress(1, false);
-                        this.state = STATES.WAITING_FOR_VOWELS;
-                        this.view = new GatheringVowelsView(this.view, this.userVowels);
+                        ret.progress = 1;
+                        ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
                     }
                 }
-                return;
+                return ret;
             case STATES.WAITING_FOR_VOWELS:
                 if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
                     if (this.intensityStats.detectSpeech()) {
-                        this.state = STATES.GATHERING_VOWELS;
-                        this.view.speechDetected = true;
+                        ret.newState = this.state = STATES.GATHERING_VOWELS;
                     }
                 }
-                return;
+                return ret;
             case STATES.GATHERING_VOWELS:
-                this.view.feed(this.formantsBuffer.buffer);
+                ret.formants = this.formantsBuffer.buffer;
                 this.formantsBuffer.clear();
-                return;
+                return ret;
             case STATES.DONE:
                 feedPlot(formants);
-                return;
+                return ret;
             default:
                 throw new Error("Unknown state: " + this.state);
         }
@@ -178,10 +174,8 @@ export class FormantProcessor {
 
     recordingStarted() {
         this.reset();
-        if (this.view) this.view.recordingStarted();
     }
 
     recordingStopped() {
-        if (this.view) this.view.recordingStopped();
     }
 }

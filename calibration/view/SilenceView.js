@@ -33,11 +33,11 @@ export class SilenceView extends StatsView {
         }
     }
 
-    constructor(div, timeRequired) {
+    constructor(view, formantProcessor) {
         super();
-        this.div = div;
-        this.timeRequired = timeRequired;
-        let divStack = this.divStack = div.querySelector(".center").querySelector(".stack");
+        this.div = view.div;
+        this.timeRequired = formantProcessor.calibrationTime;
+        let divStack = this.divStack = view.divStack;
         this.h2 = divStack.querySelector("h2");
         this.recordingStarted();
         // remove the p element

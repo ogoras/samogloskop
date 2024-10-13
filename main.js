@@ -12,7 +12,7 @@ let state = STATES[Cookies.get("state")];
 if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
 let view = null;
 
-async function onStateChange(updates = {}) {
+async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
         state = updates.newState;
         if (cookiesAccepted) Cookies.set("state", STATE_NAMES[state], { expires: 365 });
@@ -32,9 +32,11 @@ async function onStateChange(updates = {}) {
         }
         cookiePopup = false;
     }
-    if (cookiePopup) view = new CookieView(onStateChange);
-    else if (state === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
-    else view = new RecordingView(onStateChange, state, preset);
+    if (constructNewView) {
+        if (cookiePopup) view = new CookieView(onStateChange);
+        else if (state === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
+        else view = new RecordingView(onStateChange, state, preset);
+    }
 }
 
 onStateChange();

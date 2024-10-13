@@ -4,7 +4,6 @@ import { StatsView } from "./StatsView.js";
 
 export class MeasuringSpeechView extends StatsView {
     #speechDetected = false;
-    startTime = undefined;
 
     set speechDetected(value) {
         if (!value) throw new Error("Can't unset speechDetected");
@@ -13,7 +12,7 @@ export class MeasuringSpeechView extends StatsView {
         this.resetStatsElements();
     }
 
-    constructor(view) {
+    constructor(view, formantProcessor) {
         super();
         this.silenceStats.min.diff = 0;
         this.silenceStats.max.diff = 0;
