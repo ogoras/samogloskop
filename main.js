@@ -15,12 +15,13 @@ let view = null;
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
         state = updates.newState;
-        if (cookiesAccepted) Cookies.set("state", STATE_NAMES[state], { expires: 365 });
+        if (cookiesAccepted && stateSaveable(state)) Cookies.set("state", STATE_NAMES[state], { expires: 365 });
     }
     if (updates.preset !== undefined) {
         preset = updates.preset;
         if (cookiesAccepted) Cookies.set("preset", PRESET_NAMES[preset], { expires: 365 });
         state = STATES.NO_SAMPLES_YET;
+        if (cookiesAccepted) Cookies.set("state", STATE_NAMES[state], { expires: 365 });
     }
     if (updates.accepted !== undefined) {
         cookiesAccepted = updates.accepted;
@@ -37,6 +38,10 @@ async function onStateChange(updates = {}, constructNewView = true) {
         else if (state === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
         else view = new RecordingView(onStateChange, state, preset);
     }
+}
+
+function stateSaveable(state) {
+    return [STATES.PRESET_SELECTION, STATES.NO_SAMPLES_YET, STATES.SPEECH_MEASURED, STATES.DONE].includes(state);
 }
 
 onStateChange();

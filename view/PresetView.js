@@ -17,6 +17,7 @@ const choices = [
     }
 ]
 
+
 export class PresetView extends ChoiceView {
     constructor(onStateChange) {
         super(onStateChange, noticeText, choices);

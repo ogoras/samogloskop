@@ -99,6 +99,11 @@ export class RecordingView extends View {
         let buffer = updates.formants;
         if (buffer) this.view.feed(buffer);
 
+        let progressTime = updates.progressTime;
+        if (progressTime !== undefined  && this.view.updateProgress) this.view.updateProgress(progressTime);
+        let progress = updates.progress;
+        if (progress !== undefined && this.view.updateProgress) this.view.updateProgress(progress, false);
+
         let newState = updates.newState;
         if (newState !== undefined) {
             this.onStateChange({ newState }, false);
@@ -107,10 +112,6 @@ export class RecordingView extends View {
 
         let startTime = updates.startTime;
         if (startTime !== undefined) this.view.startTime = startTime;
-        let progressTime = updates.progressTime;
-        if (progressTime !== undefined  && this.view.updateProgress) this.view.updateProgress(progressTime);
-        let progress = updates.progress;
-        if (progress !== undefined && this.view.updateProgress) this.view.updateProgress(progress, false);
 
         this.waveformVisualizer.feed(samples);
 
