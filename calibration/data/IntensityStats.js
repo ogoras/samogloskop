@@ -65,7 +65,7 @@ export class IntensityStats {
             }
             else {
                 max = samples.reduce((acc, val) => Math.max(acc, val * val), -Infinity);
-                mean = samples.reduce((acc, val) => acc + val * val, 0) / this.samplesBuffer.length;
+                mean = samples.reduce((acc, val) => acc + val * val, 0) / samples.length;
             }
         }
         this.buffer.push({

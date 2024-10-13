@@ -5,6 +5,8 @@ import { IntensityStats } from './calibration/data/IntensityStats.js';
 import { Buffer } from './util/Buffer.js';
 import { GatheringVowelsView } from './calibration/view/GatheringVowelsView.js';
 import { UserVowels } from './calibration/data/UserVowels.js';
+import { STATES, STATE_NAMES } from './definitions/states.js';
+import { PRESETS, PRESET_NAMES } from './definitions/presets.js';
 
 let vowels = {
     a : { F1: 800, F2: 1300, color: "rgb(255, 0, 0)" },
@@ -18,28 +20,20 @@ let vowels = {
 const formantCount = 20;
 const statsStep = 0.1;    // 100 ms
 const calibrationTime = 10; // 10 s
-const STATES = {
-    NO_SAMPLES_YET: 0,
-    GATHERING_SILENCE: 1,
-    WAITING_FOR_SPEECH: 2,
-    MEASURING_SPEECH: 3,
-    SPEECH_MEASURED: 4,
-    WAITING_FOR_VOWELS: 5,
-    GATHERING_VOWELS: 6,
-    DONE: 7
-}
-export class FormantVisualizer {
+
+export class FormantProcessor {
     formantsBuffer = new Buffer(formantCount);
-    state = STATES.NO_SAMPLES_YET;
     time = 0;
     div = document.getElementById("formants");
     intensityStats = new IntensityStats(calibrationTime, statsStep);
     userVowels = new UserVowels();
     //scatterPlot = new ScatterPlot("formants", true, "Hz");
 
-    constructor(sampleRate) {
+    constructor(sampleRate, state = STATES.NO_SAMPLES_YET, preset) {
         this.sampleRate = sampleRate;
         this.samplesBuffer = new Buffer(this.sampleRate / 20);
+        this.state = state;
+        this.preset = preset;
         //this.scatterPlot.addSeries(Object.entries(vowels).map(this.vowelToScatterPlotEntry.bind(this)));
         //this.scatterPlot.addSeries([], true, formantCount);
         //this.scatterPlot.addSeries([]);

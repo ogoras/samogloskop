@@ -9,13 +9,18 @@ export class WaveformVisualizer {
         return bufferLength;
     }
 
+    constructor() {
+        this.canvas = document.getElementsByClassName("visualizer")[0];
+        this.canvasCtx = this.canvas.getContext("2d");    
+    }
+
     feed(samples) {
         if (bufferLength > samples.length) {
             samples.splice(0, 0, ...this.dataArray.slice(samples.length, bufferLength));
         }
         this.dataArray.set(samples.slice(samples.length - bufferLength, samples.length));
     
-        drawWaveform(this.dataArray, bufferLength);
+        drawWaveform(this.dataArray, bufferLength, this.canvas, this.canvasCtx);
     }
 
     reset() {

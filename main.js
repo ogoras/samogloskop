@@ -1,86 +1,40 @@
-import { AudioRecorder } from './Recorder.js';
-import { FormantVisualizer } from './FormantVisualizer.js';
-import { WaveformVisualizer } from './WaveformVisualizer.js';
+import { CookieView } from './view/CookieView.js';
+import { PresetView } from './view/PresetView.js';
+import { RecordingView } from './view/RecordingView.js';
 
-let formantsContainer = document.querySelector(".formants-container");
-let recordingContainer = document.querySelector(".recording-container");
-let canvas = document.querySelector("canvas");
-let cookieNoticeElement = null;
+import { STATES, STATE_NAMES } from './definitions/states.js';
+import { PRESETS, PRESET_NAMES } from './definitions/presets.js';
+
 let cookiesAccepted = Cookies.get("accepted") === "true";
+let preset = Cookies.get("preset");
+let cookiePopup = !cookiesAccepted;
+let state = STATES[Cookies.get("state")];
+if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
+let view = null;
 
-let audioRecorder, formantVisualizer, waveformVisualizer;
-
-if (!cookiesAccepted) {
-    for (let element of [formantsContainer, recordingContainer, canvas]) {
-        element.style.display = "none";
+async function onStateChange(updates = {}) {
+    if (updates.newState !== undefined) {
+        state = updates.newState;
+        if (cookiesAccepted) Cookies.set("state", STATE_NAMES[state], { expires: 365 });
     }
-    // create a new div element with the cookie notice
-    cookieNoticeElement = document.createElement("div");
-    // append it to main container
-    let mainContainer = document.querySelector(".main-container");
-    mainContainer.appendChild(cookieNoticeElement);
-    
-    let p = document.createElement("p");
-    p.innerHTML = `Ta strona używa plików <b>ciasteczek</b>, by zapamiętywać dane o twoim głosie.
-        Jeżeli nie wyrażasz na to zgody, korzystanie z aplikacji może być utrudnione.
-        Twoja zgoda i inne dane będą zapamiętane i przechowywane, wyłącznie na Twoim urządzeniu, przez 365 dni.`
-    cookieNoticeElement.appendChild(p);
-    let denyButton = document.createElement("button");
-    denyButton.innerHTML = "Nie wyrażam zgody";
-    denyButton.id = "deny";
-    denyButton.onclick = removeCookieNotice;
-    cookieNoticeElement.appendChild(denyButton);
-
-    let acceptButton = document.createElement("button");
-    acceptButton.innerHTML = "Wyrażam zgodę";
-    acceptButton.id = "accept";
-    acceptButton.onclick = () => {
-        Cookies.set("accepted", "true", { expires: 365 });
-        cookiesAccepted = true;
-        removeCookieNotice();
+    if (updates.preset !== undefined) {
+        preset = updates.preset;
+        if (cookiesAccepted) Cookies.set("preset", PRESET_NAMES[preset], { expires: 365 });
+        state = STATES.NO_SAMPLES_YET;
     }
-    cookieNoticeElement.appendChild(acceptButton);
-}
-else {
-    init();
-}
-
-function removeCookieNotice() {
-    cookieNoticeElement.remove();
-    formantsContainer.style.display = "block";
-    recordingContainer.style.display = "flex";
-    canvas.style.display = "block";
-    init();
-}
-
-function draw() {
-    if (audioRecorder.samplesCollected < WaveformVisualizer.bufferLength / 128) {
-        requestAnimationFrame(draw);
-        return;
+    if (updates.accepted !== undefined) {
+        cookiesAccepted = updates.accepted;
+        if (cookiesAccepted) Cookies.set("accepted", "true", { expires: 365 });
+        else {
+            for (let [key, val] of Object.entries(Cookies.get())) {
+                Cookies.remove(key);
+            }
+        }
+        cookiePopup = false;
     }
-
-    const samples = audioRecorder.dump();
-
-    formantVisualizer.feed(samples);
-    waveformVisualizer.feed(samples);
-
-    requestAnimationFrame(draw);
+    if (cookiePopup) view = new CookieView(onStateChange);
+    else if (state === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
+    else view = new RecordingView(onStateChange, state, preset);
 }
 
-async function init() {
-    audioRecorder = new AudioRecorder();
-    await audioRecorder.init();
-    formantVisualizer = new FormantVisualizer(audioRecorder.sampleRate);
-    waveformVisualizer = new WaveformVisualizer();
-    audioRecorder.onStart = () => {
-        formantVisualizer.recordingStarted();
-        waveformVisualizer.reset();
-    };
-
-    audioRecorder.onStop = () => {
-        formantVisualizer.recordingStopped();
-    }
-
-    draw();
-}
-
+onStateChange();

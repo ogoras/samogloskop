@@ -1,10 +1,9 @@
 // visualizer based on code from https://github.com/mdn/dom-examples/blob/main/media/web-dictaphone/scripts/app.js
-let canvas = document.getElementsByClassName("visualizer")[0];
-let canvasCtx = canvas.getContext("2d");
-const WIDTH = canvas.width;
-const HEIGHT = canvas.height;
 
-export function drawWaveform(dataArray, bufferLength) {
+
+export function drawWaveform(dataArray, bufferLength, canvas, canvasCtx) {
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
     canvasCtx.fillStyle = "rgb(200, 200, 200)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 

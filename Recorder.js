@@ -28,6 +28,8 @@ export class AudioRecorder {
                 toggleCallback.bind(this)();
             }
         });
+
+        this.audioCtx = new AudioContext();
     }
 
     async init() {
