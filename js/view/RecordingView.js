@@ -1,9 +1,9 @@
 import { View } from './View.js';
-import { AudioRecorder } from '../Recorder.js';
-import { FormantProcessor } from '../FormantProcessor.js';
-import { WaveformVisualizer } from '../WaveformVisualizer.js';
+import { AudioRecorder } from '../recording/Recorder.js';
+import { FormantProcessor } from '../data/FormantProcessor.js';
+import { WaveformVisualizer } from '../visualization/waveform/WaveformVisualizer.js';
 import { STATES, STATE_NAMES } from '../definitions/states.js';
-import { FORMANT_VIEWS } from '../calibration/view/FormantViews.js';
+import { FORMANT_VIEWS } from './formant_view/FormantViews.js';
 
 export class RecordingView extends View {
     constructor(onStateChange, state, preset) {

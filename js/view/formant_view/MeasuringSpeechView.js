@@ -1,4 +1,4 @@
-import { tonguetwisters } from "./tonguetwisters.js";
+import { tonguetwisters } from "../../definitions/tonguetwisters.js";
 import { choose } from "../../util/choose.js";
 import { StatsView } from "./StatsView.js";
 import { STATE_NAMES, STATES } from "../../definitions/states.js";

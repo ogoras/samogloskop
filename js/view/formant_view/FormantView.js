@@ -1,4 +1,4 @@
-export class FormantsView {
+export class FormantView {
     #recording = false;
 
     refreshRecording() {

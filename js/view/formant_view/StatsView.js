@@ -1,6 +1,6 @@
-import { FormantsView } from "./FormantsView.js";
+import { FormantView } from "./FormantView.js";
 
-export class StatsView extends FormantsView {
+export class StatsView extends FormantView {
     startTime = 0;
 
     silenceStats = {

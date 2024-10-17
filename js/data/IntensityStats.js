@@ -1,4 +1,4 @@
-import { Buffer } from '../../util/Buffer.js';
+import { Buffer } from '../util/Buffer.js';
 
 export class IntensityStats {
     min = Infinity;

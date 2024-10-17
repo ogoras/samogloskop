@@ -34,7 +34,7 @@ export class AudioRecorder {
 
     async init() {
         this.audioCtx = new AudioContext();
-        await this.audioCtx.audioWorklet.addModule('recorder-worklet-processor.js');
+        await this.audioCtx.audioWorklet.addModule('js/recording/recorder-worklet-processor.js');
     }
 
     async startRecording() {

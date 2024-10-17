@@ -1,4 +1,4 @@
-import { phonemes } from '../../definitions/polishVowels.js';
+import { phonemes } from '../definitions/polishVowels.js';
 
 const REQUIRED_FORMANTS = 20;
 export class UserVowels {

@@ -1,9 +1,9 @@
-import { soundToFormant } from './sound_to_formant/formant.js';
-import { IntensityStats } from './calibration/data/IntensityStats.js';
-import { Buffer } from './util/Buffer.js';
-import { UserVowels } from './calibration/data/UserVowels.js';
-import { STATES, STATE_NAMES } from './definitions/states.js';
-import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from './definitions/presets.js';
+import { soundToFormant } from '../sound_to_formant/formant.js';
+import { IntensityStats } from './IntensityStats.js';
+import { Buffer } from '../util/Buffer.js';
+import { UserVowels } from './UserVowels.js';
+import { STATES, STATE_NAMES } from '../definitions/states.js';
+import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from '../definitions/presets.js';
 
 export const formantCount = 20;
 const minimumSmoothingCount = 20;

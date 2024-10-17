@@ -1,8 +1,8 @@
-import { FormantsView } from './FormantsView.js';
+import { FormantView } from './FormantView.js';
 import { ScatterPlot } from '../../visualization/ScatterPlot.js';
-import { formantCount } from '../../FormantProcessor.js';
+import { formantCount } from '../../data/FormantProcessor.js';
 
-export class GatheringVowelsView extends FormantsView {
+export class GatheringVowelsView extends FormantView {
     #speechDetected = false;
     #plotInitialized = false;
     #hintKeepGoing = false;
