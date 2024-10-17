@@ -5,15 +5,6 @@ import { UserVowels } from './calibration/data/UserVowels.js';
 import { STATES, STATE_NAMES } from './definitions/states.js';
 import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from './definitions/presets.js';
 
-let vowels = {
-    a : { F1: 800, F2: 1300, color: "rgb(255, 0, 0)" },
-    e : { F1: 660, F2: 1600, color: "rgb(250, 165, 0)" },
-    i : { F1: 300, F2: 2300, color: "rgb(0, 200, 0)" },
-    o : { F1: 580, F2: 900, color: "rgb(255, 0, 255)" },
-    u : { F1: 320, F2: 630, color: "rgb(0, 0, 255)"  },
-    y : { F1: 480, F2: 1750, color: "rgb(150, 75, 0)" }
-}
-
 export const formantCount = 20;
 const minimumSmoothingCount = 20;
 const statsStep = 0.1;    // 100 ms
@@ -170,7 +161,8 @@ export class FormantProcessor {
         let smoothedFormants = {
             x: xSum / weightSum,
             y: ySum / weightSum,
-            size: 10
+            size: 10,
+            color: this.userVowels.currentPhoneme.color || "black"
         };
         this.formantsToSave = this.smoothedFormantsBuffer.push(smoothedFormants)
         return smoothedFormants;

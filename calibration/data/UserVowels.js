@@ -1,6 +1,7 @@
-const phonemes = "aeiouy";
+import { phonemes } from '../../definitions/polishVowels.js';
+
 export class UserVowels {
-    phonemesRemaining = phonemes.split('');
+    phonemesRemaining = [...phonemes];
 
     nextVowel() {
         let index = Math.floor(Math.random() * this.phonemesRemaining.length);
