@@ -96,7 +96,7 @@ export class FormantProcessor {
                 return ret;
             case STATES.SPEECH_MEASURED:
                 // wait for 2 seconds of silence
-                const silenceRequired = 2;
+                var silenceRequired = 2;
                 if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
                     let length = this.intensityStats.silenceDuration;
                     ret.progress = length / silenceRequired;
@@ -138,6 +138,24 @@ export class FormantProcessor {
                 ret.formantsSmoothed = this.smoothedFormants;
                 ret.formantsSaved = this.formantsToSave;
                 this.userVowels.addFormants(this.formantsToSave);
+                this.formantsToSave = undefined;
+                if (this.userVowels.isVowelGathered()) {
+                    ret.newState = this.state = STATES.VOWEL_GATHERED;
+                    this.userVowels.saveVowel();
+                }
+                return ret;
+            case STATES.VOWEL_GATHERED:
+                // wait for 1 second of silence
+                var silenceRequired = 1;
+                if (this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer)) {
+                    let length = this.intensityStats.silenceDuration;
+                    ret.progress = length / silenceRequired;
+                    if (this.intensityStats.silenceDuration >= silenceRequired) {
+                        ret.progress = 1;
+                        ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
+                        this.smoothedFormantsBuffer.clear();
+                    }
+                }
                 return ret;
             case STATES.DONE:
                 feedPlot(formants);

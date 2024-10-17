@@ -6,6 +6,7 @@ export class GatheringVowelsView extends FormantsView {
     #speechDetected = false;
     #plotInitialized = false;
     #hintKeepGoing = false;
+    #vowelGathered = false;
 
     /**
      * @param {boolean} value
@@ -19,9 +20,22 @@ export class GatheringVowelsView extends FormantsView {
             this.initializePlot();
         }
         if (!value) {
-            this.#hintKeepGoing = true;
-            this.updateRecording();
+            if (this.#vowelGathered) {
+                this.currentVowel = this.userVowels.nextVowel();
+                this.#vowelGathered = false;
+            }
+            else {
+                this.#hintKeepGoing = true;
+            }
+            this.refreshRecording();
         }
+    }
+
+    set vowelGathered(value) {
+        if (!value) throw new Error("Cannot unset vowelGathered");
+        this.#vowelGathered = true;
+        this.#hintKeepGoing = false;
+        this.refreshRecording();
     }
 
     constructor(view, formantProcessor) {
@@ -75,14 +89,20 @@ export class GatheringVowelsView extends FormantsView {
         if (!this.#speechDetected) throw new Error("Given formants without speech detected");
 
         formants.size = 5;
+        formants.color += "80";
         this.scatterPlot.feed(formants, -3);
     }
 
     recordingStarted() {
         super.recordingStarted();
-        this.h2.innerHTML = 
-            (this.#hintKeepGoing ? "Jeszcze trochę, mów" : "Powiedz")
-            + ` <q>${this.currentVowel.letter.repeat(3)}</q>, głośno i wyraźnie...`;
+        if (this.#vowelGathered) {
+            this.h2.innerHTML = "Świetnie! Sekunda przerwy...";
+        }
+        else {
+            this.h2.innerHTML = 
+                (this.#hintKeepGoing ? "Jeszcze trochę, mów" : "Powiedz")
+                + ` <q>${this.currentVowel.letter.repeat(3)}</q>, głośno i wyraźnie...`;
+        }
     }
 
     recordingStopped() {

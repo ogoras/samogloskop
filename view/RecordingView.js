@@ -69,14 +69,20 @@ export class RecordingView extends View {
                 if (Constructor !== this.view.constructor) {
                     this.view = new Constructor(this.view, this.formantProcessor);
                 }
-                else if (state === STATES.SPEECH_MEASURED) {
-                    this.view.finish();
-                }
-                else if (state === STATES.MEASURING_SPEECH || state === STATES.GATHERING_VOWELS) {
-                    this.view.speechDetected = true;
-                }
-                else if (state === STATES.WAITING_FOR_VOWELS) {
-                    this.view.speechDetected = false;
+                else switch(state) {
+                    case STATES.SPEECH_MEASURED:
+                        this.view.finish();
+                        break;
+                    case STATES.MEASURING_SPEECH:
+                    case STATES.GATHERING_VOWELS:
+                        this.view.speechDetected = true;
+                        break;
+                    case STATES.WAITING_FOR_VOWELS:
+                        this.view.speechDetected = false;
+                        break;
+                    case STATES.VOWEL_GATHERED:
+                        this.view.vowelGathered = true;
+                        break;
                 }
             }
             else this.view = new Constructor(this.formantsContainer, this.formantProcessor, state);

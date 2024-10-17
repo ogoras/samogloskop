@@ -9,6 +9,7 @@ export const STATE_NAMES = [
     "SPEECH_MEASURED",
     "WAITING_FOR_VOWELS",
     "GATHERING_VOWELS",
+    "VOWEL_GATHERED",
     "DONE"
 ]
 export const STATES = arrToObj(STATE_NAMES);

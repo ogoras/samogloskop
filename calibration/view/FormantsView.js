@@ -1,7 +1,7 @@
 export class FormantsView {
     #recording = false;
 
-    updateRecording() {
+    refreshRecording() {
         this.recording = this.#recording;
     }
 

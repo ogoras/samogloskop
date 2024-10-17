@@ -12,4 +12,6 @@ export const FORMANT_VIEWS = {
     [STATES.SPEECH_MEASURED]: MeasuringSpeechView,
     [STATES.WAITING_FOR_VOWELS]: GatheringVowelsView,
     [STATES.GATHERING_VOWELS]: GatheringVowelsView,
+    [STATES.VOWEL_GATHERED]: GatheringVowelsView,
+    //[STATES.DONE]: TODO
 }

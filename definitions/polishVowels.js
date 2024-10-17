@@ -14,7 +14,7 @@ export const phonemes = [
             broad: "a",
             narrow: "ä"
         },
-        color: "rgb(255, 0, 0)",
+        color: "#ff0000",
     },
     {
         letter: "e",
@@ -22,7 +22,7 @@ export const phonemes = [
             broad: "ɛ",
             narrow: "ɛ"
         },
-        color: "rgb(250, 165, 0)",
+        color: "#faa500",
     },
     {
         letter: "i",
@@ -30,7 +30,7 @@ export const phonemes = [
             broad: "i",
             narrow: "i"
         },
-        color: "rgb(0, 200, 0)",
+        color: "#00c800",
     },
     {
         letter: "o",
@@ -38,7 +38,7 @@ export const phonemes = [
             broad: "ɔ",
             narrow: "ɔ"
         },
-        color: "rgb(255, 0, 255)",
+        color: "#ff00ff",
     },
     {
         letter: "u",
@@ -46,7 +46,7 @@ export const phonemes = [
             broad: "u",
             narrow: "u"
         },
-        color: "rgb(0, 0, 255)",
+        color: "#0000ff",
     },
     {
         letter: "y",
@@ -54,6 +54,6 @@ export const phonemes = [
             broad: "ɨ",
             narrow: "ɘ"
         },
-        color: "rgb(150, 75, 0)",
+        color: "#964b00",
     }
 ]
