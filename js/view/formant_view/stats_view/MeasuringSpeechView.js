@@ -1,12 +1,15 @@
-import { tonguetwisters } from "../../definitions/tonguetwisters.js";
-import { choose } from "../../util/choose.js";
+import { tonguetwisters } from "../../../definitions/tonguetwisters.js";
+import { choose } from "../../../util/choose.js";
 import { StatsView } from "./StatsView.js";
-import { STATE_NAMES, STATES } from "../../definitions/states.js";
-import { ProgressBar } from "../../visualization/ProgressBar.js";
+import { STATE_NAMES, STATES } from "../../../definitions/states.js";
+import { ProgressBar } from "../../../visualization/ProgressBar.js";
 
 export class MeasuringSpeechView extends StatsView {
     #speechDetected = false;
 
+    /**
+     * @param {boolean} value
+     */
     set speechDetected(value) {
         if (!value) throw new Error("Can't unset speechDetected");
         this.#speechDetected = value;

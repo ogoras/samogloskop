@@ -117,11 +117,12 @@ export class FormantProcessor {
                 }
                 return ret;
             case STATES.GATHERING_VOWELS:
+            case STATES.DONE:
                 this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer);
                 if (!this.intensityStats.detectSpeech()) {
                     this.formantsBuffer.clear();
                     this.smoothedFormantsBuffer.clear();
-                    ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
+                    if (this.state !== STATES.DONE) ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
                     return ret;
                 }
                 ret.formants = [];
@@ -136,12 +137,14 @@ export class FormantProcessor {
                     }
                 }
                 ret.formantsSmoothed = this.smoothedFormants;
-                ret.formantsSaved = this.formantsToSave;
-                this.userVowels.addFormants(this.formantsToSave);
-                this.formantsToSave = undefined;
-                if (this.userVowels.isVowelGathered()) {
-                    this.userVowels.saveVowel();
-                    ret.newState = this.state = this.userVowels.isDone() ? STATES.DONE : STATES.VOWEL_GATHERED;
+                if (this.state !== STATES.DONE) {
+                    ret.formantsSaved = this.formantsToSave;
+                    this.userVowels.addFormants(this.formantsToSave);
+                    this.formantsToSave = undefined;
+                    if (this.userVowels.isVowelGathered()) {
+                        this.userVowels.saveVowel();
+                        ret.newState = this.state = this.userVowels.isDone() ? STATES.DONE : STATES.VOWEL_GATHERED;
+                    }
                 }
                 return ret;
             case STATES.VOWEL_GATHERED:
@@ -157,11 +160,8 @@ export class FormantProcessor {
                     }
                 }
                 return ret;
-            case STATES.DONE:
-                // TODO
-                return ret;
             default:
-                throw new Error("Unknown state: " + this.state);
+                throw new Error("Unknown state: " + STATE_NAMES[this.state] ?? this.state);
         }
     }
 
@@ -182,23 +182,15 @@ export class FormantProcessor {
             x: xSum / weightSum,
             y: ySum / weightSum,
             size: 10,
-            color: this.userVowels.currentPhoneme.color || "black"
+            color: !this.userVowels.isDone() ? this.userVowels.currentPhoneme.color : "black"
         };
         this.formantsToSave = this.smoothedFormantsBuffer.push(smoothedFormants)
         return smoothedFormants;
     }
 
-    reset() {
+    recordingStarted() {
         this.samplesBuffer.clear();
         this.formantsBuffer.clear();
-        if (this.state === STATES.DONE) {
-            this.scatterPlot.clearSeries(-1);
-            this.scatterPlot.clearSeries(-2);
-        }
-    }
-
-    recordingStarted() {
-        this.reset();
     }
 
     recordingStopped() {}

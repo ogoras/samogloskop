@@ -1,8 +1,8 @@
 import { CalibrationStartView } from "./CalibrationStartView.js";
-import { SilenceView } from "./SilenceView.js";
-import { MeasuringSpeechView } from "./MeasuringSpeechView.js";
-import { GatheringVowelsView } from "./GatheringVowelsView.js";
-import { FreeView } from "./FreeView.js";
+import { SilenceView } from "./stats_view/SilenceView.js";
+import { MeasuringSpeechView } from "./stats_view/MeasuringSpeechView.js";
+import { GatheringVowelsView } from "./scatter_view/GatheringVowelsView.js";
+import { FreeView } from "./scatter_view/FreeView.js";
 import { STATES } from "../../definitions/states.js";
 
 export const FORMANT_VIEWS = {

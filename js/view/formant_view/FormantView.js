@@ -1,4 +1,9 @@
 export class FormantView {
+    constructor() {
+        if (this.constructor === FormantView)
+            throw new Error("Cannot instantiate abstract class FormantView");
+    }
+
     #recording = false;
 
     refreshRecording() {

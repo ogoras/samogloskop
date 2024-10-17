@@ -6,7 +6,7 @@ export class UserVowels {
     phonemesProcessed = [];
 
     nextVowel() {
-        if (this.isDone()) return undefined;
+        if (this.phonemesRemaining.length === 0) return undefined;
         let index = Math.floor(Math.random() * this.phonemesRemaining.length);
         let phoneme = this.currentPhoneme = this.phonemesRemaining[index];
         this.phonemesRemaining.splice(index, 1);
@@ -31,6 +31,6 @@ export class UserVowels {
     }
 
     isDone() {
-        return this.phonemesRemaining.length === 0;
+        return this.phonemesRemaining.length === 0 && !this.currentPhoneme;
     }
 }

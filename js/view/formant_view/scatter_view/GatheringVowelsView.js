@@ -1,8 +1,6 @@
-import { FormantView } from './FormantView.js';
-import { ScatterPlot } from '../../visualization/ScatterPlot.js';
-import { formantCount } from '../../data/FormantProcessor.js';
+import { ScatterView } from './ScatterView.js';
 
-export class GatheringVowelsView extends FormantView {
+export class GatheringVowelsView extends ScatterView {
     #speechDetected = false;
     #plotInitialized = false;
     #hintKeepGoing = false;
@@ -12,7 +10,8 @@ export class GatheringVowelsView extends FormantView {
      * @param {boolean} value
      */
     set speechDetected(value) {
-        if (value == this.#speechDetected) throw new Error("Setter tried to set speechDetected to the same value");
+        if (value == this.#speechDetected) 
+            throw new Error("Setter tried to set speechDetected to the same value");
 
         this.#speechDetected = value;
         if (!this.#plotInitialized) {
@@ -31,6 +30,9 @@ export class GatheringVowelsView extends FormantView {
         }
     }
 
+    /**
+     * @param {boolean} value
+     */
     set vowelGathered(value) {
         if (!value) throw new Error("Cannot unset vowelGathered");
         this.#vowelGathered = true;
@@ -39,16 +41,13 @@ export class GatheringVowelsView extends FormantView {
     }
 
     constructor(view, formantProcessor) {
-        super();
+        super(view);
 
         this.userVowels = formantProcessor.userVowels;
         this.currentVowel = this.userVowels.nextVowel();
 
-        this.div = view.div;
-        let divStack = this.divStack = view.divStack;
-        this.h2 = view.h2;
-
         // remove all elements from divStack except h2
+        let divStack = this.divStack;
         while (divStack.lastChild !== this.h2) {
             divStack.removeChild(divStack.lastChild);
         }
@@ -56,37 +55,18 @@ export class GatheringVowelsView extends FormantView {
         this.h2.innerHTML = "Kalibracja samogłosek:<br>" + this.h2.innerHTML;
     }
 
-    initializePlot() {
-        // move the divStack element to .main-container in between the div and the canvas
-        let mainContainer = document.querySelector(".main-container");
-        mainContainer.appendChild(this.divStack);
-        mainContainer.insertBefore(this.divStack, document.querySelector("canvas"));
-        // remove everything from div
-        while (this.div.firstChild) {
-            this.div.removeChild(this.div.firstChild);
-        }
-        this.scatterPlot = new ScatterPlot("formants", true, "Hz");
-        this.scatterPlot.addSeries([]);
-        this.scatterPlot.addSeries([], true, formantCount);
-        this.scatterPlot.addSeries([]);
-        this.recordingStarted();
-    }
-
     feed(formants) {
-        if (!this.#speechDetected) throw new Error("Given formants without speech detected");
-        for (let formant of formants) {
-            this.scatterPlot.feed(formant, -2);
-        }
+        this.assertSpeechFormants();
+        super.feed(formants);
     }
 
     feedSmoothed(formants) {
-        if (!this.#speechDetected) throw new Error("Given formants without speech detected");
-        
-        this.scatterPlot.setSeriesSingle(formants, -1, 50);
+        this.assertSpeechFormants();
+        super.feedSmoothed(formants);
     }
 
     saveFormants(formants) {
-        if (!this.#speechDetected) throw new Error("Given formants without speech detected");
+        this.assertSpeechFormants();
 
         formants.size = 5;
         formants.color += "80";
@@ -108,5 +88,9 @@ export class GatheringVowelsView extends FormantView {
     recordingStopped() {
         super.recordingStopped();
         this.h2.innerHTML = "Włącz mikrofon, aby kontynuować kalibrację...";
+    }
+
+    assertSpeechFormants() {
+        if (!this.#speechDetected) throw new Error("Given formants without speech detected");
     }
 }

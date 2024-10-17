@@ -17,7 +17,8 @@ let view = null;
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
         state = updates.newState;
-        if (cookiesAccepted && stateSaveable(state)) Cookies.set("state", STATE_NAMES[state], { expires: 365 });
+        if (cookiesAccepted && stateSaveable(state)) 
+            Cookies.set("state", STATE_NAMES[state], { expires: 365 });
     }
     if (updates.preset !== undefined) {
         preset = updates.preset;
@@ -46,8 +47,15 @@ async function onStateChange(updates = {}, constructNewView = true) {
     }
 }
 
+const SAVEABLE_STATES = [
+    STATES.PRESET_SELECTION,
+    STATES.NO_SAMPLES_YET,
+    STATES.SPEECH_MEASURED,
+    // STATES.DONE
+]
+
 function stateSaveable(state) {
-    return [STATES.PRESET_SELECTION, STATES.NO_SAMPLES_YET, STATES.SPEECH_MEASURED, /* STATES.DONE */].includes(state);
+    return SAVEABLE_STATES.includes(state);
 }
 
 onStateChange();
