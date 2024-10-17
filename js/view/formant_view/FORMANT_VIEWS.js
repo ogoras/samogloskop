@@ -2,6 +2,7 @@ import { CalibrationStartView } from "./CalibrationStartView.js";
 import { SilenceView } from "./SilenceView.js";
 import { MeasuringSpeechView } from "./MeasuringSpeechView.js";
 import { GatheringVowelsView } from "./GatheringVowelsView.js";
+import { FreeView } from "./FreeView.js";
 import { STATES } from "../../definitions/states.js";
 
 export const FORMANT_VIEWS = {
@@ -13,5 +14,5 @@ export const FORMANT_VIEWS = {
     [STATES.WAITING_FOR_VOWELS]: GatheringVowelsView,
     [STATES.GATHERING_VOWELS]: GatheringVowelsView,
     [STATES.VOWEL_GATHERED]: GatheringVowelsView,
-    //[STATES.DONE]: TODO
+    [STATES.DONE]: FreeView
 }

@@ -140,8 +140,8 @@ export class FormantProcessor {
                 this.userVowels.addFormants(this.formantsToSave);
                 this.formantsToSave = undefined;
                 if (this.userVowels.isVowelGathered()) {
-                    ret.newState = this.state = STATES.VOWEL_GATHERED;
                     this.userVowels.saveVowel();
+                    ret.newState = this.state = this.userVowels.isDone() ? STATES.DONE : STATES.VOWEL_GATHERED;
                 }
                 return ret;
             case STATES.VOWEL_GATHERED:
@@ -158,7 +158,7 @@ export class FormantProcessor {
                 }
                 return ret;
             case STATES.DONE:
-                feedPlot(formants);
+                // TODO
                 return ret;
             default:
                 throw new Error("Unknown state: " + this.state);
@@ -201,6 +201,5 @@ export class FormantProcessor {
         this.reset();
     }
 
-    recordingStopped() {
-    }
+    recordingStopped() {}
 }

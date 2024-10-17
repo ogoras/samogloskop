@@ -29,7 +29,7 @@ async function onStateChange(updates = {}, constructNewView = true) {
         cookiesAccepted = updates.accepted;
         if (cookiesAccepted) Cookies.set("accepted", "true", { expires: 365 });
         else {
-            for (let [key, val] of Object.entries(Cookies.get())) {
+            for (let [key] of Object.entries(Cookies.get())) {
                 Cookies.remove(key);
             }
         }
@@ -47,7 +47,7 @@ async function onStateChange(updates = {}, constructNewView = true) {
 }
 
 function stateSaveable(state) {
-    return [STATES.PRESET_SELECTION, STATES.NO_SAMPLES_YET, STATES.SPEECH_MEASURED, STATES.DONE].includes(state);
+    return [STATES.PRESET_SELECTION, STATES.NO_SAMPLES_YET, STATES.SPEECH_MEASURED, /* STATES.DONE */].includes(state);
 }
 
 onStateChange();
