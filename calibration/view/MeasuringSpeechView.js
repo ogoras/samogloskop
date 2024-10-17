@@ -57,6 +57,7 @@ export class MeasuringSpeechView extends StatsView {
     }
 
     recordingStarted() {
+        super.recordingStarted();
         if (this.finished) {
             this.h2.innerHTML = "Pomiar poziomu głosu zakończony. Za chwilę przejdziesz do kalibracji samogłosek...";
         }
@@ -68,6 +69,7 @@ export class MeasuringSpeechView extends StatsView {
     }
 
     recordingStopped() {
+        super.recordingStopped();
         if (this.finished) {
             this.h2.innerHTML = "Włącz mikrofon, aby kontynuować...";
         }

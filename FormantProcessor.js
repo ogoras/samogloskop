@@ -121,6 +121,7 @@ export class FormantProcessor {
                 if (!this.intensityStats.detectSpeech()) {
                     this.formantsBuffer.clear();
                     this.smoothedFormantsBuffer.clear();
+                    ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
                     return ret;
                 }
                 ret.formants = [];
@@ -136,6 +137,7 @@ export class FormantProcessor {
                 }
                 ret.formantsSmoothed = this.smoothedFormants;
                 ret.formantsSaved = this.formantsToSave;
+                this.userVowels.addFormants(this.formantsToSave);
                 return ret;
             case STATES.DONE:
                 feedPlot(formants);

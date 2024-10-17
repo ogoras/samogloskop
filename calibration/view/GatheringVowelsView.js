@@ -4,23 +4,24 @@ import { formantCount } from '../../FormantProcessor.js';
 
 export class GatheringVowelsView extends FormantsView {
     #speechDetected = false;
+    #plotInitialized = false;
+    #hintKeepGoing = false;
 
+    /**
+     * @param {boolean} value
+     */
     set speechDetected(value) {
-        if (!value) throw new Error("Can't unset speechDetected");
+        if (value == this.#speechDetected) throw new Error("Setter tried to set speechDetected to the same value");
+
         this.#speechDetected = value;
-        // move the divStack element to .main-container in between the div and the canvas
-        let mainContainer = document.querySelector(".main-container");
-        mainContainer.appendChild(this.divStack);
-        mainContainer.insertBefore(this.divStack, document.querySelector("canvas"));
-        // remove everything from div
-        while (this.div.firstChild) {
-            this.div.removeChild(this.div.firstChild);
+        if (!this.#plotInitialized) {
+            this.#plotInitialized = true;
+            this.initializePlot();
         }
-        this.scatterPlot = new ScatterPlot("formants", true, "Hz");
-        this.scatterPlot.addSeries([]);
-        this.scatterPlot.addSeries([], true, formantCount);
-        this.scatterPlot.addSeries([]);
-        this.recordingStarted();
+        if (!value) {
+            this.#hintKeepGoing = true;
+            this.updateRecording();
+        }
     }
 
     constructor(view, formantProcessor) {
@@ -39,6 +40,22 @@ export class GatheringVowelsView extends FormantsView {
         }
         this.recordingStarted();
         this.h2.innerHTML = "Kalibracja samogłosek:<br>" + this.h2.innerHTML;
+    }
+
+    initializePlot() {
+        // move the divStack element to .main-container in between the div and the canvas
+        let mainContainer = document.querySelector(".main-container");
+        mainContainer.appendChild(this.divStack);
+        mainContainer.insertBefore(this.divStack, document.querySelector("canvas"));
+        // remove everything from div
+        while (this.div.firstChild) {
+            this.div.removeChild(this.div.firstChild);
+        }
+        this.scatterPlot = new ScatterPlot("formants", true, "Hz");
+        this.scatterPlot.addSeries([]);
+        this.scatterPlot.addSeries([], true, formantCount);
+        this.scatterPlot.addSeries([]);
+        this.recordingStarted();
     }
 
     feed(formants) {
@@ -62,11 +79,14 @@ export class GatheringVowelsView extends FormantsView {
     }
 
     recordingStarted() {
-        this.h2.innerHTML = `Powiedz <q>${this.currentVowel.letter.repeat(3)}</q>,
-             głośno i wyraźnie...`;
+        super.recordingStarted();
+        this.h2.innerHTML = 
+            (this.#hintKeepGoing ? "Jeszcze trochę, mów" : "Powiedz")
+            + ` <q>${this.currentVowel.letter.repeat(3)}</q>, głośno i wyraźnie...`;
     }
 
     recordingStopped() {
+        super.recordingStopped();
         this.h2.innerHTML = "Włącz mikrofon, aby kontynuować kalibrację...";
     }
 }

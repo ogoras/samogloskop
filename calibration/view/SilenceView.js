@@ -47,10 +47,12 @@ export class SilenceView extends StatsView {
     }
 
     recordingStarted() {
+        super.recordingStarted();
         this.h2.innerHTML = "Nagrywanie ciszy, nie odzywaj się...";
     }
 
     recordingStopped() {
+        super.recordingStopped();
         this.h2.innerHTML = "Nagrywanie ciszy wstrzymane.";
     }
 }
