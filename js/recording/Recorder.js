@@ -14,14 +14,19 @@ export class AudioRecorder {
         return this.audioBufferData ? this.audioBufferData.length : 0;
     }
 
+    #currentlyToggling = false;
+
     constructor() {
-        function toggleCallback() {
+        async function toggleCallback() {
+            if (this.#currentlyToggling) return;
+            this.#currentlyToggling = true;
             if (this.recording) {
                 this.stopRecording();
             } else {
-                this.startRecording();
+                await this.startRecording();
             }
-        } 
+            this.#currentlyToggling = false;
+        }
         this.recordButton.addEventListener('mousedown', toggleCallback.bind(this));
         addEventListener('keydown', (event) => {
             if (event.code === 'Space') {
