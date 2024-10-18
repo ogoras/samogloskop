@@ -139,6 +139,7 @@ export class IntensityStats {
     }
 
     isSilence(stats = this.buffer.getLastElement()) {
+        if (!stats) return false;
         return stats.mean < adjustdB(this.speechStats.max, -30);
     }
 

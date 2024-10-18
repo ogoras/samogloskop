@@ -3,15 +3,26 @@ import { ScatterPlot } from '../../../visualization/ScatterPlot.js';
 import { formantCount } from '../../../data/FormantProcessor.js';
 
 export class ScatterView extends FormantView {
-    constructor(view) {
+    constructor(arg, state) {
         super();
-        if (this.constructor === ScatterView)
+        if (this.constructor === ScatterView) {
             throw new Error("Cannot instantiate abstract class ScatterView");
-
-        this.div = view.div;
-        this.divStack = view.divStack;
-        this.h2 = view.h2;
-        if (view.scatterPlot) this.scatterPlot = view.scatterPlot;
+        }
+        if (state === undefined) {
+            let view = arg;
+            this.div = view.div;
+            this.divStack = view.divStack;
+            this.h2 = view.h2;
+            if (view.scatterPlot) this.scatterPlot = view.scatterPlot;
+        }
+        else {
+            let div = this.div = arg;
+            this.divStack = document.createElement("div");
+            this.divStack.classList.add("stack");
+            this.h2 = document.createElement("h2");
+            this.divStack.appendChild(this.h2);
+            this.initializePlot();
+        }
     }
 
     initializePlot() {
@@ -28,7 +39,17 @@ export class ScatterView extends FormantView {
         this.scatterPlot.addSeries([]);
         this.scatterPlot.addSeries([], true, formantCount);
         this.scatterPlot.addSeries([]);
-        this.recordingStarted();
+        this.refreshRecording();
+    }
+
+    saveFormants(formants) {
+        formants.size = 5;
+        if (formants.color.length <= 7) formants.color += "80";
+        this.scatterPlot.feed(formants, -4);
+    }
+
+    vowelCentroid(formants) {
+        this.scatterPlot.feed(formants, -3);
     }
 
     feed(formants) {

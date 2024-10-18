@@ -17,6 +17,7 @@ export class GatheringVowelsView extends ScatterView {
         if (!this.#plotInitialized) {
             this.#plotInitialized = true;
             this.initializePlot();
+            this.recordingStarted();
         }
         if (!value) {
             if (this.#vowelGathered) {
@@ -67,14 +68,7 @@ export class GatheringVowelsView extends ScatterView {
 
     saveFormants(formants) {
         this.assertSpeechFormants();
-
-        formants.size = 5;
-        formants.color += "80";
-        this.scatterPlot.feed(formants, -4);
-    }
-
-    vowelCentroid(formants) {
-        this.scatterPlot.feed(formants, -3);
+        super.saveFormants(formants);
     }
 
     recordingStarted() {

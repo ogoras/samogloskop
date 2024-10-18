@@ -58,7 +58,7 @@ const SAVEABLE_STATES = [
     STATES.PRESET_SELECTION,
     STATES.NO_SAMPLES_YET,
     STATES.SPEECH_MEASURED,
-    // STATES.DONE
+    STATES.DONE
 ]
 
 function stateSaveable(state) {

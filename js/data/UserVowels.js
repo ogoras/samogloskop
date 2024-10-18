@@ -26,21 +26,21 @@ export class UserVowels {
     }
 
     saveVowel() {
-        this.currentPhoneme.avg = { label: this.currentPhoneme.letter, color: this.currentPhoneme.color };
-        for (let attribute of ["x", "y", "size"]) this.calculateAvg(attribute);
-        this.currentPhoneme.avg.size *= 1.5;
+        this.calculateAverage();
         let ret = this.currentPhoneme;
         this.phonemesProcessed.push(ret);
         this.currentPhoneme = undefined;
         return ret;
     }
 
-    isDone() {
-        return this.phonemesRemaining.length === 0 && !this.currentPhoneme;
+    calculateAverage(phoneme = this.currentPhoneme) {
+        phoneme.avg = { label: phoneme.letter, color: phoneme.color };
+        for (let attribute of ["x", "y", "size"]) calculateAverageAttribute(phoneme, attribute);
+        phoneme.avg.size *= 1.5;
     }
 
-    calculateAvg(attribute) {
-        this.currentPhoneme.avg[attribute] = this.currentPhoneme.formants.reduce((acc, formant) => acc + formant[attribute], 0) / this.currentPhoneme.formants.length;
+    isDone() {
+        return this.phonemesRemaining.length === 0 && !this.currentPhoneme;
     }
 
     toString() {
@@ -55,4 +55,24 @@ export class UserVowels {
             }})
         );
     }
+
+    static fromString(string) {
+        let phonemesProcessed = JSON.parse(string);
+        let userVowels = new UserVowels();
+        userVowels.phonemesRemaining = [];
+        userVowels.phonemesProcessed = phonemesProcessed;
+        for (let phoneme of phonemesProcessed) {
+            userVowels.calculateAverage(phoneme);
+            for (let formant of phoneme.formants) {
+                formant.color = phoneme.color;
+            }
+        }
+        return userVowels;
+    }
+}
+
+function calculateAverageAttribute(phoneme, attribute) {
+    phoneme.avg[attribute] = 
+        phoneme.formants.reduce((acc, formant) => acc + formant[attribute], 0) 
+        / phoneme.formants.length;
 }
