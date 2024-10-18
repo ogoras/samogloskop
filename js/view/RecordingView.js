@@ -44,6 +44,22 @@ export class RecordingView extends View {
         canvas.classList.add("fl");
         this.mainContainer.appendChild(canvas);
 
+        if (localStorage.getItem("accepted") === "true") {
+            let localStorageInfo = document.createElement("div");
+            this.mainContainer.appendChild(localStorageInfo);
+            let p = document.createElement("p");
+            p.innerHTML = `Zaakceptowano przechowywanie danych w pamięci lokalnej.
+                Po wycofaniu zgody aplikacja będzie pamiętać dane tylko do końca sesji lub odświeżenia strony.`;
+            localStorageInfo.appendChild(p);
+            let button = document.createElement("button");
+            button.innerHTML = "Wycofaj zgodę i wyczyść dane z pamięci lokalnej";
+            button.addEventListener("click", () => {
+                this.onStateChange({ accepted: false }, false);
+                localStorageInfo.remove();
+            });
+            localStorageInfo.appendChild(button);
+        }
+
         this.audioRecorder = new AudioRecorder();
         this.formantProcessor = new FormantProcessor(this.audioRecorder.sampleRate, state, preset);
         this.waveformVisualizer = new WaveformVisualizer();
