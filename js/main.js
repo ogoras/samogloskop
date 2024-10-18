@@ -10,8 +10,8 @@ let preset = Cookies.get("preset");
 let cookiePopup = !cookiesAccepted;
 let state = STATES[Cookies.get("state")];
 if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
-let calibration = Cookies.get("calibration");
-if (calibration === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
+let intensityStats = Cookies.get("intensityStats");
+if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null;
 
 async function onStateChange(updates = {}, constructNewView = true) {
@@ -36,9 +36,9 @@ async function onStateChange(updates = {}, constructNewView = true) {
         }
         cookiePopup = false;
     }
-    if (updates.calibration !== undefined) {
-        calibration = updates.calibration;
-        if (cookiesAccepted) Cookies.set("calibration", calibration, { expires: 365 });
+    if (updates.intensityStats !== undefined) {
+        intensityStats = updates.intensityStats;
+        if (cookiesAccepted) Cookies.set("intensityStats", intensityStats, { expires: 365 });
     }
     if (constructNewView) {
         if (cookiePopup) view = new CookieView(onStateChange);

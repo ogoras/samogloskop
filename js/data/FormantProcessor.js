@@ -27,7 +27,7 @@ export class FormantProcessor {
         this.state = state;
         this.preset = preset;
         if (state >= STATES.SPEECH_MEASURED) {
-            this.intensityStats = IntensityStats.fromString(Cookies.get("calibration"));
+            this.intensityStats = IntensityStats.fromString(Cookies.get("intensityStats"));
         }
         //this.scatterPlot.addSeries(Object.entries(vowels).map(this.vowelToScatterPlotEntry.bind(this)));
         //this.scatterPlot.addSeries([], true, formantCount);

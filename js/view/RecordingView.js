@@ -119,7 +119,7 @@ export class RecordingView extends View {
 
         let newState = updates.newState;
         if (newState !== undefined) {
-            this.onStateChange({ newState, calibration: updates.intensityStatsString  }, false);
+            this.onStateChange({ newState, intensityStats: updates.intensityStatsString  }, false);
             this.updateView(newState);
         }
 
