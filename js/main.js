@@ -1,4 +1,4 @@
-import { CookieView } from './view/CookieView.js';
+import { ConsentView } from './view/ConsentView.js';
 import { PresetView } from './view/PresetView.js';
 import { RecordingView } from './view/RecordingView.js';
 
@@ -6,51 +6,49 @@ import { VERSION_MAJOR, VERSION_MINOR } from './definitions/version.js';
 import { STATES, STATE_NAMES } from './definitions/states.js';
 import { PRESETS, PRESET_NAMES } from './definitions/presets.js';
 
-let cookiesAccepted = Cookies.get("accepted") === "true";
-if (cookiesAccepted && !Cookies.get("version")) {
-    Cookies.set("version", "0.0", { expires: 365 });
+let dataConsentGiven = localStorage.getItem("accepted") === "true";
+if (dataConsentGiven && !localStorage.getItem("version")) {
+    localStorage.setItem("version", "0.0");
 }
-let preset = Cookies.get("preset");
-let cookiePopup = !cookiesAccepted;
-let state = STATES[Cookies.get("state")];
+let preset = localStorage.getItem("preset");
+let consentPopup = !dataConsentGiven;
+let state = STATES[localStorage.getItem("state")];
 if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
-let intensityStats = Cookies.get("intensityStats");
+let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null;
 
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
         state = updates.newState;
-        if (cookiesAccepted && stateSaveable(state)) 
-            Cookies.set("state", STATE_NAMES[state], { expires: 365 });
+        if (dataConsentGiven && stateSaveable(state)) 
+            localStorage.setItem("state", STATE_NAMES[state]);
     }
     if (updates.preset !== undefined) {
         preset = updates.preset;
-        if (cookiesAccepted) Cookies.set("preset", PRESET_NAMES[preset], { expires: 365 });
+        if (dataConsentGiven) localStorage.setItem("preset", PRESET_NAMES[preset]);
         state = STATES.NO_SAMPLES_YET;
-        if (cookiesAccepted) Cookies.set("state", STATE_NAMES[state], { expires: 365 });
+        if (dataConsentGiven) localStorage.setItem("state", STATE_NAMES[state]);
     }
     if (updates.accepted !== undefined) {
-        cookiesAccepted = updates.accepted;
-        if (cookiesAccepted) {
-            Cookies.set("accepted", "true", { expires: 365 });
-            Cookies.set("version", `${VERSION_MAJOR}.${VERSION_MINOR}`, { expires: 365 });
+        dataConsentGiven = updates.accepted;
+        if (dataConsentGiven) {
+            localStorage.setItem("accepted", "true");
+            localStorage.setItem("version", `${VERSION_MAJOR}.${VERSION_MINOR}`);
         }
         else {
-            for (let [key] of Object.entries(Cookies.get())) {
-                Cookies.remove(key);
-            }
+            localStorage.clear();
         }
-        cookiePopup = false;
+        consentPopup = false;
     }
     if (updates.intensityStats !== undefined) {
-        if (cookiesAccepted) Cookies.set("intensityStats", updates.intensityStats, { expires: 365 });
+        if (dataConsentGiven) localStorage.setItem("intensityStats", updates.intensityStats);
     }
     if (updates.userVowels !== undefined) {
-        if (cookiesAccepted) Cookies.set("userVowels", updates.userVowels, { expires: 365 });
+        if (dataConsentGiven) localStorage.setItem("userVowels", updates.userVowels);
     }
     if (constructNewView) {
-        if (cookiePopup) view = new CookieView(onStateChange);
+        if (consentPopup) view = new ConsentView(onStateChange);
         else if (state === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
         else view = new RecordingView(onStateChange, state, preset);
     }

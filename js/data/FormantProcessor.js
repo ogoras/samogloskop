@@ -24,7 +24,7 @@ export class FormantProcessor {
         this.state = state;
         this.preset = preset;
         if (state >= STATES.SPEECH_MEASURED) {
-            this.intensityStats = IntensityStats.fromString(Cookies.get("intensityStats"));
+            this.intensityStats = IntensityStats.fromString(localStorage.getItem("intensityStats"));
         }
     }
 
