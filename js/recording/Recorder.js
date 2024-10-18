@@ -20,12 +20,21 @@ export class AudioRecorder {
         async function toggleCallback() {
             if (this.#currentlyToggling) return;
             this.#currentlyToggling = true;
-            if (this.recording) {
-                this.stopRecording();
-            } else {
-                await this.startRecording();
+
+            try {
+                if (this.recording) {
+                    this.stopRecording();
+                } else {
+                    await this.startRecording();
+                }
+                this.#currentlyToggling = false;
             }
-            this.#currentlyToggling = false;
+            catch (error) {
+                console.log("An error occured in toggleCallback: " + error);
+            }
+            finally {
+                this.#currentlyToggling = false;
+            }
         }
         this.recordButton.addEventListener('mousedown', toggleCallback.bind(this));
         addEventListener('keydown', (event) => {
