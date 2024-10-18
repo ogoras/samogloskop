@@ -42,4 +42,17 @@ export class UserVowels {
     calculateAvg(attribute) {
         this.currentPhoneme.avg[attribute] = this.currentPhoneme.formants.reduce((acc, formant) => acc + formant[attribute], 0) / this.currentPhoneme.formants.length;
     }
+
+    toString() {
+        return JSON.stringify(
+            this.phonemesProcessed.map(phoneme => { return {
+                letter: phoneme.letter,
+                color: phoneme.color,
+                formants: phoneme.formants.map(formant => { return {
+                    x: formant.x,
+                    y: formant.y
+                }})
+            }})
+        );
+    }
 }

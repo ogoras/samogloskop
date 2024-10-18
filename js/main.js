@@ -2,10 +2,14 @@ import { CookieView } from './view/CookieView.js';
 import { PresetView } from './view/PresetView.js';
 import { RecordingView } from './view/RecordingView.js';
 
+import { VERSION_MAJOR, VERSION_MINOR } from './definitions/version.js';
 import { STATES, STATE_NAMES } from './definitions/states.js';
 import { PRESETS, PRESET_NAMES } from './definitions/presets.js';
 
 let cookiesAccepted = Cookies.get("accepted") === "true";
+if (cookiesAccepted && !Cookies.get("version")) {
+    Cookies.set("version", "0.0", { expires: 365 });
+}
 let preset = Cookies.get("preset");
 let cookiePopup = !cookiesAccepted;
 let state = STATES[Cookies.get("state")];
@@ -28,7 +32,10 @@ async function onStateChange(updates = {}, constructNewView = true) {
     }
     if (updates.accepted !== undefined) {
         cookiesAccepted = updates.accepted;
-        if (cookiesAccepted) Cookies.set("accepted", "true", { expires: 365 });
+        if (cookiesAccepted) {
+            Cookies.set("accepted", "true", { expires: 365 });
+            Cookies.set("version", `${VERSION_MAJOR}.${VERSION_MINOR}`, { expires: 365 });
+        }
         else {
             for (let [key] of Object.entries(Cookies.get())) {
                 Cookies.remove(key);
@@ -37,8 +44,10 @@ async function onStateChange(updates = {}, constructNewView = true) {
         cookiePopup = false;
     }
     if (updates.intensityStats !== undefined) {
-        intensityStats = updates.intensityStats;
-        if (cookiesAccepted) Cookies.set("intensityStats", intensityStats, { expires: 365 });
+        if (cookiesAccepted) Cookies.set("intensityStats", updates.intensityStats, { expires: 365 });
+    }
+    if (updates.userVowels !== undefined) {
+        if (cookiesAccepted) Cookies.set("userVowels", updates.userVowels, { expires: 365 });
     }
     if (constructNewView) {
         if (cookiePopup) view = new CookieView(onStateChange);

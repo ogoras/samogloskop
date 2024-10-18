@@ -11,9 +11,7 @@ const statsStep = 0.1;    // 100 ms
 const calibrationTime = 10; // 10 s
 
 export class FormantProcessor {
-    get calibrationTime() {
-        return calibrationTime;
-    }
+    get calibrationTime() { return calibrationTime; }
     formantsBuffer = new Buffer(formantCount);
     time = 0;
     div = document.getElementById("formants");
@@ -139,7 +137,12 @@ export class FormantProcessor {
                     this.formantsToSave = undefined;
                     if (this.userVowels.isVowelGathered()) {
                         ret.vowel = this.userVowels.saveVowel();
-                        ret.newState = this.state = this.userVowels.isDone() ? STATES.DONE : STATES.VOWEL_GATHERED;
+                        if (this.userVowels.isDone()) {
+                            ret.newState = this.state = STATES.DONE;
+                            ret.userVowelsString = this.userVowels.toString();
+                        } else {
+                            ret.newState = this.state = STATES.VOWEL_GATHERED;
+                        }
                     }
                 }
                 return ret;

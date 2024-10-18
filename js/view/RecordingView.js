@@ -119,7 +119,11 @@ export class RecordingView extends View {
 
         let newState = updates.newState;
         if (newState !== undefined) {
-            this.onStateChange({ newState, intensityStats: updates.intensityStatsString  }, false);
+            this.onStateChange({ 
+                newState,
+                intensityStats: updates.intensityStatsString,
+                userVowels: updates.userVowelsString
+            }, false);
             this.updateView(newState);
         }
 
