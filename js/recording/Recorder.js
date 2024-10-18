@@ -27,12 +27,9 @@ export class AudioRecorder {
                 } else {
                     await this.startRecording();
                 }
-                this.#currentlyToggling = false;
-            }
-            catch (error) {
+            } catch (error) {
                 console.log("An error occured in toggleCallback: " + error);
-            }
-            finally {
+            } finally {
                 this.#currentlyToggling = false;
             }
         }
