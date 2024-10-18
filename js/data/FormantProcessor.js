@@ -19,7 +19,6 @@ export class FormantProcessor {
     div = document.getElementById("formants");
     intensityStats = new IntensityStats(calibrationTime, statsStep);
     userVowels = new UserVowels();
-    //scatterPlot = new ScatterPlot("formants", true, "Hz");
 
     constructor(sampleRate, state = STATES.NO_SAMPLES_YET, preset = PRESETS.FEMALE) {
         this.sampleRate = sampleRate;
@@ -29,9 +28,6 @@ export class FormantProcessor {
         if (state >= STATES.SPEECH_MEASURED) {
             this.intensityStats = IntensityStats.fromString(Cookies.get("intensityStats"));
         }
-        //this.scatterPlot.addSeries(Object.entries(vowels).map(this.vowelToScatterPlotEntry.bind(this)));
-        //this.scatterPlot.addSeries([], true, formantCount);
-        //this.scatterPlot.addSeries([]);
     }
 
     vowelToScatterPlotEntry(vowel) {
