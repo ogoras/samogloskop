@@ -70,6 +70,10 @@ export class GatheringVowelsView extends ScatterView {
 
         formants.size = 5;
         formants.color += "80";
+        this.scatterPlot.feed(formants, -4);
+    }
+
+    vowelCentroid(formants) {
         this.scatterPlot.feed(formants, -3);
     }
 

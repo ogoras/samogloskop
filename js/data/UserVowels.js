@@ -26,11 +26,20 @@ export class UserVowels {
     }
 
     saveVowel() {
-        this.phonemesProcessed.push(this.currentPhoneme);
+        this.currentPhoneme.avg = { label: this.currentPhoneme.letter, color: this.currentPhoneme.color };
+        for (let attribute of ["x", "y", "size"]) this.calculateAvg(attribute);
+        this.currentPhoneme.avg.size *= 1.5;
+        let ret = this.currentPhoneme;
+        this.phonemesProcessed.push(ret);
         this.currentPhoneme = undefined;
+        return ret;
     }
 
     isDone() {
         return this.phonemesRemaining.length === 0 && !this.currentPhoneme;
+    }
+
+    calculateAvg(attribute) {
+        this.currentPhoneme.avg[attribute] = this.currentPhoneme.formants.reduce((acc, formant) => acc + formant[attribute], 0) / this.currentPhoneme.formants.length;
     }
 }

@@ -142,7 +142,7 @@ export class FormantProcessor {
                     this.userVowels.addFormants(this.formantsToSave);
                     this.formantsToSave = undefined;
                     if (this.userVowels.isVowelGathered()) {
-                        this.userVowels.saveVowel();
+                        ret.vowel = this.userVowels.saveVowel();
                         ret.newState = this.state = this.userVowels.isDone() ? STATES.DONE : STATES.VOWEL_GATHERED;
                     }
                 }

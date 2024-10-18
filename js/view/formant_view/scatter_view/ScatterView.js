@@ -25,6 +25,7 @@ export class ScatterView extends FormantView {
         }
         this.scatterPlot = new ScatterPlot("formants", true, "Hz");
         this.scatterPlot.addSeries([]);
+        this.scatterPlot.addSeries([]);
         this.scatterPlot.addSeries([], true, formantCount);
         this.scatterPlot.addSeries([]);
         this.recordingStarted();

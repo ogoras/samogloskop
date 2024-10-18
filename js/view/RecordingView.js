@@ -109,6 +109,9 @@ export class RecordingView extends View {
         let formantsSaved = updates.formantsSaved;
         if (formantsSaved) this.view.saveFormants(formantsSaved);
 
+        let vowel = updates.vowel;
+        if (vowel) this.view.vowelCentroid(vowel.avg);
+
         let progressTime = updates.progressTime;
         if (progressTime !== undefined  && this.view.updateProgress) this.view.updateProgress(progressTime);
         let progress = updates.progress;

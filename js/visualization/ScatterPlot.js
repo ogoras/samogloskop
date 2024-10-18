@@ -103,6 +103,7 @@ export class ScatterPlot {
             y: point.y,
             label: point.label ? series.g.append("text")
                 .attr("font-weight", "bold")
+                .attr("style", `text-shadow:${" 0 0 0.3em #fff,".repeat(5).slice(0, -1)}`)
                 .attr("font-family", "Helvetica, sans-serif")
                 .text(point.label)
                 .attr("x", this.x.scale(point.x))
