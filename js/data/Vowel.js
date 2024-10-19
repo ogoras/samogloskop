@@ -1,6 +1,31 @@
 export class Vowel {
     formants = [];
 
+    get meanFormants() {
+        if (!this.avg) this.calculateAverage();
+        return {
+            x: this.avg.x,
+            y: this.avg.y
+        }
+    }
+
+    get variance() {
+        if (!this.avg) this.calculateAverage();
+        let sumSqrDiffs = this.formants.reduce(
+            (acc, formant) => {
+                return {
+                    x: acc.x + (formant.x - this.avg.x) ** 2,
+                    y: acc.y + (formant.y - this.avg.y) ** 2
+                };
+            },
+            {x: 0, y: 0}
+        );
+        return {
+            x: sumSqrDiffs.x / this.formants.length,
+            y: sumSqrDiffs.y / this.formants.length
+        }
+    }
+
     constructor(letter, IPA, color = "#000000") {
         this.letter = letter;
         this.IPA = IPA;
@@ -21,6 +46,15 @@ export class Vowel {
         this.avg[attribute] = 
             this.formants.reduce((acc, formant) => acc + formant[attribute], 0) 
             / this.formants.length;
+    }
+
+    scaleLobanov(mean, deviation) {
+        function scaleFunction (formants) {
+            formants.x = (formants.x - mean.x) / deviation.x;
+            formants.y = (formants.y - mean.y) / deviation.y;
+        }
+        this.formants.forEach(scaleFunction);
+        scaleFunction(this.avg);
     }
 
     toSimpleObject() {

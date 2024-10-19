@@ -4,11 +4,13 @@ export class ScatterPlot {
     series = [];
     x = {
         domain: [0, 100],
+        range: [,,],
         scale: null,
         g: null
     };
     y = {
         domain: [0, 100],
+        range: [,,],
         scale: null,
         g: null
     };
@@ -90,8 +92,8 @@ export class ScatterPlot {
         }
     }
 
-    addPoint(point, seriesId, animationMs = 200) {
-        this.resizeIfNeeded(point, animationMs);
+    addPoint(point, seriesId, animationMs = 200, rescale = true) {
+        if (rescale) this.resizeIfNeeded(point, animationMs);
         let series = this.series[seriesId];
         series.points.push({
             element: series.g.append("circle")
@@ -124,9 +126,9 @@ export class ScatterPlot {
         }
     }
 
-    setSeriesSingle(point, seriesId = this.series.length - 1, animationMs = 50) {
+    setSeriesSingle(point, seriesId = this.series.length - 1, animationMs = 50, rescale = true) {
         if (seriesId < 0) seriesId = this.series.length + seriesId;
-        this.resizeIfNeeded(point, animationMs);
+        if (rescale) this.resizeIfNeeded(point, animationMs);
         let series = this.series[seriesId];
         if (!series.points.length) return this.addPoint(point, seriesId, 0);
         series.points[0].element.transition()
@@ -147,19 +149,25 @@ export class ScatterPlot {
     resizeDomain(axisId, value) {
         let axis = axisId ? this.y : this.x;
         let domain = axis.domain;
+        let range = axis.range;
         let changed = false;
         if (this.domainDefined) {
-            if (value < domain[0]) {
-                domain[0] = value - 0.1 * (domain[1] - domain[0]);
+            if (value < range[0]) {
+                range[0] = value;
                 changed = true;
-            } else if (value > domain[1]) {
-                domain[1] = value + 0.1 * (domain[1] - domain[0]);
+            } else if (value > range[1]) {
+                range[1] = value;
                 changed = true;
+            }
+            if (changed) {
+                let length = range[1] - range[0];
+                domain[0] = range[0] - length * 0.1;
+                domain[1] = range[1] + length * 0.1;
             }
         }
         else {
-            domain[0] = value;
-            domain[1] = value;
+            range[0] = domain[0] = value;
+            range[1] = domain[1] = value;
             changed = true;
         }
         if (changed) {
@@ -192,9 +200,9 @@ export class ScatterPlot {
         }
     }
 
-    feed(point, seriesId = this.series.length - 1) {
+    feed(point, seriesId = -1, rescale = true) {
         if (seriesId < 0) seriesId = this.series.length + seriesId;
-        this.addPoint(point, seriesId);
+        this.addPoint(point, seriesId, undefined, rescale);
     }
 
     clearSeries(seriesId) {

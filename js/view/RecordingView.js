@@ -9,6 +9,8 @@ export class RecordingView extends View {
     constructor(onStateChange, state, preset) {
         super(onStateChange);
 
+        this.state = state;
+
         // add a div before the main container
         let formantsContainer = this.formantsContainer = document.createElement("div");
         formantsContainer.classList.add("formants-container");
@@ -119,9 +121,9 @@ export class RecordingView extends View {
         if (intensityStats) this.view.update(intensityStats);
 
         let formants = updates.formants;
-        if (formants) this.view.feed(formants);
+        if (formants) this.view.feed(formants, this.state < STATES.DONE);
         let formantsSmoothed = updates.formantsSmoothed;
-        if (formantsSmoothed) this.view.feedSmoothed(formantsSmoothed);
+        if (formantsSmoothed) this.view.feedSmoothed(formantsSmoothed, this.state < STATES.DONE);
         let formantsSaved = updates.formantsSaved;
         if (formantsSaved) this.view.saveFormants(formantsSaved);
 
@@ -135,6 +137,7 @@ export class RecordingView extends View {
 
         let newState = updates.newState;
         if (newState !== undefined) {
+            this.state = newState;
             this.onStateChange({ 
                 newState,
                 intensityStats: updates.intensityStatsString,

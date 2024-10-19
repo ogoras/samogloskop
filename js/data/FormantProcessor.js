@@ -126,15 +126,17 @@ export class FormantProcessor {
                 ret.formants = [];
                 for (let formant of formants) {
                     if (formant.formant.length >= 2) {
-                        ret.formants.push({
+                        let point = {
                             x: formant.formant[1].frequency,
                             y: formant.formant[0].frequency,
                             color: "#00000044",
                             size: 3
-                        });
+                        }
+                        this.userVowels.scale(point);
+                        ret.formants.push(point);
                     }
                 }
-                ret.formantsSmoothed = this.smoothedFormants;
+                ret.formantsSmoothed = this.userVowels.scale(this.smoothedFormants);
                 if (this.state !== STATES.DONE) {
                     ret.formantsSaved = this.formantsToSave;
                     this.userVowels.addFormants(this.formantsToSave);
@@ -143,6 +145,7 @@ export class FormantProcessor {
                         ret.vowel = this.userVowels.saveVowel();
                         if (this.userVowels.isDone()) {
                             ret.newState = this.state = STATES.DONE;
+                            this.userVowels.scaleLobanov();
                             ret.userVowelsString = this.userVowels.toString();
                         } else {
                             ret.newState = this.state = STATES.VOWEL_GATHERED;

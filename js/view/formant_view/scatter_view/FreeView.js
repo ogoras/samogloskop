@@ -19,14 +19,20 @@ export class FreeView extends ScatterView {
         }
         this.divStack.appendChild(button);
 
-        if (state === STATES.DONE) {
-            let userVowels = formantProcessor.userVowels;
+        if (state === undefined) {
+            // remove all elements from the div
+            while (this.div.firstChild) {
+                this.div.removeChild(this.div.firstChild);
+            }
+            this.initializePlot();
+        }
+        
+        let userVowels = formantProcessor.userVowels;
             for (let vowel of userVowels.vowelsProcessed) {
                 for (let formant of vowel.formants) {
                     this.saveFormants(formant);
                 }
                 this.vowelCentroid(vowel.avg);
             }
-        }
     }
 }

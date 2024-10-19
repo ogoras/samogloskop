@@ -10,6 +10,13 @@ let dataConsentGiven = localStorage.getItem("accepted") === "true";
 if (dataConsentGiven && !localStorage.getItem("version")) {
     localStorage.setItem("version", "0.0");
 }
+let localStorageVersion = localStorage.getItem("version")
+if (localStorageVersion !== `${VERSION_MAJOR}.${VERSION_MINOR}`) {
+    // for now, every update will clear the local storage to avoid any conversion issues
+    // TODO: implement a conversion mechanism for versions 1.x and higher
+    localStorage.clear();
+    dataConsentGiven = false;
+}
 let preset = localStorage.getItem("preset");
 let consentPopup = !dataConsentGiven;
 let state = STATES[localStorage.getItem("state")];
