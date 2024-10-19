@@ -1,5 +1,5 @@
 import { ScatterView } from "./ScatterView.js";
-import { STATES } from "../../../definitions/states.js";
+import { STATES } from "../../../const/states.js";
 
 export class FreeView extends ScatterView {
     constructor(arg, formantProcessor, state) {
@@ -21,11 +21,11 @@ export class FreeView extends ScatterView {
 
         if (state === STATES.DONE) {
             let userVowels = formantProcessor.userVowels;
-            for (let phoneme of userVowels.phonemesProcessed) {
-                for (let formant of phoneme.formants) {
+            for (let vowel of userVowels.vowelsProcessed) {
+                for (let formant of vowel.formants) {
                     this.saveFormants(formant);
                 }
-                this.vowelCentroid(phoneme.avg);
+                this.vowelCentroid(vowel.avg);
             }
         }
     }

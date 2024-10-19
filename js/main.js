@@ -2,9 +2,9 @@ import { ConsentView } from './view/ConsentView.js';
 import { PresetView } from './view/PresetView.js';
 import { RecordingView } from './view/RecordingView.js';
 
-import { VERSION_MAJOR, VERSION_MINOR } from './definitions/version.js';
-import { STATES, STATE_NAMES } from './definitions/states.js';
-import { PRESETS, PRESET_NAMES } from './definitions/presets.js';
+import { VERSION_MAJOR, VERSION_MINOR } from './const/version.js';
+import { STATES, STATE_NAMES } from './const/states.js';
+import { PRESETS, PRESET_NAMES } from './const/presets.js';
 
 let dataConsentGiven = localStorage.getItem("accepted") === "true";
 if (dataConsentGiven && !localStorage.getItem("version")) {

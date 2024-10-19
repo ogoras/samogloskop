@@ -1,9 +1,9 @@
-import { soundToFormant } from '../sound_to_formant/formant.js';
+import { soundToFormant } from '../praat/formant.js';
 import { IntensityStats } from './IntensityStats.js';
 import { Buffer } from '../util/Buffer.js';
-import { UserVowels } from './UserVowels.js';
-import { STATES, STATE_NAMES } from '../definitions/states.js';
-import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from '../definitions/presets.js';
+import { SpeakerVowels } from './SpeakerVowels.js';
+import { STATES, STATE_NAMES } from '../const/states.js';
+import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from '../const/presets.js';
 
 export const formantCount = 20;
 const minimumSmoothingCount = 20;
@@ -16,7 +16,7 @@ export class FormantProcessor {
     time = 0;
     div = document.getElementById("formants");
     intensityStats = new IntensityStats(calibrationTime, statsStep);
-    userVowels = new UserVowels();
+    userVowels = new SpeakerVowels();
 
     constructor(sampleRate, state = STATES.NO_SAMPLES_YET, preset = PRESETS.FEMALE) {
         this.sampleRate = sampleRate;
@@ -27,7 +27,7 @@ export class FormantProcessor {
             this.intensityStats = IntensityStats.fromString(localStorage.getItem("intensityStats"));
         }
         if (state >= STATES.DONE) {
-            this.userVowels = UserVowels.fromString(localStorage.getItem("userVowels"));
+            this.userVowels = SpeakerVowels.fromString(localStorage.getItem("userVowels"));
         }
     }
 
@@ -185,7 +185,7 @@ export class FormantProcessor {
             x: xSum / weightSum,
             y: ySum / weightSum,
             size: 10,
-            color: !this.userVowels.isDone() ? this.userVowels.currentPhoneme.color : "black"
+            color: !this.userVowels.isDone() ? this.userVowels.currentVowel.color : "black"
         };
         this.formantsToSave = this.smoothedFormantsBuffer.push(smoothedFormants)
         return smoothedFormants;

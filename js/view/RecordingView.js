@@ -2,7 +2,7 @@ import { View } from './View.js';
 import { AudioRecorder } from '../recording/Recorder.js';
 import { FormantProcessor } from '../data/FormantProcessor.js';
 import { WaveformVisualizer } from '../visualization/waveform/WaveformVisualizer.js';
-import { STATES, STATE_NAMES } from '../definitions/states.js';
+import { STATES, STATE_NAMES } from '../const/states.js';
 import { FORMANT_VIEWS } from './formant_view/FORMANT_VIEWS.js';
 
 export class RecordingView extends View {

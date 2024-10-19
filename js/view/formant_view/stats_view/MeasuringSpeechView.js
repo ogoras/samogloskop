@@ -1,7 +1,7 @@
-import { tonguetwisters } from "../../../definitions/tonguetwisters.js";
+import { tonguetwisters } from "../../../const/tonguetwisters.js";
 import { choose } from "../../../util/choose.js";
 import { StatsView } from "./StatsView.js";
-import { STATE_NAMES, STATES } from "../../../definitions/states.js";
+import { STATE_NAMES, STATES } from "../../../const/states.js";
 import { ProgressBar } from "../../../visualization/ProgressBar.js";
 
 export class MeasuringSpeechView extends StatsView {
