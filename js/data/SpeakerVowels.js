@@ -1,4 +1,4 @@
-import { vowels } from '../const/polishVowels.js';
+import { vowels } from '../const/vowels/PL.js';
 import { Vowel } from './Vowel.js';
 
 const REQUIRED_FORMANTS = 20;

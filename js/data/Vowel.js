@@ -26,9 +26,9 @@ export class Vowel {
         }
     }
 
-    constructor(letter, IPA, color = "#000000") {
-        this.letter = letter;
+    constructor(IPA, letter, color = "#000000") {
         this.IPA = IPA;
+        this.letter = letter;
         this.color = color;
     }
 
@@ -69,7 +69,7 @@ export class Vowel {
     }
 
     static fromSimpleObject(obj) {
-        let vowel = new Vowel(obj.letter, undefined, obj.color);    // TODO: figure out IPA
+        let vowel = new Vowel(undefined, obj.letter, obj.color);    // TODO: figure out IPA
         vowel.formants = obj.formants.map(formants => { 
             return {...formants, size: 5, color: vowel.color};
         });

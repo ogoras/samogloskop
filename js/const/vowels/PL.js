@@ -6,13 +6,13 @@
 //     u : { F1: 320, F2: 630, color: "rgb(0, 0, 255)"  },
 //     y : { F1: 480, F2: 1750, color: "rgb(150, 75, 0)" }
 // }
-import { Vowel } from "../data/Vowel.js";
+import { Vowel } from "../../data/Vowel.js";
 
 export const vowels = [
-    new Vowel("a", {broad: "a", narrow: "ä"}, "#ff0000"),
-    new Vowel("e", {broad: "ɛ", narrow: "ɛ"}, "#faa500"),
-    new Vowel("i", {broad: "i", narrow: "i"}, "#00c800"),
-    new Vowel("o", {broad: "ɔ", narrow: "ɔ"}, "#ff00ff"),
-    new Vowel("u", {broad: "u", narrow: "u"}, "#0000ff"),
-    new Vowel("y", {broad: "ɨ", narrow: "ɘ"}, "#964b00")
+    new Vowel({broad: "a", narrow: "ä"}, "a", "#ff0000"),
+    new Vowel({broad: "ɛ", narrow: "ɛ"}, "e",  "#faa500"),
+    new Vowel({broad: "i", narrow: "i"}, "i", "#00c800"),
+    new Vowel({broad: "ɔ", narrow: "ɔ"}, "o", "#ff00ff"),
+    new Vowel({broad: "u", narrow: "u"}, "u", "#0000ff"),
+    new Vowel({broad: "ɨ", narrow: "ɘ"}, "y", "#964b00")
 ]
