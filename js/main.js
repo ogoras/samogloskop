@@ -2,6 +2,9 @@ import { ConsentView } from './view/ConsentView.js';
 import { PresetView } from './view/PresetView.js';
 import { RecordingView } from './view/RecordingView.js';
 
+import { AudioRecorder } from './recording/Recorder.js';
+import { FormantProcessor } from './data/FormantProcessor.js';
+
 import { VERSION_MAJOR, VERSION_MINOR } from './const/version.js';
 import { STATES, STATE_NAMES } from './const/states.js';
 import { PRESETS, PRESET_NAMES } from './const/presets.js';
@@ -23,7 +26,7 @@ let state = STATES[localStorage.getItem("state")];
 if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
 let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
-let view = null;
+let view = null, audioRecorder = null, formantProcessor = null;
 
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
@@ -57,8 +60,49 @@ async function onStateChange(updates = {}, constructNewView = true) {
     if (constructNewView) {
         if (consentPopup) view = new ConsentView(onStateChange);
         else if (state === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
-        else view = new RecordingView(onStateChange, state, preset);
+        else {
+            view = new RecordingView(onStateChange);
+            audioRecorder = new AudioRecorder();
+            formantProcessor = new FormantProcessor(audioRecorder.sampleRate, state, preset);
+            view.updateView(state, formantProcessor);
+            audioRecorder.onStart = () => {
+                formantProcessor.recordingStarted();
+                view.recordingStarted();
+            };
+            audioRecorder.onStop = () => {
+                formantProcessor.recordingStopped();
+                view.recordingStopped();
+            };
+            renderLoop();
+        }
     }
+}
+
+function renderLoop() {
+    if (audioRecorder.samplesCollected < 8) {
+        requestAnimationFrame(renderLoop);
+        return;
+    }
+
+    const samples = audioRecorder.dump();
+
+    let updates = formantProcessor.feed(samples);
+
+    let newState = updates.newState;
+    if (newState !== undefined) {
+        updates.newState = undefined;
+        state = newState;
+        onStateChange({ 
+            newState,
+            intensityStats: updates.intensityStatsString,
+            userVowels: updates.userVowelsString
+        }, false);
+        view.updateView(newState, formantProcessor);
+    }
+
+    view.feed(samples, updates, state < STATES.DONE);
+
+    requestAnimationFrame(renderLoop);
 }
 
 const SAVEABLE_STATES = [
