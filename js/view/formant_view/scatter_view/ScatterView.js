@@ -53,7 +53,7 @@ export default class ScatterView extends FormantView {
 
     feed(formants, rescale = true) {
         for (let formant of formants) {
-            this.scatterPlot.feed(formant, -2, rescale);
+            this.scatterPlot.feed(formant, 2, rescale);
         }
     }
 

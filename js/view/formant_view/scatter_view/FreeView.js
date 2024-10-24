@@ -39,5 +39,13 @@ export default class FreeView extends ScatterView {
     addDataset(vowels) {
         this.scatterPlot.insertSeries(vowels.singleMeasurements, 2);
         this.scatterPlot.insertSeries(vowels.centroids, 3);
+        this.visibleVowelsChoice = document.createElement("div");
+        this.visibleVowelsChoice.innerHTML = 
+            `<h3>Pokaż:</h3><br>
+            moje samogłoski <input type="checkbox" id="user-vowels" checked><br>
+            samogłoski angielskie <p class=gray>(General American, Peterson & Barney, 1952)</p>
+            <input type="checkbox" id="peterson-barney" checked>`;
+        // insert after canvas
+        this.div.insertBefore(this.visibleVowelsChoice, this.canvas);
     }
 }
