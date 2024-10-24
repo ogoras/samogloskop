@@ -101,6 +101,7 @@ function renderLoop() {
             userVowels: updates.userVowelsString
         }, false);
         view.updateView(newState, formantProcessor);
+        if (state === STATES.DONE && petersonBarney.initialized) view.addDataset(petersonBarney); 
     }
 
     requestAnimationFrame(renderLoop);

@@ -219,6 +219,13 @@ export default class ScatterPlot {
         }
         this.series[seriesId].points = [];
     }
+
+    setSeriesVisibility(visible, ...seriesIds) {
+        for (let seriesId of seriesIds) {
+            if (seriesId < 0) seriesId = this.series.length + seriesId;
+            this.series[seriesId].g.style("display", visible ? "block" : "none");
+        }
+    }
 }
 
 function parseFlipParameter(flip) {

@@ -22,7 +22,7 @@ export default class Vowels {
                 vowel.formants = data[vowel.key()].map(formants => {
                     return { 
                         y: formants.F1 * 0.8,     // TODO: implement it better
-                        x: formants.F2 * 0.9 - 0.3,
+                        x: formants.F2,
                         identified: formants.identified,
                         size: 3,
                         color: vowel.color + (formants.identified ? "80" : "40")
