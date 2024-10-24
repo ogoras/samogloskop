@@ -6,9 +6,9 @@
 //     u : { F1: 320, F2: 630, color: "rgb(0, 0, 255)"  },
 //     y : { F1: 480, F2: 1750, color: "rgb(150, 75, 0)" }
 // }
-import { Vowel } from "../../data/Vowel.js";
+import Vowel from "../../data/Vowel.js";
 
-export const vowels = [
+const vowels = [
     new Vowel({broad: "a", narrow: "ä"}, "a", "#ff0000"),
     new Vowel({broad: "ɛ", narrow: "ɛ"}, "e",  "#faa500"),
     new Vowel({broad: "i", narrow: "i"}, "i", "#00c800"),
@@ -16,3 +16,5 @@ export const vowels = [
     new Vowel({broad: "u", narrow: "u"}, "u", "#0000ff"),
     new Vowel({broad: "ɨ", narrow: "ɘ"}, "y", "#964b00")
 ]
+
+export default vowels;

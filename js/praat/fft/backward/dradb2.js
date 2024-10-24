@@ -1,4 +1,4 @@
-export function dradb2 (ido, l1, cc, ch, wa1, waoffset)
+export default function dradb2 (ido, l1, cc, ch, wa1, waoffset)
 {
 	const t0 = l1 * ido;
 

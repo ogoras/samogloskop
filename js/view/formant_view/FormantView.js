@@ -1,4 +1,4 @@
-export class FormantView {
+export default class FormantView {
     constructor() {
         if (this.constructor === FormantView)
             throw new Error("Cannot instantiate abstract class FormantView");

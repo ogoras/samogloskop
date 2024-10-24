@@ -1,4 +1,4 @@
-export class Vowel {
+export default class Vowel {
     formants = [];
 
     get meanFormants() {

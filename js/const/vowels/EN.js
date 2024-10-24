@@ -1,6 +1,6 @@
-import { Vowel } from "../../data/Vowel.js";
+import Vowel from "../../data/Vowel.js";
 
-export const vowels = [
+const vowels = [
     new Vowel({broad: "ɑ"}),
     new Vowel({broad: "æ"}),
     new Vowel({broad: "ɛ"}),
@@ -11,3 +11,5 @@ export const vowels = [
     new Vowel({broad: "ʌ"}),
     new Vowel({broad: "ɔ"})
 ]
+
+export default vowels;

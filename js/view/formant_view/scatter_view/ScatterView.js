@@ -1,8 +1,8 @@
-import { FormantView } from '../FormantView.js';
-import { ScatterPlot } from '../../../visualization/ScatterPlot.js';
+import FormantView from '../FormantView.js';
+import ScatterPlot from '../../../visualization/ScatterPlot.js';
 import { formantCount } from '../../../data/FormantProcessor.js';
 
-export class ScatterView extends FormantView {
+export default class ScatterView extends FormantView {
     constructor(arg, state) {
         super();
         if (this.constructor === ScatterView) {

@@ -1,4 +1,4 @@
-export function dradb3 (ido, l1, cc, ch, wa, wa1offset, wa2offset)
+export default function dradb3 (ido, l1, cc, ch, wa, wa1offset, wa2offset)
 {
 	const taur = -.5;
 	const taui = .86602540378443864676372317075293618;

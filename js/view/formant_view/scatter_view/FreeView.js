@@ -1,7 +1,7 @@
-import { ScatterView } from "./ScatterView.js";
-import { STATES } from "../../../const/states.js";
+import ScatterView from "./ScatterView.js";
+import STATES from "../../../const/states.js";
 
-export class FreeView extends ScatterView {
+export default class FreeView extends ScatterView {
     constructor(arg, formantProcessor, state) {
         super(arg, state);
 

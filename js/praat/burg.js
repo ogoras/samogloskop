@@ -1,8 +1,8 @@
-import { VECburg } from './num/vec_burg.js';
+import VECburg from './num/vec_burg.js';
 import { Polynomial_create } from './num/polynomial.js';
 import { Polynomial_to_Roots, Roots_fixIntoUnitCircle } from './num/roots.js';
 
-export function burg(samples, coefficients, frame_intensity, nyquistFrequency, safetyMargin) {
+export default function burg(samples, coefficients, frame_intensity, nyquistFrequency, safetyMargin) {
     // TODO
     let frame = {
         numberOfFormants: 0,

@@ -1,7 +1,5 @@
 // visualizer based on code from https://github.com/mdn/dom-examples/blob/main/media/web-dictaphone/scripts/app.js
-
-
-export function drawWaveform(dataArray, bufferLength, canvas, canvasCtx) {
+export default function drawWaveform(dataArray, bufferLength, canvas, canvasCtx) {
     const WIDTH = canvas.width;
     const HEIGHT = canvas.height;
     canvasCtx.fillStyle = "rgb(200, 200, 200)";

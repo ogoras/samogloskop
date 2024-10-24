@@ -1,6 +1,6 @@
-import { drfti1 } from './drfti1.js';
-import { drftf1 } from './forward/drftf1.js';
-import { drftb1 } from './backward/drftb1.js';
+import drfti1 from './drfti1.js';
+import drftf1 from './forward/drftf1.js';
+import drftb1 from './backward/drftb1.js';
 
 // NUMforwardRealFastFourierTransform in Praat
 export function fft(data) {

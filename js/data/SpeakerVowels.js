@@ -1,8 +1,8 @@
-import { vowels } from '../const/vowels/PL.js';
-import { Vowel } from './Vowel.js';
+import vowels from '../const/vowels/PL.js';
+import Vowel from './Vowel.js';
 
 const REQUIRED_FORMANTS = 20;
-export class SpeakerVowels {
+export default class SpeakerVowels {
     vowelsRemaining = [...vowels];
     vowelsProcessed = [];
     lobanovScaled = false;

@@ -1,11 +1,11 @@
-import { CalibrationStartView } from "./CalibrationStartView.js";
-import { SilenceView } from "./stats_view/SilenceView.js";
-import { MeasuringSpeechView } from "./stats_view/MeasuringSpeechView.js";
-import { GatheringVowelsView } from "./scatter_view/GatheringVowelsView.js";
-import { FreeView } from "./scatter_view/FreeView.js";
-import { STATES } from "../../const/states.js";
+import CalibrationStartView from "./CalibrationStartView.js";
+import SilenceView from "./stats_view/SilenceView.js";
+import MeasuringSpeechView from "./stats_view/MeasuringSpeechView.js";
+import GatheringVowelsView from "./scatter_view/GatheringVowelsView.js";
+import FreeView from "./scatter_view/FreeView.js";
+import STATES from "../../const/states.js";
 
-export const FORMANT_VIEWS = {
+export default {
     [STATES.NO_SAMPLES_YET]: CalibrationStartView,
     [STATES.GATHERING_SILENCE]: SilenceView,
     [STATES.WAITING_FOR_SPEECH]: MeasuringSpeechView,

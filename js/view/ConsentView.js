@@ -1,4 +1,4 @@
-import { ChoiceView } from "./ChoiceView.js";
+import ChoiceView from "./ChoiceView.js";
 
 const noticeText = `Ta strona używa pamięci <b>localStorage</b>, by zapamiętywać dane o twoim głosie.
     Jeżeli nie wyrażasz na to zgody, korzystanie z aplikacji może być utrudnione.
@@ -19,7 +19,7 @@ const choices = [
 ]
 
 
-export class ConsentView extends ChoiceView {
+export default class ConsentView extends ChoiceView {
     constructor(onStateChange) {
         super(onStateChange, noticeText, choices);
     }

@@ -1,6 +1,6 @@
-import { FormantView } from "./FormantView.js";
+import FormantView from "./FormantView.js";
 
-export class CalibrationStartView extends FormantView {
+export default class CalibrationStartView extends FormantView {
     constructor(container) {
         super();
 

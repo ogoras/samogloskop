@@ -1,8 +1,8 @@
-import { drawWaveform } from './drawWaveform.js';
+import drawWaveform from './drawWaveform.js';
 
 const bufferLength = 1024;
 
-export class WaveformVisualizer {
+export default class WaveformVisualizer {
     dataArray = new Float32Array(bufferLength);
 
     static get bufferLength() {

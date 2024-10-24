@@ -1,4 +1,4 @@
-export class AudioRecorder {
+export default class AudioRecorder {
     stream = null;
     audioCtx = null; source = null; audioBufferData = []; recorderNode = null;
     initialized = false; recording = false;

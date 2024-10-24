@@ -1,7 +1,7 @@
-import { View } from './View.js';
-import { WaveformVisualizer } from '../visualization/waveform/WaveformVisualizer.js';
+import View from './View.js';
+import WaveformVisualizer from '../visualization/waveform/WaveformVisualizer.js';
 import { STATES, STATE_NAMES } from '../const/states.js';
-import { FORMANT_VIEWS } from './formant_view/FORMANT_VIEWS.js';
+import FORMANT_VIEWS from './formant_view/FORMANT_VIEWS.js';
 
 const UPDATE_FUNCTION = {
     intensityStats: (t, x) => { t.update?.(x); },
@@ -14,7 +14,7 @@ const UPDATE_FUNCTION = {
     startTime: (t, time) => { t.startTime = time; },
 }
 
-export class RecordingView extends View {
+export default class RecordingView extends View {
     constructor(onStateChange) {
         super(onStateChange);
 

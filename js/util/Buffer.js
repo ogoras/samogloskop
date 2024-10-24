@@ -1,4 +1,4 @@
-export class Buffer {
+export default class Buffer {
     buffer = [];
 
     constructor(capacity) {

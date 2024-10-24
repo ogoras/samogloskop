@@ -1,4 +1,4 @@
-export class ScatterPlot {
+export default class ScatterPlot {
     margin = { top: 10, right: 30, bottom: 30, left: 60 };
     domainDefined = false;
     series = [];

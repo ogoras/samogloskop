@@ -1,5 +1,5 @@
 // drfti1 in Praat
-export function drfti1(n, wa, ifac, waoffset = 0) {
+export default function drfti1(n, wa, ifac, waoffset = 0) {
 	const ntryh = [4, 2, 3, 5];
 	const tpi = 6.28318530717958647692528676655900577;
 	let ntry = 0, j = -1, nl = n, nf = 0;

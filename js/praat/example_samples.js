@@ -1,4 +1,4 @@
-export let exampleSamples = [
+export default exampleSamples = [
     0.00779525563120842,
     0.011857626959681511,
     0.014745783060789108,
