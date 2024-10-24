@@ -4,13 +4,13 @@ import { STATES, STATE_NAMES } from '../const/states.js';
 import { FORMANT_VIEWS } from './formant_view/FORMANT_VIEWS.js';
 
 const UPDATE_FUNCTION = {
-    intensityStats: (t, x) => { t.update(x) },
-    formants: (t, x, y) => { t.feed(x, y) },
-    formantsSmoothed: (t, x, y) => { t.feedSmoothed(x, y) },
-    formantsSaved: (t, x) => { t.saveFormants(x) },
-    vowel: (t, vowel) => { t.vowelCentroid(vowel.avg) },
-    progressTime: (t, time) => { if (y.updateProgress) y.updateProgress(time); },
-    progress: (t, progress) => { if (t.updateProgress) t.updateProgress(progress, false); },
+    intensityStats: (t, x) => { t.update?.(x) },
+    formants: (t, x, y) => { t.feed?.(x, y) },
+    formantsSmoothed: (t, x, y) => { t.feedSmoothed?.(x, y) },
+    formantsSaved: (t, x) => { t.saveFormants?.(x) },
+    vowel: (t, vowel) => { t.vowelCentroid?.(vowel.avg) },
+    progressTime: (t, time) => { t.updateProgress?.(time); },
+    progress: (t, progress) => { t.updateProgress?.(progress, false); },
     startTime: (t, time) => { t.startTime = time; },
 }
 
@@ -100,10 +100,8 @@ export class RecordingView extends View {
     }
 
     feed(samples, updates, rescalePlots) {
-        console.log(updates);
-        console.log(Object.entries(updates));
         for (let [key, value] of Object.entries(updates)) {
-            if (value !== undefined) UPDATE_FUNCTION[key](this.view, value, rescalePlots);
+            if (value !== undefined && value !== null) UPDATE_FUNCTION[key]?.(this.view, value, rescalePlots);
         }
         this.waveformVisualizer.feed(samples);
     }

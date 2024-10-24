@@ -88,9 +88,10 @@ function renderLoop() {
 
     let updates = formantProcessor.feed(samples);
 
+    view.feed(samples, updates, state < STATES.DONE);
+
     let newState = updates.newState;
     if (newState !== undefined) {
-        updates.newState = undefined;
         state = newState;
         onStateChange({ 
             newState,
@@ -99,8 +100,6 @@ function renderLoop() {
         }, false);
         view.updateView(newState, formantProcessor);
     }
-
-    view.feed(samples, updates, state < STATES.DONE);
 
     requestAnimationFrame(renderLoop);
 }
