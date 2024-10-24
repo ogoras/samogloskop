@@ -1,7 +1,7 @@
-import { ScatterView } from "./ScatterView.js";
-import { STATES } from "../../../const/states.js";
+import ScatterView from "./ScatterView.js";
+import STATES from "../../../const/states.js";
 
-export class FreeView extends ScatterView {
+export default class FreeView extends ScatterView {
     constructor(arg, formantProcessor, state) {
         super(arg, state);
 
@@ -34,5 +34,10 @@ export class FreeView extends ScatterView {
                 }
                 this.vowelCentroid(vowel.avg);
             }
+    }
+
+    addDataset(vowels) {
+        this.scatterPlot.insertSeries(vowels.singleMeasurements, 2);
+        this.scatterPlot.insertSeries(vowels.centroids, 3);
     }
 }

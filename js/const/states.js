@@ -1,4 +1,4 @@
-import { arrToObj } from "../util/arrToObj.js";
+import arrToObj from "../util/arrToObj.js";
 
 export const STATE_NAMES = [
     "PRESET_SELECTION",
@@ -13,3 +13,5 @@ export const STATE_NAMES = [
     "DONE"
 ]
 export const STATES = arrToObj(STATE_NAMES);
+
+export default STATES;

@@ -1,7 +1,7 @@
-import { soundToFormant } from '../praat/formant.js';
-import { IntensityStats } from './IntensityStats.js';
-import { Buffer } from '../util/Buffer.js';
-import { SpeakerVowels } from './SpeakerVowels.js';
+import soundToFormant from '../praat/formant.js';
+import IntensityStats from './IntensityStats.js';
+import Buffer from '../util/Buffer.js';
+import SpeakerVowels from './SpeakerVowels.js';
 import { STATES, STATE_NAMES } from '../const/states.js';
 import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from '../const/presets.js';
 
@@ -10,7 +10,7 @@ const minimumSmoothingCount = 20;
 const statsStep = 0.1;    // 100 ms
 const calibrationTime = 10; // 10 s
 
-export class FormantProcessor {
+export default class FormantProcessor {
     get calibrationTime() { return calibrationTime; }
     formantsBuffer = new Buffer(formantCount);
     time = 0;

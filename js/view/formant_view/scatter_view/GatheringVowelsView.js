@@ -1,6 +1,6 @@
-import { ScatterView } from './ScatterView.js';
+import ScatterView from './ScatterView.js';
 
-export class GatheringVowelsView extends ScatterView {
+export default class GatheringVowelsView extends ScatterView {
     #speechDetected = false;
     #plotInitialized = false;
     #hintKeepGoing = false;

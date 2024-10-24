@@ -1,8 +1,8 @@
 import { fft, ifft } from "./fft/fft.js";
-import { NUM_interpolate_sinc } from "./num/interpolate_sinc.js";
+import NUM_interpolate_sinc from "./num/interpolate_sinc.js";
 
 // Sound_resample in Praat
-export function resample(samples, oldSampleRate, newSampleRate, precision = 50) {
+export default function resample(samples, oldSampleRate, newSampleRate, precision = 50) {
     const upfactor = newSampleRate / oldSampleRate;
     if (Math.abs(upfactor - 2) < 1e-6) return upsample(samples);
     if (Math.abs(upfactor - 1) < 1e-6) return samples;

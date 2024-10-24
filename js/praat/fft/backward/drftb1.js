@@ -1,10 +1,10 @@
 // NUMfft_core.h in Praat
-import { dradbg } from './dradbg.js';
-import { dradb2 } from './dradb2.js';
-import { dradb3 } from './dradb3.js';
-import { dradb4 } from './dradb4.js';
+import dradbg from './dradbg.js';
+import dradb2 from './dradb2.js';
+import dradb3 from './dradb3.js';
+import dradb4 from './dradb4.js';
 
-export function drftb1 (n, c, ch, ifac, waoffset) // wa[0] = ch[waoffset]
+export default function drftb1 (n, c, ch, ifac, waoffset) // wa[0] = ch[waoffset]
 {
 	const nf = ifac [1];
 	let na = 0;

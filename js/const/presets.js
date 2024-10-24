@@ -1,4 +1,4 @@
-import { arrToObj } from "../util/arrToObj.js";
+import arrToObj from "../util/arrToObj.js";
 
 export const PRESET_NAMES = [
     "MALE",
@@ -11,3 +11,5 @@ export const PRESET_FREQUENCIES = [
     5500,
     8000
 ]
+
+export default PRESETS;

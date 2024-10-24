@@ -1,5 +1,5 @@
-import { ChoiceView } from "./ChoiceView.js";
-import { PRESETS } from '../const/presets.js';
+import ChoiceView from "./ChoiceView.js";
+import PRESETS from '../const/presets.js';
 
 const noticeText = `Wybierz kategorię, która najbardziej do Ciebie pasuje. Pamiętaj, aby kierować się charakterystyką swojego głosu, więc np. dla chłopca po mutacji najpewniej sprawdzi się opcja <q>mężczyzna</q>, niezależnie od wieku. <h3>Jestem:</h3>`;
 const choices = [
@@ -18,7 +18,7 @@ const choices = [
 ]
 
 
-export class PresetView extends ChoiceView {
+export default class PresetView extends ChoiceView {
     constructor(onStateChange) {
         super(onStateChange, noticeText, choices);
     }

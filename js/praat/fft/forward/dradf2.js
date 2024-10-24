@@ -1,4 +1,4 @@
-export function dradf2(ido, l1, cc, ch, wa1, waoffset)
+export default function dradf2(ido, l1, cc, ch, wa1, waoffset)
 {
 	let t1 = 0;
 	let t2, t0 = (t2 = l1 * ido);

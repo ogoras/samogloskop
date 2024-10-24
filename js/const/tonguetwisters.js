@@ -1,4 +1,4 @@
-export let tonguetwisters = [
+export default [
     "Chrząszcz brzmi w trzcinie w Szczebrzeszynie",
     "stół z powyłamywanymi nogami",
     "Ala ma kota",

@@ -1,4 +1,4 @@
-export class ScatterPlot {
+export default class ScatterPlot {
     margin = { top: 10, right: 30, bottom: 30, left: 60 };
     domainDefined = false;
     series = [];
@@ -17,6 +17,7 @@ export class ScatterPlot {
     svg = null;
     g = null;
     plotArea = null;
+    #lastSeriesId = 0;
 
     constructor(elementId, flip = false, unit = null) {
         let [flipX, flipY] = [ this.flipX, this.flipY ] = parseFlipParameter(flip);
@@ -80,14 +81,18 @@ export class ScatterPlot {
     }
 
     addSeries(series, growSize = false, capacity = undefined) {
-        let seriesId = this.series.length;
-        this.series.push({
-            g: this.plotArea.append("g"),
+        this.insertSeries(series, this.series.length, growSize, capacity);
+    }
+
+    insertSeries(series, seriesId, growSize = false, capacity = undefined) {
+        this.series.splice(seriesId, 0, {
+            g: this.plotArea.insert("g", `#id-${this.series[seriesId]?.id}`).attr("id", `id-${++this.#lastSeriesId}`),
+            id: this.#lastSeriesId,
             points: [],
             growSize,
             capacity
-        })
-        for (let point of series) {
+        });
+        for (let point of series ?? []) {
             this.addPoint(point, seriesId, 0);
         }
     }
@@ -126,7 +131,7 @@ export class ScatterPlot {
         }
     }
 
-    setSeriesSingle(point, seriesId = this.series.length - 1, animationMs = 50, rescale = true) {
+    setSeriesSingle(point, seriesId = -1, animationMs = 50, rescale = true) {
         if (seriesId < 0) seriesId = this.series.length + seriesId;
         if (rescale) this.resizeIfNeeded(point, animationMs);
         let series = this.series[seriesId];

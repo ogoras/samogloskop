@@ -1,5 +1,5 @@
 // NUM2.cpp in Praat
-export function VECburg(a, x) {
+export default function VECburg(a, x) {
     const n = x.length, m = a.length;
 	a.fill(0);
 	if (n <= 2) {

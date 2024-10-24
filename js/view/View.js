@@ -1,4 +1,4 @@
-export class View {
+export default class View {
     mainContainer = document.querySelector(".main-container");
 
     constructor(onStateChange) {

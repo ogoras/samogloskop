@@ -1,6 +1,6 @@
-import { View } from './View.js';
+import View from './View.js';
 
-export class ChoiceView extends View {
+export default class ChoiceView extends View {
     choiceElement = document.createElement("div");
 
     constructor(onStateChange, text, choices) {

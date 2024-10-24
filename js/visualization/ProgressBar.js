@@ -1,4 +1,4 @@
-export class ProgressBar {
+export default class ProgressBar {
     set color(value) {
         this.background.style.backgroundColor = window.getComputedStyle(this.bar).backgroundColor;
         this.bar.style.backgroundColor = value;

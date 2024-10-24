@@ -1,8 +1,8 @@
-import { FormantView } from '../FormantView.js';
-import { ScatterPlot } from '../../../visualization/ScatterPlot.js';
+import FormantView from '../FormantView.js';
+import ScatterPlot from '../../../visualization/ScatterPlot.js';
 import { formantCount } from '../../../data/FormantProcessor.js';
 
-export class ScatterView extends FormantView {
+export default class ScatterView extends FormantView {
     constructor(arg, state) {
         super();
         if (this.constructor === ScatterView) {
@@ -44,11 +44,11 @@ export class ScatterView extends FormantView {
     saveFormants(formants) {
         formants.size = 5;
         if (formants.color.length <= 7) formants.color += "80";
-        this.scatterPlot.feed(formants, -4);
+        this.scatterPlot.feed(formants, 0);
     }
 
     vowelCentroid(formants) {
-        this.scatterPlot.feed(formants, -3);
+        this.scatterPlot.feed(formants, 1);
     }
 
     feed(formants, rescale = true) {

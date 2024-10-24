@@ -1,4 +1,4 @@
-export class Vowel {
+export default class Vowel {
     formants = [];
 
     get meanFormants() {
@@ -26,9 +26,9 @@ export class Vowel {
         }
     }
 
-    constructor(IPA, letter, color = "#000000") {
+    constructor(IPA, color = "#000000", letter) {
         this.IPA = IPA;
-        this.letter = letter;
+        this.letter = letter ?? IPA.broad ?? IPA.narrow;
         this.color = color;
     }
 
@@ -68,8 +68,12 @@ export class Vowel {
         };
     }
 
+    key() {
+        return this.IPA.broad // TODO take language into account
+    }
+
     static fromSimpleObject(obj) {
-        let vowel = new Vowel(undefined, obj.letter, obj.color);    // TODO: figure out IPA
+        let vowel = new Vowel(undefined, obj.color, obj.letter);    // TODO: figure out IPA
         vowel.formants = obj.formants.map(formants => { 
             return {...formants, size: 5, color: vowel.color};
         });

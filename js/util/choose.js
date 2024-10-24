@@ -1,4 +1,4 @@
-export function choose(array, n) {
+export default function choose(array, n) {
     let result = [];
     for (let i = 0; i < n; i++) {
         let index = Math.floor(Math.random() * array.length);

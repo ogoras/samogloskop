@@ -1,4 +1,4 @@
-export function dradb4 (ido, l1, cc, ch, wa, wa1offset, wa2offset, wa3offset)
+export default function dradb4 (ido, l1, cc, ch, wa, wa1offset, wa2offset, wa3offset)
 {
 	const sqrt2 = 1.4142135623730950488016887242097;
 

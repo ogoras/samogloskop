@@ -1,6 +1,6 @@
-import { FormantView } from "../FormantView.js";
+import FormantView from "../FormantView.js";
 
-export class StatsView extends FormantView {
+export default class StatsView extends FormantView {
     constructor() {
         super();
         if (this.constructor === StatsView)

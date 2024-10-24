@@ -1,9 +1,10 @@
-import { ConsentView } from './view/ConsentView.js';
-import { PresetView } from './view/PresetView.js';
-import { RecordingView } from './view/RecordingView.js';
+import ConsentView from './view/ConsentView.js';
+import PresetView from './view/PresetView.js';
+import RecordingView from './view/RecordingView.js';
 
-import { AudioRecorder } from './recording/Recorder.js';
-import { FormantProcessor } from './data/FormantProcessor.js';
+import AudioRecorder from './recording/Recorder.js';
+import FormantProcessor from './data/FormantProcessor.js';
+import Vowels from './data/Vowels.js';
 
 import { VERSION_MAJOR, VERSION_MINOR } from './const/version.js';
 import { STATES, STATE_NAMES } from './const/states.js';
@@ -27,6 +28,7 @@ if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION
 let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null, audioRecorder = null, formantProcessor = null;
+let petersonBarney = new Vowels("EN", "peterson_barney", datasetLoaded);
 
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
@@ -102,6 +104,10 @@ function renderLoop() {
     }
 
     requestAnimationFrame(renderLoop);
+}
+
+function datasetLoaded() {
+    if (state >= STATES.DONE) view.addDataset(petersonBarney);
 }
 
 const SAVEABLE_STATES = [

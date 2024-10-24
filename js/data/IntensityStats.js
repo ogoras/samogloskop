@@ -1,6 +1,6 @@
-import { Buffer } from '../util/Buffer.js';
+import Buffer from '../util/Buffer.js';
 
-export class IntensityStats {
+export default class IntensityStats {
     min = Infinity;
     max = -Infinity;
     mean = 0;

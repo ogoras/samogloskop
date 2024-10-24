@@ -1,20 +1,20 @@
-import { View } from './View.js';
-import { WaveformVisualizer } from '../visualization/waveform/WaveformVisualizer.js';
+import View from './View.js';
+import WaveformVisualizer from '../visualization/waveform/WaveformVisualizer.js';
 import { STATES, STATE_NAMES } from '../const/states.js';
-import { FORMANT_VIEWS } from './formant_view/FORMANT_VIEWS.js';
+import FORMANT_VIEWS from './formant_view/FORMANT_VIEWS.js';
 
-const UPDATE_FUNCTION = {
-    intensityStats: (t, x) => { t.update?.(x); },
-    formants: (t, x, y) => { t.feed?.(x, y); },
-    formantsSmoothed: (t, x, y) => { t.feedSmoothed?.(x, y); },
-    formantsSaved: (t, x) => { t.saveFormants?.(x); },
-    vowel: (t, vowel) => { t.vowelCentroid?.(vowel.avg); },
-    progressTime: (t, time) => { t.updateProgress?.(time); },
-    progress: (t, progress) => { t.updateProgress?.(progress, false); },
-    startTime: (t, time) => { t.startTime = time; },
-}
+export default class RecordingView extends View {
+    #UPDATE_FUNCTION = {
+        intensityStats: (x) => { this.view?.update?.(x); },
+        formants: (x, y) => { this.view?.feed?.(x, y); },
+        formantsSmoothed: (x, y) => { this.view?.feedSmoothed?.(x, y); },
+        formantsSaved: (x) => { this.view?.saveFormants?.(x); },
+        vowel: (vowel) => { this.view?.vowelCentroid?.(vowel.avg); },
+        progressTime: (time) => { this.view?.updateProgress?.(time); },
+        progress: (progress) => { this.view?.updateProgress?.(progress, false); },
+        startTime: (time) => { if (this.view) this.view.startTime = time; },
+    }
 
-export class RecordingView extends View {
     constructor(onStateChange) {
         super(onStateChange);
 
@@ -101,9 +101,13 @@ export class RecordingView extends View {
 
     feed(samples, updates, rescalePlots) {
         for (let [key, value] of Object.entries(updates)) {
-            if (value !== undefined && value !== null) UPDATE_FUNCTION[key]?.(this.view, value, rescalePlots);
+            if (value !== undefined && value !== null) this.#UPDATE_FUNCTION[key]?.(value, rescalePlots);
         }
         this.waveformVisualizer.feed(samples);
+    }
+
+    addDataset(vowels) {
+        this.view?.addDataset?.(vowels);
     }
 
     recordingStarted() {

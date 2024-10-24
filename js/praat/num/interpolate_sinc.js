@@ -1,4 +1,4 @@
-export function NUM_interpolate_sinc (y, x, maxDepth) {
+export default function NUM_interpolate_sinc (y, x, maxDepth) {
 	const NUMpi = Math.PI;
 	const midleft = Math.floor (x), midright = midleft + 1;
 	let result = 0.0;

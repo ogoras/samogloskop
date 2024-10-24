@@ -1,5 +1,5 @@
 // NUMfft_core.h in Praat
-export function dradbg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
+export default function dradbg (ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa, waoffset)
 {
 	const tpi = 6.28318530717958647692528676655900577;
 	let is, t1, t2, t3, t4, t5, t6, t7, t8, t9, t11, t12;
