@@ -107,11 +107,11 @@ export class RecordingView extends View {
     }
 
     recordingStarted() {
-        if (this.view) this.view.recordingStarted();
+        this.view?.recordingStarted();
         this.waveformVisualizer.reset();
     }
 
     recordingStopped() {
-        if (this.view) this.view.recordingStopped();
+        this.view?.recordingStopped();
     }
 }

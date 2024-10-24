@@ -48,32 +48,32 @@ export class ScatterPlot {
         this.width = this.parent.clientWidth - this.margin.left - this.margin.right;
         this.height = this.parent.clientHeight - this.margin.top - this.margin.bottom;
         
-        if (!this.svg) this.svg = d3.select(`#${this.parent.id}`).append("svg");
+        this.svg ??= d3.select(`#${this.parent.id}`).append("svg");
         this.svg.attr("width", this.parent.clientWidth)
             .attr("height", this.parent.clientHeight)
 
-        if (!this.g) this.g = this.svg.append("g");
+        this.g ??= this.svg.append("g");
         this.g.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
 
-        if (!this.x.scale) this.x.scale = d3.scaleLinear().domain(this.x.domain)
+        this.x.scale ??= d3.scaleLinear().domain(this.x.domain)
         this.x.scale.range(flipX ? [this.width, 0] : [0, this.width]);
 
-        if (!this.x.g) this.x.g = this.g.append("g")
+        this.x.g ??= this.g.append("g")
         this.x.g.attr("transform", `translate(0, ${flipY ? 0 : this.height})`)
             .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
 
-        if (!this.y.scale) this.y.scale = d3.scaleLinear().domain(this.y.domain)
+        this.y.scale ??= d3.scaleLinear().domain(this.y.domain)
         this.y.scale.range(flipY ? [0, this.height] : [this.height, 0]);
 
-        if (!this.y.g) this.y.g = this.g.append("g");
+        this.y.g ??= this.g.append("g");
         this.y.g.attr("transform", `translate(${flipX ? this.width : 0}, 0)`)
             .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
 
-        if (!this.plotArea) this.plotArea = this.g.append("g");
+        this.plotArea ??= this.g.append("g");
 
         if (!this.unit) return;
 
-        if (!this.unit.element) this.unit.element = this.g.append("text")
+        this.unit.element ??= this.g.append("text")
             .attr("font-family", "Helvetica, sans-serif")
             .text(this.unit.text);
         this.unit.element.attr("transform", `translate(${flipX ? this.width + 5 : -5}, ${flipY ? -5 : this.height + 5})`)
@@ -193,7 +193,7 @@ export class ScatterPlot {
                 point.element.transition(t)
                     .attr("cx", this.x.scale(point.x))
                     .attr("cy", this.y.scale(point.y));
-                if (point.label) point.label.transition(t)
+                point.label?.transition(t)
                         .attr("x", this.x.scale(point.x))
                         .attr("y", this.y.scale(point.y) - 10);
             }
@@ -210,7 +210,7 @@ export class ScatterPlot {
         if (!this.series[seriesId]) return;
         for (let point of this.series[seriesId].points) {
             point.element.remove();
-            if (point.label) point.label.remove();
+            point.label?.remove();
         }
         this.series[seriesId].points = [];
     }
