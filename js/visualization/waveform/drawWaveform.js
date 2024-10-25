@@ -3,13 +3,9 @@ export default function drawWaveform(dataArray, bufferLength, canvas, canvasCtx)
     const WIDTH = canvas.clientWidth;
     const HEIGHT = canvas.clientHeight;
     if (Math.abs(WIDTH - canvas.width) > 10) {
-        console.log(`Changing canvas width from ${canvas.width} to ${WIDTH}`);
+        // console.log(`Changing canvas width from ${canvas.width} to ${WIDTH}`);
         canvas.width = WIDTH;
     }
-    // if (Math.abs(HEIGHT - canvas.height) > 10) {
-    //     console.log(`Changing canvas height from ${canvas.height} to ${HEIGHT}`);
-    //     canvas.height = HEIGHT;
-    // }
     canvasCtx.fillStyle = "white";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
