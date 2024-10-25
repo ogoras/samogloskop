@@ -80,11 +80,11 @@ h3 {
 }
 
 .recording-indicator {
-    width: 1.3rem;
     height: 1.3rem;
     background-color: #ff000000;
     border-radius: 50%;
     margin: 0.3rem;
+    aspect-ratio: 1 / 1;
 }
 
 button {
@@ -175,8 +175,13 @@ button {
     width: 100%;
 }
 
+canvas {
+    height: 100%;
+    width: 100%;
+}
+
 .visualizer {
-    height: 8rem;
+    height: 100%;
     width: 100%;
 }
 

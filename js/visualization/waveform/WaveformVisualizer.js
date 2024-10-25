@@ -10,7 +10,7 @@ export default class WaveformVisualizer {
     }
 
     constructor() {
-        this.canvas = document.getElementsByClassName("visualizer")[0];
+        this.canvas = document.querySelector("canvas");
         this.canvasCtx = this.canvas.getContext("2d");    
     }
 

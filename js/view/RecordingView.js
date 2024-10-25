@@ -45,13 +45,14 @@ export default class RecordingView extends View {
         hint.innerHTML = `<h5><b>←</b></h5>
             <p class="gray">Naciśnij przycisk, żeby włączyć nasłuchiwanie</p>`;
         recordingContainer.appendChild(hint);
-
+        let visualizer = document.createElement("div");
+        visualizer.classList.add("visualizer");
         let canvas = document.createElement("canvas");
-        canvas.width = 800;
-        canvas.height = 100;
-        canvas.classList.add("visualizer");
-        canvas.classList.add("fl");
-        this.mainContainer.appendChild(canvas);
+        canvas.width = canvas.height = 0;
+        visualizer.appendChild(canvas);
+        recordingContainer.appendChild(visualizer);
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
 
         if (localStorage.getItem("accepted") === "true") {
             let localStorageInfo = document.createElement("div");

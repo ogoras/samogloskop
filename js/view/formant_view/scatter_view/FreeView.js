@@ -54,6 +54,6 @@ export default class FreeView extends ScatterView {
         }
         let mainContainer = document.querySelector(".main-container");
         mainContainer.appendChild(this.visibleVowelsChoice);
-        mainContainer.insertBefore(this.visibleVowelsChoice, document.querySelector("canvas"));
+        document.querySelector(".recording-container").after(this.visibleVowelsChoice);
     }
 }

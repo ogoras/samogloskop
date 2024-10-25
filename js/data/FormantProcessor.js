@@ -116,9 +116,9 @@ export default class FormantProcessor {
             case STATES.GATHERING_VOWELS:
             case STATES.DONE:
                 this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer);
+                this.smoothedFormantsBuffer ??= new Buffer(minimumSmoothingCount);
                 if (!this.intensityStats.detectSpeech()) {
                     this.formantsBuffer.clear();
-                    this.smoothedFormantsBuffer ??= new Buffer(minimumSmoothingCount);
                     this.smoothedFormantsBuffer.clear();
                     if (this.state !== STATES.DONE) ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
                     return ret;

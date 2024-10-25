@@ -25,10 +25,10 @@ export default class ScatterView extends FormantView {
     }
 
     initializePlot(unit) {
-        // move the divStack element to .main-container in between the div and the canvas
+        // move the divStack element to .main-container below the recording container
         let mainContainer = document.querySelector(".main-container");
         mainContainer.appendChild(this.divStack);
-        mainContainer.insertBefore(this.divStack, document.querySelector("canvas"));
+        document.querySelector(".recording-container").after(this.divStack);
         // remove everything from div
         while (this.div.firstChild) {
             this.div.removeChild(this.div.firstChild);
