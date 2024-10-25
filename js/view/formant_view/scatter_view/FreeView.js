@@ -43,8 +43,8 @@ export default class FreeView extends ScatterView {
         this.visibleVowelsChoice = document.createElement("div");
         this.visibleVowelsChoice.innerHTML = 
             `<h3>Pokaż:</h3>
-            moje samogłoski <input type="checkbox" id="user-vowels" checked><br>
-            samogłoski angielskie <input type="checkbox" id="peterson-barney">
+            <input type="checkbox" id="user-vowels" checked> moje samogłoski<br>
+            <input type="checkbox" id="peterson-barney"> samogłoski angielskie
             <text class=gray>(General American, Peterson & Barney, 1952)</p>`;
         this.visibleVowelsChoice.querySelector("#user-vowels").onchange = (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 0, 1);
