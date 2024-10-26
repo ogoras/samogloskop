@@ -64,6 +64,7 @@ export default class RecordingView extends View {
             let button = document.createElement("button");
             button.innerHTML = "Wycofaj zgodę i wyczyść dane z pamięci lokalnej";
             button.addEventListener("click", () => {
+                if (!confirm("Czy na pewno chcesz wycofać zgodę i wyczyścić dane z pamięci lokalnej? Utracisz wszystkie swoje dane.")) return;
                 this.onStateChange({ accepted: false }, false);
                 localStorageInfo.remove();
             });
