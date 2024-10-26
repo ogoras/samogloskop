@@ -142,19 +142,23 @@ button {
 }
 
 @media (hover: hover) {
-    button:hover {
+    button:hover, .record-button:hover {
         cursor: pointer;
         opacity: 0.9;
     }
 
-    .button:active {
+    button:active, .record-button:active {
         opacity: 1;
+    }
 
+    /* checkboxes with pointer */
+    input[type="checkbox"] {
+        cursor: pointer;
     }
 }
 
 @media (hover: none) {
-    button:active {
+    button:active, .record-button:active {
         opacity: 1;
     }
 }
