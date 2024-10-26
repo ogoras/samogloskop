@@ -101,10 +101,9 @@ export default class ScatterPlot {
         if (rescale) this.resizeIfNeeded(point, animationMs);
         let series = this.series[seriesId];
         series.points.push({
-            element: series.g.append("circle")
-                .attr("cx", this.x.scale(point.x))
-                .attr("cy", this.y.scale(point.y))
-                .attr("r", point.size ? point.size : 5)
+            element: series.g.append("path")
+                .attr("d", d3.symbol(point.symbol ?? d3.symbolCircle).size(point.size ?? 64))
+                .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`)
                 .attr("fill", point.color ? point.color : "black"),
             x: point.x,
             y: point.y,
@@ -138,9 +137,8 @@ export default class ScatterPlot {
         if (!series.points.length) return this.addPoint(point, seriesId, 0);
         series.points[0].element.transition()
             .duration(animationMs)
-            .attr("cx", this.x.scale(point.x))
-            .attr("cy", this.y.scale(point.y))
-            .attr("r", point.size ? point.size : 3)
+            .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`)
+            .attr("d", d3.symbol(point.symbol ?? d3.symbolCircle).size(point.size ?? 64))
             .attr("fill", point.color ? point.color : "black");
     }
 
@@ -196,11 +194,10 @@ export default class ScatterPlot {
         for (let series of this.series) {
             for (let point of series.points) {
                 point.element.transition(t)
-                    .attr("cx", this.x.scale(point.x))
-                    .attr("cy", this.y.scale(point.y));
+                    .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`);
                 point.label?.transition(t)
-                        .attr("x", this.x.scale(point.x))
-                        .attr("y", this.y.scale(point.y) - 10);
+                    .attr("x", this.x.scale(point.x))
+                    .attr("y", this.y.scale(point.y) - 10);
             }
         }
     }

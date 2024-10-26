@@ -1,6 +1,7 @@
 import FormantView from '../FormantView.js';
 import ScatterPlot from '../../../visualization/ScatterPlot.js';
 import { formantCount } from '../../../data/FormantProcessor.js';
+import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 
 export default class ScatterView extends FormantView {
     constructor(arg, state) {
@@ -42,7 +43,7 @@ export default class ScatterView extends FormantView {
     }
 
     saveFormants(formants) {
-        formants.size = 5;
+        formants.size = POINT_SIZES.USER_DATAPOINTS;
         if (formants.color.length <= 7) formants.color += "80";
         this.scatterPlot.feed(formants, 0);
     }

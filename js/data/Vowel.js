@@ -1,3 +1,5 @@
+import { POINT_SIZES } from "../const/POINT_SIZES.js";
+
 export default class Vowel {
     formants = [];
 
@@ -36,10 +38,11 @@ export default class Vowel {
         this.formants.push(formants);
     }
 
-    calculateAverage() {
+    calculateAverage(newSize) {
         this.avg = { label: this.letter, color: this.color };
         for (let attribute of ["x", "y", "size"]) this.calculateAverageAttribute(attribute);
-        this.avg.size *= 1.5;
+        this.avg.symbol = this.formants[0]?.symbol;
+        this.avg.size = newSize ?? this.avg.size * 2;
     }
 
     calculateAverageAttribute(attribute) {
@@ -75,9 +78,9 @@ export default class Vowel {
     static fromSimpleObject(obj) {
         let vowel = new Vowel(undefined, obj.color, obj.letter);    // TODO: figure out IPA
         vowel.formants = obj.formants.map(formants => { 
-            return {...formants, size: 5, color: vowel.color};
+            return {...formants, size: POINT_SIZES.USER_DATAPOINTS, color: vowel.color};
         });
-        vowel.calculateAverage();
+        vowel.calculateAverage(POINT_SIZES.USER_CENTROIDS);
         return vowel;
     }
 }

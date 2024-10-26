@@ -1,5 +1,6 @@
 import Vowel from './Vowel.js';
 import { VOWELS_PER_LANGUAGE } from '../const/vowels/vowels.js';
+import { POINT_SIZES } from '../const/POINT_SIZES.js';
 
 export default class Vowels {
     initialized = false;
@@ -24,11 +25,12 @@ export default class Vowels {
                         y: formants.F1 * 0.8,     // TODO: implement it better
                         x: formants.F2,
                         identified: formants.identified,
-                        size: 3,
-                        color: vowel.color + (formants.identified ? "80" : "40")
+                        size: POINT_SIZES.DATAPOINTS,
+                        color: vowel.color + (formants.identified ? "80" : "40"),
+                        symbol: d3.symbolSquare
                     }
                 });
-                vowel.calculateAverage();
+                vowel.calculateAverage(POINT_SIZES.CENTROIDS);
             }
             this.initialized = true;
             callback();

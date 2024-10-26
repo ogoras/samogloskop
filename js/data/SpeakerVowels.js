@@ -1,3 +1,4 @@
+import { POINT_SIZES } from '../const/POINT_SIZES.js';
 import vowels from '../const/vowels/PL.js';
 import Vowel from './Vowel.js';
 
@@ -68,7 +69,7 @@ export default class SpeakerVowels {
     }
 
     saveVowel() {
-        this.currentVowel.calculateAverage();
+        this.currentVowel.calculateAverage(POINT_SIZES.USER_CENTROIDS);
         let ret = this.currentVowel;
         this.vowelsProcessed.push(ret);
         this.currentVowel = undefined;

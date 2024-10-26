@@ -4,6 +4,7 @@ import Buffer from '../util/Buffer.js';
 import SpeakerVowels from './SpeakerVowels.js';
 import { STATES, STATE_NAMES } from '../const/states.js';
 import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from '../const/presets.js';
+import { POINT_SIZES } from '../const/POINT_SIZES.js';
 
 export const formantCount = 20;
 const minimumSmoothingCount = 20;
@@ -130,7 +131,7 @@ export default class FormantProcessor {
                             x: formant.formant[1].frequency,
                             y: formant.formant[0].frequency,
                             color: "#00000044",
-                            size: 3
+                            size: POINT_SIZES.TRAIL
                         }
                         this.userVowels.scale(point);
                         ret.formants.push(point);
@@ -187,10 +188,11 @@ export default class FormantProcessor {
         let smoothedFormants = {
             x: xSum / weightSum,
             y: ySum / weightSum,
-            size: 10,
+            size: POINT_SIZES.CURRENT,
             color: !this.userVowels.isDone() ? this.userVowels.currentVowel.color : "black"
         };
         this.formantsToSave = this.smoothedFormantsBuffer.push(smoothedFormants)
+        if (this.formantsToSave) this.formantsToSave.size = POINT_SIZES.USER_DATAPOINTS;
         return smoothedFormants;
     }
 
