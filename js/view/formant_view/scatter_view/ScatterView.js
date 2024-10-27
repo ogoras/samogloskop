@@ -1,5 +1,5 @@
 import SpeechView from '../SpeechView.js';
-import ScatterPlot from '../../../visualization/ScatterPlot.js';
+import ScatterPlot from '../../../visualization/scatter_plot/ScatterPlot.js';
 import { formantCount } from '../../../data/FormantProcessor.js';
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 

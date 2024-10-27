@@ -7,7 +7,7 @@ import FormantProcessor from './data/FormantProcessor.js';
 import Vowels from './data/Vowels.js';
 
 import { VERSION_MAJOR, VERSION_MINOR } from './const/version.js';
-console.log(`%c Samogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}`,
+console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}`,
      "font-size: 3rem; font-weight: bold;");
 import { STATES, STATE_NAMES } from './const/states.js';
 import { PRESETS, PRESET_NAMES } from './const/presets.js';

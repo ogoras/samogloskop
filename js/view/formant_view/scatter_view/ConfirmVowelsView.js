@@ -1,6 +1,8 @@
 import ScatterView from './ScatterView.js';
 
 export default class ConfirmVowelsView extends ScatterView {
+    currentMessage = 0;
+
     constructor(arg, formantProcessor, state) {
         super(arg, state);
 
@@ -14,7 +16,7 @@ export default class ConfirmVowelsView extends ScatterView {
         let button = document.createElement("button");
         button.innerHTML = "OK";
         button.onclick = () => {
-            this.divStack.remove();
+            this.nextMessage();
         }
         this.divStack.appendChild(button);
 
@@ -29,5 +31,20 @@ export default class ConfirmVowelsView extends ScatterView {
                 }
                 this.vowelCentroid(vowel.avg);
             }
+    }
+
+    nextMessage() {
+        switch(++this.currentMessage) {
+            case 1:
+                this.h2.innerHTML = `Naciśnij na reprezentację samogłoski na wykresie, żeby poprawić jej pozycję. 
+                    Jeśli uważasz, że wszystko się zgadza, możesz od razu przejść do kolejnego kroku.`;
+                this.divStack.querySelector("button").innerHTML = "Przejdź dalej";
+                break;
+            case 2:
+                this.h2.innerHTML = `Niestety, następny krok jeszcze nie jest gotowy :(`
+                this.divStack.querySelector("button").remove();
+                // TODO: implement callback to parent
+                break;
+        }
     }
 }
