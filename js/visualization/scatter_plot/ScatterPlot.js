@@ -1,4 +1,5 @@
-import PointGroup from "./PointGroup.js";
+import NestedPointGroup from "./NestedPointGroup.js";
+import SimplePointGroup from "./SimplePointGroup.js";
 
 export default class ScatterPlot {
     margin = { top: 10, right: 30, bottom: 30, left: 60 };
@@ -72,7 +73,7 @@ export default class ScatterPlot {
         this.y.g.attr("transform", `translate(${flipX ? this.width : 0}, 0)`)
             .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
 
-        this.allPointsGroup ??= new PointGroup({g: this.g, x: this.x, y: this.y});
+        this.allPointsGroup ??= new NestedPointGroup({g: this.g, x: this.x, y: this.y});
 
         if (!this.unit) return;
 
@@ -93,8 +94,7 @@ export default class ScatterPlot {
         } else if (!Array.isArray(ids)) {
             throw new Error(`insertSeries: ids must be a number or an array, got ${ids} which is of type ${typeof ids} instead`);
         }
-        let seriesId = ids[0];
-        let group = ids.reduce((acc, id) => acc.getOrCreateSubgroup(id), this.allPointsGroup);
+        let group = this.allPointsGroup.navigate(ids);
         group.growSize = growSize;
         group.capacity = capacity;
         // this.series.splice(seriesId, 0, {
@@ -121,8 +121,11 @@ export default class ScatterPlot {
         if (seriesId < 0) seriesId = this.allPointsGroup.length + seriesId;
         if (rescale) this.resizeIfNeeded(point, animationMs);
         let group = this.allPointsGroup[seriesId];
-        if (!group.points.length) return this.addPoint(point, group, 0);
-        group.points[0].element.transition()
+        while(group.constructor !== SimplePointGroup) {
+            group = group.getOrCreateSubgroup(0, false);
+        }
+        if (!group.length) return this.addPoint(point, group, 0);
+        group[0].element.transition()
             .duration(animationMs)
             .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`)
             .attr("d", d3.symbol(point.symbol ?? d3.symbolCircle).size(point.size ?? 64))
