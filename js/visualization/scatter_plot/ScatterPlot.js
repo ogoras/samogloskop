@@ -72,7 +72,7 @@ export default class ScatterPlot {
         this.y.g.attr("transform", `translate(${flipX ? this.width : 0}, 0)`)
             .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
 
-        this.allPointsGroup ??= new PointGroup({g: this.g});
+        this.allPointsGroup ??= new PointGroup({g: this.g, x: this.x, y: this.y});
 
         if (!this.unit) return;
 
@@ -94,7 +94,7 @@ export default class ScatterPlot {
             throw new Error(`insertSeries: ids must be a number or an array, got ${ids} which is of type ${typeof ids} instead`);
         }
         let seriesId = ids[0];
-        let group = ids.reduce((acc, id) => acc.getOrCreate(id), this.allPointsGroup);
+        let group = ids.reduce((acc, id) => acc.getOrCreateSubgroup(id), this.allPointsGroup);
         group.growSize = growSize;
         group.capacity = capacity;
         // this.series.splice(seriesId, 0, {
@@ -114,42 +114,15 @@ export default class ScatterPlot {
             group = this.allPointsGroup[group];
         }
         if (rescale) this.resizeIfNeeded(point, animationMs);
-        group.push({
-            element: group.g.append("path")
-                .attr("d", d3.symbol(point.symbol ?? d3.symbolCircle).size(point.size ?? 64))
-                .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`)
-                .attr("fill", point.color ? point.color : "black"),
-            x: point.x,
-            y: point.y,
-            label: point.label ? group.g.append("text")
-                .attr("font-weight", "bold")
-                .attr("style", `text-shadow:${" 0 0 0.3em #fff,".repeat(5).slice(0, -1)}`)
-                .attr("font-family", "Helvetica, sans-serif")
-                .text(point.label)
-                .attr("x", this.x.scale(point.x))
-                .attr("y", this.y.scale(point.y) - 10)
-                .attr("fill", point.color ? point.color : "black") : null,
-        });
-        
-        if (group.capacity && group.length > group.capacity) {
-            let removed = group.shift();
-            removed.element.remove();
-        }
-        let pointCount = group.length;
-        if (group.growSize) {
-            for (let i = 0; i < pointCount; i++) {
-                let point = group[i];
-                point.element.attr("r", (i + 1) / pointCount * 3);
-            }
-        }
+        group.addPoint(point);
     }
 
     setSeriesSingle(point, seriesId = -1, animationMs = 50, rescale = true) {
         if (seriesId < 0) seriesId = this.allPointsGroup.length + seriesId;
         if (rescale) this.resizeIfNeeded(point, animationMs);
         let group = this.allPointsGroup[seriesId];
-        if (!group.length) return this.addPoint(point, group, 0);
-        group[0].element.transition()
+        if (!group.points.length) return this.addPoint(point, group, 0);
+        group.points[0].element.transition()
             .duration(animationMs)
             .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`)
             .attr("d", d3.symbol(point.symbol ?? d3.symbolCircle).size(point.size ?? 64))
@@ -205,14 +178,12 @@ export default class ScatterPlot {
     }
 
     rescalePoints(t) {
-        for (let group of this.allPointsGroup) {
-            for (let point of group) {
-                point.element.transition(t)
-                    .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`);
-                point.label?.transition(t)
-                    .attr("x", this.x.scale(point.x))
-                    .attr("y", this.y.scale(point.y) - 10);
-            }
+        for (let point of this.allPointsGroup.getAllPoints()) {
+            point.element.transition(t)
+                .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`);
+            point.label?.transition(t)
+                .attr("x", this.x.scale(point.x))
+                .attr("y", this.y.scale(point.y) - 10);
         }
     }
 
