@@ -2,6 +2,7 @@ import SpeechView from '../SpeechView.js';
 import ScatterPlot from '../../../visualization/scatter_plot/ScatterPlot.js';
 import { formantCount } from '../../../data/FormantProcessor.js';
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
+import polishVowels from '../../../const/vowels/PL.js';
 
 export default class ScatterView extends SpeechView {
     constructor(arg, state) {
@@ -35,21 +36,36 @@ export default class ScatterView extends SpeechView {
             this.div.removeChild(this.div.firstChild);
         }
         this.scatterPlot = new ScatterPlot("formants", true, unit);
-        this.scatterPlot.addSeries([]);
-        this.scatterPlot.addSeries([]);
-        this.scatterPlot.addSeries([], true, formantCount);
-        this.scatterPlot.addSeries([]);
+        this.scatterPlot.appendGroup({ nested: true, formatting: {
+            size: POINT_SIZES.USER_DATAPOINTS,
+            opacity: "80",
+        }});
+        this.scatterPlot.appendGroup({ nested: true, formatting: {
+            size: POINT_SIZES.VOWEL_CENTROID
+        }});
+        polishVowels.forEach(vowel => {
+            [0, 1].forEach(index => {
+                this.scatterPlot.appendGroup({ formatting: {
+                    rgb: vowel.rgb
+                }}, index);
+            });
+        });
+        this.scatterPlot.appendGroup({ capacity: formantCount, growSize: true, formatting: {
+            size: POINT_SIZES.TRAIL,
+            opacity: "80"
+        }});
+        this.scatterPlot.appendGroup({ formatting: {
+            size: POINT_SIZES.CURRENT
+        }});
         this.refreshRecording();
     }
 
-    saveFormants(formants) {
-        formants.size = POINT_SIZES.USER_DATAPOINTS;
-        if (formants.color.length <= 7) formants.color += "80";
-        this.scatterPlot.feed(formants, 0);
+    saveFormants(formants, vowelId = 0) {
+        this.scatterPlot.feed(formants, [0, vowelId]);
     }
 
-    vowelCentroid(formants) {
-        this.scatterPlot.feed(formants, 1);
+    vowelCentroid(formants, vowelId = 0) {
+        this.scatterPlot.feed(formants, [1, vowelId]);
     }
 
     feed(formants, rescale = true) {

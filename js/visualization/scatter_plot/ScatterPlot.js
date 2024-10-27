@@ -80,31 +80,31 @@ export default class ScatterPlot {
         this.unit.element ??= this.g.append("text")
             .attr("font-family", "Helvetica, sans-serif")
             .text(this.unit.text);
-        this.unit.element.attr("transform", `translate(${flipX ? this.width + 5 : -5}, ${flipY ? -5 : this.height + 5})`)
+        this.unit.element.attr("transform",
+             `translate(${flipX ? this.width + 5 : -5}, ${flipY ? -5 : this.height + 5})`)
     }
 
-    addSeries(series, growSize = false, capacity = undefined) {
-        this.insertSeries(series, this.allPointsGroup.length, growSize, capacity);
-    }
-
-    insertSeries(series, ids, growSize = false, capacity = undefined) {
-        // insert series at this.series[ids[0]][ids[1]]...[ids[ids.length - 1]]
+    convertToIdArray(ids) {
         if (typeof ids === "number") {
             ids = [ids];
         } else if (!Array.isArray(ids)) {
-            throw new Error(`insertSeries: ids must be a number or an array, got ${ids} which is of type ${typeof ids} instead`);
+            throw new Error(`insertSeries: ids must be a number or an array, got ${ids} which is of type\
+                 ${typeof ids} instead`);
         }
+        return ids;
+    }
+
+    appendGroup(constructorDefaults, ids = [], points = []) {
+        ids = this.convertToIdArray(ids);
         let group = this.allPointsGroup.navigate(ids);
-        group.growSize = growSize;
-        group.capacity = capacity;
-        // this.series.splice(seriesId, 0, {
-        //     g: this.plotArea.insert("g", `#id-${this.series[seriesId]?.id}`).attr("id", `id-${++this.#lastSeriesId}`),
-        //     id: this.#lastSeriesId,
-        //     points: [],
-        //     growSize,
-        //     capacity
-        // });
-        for (let point of series ?? []) {
+        this.insertGroup(constructorDefaults, ids.concat(group.length), points);
+    }
+
+    insertGroup(constructorDefaults, ids, points = []) {
+        ids = this.convertToIdArray(ids);
+        let group = this.allPointsGroup.navigate(ids, true, constructorDefaults);
+
+        for (let point of points ?? []) {
             this.addPoint(point, group, 0);
         }
     }
@@ -190,9 +190,10 @@ export default class ScatterPlot {
         }
     }
 
-    feed(point, seriesId = -1, rescale = true) {
-        if (seriesId < 0) seriesId = this.allPointsGroup.length + seriesId;
-        this.addPoint(point, seriesId, undefined, rescale);
+    feed(point, ids = -1, rescale = true) {
+        ids = this.convertToIdArray(ids);
+        let group = this.allPointsGroup.navigate(ids);
+        this.addPoint(point, group, undefined, rescale);
     }
 
     clearSeries(seriesId) {

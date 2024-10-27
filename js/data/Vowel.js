@@ -28,10 +28,10 @@ export default class Vowel {
         }
     }
 
-    constructor(IPA, color = "#000000", letter) {
+    constructor(IPA, rgb = "000000", letter) {
         this.IPA = IPA;
         this.letter = letter ?? IPA.broad ?? IPA.narrow;
-        this.color = color;
+        this.rgb = rgb;
     }
 
     addFormants(formants) {
@@ -39,7 +39,7 @@ export default class Vowel {
     }
 
     calculateAverage(newSize) {
-        this.avg = { label: this.letter, color: this.color };
+        this.avg = { label: this.letter, rgb: this.rgb };
         for (let attribute of ["x", "y", "size"]) this.calculateAverageAttribute(attribute);
         this.avg.symbol = this.formants[0]?.symbol;
         this.avg.size = newSize ?? this.avg.size * 2;
@@ -63,7 +63,7 @@ export default class Vowel {
     toSimpleObject() {
         return {
             letter: this.letter,
-            color: this.color,
+            rgb: this.rgb,
             formants: this.formants.map(formants => { return {
                 x: formants.x,
                 y: formants.y
@@ -78,7 +78,7 @@ export default class Vowel {
     static fromSimpleObject(obj) {
         let vowel = new Vowel(undefined, obj.color, obj.letter);    // TODO: figure out IPA
         vowel.formants = obj.formants.map(formants => { 
-            return {...formants, size: POINT_SIZES.USER_DATAPOINTS, color: vowel.color};
+            return {...formants, size: POINT_SIZES.USER_DATAPOINTS, rgb: vowel.rgb};
         });
         vowel.calculateAverage(POINT_SIZES.USER_CENTROIDS);
         return vowel;

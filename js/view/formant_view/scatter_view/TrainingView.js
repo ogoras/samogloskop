@@ -32,8 +32,8 @@ export default class TrainingView extends ScatterView {
     }
 
     addDataset(vowels) {
-        this.scatterPlot.insertSeries(vowels.singleMeasurements, 2);
-        this.scatterPlot.insertSeries(vowels.centroids, 3);
+        this.scatterPlot.insertGroup(vowels.singleMeasurements, 2);
+        this.scatterPlot.insertGroup(vowels.centroids, 3);
         this.scatterPlot.setSeriesVisibility(false, 2, 3);
         this.visibleVowelsChoice = document.createElement("div");
         this.visibleVowelsChoice.innerHTML = 

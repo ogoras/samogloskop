@@ -189,7 +189,7 @@ export default class FormantProcessor {
             x: xSum / weightSum,
             y: ySum / weightSum,
             size: POINT_SIZES.CURRENT,
-            color: !this.userVowels.isDone() ? this.userVowels.currentVowel.color : "black"
+            color: !this.userVowels.isDone() ? this.userVowels.currentVowel.rgb : "black"
         };
         this.formantsToSave = this.smoothedFormantsBuffer.push(smoothedFormants)
         if (this.formantsToSave) this.formantsToSave.size = POINT_SIZES.USER_DATAPOINTS;

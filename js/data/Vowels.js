@@ -25,9 +25,6 @@ export default class Vowels {
                         y: formants.F1 * 0.8,     // TODO: implement it better
                         x: formants.F2,
                         identified: formants.identified,
-                        size: POINT_SIZES.DATAPOINTS,
-                        color: vowel.color + (formants.identified ? "80" : "40"),
-                        symbol: d3.symbolSquare
                     }
                 });
                 vowel.calculateAverage(POINT_SIZES.CENTROIDS);

@@ -9,12 +9,12 @@
 import Vowel from "../../data/Vowel.js";
 
 const vowels = [
-    new Vowel({broad: "a", narrow: "ä"}, "#ff0000", "a"),
-    new Vowel({broad: "ɛ", narrow: "ɛ"}, "#faa500", "e"),
-    new Vowel({broad: "i", narrow: "i"}, "#00c800", "i"),
-    new Vowel({broad: "ɔ", narrow: "ɔ"}, "#ff00ff", "o"),
-    new Vowel({broad: "u", narrow: "u"}, "#0000ff", "u"),
-    new Vowel({broad: "ɨ", narrow: "ɘ"}, "#964b00", "y")
+    new Vowel({broad: "a", narrow: "ä"}, "ff0000", "a"),
+    new Vowel({broad: "ɛ", narrow: "ɛ"}, "faa500", "e"),
+    new Vowel({broad: "i", narrow: "i"}, "00c800", "i"),
+    new Vowel({broad: "ɔ", narrow: "ɔ"}, "ff00ff", "o"),
+    new Vowel({broad: "u", narrow: "u"}, "0000ff", "u"),
+    new Vowel({broad: "ɨ", narrow: "ɘ"}, "964b00", "y")
 ]
 
 export default vowels;

@@ -1,4 +1,8 @@
+import PointFormatting from "./PointFormatting.js";
+
 export default class PointGroup extends Array {
+    defaultFormatting = new PointFormatting();
+
     constructor(...args) {
         if (args.length === 1 && typeof args[0] === "number") {
             super(...args);
@@ -8,8 +12,12 @@ export default class PointGroup extends Array {
         if (this.constructor === PointGroup) {
             throw new Error("Cannot instantiate abstract class Group");
         } 
-        let [parent, index] = args;
+        let [parent, index, defaults] = args;
         this.parent = parent;
+        if (parent.defaultFormatting) this.defaultFormatting = parent.defaultFormatting.copy();
+        this.defaultFormatting.update(defaults?.formatting);
+        this.capacity = defaults?.capacity;
+        this.growSize = defaults?.growSize;
         this.x = parent.x;
         this.y = parent.y;
         this.element = this.g = parent.id ?
