@@ -27,7 +27,7 @@ export default class FormantProcessor {
         if (state >= STATES.SPEECH_MEASURED) {
             this.intensityStats = IntensityStats.fromString(localStorage.getItem("intensityStats"));
         }
-        if (state >= STATES.DONE) {
+        if (state >= STATES.CONFIRM_VOWELS) {
             this.userVowels = SpeakerVowels.fromString(localStorage.getItem("userVowels"));
         }
     }
@@ -115,13 +115,13 @@ export default class FormantProcessor {
                 }
                 return ret;
             case STATES.GATHERING_VOWELS:
-            case STATES.DONE:
+            case STATES.CONFIRM_VOWELS:
                 this.intensityStats.update(this.time, this.formantsBuffer.buffer, this.samplesBuffer.buffer);
                 this.smoothedFormantsBuffer ??= new Buffer(minimumSmoothingCount);
                 if (!this.intensityStats.detectSpeech()) {
                     this.formantsBuffer.clear();
                     this.smoothedFormantsBuffer.clear();
-                    if (this.state !== STATES.DONE) ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
+                    if (this.state === STATES.GATHERING_VOWELS) ret.newState = this.state = STATES.WAITING_FOR_VOWELS;
                     return ret;
                 }
                 ret.formants = [];
@@ -138,14 +138,14 @@ export default class FormantProcessor {
                     }
                 }
                 ret.formantsSmoothed = this.userVowels.scale(this.smoothedFormants);
-                if (this.state !== STATES.DONE) {
+                if (this.state === STATES.GATHERING_VOWELS) {
                     ret.formantsSaved = this.formantsToSave;
                     this.userVowels.addFormants(this.formantsToSave);
                     this.formantsToSave = undefined;
                     if (this.userVowels.isVowelGathered()) {
                         ret.vowel = this.userVowels.saveVowel();
                         if (this.userVowels.isDone()) {
-                            ret.newState = this.state = STATES.DONE;
+                            ret.newState = this.state = STATES.CONFIRM_VOWELS;
                             this.userVowels.scaleLobanov();
                             ret.userVowelsString = this.userVowels.toString();
                         } else {

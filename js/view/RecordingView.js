@@ -1,7 +1,7 @@
 import View from './View.js';
 import WaveformVisualizer from '../visualization/waveform/WaveformVisualizer.js';
 import { STATES, STATE_NAMES } from '../const/states.js';
-import FORMANT_VIEWS from './formant_view/FORMANT_VIEWS.js';
+import SPEECH_VIEWS from './formant_view/SPEECH_VIEWS.js';
 
 export default class RecordingView extends View {
     #UPDATE_FUNCTION = {
@@ -75,7 +75,7 @@ export default class RecordingView extends View {
     }
     
     updateView(state, formantProcessor) {
-        let Constructor = FORMANT_VIEWS[state];
+        let Constructor = SPEECH_VIEWS[state];
         if (Constructor) {
             if (this.view) {
                 if (Constructor !== this.view.constructor) {

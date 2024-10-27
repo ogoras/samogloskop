@@ -2,7 +2,9 @@ import CalibrationStartView from "./CalibrationStartView.js";
 import SilenceView from "./stats_view/SilenceView.js";
 import MeasuringSpeechView from "./stats_view/MeasuringSpeechView.js";
 import GatheringVowelsView from "./scatter_view/GatheringVowelsView.js";
-import FreeView from "./scatter_view/FreeView.js";
+import TrainingView from "./scatter_view/TrainingView.js";
+import ConfirmVowelsView from "./scatter_view/ConfirmVowelsView.js";
+import GatheringForeignView from "./GatheringForeignView.js";
 import STATES from "../../const/states.js";
 
 export default {
@@ -14,5 +16,8 @@ export default {
     [STATES.WAITING_FOR_VOWELS]: GatheringVowelsView,
     [STATES.GATHERING_VOWELS]: GatheringVowelsView,
     [STATES.VOWEL_GATHERED]: GatheringVowelsView,
-    [STATES.DONE]: FreeView
+    [STATES.CONFIRM_VOWELS]: ConfirmVowelsView,
+    [STATES.INITIAL_FOREIGN]: GatheringForeignView,
+    [STATES.TRAINING]: TrainingView,
+    [STATES.REPEAT_FOREIGN]: GatheringForeignView
 }

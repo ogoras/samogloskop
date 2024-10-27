@@ -1,15 +1,10 @@
 import ScatterView from "./ScatterView.js";
-import STATES from "../../../const/states.js";
 
-export default class FreeView extends ScatterView {
+export default class TrainingView extends ScatterView {
     constructor(arg, formantProcessor, state) {
         super(arg, state);
 
-        this.h2.innerHTML = (state === undefined
-            ? `Kalibracja ukończona!`
-            : `Wczytano dane kalibracji z poprzedniej sesji.`)
-            + `<br>
-                Jesteś teraz w trybie swobodnego mówienia. 
+        this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
         
         let button = document.createElement("button");

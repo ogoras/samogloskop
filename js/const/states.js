@@ -10,6 +10,10 @@ export const STATE_NAMES = [
     "WAITING_FOR_VOWELS",
     "GATHERING_VOWELS",
     "VOWEL_GATHERED",
+    "CONFIRM_VOWELS",
+    "INITIAL_FOREIGN",
+    "TRAINING",
+    "REPEAT_FOREIGN",
     "DONE"
 ]
 export const STATES = arrToObj(STATE_NAMES);

@@ -1,6 +1,6 @@
-import FormantView from "./FormantView.js";
+import SpeechView from "./SpeechView.js";
 
-export default class CalibrationStartView extends FormantView {
+export default class CalibrationStartView extends SpeechView {
     constructor(container) {
         super();
 

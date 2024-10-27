@@ -7,6 +7,8 @@ import FormantProcessor from './data/FormantProcessor.js';
 import Vowels from './data/Vowels.js';
 
 import { VERSION_MAJOR, VERSION_MINOR } from './const/version.js';
+console.log(`%c Samogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}`,
+     "font-size: 3rem; font-weight: bold;");
 import { STATES, STATE_NAMES } from './const/states.js';
 import { PRESETS, PRESET_NAMES } from './const/presets.js';
 
@@ -16,10 +18,18 @@ if (dataConsentGiven && !localStorage.getItem("version")) {
 }
 let localStorageVersion = localStorage.getItem("version")
 if (localStorageVersion !== `${VERSION_MAJOR}.${VERSION_MINOR}`) {
-    // for now, every update will clear the local storage to avoid any conversion issues
-    // TODO: implement a conversion mechanism for versions 1.x and higher
-    localStorage.clear();
-    dataConsentGiven = false;
+    if (localStorageVersion === "0.1") {
+        // 0.1 -> 0.2 conversion
+        if (localStorage.getItem("state") === "DONE")
+            localStorage.setItem("state", "CONFIRM_VOWELS");
+    }
+    else {
+        // for now, local storage v0.0 is not supported
+        // TODO: implement a conversion mechanism for versions 1.x and higher
+        console.log(`Conversion not implemented for version ${localStorageVersion}`);
+        localStorage.clear();
+        dataConsentGiven = false;
+    }
 }
 let preset = localStorage.getItem("preset");
 let consentPopup = !dataConsentGiven;
@@ -90,7 +100,7 @@ function renderLoop() {
 
     let updates = formantProcessor.feed(samples);
 
-    view.feed(samples, updates, state < STATES.DONE);
+    view.feed(samples, updates, state < STATES.CONFIRM_VOWELS);
 
     let newState = updates.newState;
     if (newState !== undefined) {
@@ -101,21 +111,21 @@ function renderLoop() {
             userVowels: updates.userVowelsString
         }, false);
         view.updateView(newState, formantProcessor);
-        if (state === STATES.DONE && petersonBarney.initialized) view.addDataset(petersonBarney); 
+        if (state === STATES.TRAINING && petersonBarney.initialized) view.addDataset(petersonBarney); 
     }
 
     requestAnimationFrame(renderLoop);
 }
 
 function datasetLoaded() {
-    if (state >= STATES.DONE) view.addDataset(petersonBarney);
+    if (state >= STATES.TRAINING) view.addDataset(petersonBarney);
 }
 
 const SAVEABLE_STATES = [
     STATES.PRESET_SELECTION,
     STATES.NO_SAMPLES_YET,
     STATES.SPEECH_MEASURED,
-    STATES.DONE
+    STATES.CONFIRM_VOWELS,
 ]
 
 function stateSaveable(state) {

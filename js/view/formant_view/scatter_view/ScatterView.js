@@ -1,9 +1,9 @@
-import FormantView from '../FormantView.js';
+import SpeechView from '../SpeechView.js';
 import ScatterPlot from '../../../visualization/ScatterPlot.js';
 import { formantCount } from '../../../data/FormantProcessor.js';
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 
-export default class ScatterView extends FormantView {
+export default class ScatterView extends SpeechView {
     constructor(arg, state) {
         super();
         if (this.constructor === ScatterView) {

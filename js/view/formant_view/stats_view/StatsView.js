@@ -1,6 +1,6 @@
-import FormantView from "../FormantView.js";
+import SpeechView from "../SpeechView.js";
 
-export default class StatsView extends FormantView {
+export default class StatsView extends SpeechView {
     constructor() {
         super();
         if (this.constructor === StatsView)
