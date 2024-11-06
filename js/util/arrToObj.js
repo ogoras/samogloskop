@@ -1,3 +1,5 @@
-export default function arrToObj(arr) {
-    return arr.reduce((dict, key) => ({ ...dict, [key]: Object.keys(dict).length}), {});
+export default function arrToObj(arr, property) {
+    return arr.reduce((acc, element) => 
+        ({ ...acc, [property ? element[property] : element]: Object.keys(acc).length}),
+    {});
 }

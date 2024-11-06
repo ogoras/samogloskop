@@ -2,7 +2,7 @@ import SpeechView from '../SpeechView.js';
 import ScatterPlot from '../../../visualization/scatter_plot/ScatterPlot.js';
 import { formantCount } from '../../../data/FormantProcessor.js';
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
-import polishVowels from '../../../const/vowels/PL.js';
+import { VOWEL_INVENTORIES } from '../../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 export default class ScatterView extends SpeechView {
     constructor(arg, state) {
@@ -43,13 +43,15 @@ export default class ScatterView extends SpeechView {
         this.scatterPlot.appendGroup({ nested: true, formatting: {
             size: POINT_SIZES.VOWEL_CENTROID
         }});
-        polishVowels.forEach(vowel => {
+        let vowelInv = VOWEL_INVENTORIES.PL;
+        for (let i = 0; i < vowelInv.length; i++) {
+            let vowel = vowelInv[i];
             [0, 1].forEach(index => {
                 this.scatterPlot.appendGroup({ formatting: {
                     rgb: vowel.rgb
                 }}, index);
             });
-        });
+        }
         this.scatterPlot.appendGroup({ capacity: formantCount, growSize: true, formatting: {
             size: POINT_SIZES.TRAIL,
             opacity: "80"

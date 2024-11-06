@@ -25,12 +25,12 @@ export default class ConfirmVowelsView extends ScatterView {
         }
         
         let userVowels = formantProcessor.userVowels;
-            for (let vowel of userVowels.vowelsProcessed) {
-                for (let formant of vowel.formants) {
-                    this.saveFormants(formant);
-                }
-                this.vowelCentroid(vowel.avg);
-            }
+        userVowels.vowelsProcessed.forEach(vowel => {
+            vowel.formants.forEach(formant => {
+                this.saveFormants(formant, vowel.id);
+            });
+            this.vowelCentroid(vowel.avg, vowel.id);
+        });
     }
 
     nextMessage() {

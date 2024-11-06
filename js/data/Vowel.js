@@ -1,4 +1,5 @@
 import { POINT_SIZES } from "../const/POINT_SIZES.js";
+import { VOWELS_DICTS, VOWEL_INVENTORIES } from "../const/vowel_inventories/VOWEL_INVENTORIES.js";
 
 export default class Vowel {
     formants = [];
@@ -28,10 +29,23 @@ export default class Vowel {
         }
     }
 
-    constructor(IPA, rgb = "000000", letter) {
-        this.IPA = IPA;
-        this.letter = letter ?? IPA.broad ?? IPA.narrow;
-        this.rgb = rgb;
+    constructor(vowel) {
+        this.language = vowel.language ?? "PL";
+        let vowelDict = VOWELS_DICTS[this.language];
+        let vowelInv = VOWEL_INVENTORIES[this.language];
+        if (!vowel?.IPA) {
+            if (vowelDict?.[vowel?.letter] !== undefined) {
+                vowel.IPA = vowelInv[vowelDict[vowel.letter]].IPA;
+            } else {
+                console.log(VOWELS_DICTS);
+                console.log(vowel);
+                throw new Error("Vowel must have an IPA description");
+            }
+        }
+        let IPA = this.IPA = vowel.IPA;
+        this.letter = vowel.letter ?? IPA.broad ?? IPA.narrow;
+        this.id = vowelDict[this.letter];
+        this.rgb = vowel.rgb ?? "000000";
     }
 
     addFormants(formants) {
@@ -76,7 +90,7 @@ export default class Vowel {
     }
 
     static fromSimpleObject(obj) {
-        let vowel = new Vowel(undefined, obj.color, obj.letter);    // TODO: figure out IPA
+        let vowel = new Vowel(obj);
         vowel.formants = obj.formants.map(formants => { 
             return {...formants, size: POINT_SIZES.USER_DATAPOINTS, rgb: vowel.rgb};
         });

@@ -1,10 +1,10 @@
 import { POINT_SIZES } from '../const/POINT_SIZES.js';
-import vowels from '../const/vowels/PL.js';
 import Vowel from './Vowel.js';
+import Vowels from './Vowels.js';
 
 const REQUIRED_FORMANTS = 20;
-export default class SpeakerVowels {
-    vowelsRemaining = [...vowels];
+export default class SpeakerVowels extends Vowels {
+    vowelsRemaining = [...this.vowels];
     vowelsProcessed = [];
     lobanovScaled = false;
     #meanFormants; #formantsDeviation;

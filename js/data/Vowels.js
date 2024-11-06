@@ -1,5 +1,5 @@
 import Vowel from './Vowel.js';
-import { VOWELS_PER_LANGUAGE } from '../const/vowels/vowels.js';
+import { VOWEL_INVENTORIES } from '../const/vowel_inventories/VOWEL_INVENTORIES.js';
 import { POINT_SIZES } from '../const/POINT_SIZES.js';
 
 export default class Vowels {
@@ -15,22 +15,27 @@ export default class Vowels {
         return this.vowels.map(vowel => vowel.avg);
     }
 
-    constructor(language, dataset, callback) {
-        if (!VOWELS_PER_LANGUAGE[language]) throw new Error(`Language ${language} not supported`);
-        this.vowels = VOWELS_PER_LANGUAGE[language];
-        fetch(`./js/const/vowels/${dataset}.json`).then(response => response.json()).then(data => {
-            for (let vowel of this.vowels) {
-                vowel.formants = data[vowel.key()].map(formants => {
-                    return { 
-                        y: formants.F1 * 0.8,     // TODO: implement it better
-                        x: formants.F2,
-                        identified: formants.identified,
-                    }
-                });
-                vowel.calculateAverage(POINT_SIZES.CENTROIDS);
-            }
-            this.initialized = true;
-            callback();
-        });
+    constructor(language = "PL", dataset, callback) {
+        if (!VOWEL_INVENTORIES[language]) {
+            throw new Error(`Language ${language} not supported`);
+        }
+        this.vowels = VOWEL_INVENTORIES[language].map(vowel => new Vowel(vowel));
+        if (!dataset) return;
+        fetch(`./js/const/vowel_measurements/${dataset}.json`)
+            .then(response => response.json())
+            .then(data => {
+                for (let vowel of this.vowels) {
+                    vowel.formants = data[vowel.key()].map(formants => {
+                        return { 
+                            y: formants.F1 * 0.8,     // TODO: implement it better
+                            x: formants.F2,
+                            identified: formants.identified,
+                        }
+                    });
+                    vowel.calculateAverage(POINT_SIZES.CENTROIDS);
+                }
+                this.initialized = true;
+                callback();
+            });
     }
 }
