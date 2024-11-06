@@ -6,7 +6,7 @@ export default function arrObjToObjArr(arrObj) {
             if (typeof values === 'object') {
                 values = arrObjToObjArr(values);
             } else {
-                values = Array(objArr.length).fill(values);
+                values = Array(objArr.length).fill(values); // TODO: figure out length properly
             }
         }
         for (let i = 0; i < values.length; i++) {
