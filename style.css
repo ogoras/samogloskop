@@ -74,6 +74,7 @@ h3 {
 }
 
 .main-container {
+    width: calc(100% - 1.4rem);
     margin: 0.7rem;
     display: flex;
     flex-direction: column;

@@ -29,7 +29,7 @@ export default class ConfirmVowelsView extends ScatterView {
             vowel.formants.forEach(formant => {
                 this.saveFormants(formant, vowel.id);
             });
-            this.vowelCentroid(vowel.avg, vowel.id);
+            this.vowelCentroid(vowel);
         });
     }
 

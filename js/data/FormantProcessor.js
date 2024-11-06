@@ -130,8 +130,8 @@ export default class FormantProcessor {
                         let point = {
                             x: formant.formant[1].frequency,
                             y: formant.formant[0].frequency,
-                            color: "#00000044",
-                            size: POINT_SIZES.TRAIL
+                            // color: "#00000044",
+                            // size: POINT_SIZES.TRAIL
                         }
                         this.userVowels.scale(point);
                         ret.formants.push(point);
@@ -189,7 +189,7 @@ export default class FormantProcessor {
             x: xSum / weightSum,
             y: ySum / weightSum,
             size: POINT_SIZES.CURRENT,
-            color: !this.userVowels.isDone() ? this.userVowels.currentVowel.rgb : "black"
+            //color: !this.userVowels.isDone() ? this.userVowels.currentVowel.rgb : "black"
         };
         this.formantsToSave = this.smoothedFormantsBuffer.push(smoothedFormants)
         if (this.formantsToSave) this.formantsToSave.size = POINT_SIZES.USER_DATAPOINTS;

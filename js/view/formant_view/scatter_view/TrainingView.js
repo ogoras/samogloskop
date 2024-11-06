@@ -27,7 +27,7 @@ export default class TrainingView extends ScatterView {
                 for (let formant of vowel.formants) {
                     this.saveFormants(formant);
                 }
-                this.vowelCentroid(vowel.avg);
+                this.vowelCentroid(vowel);
             }
     }
 

@@ -9,7 +9,7 @@ export default class RecordingView extends View {
         formants: (x, y) => { this.view?.feed?.(x, y); },
         formantsSmoothed: (x, y) => { this.view?.feedSmoothed?.(x, y); },
         formantsSaved: (x) => { this.view?.saveFormants?.(x); },
-        vowel: (vowel) => { this.view?.vowelCentroid?.(vowel.avg); },
+        vowel: (vowel) => { this.view?.vowelCentroid?.(vowel); },
         progressTime: (time) => { this.view?.updateProgress?.(time); },
         progress: (progress) => { this.view?.updateProgress?.(progress, false); },
         startTime: (time) => { if (this.view) this.view.startTime = time; },

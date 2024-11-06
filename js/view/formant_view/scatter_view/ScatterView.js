@@ -66,8 +66,8 @@ export default class ScatterView extends SpeechView {
         this.scatterPlot.feed(formants, [0, vowelId]);
     }
 
-    vowelCentroid(formants, vowelId = 0) {
-        this.scatterPlot.feed(formants, [1, vowelId]);
+    vowelCentroid(vowel) {
+        this.scatterPlot.feed(vowel.avg, [1, vowel.id]);
     }
 
     feed(formants, rescale = true) {

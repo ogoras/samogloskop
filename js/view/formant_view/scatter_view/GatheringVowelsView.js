@@ -68,7 +68,7 @@ export default class GatheringVowelsView extends ScatterView {
 
     saveFormants(formants) {
         this.assertSpeechFormants();
-        super.saveFormants(formants);
+        super.saveFormants(formants, this.currentVowel.id);
     }
 
     recordingStarted() {
