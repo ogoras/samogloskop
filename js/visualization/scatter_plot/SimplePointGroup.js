@@ -8,8 +8,7 @@ export default class SimplePointGroup extends PointGroup {
         let p = ({
             element: this.g.append("path")
                 .attr("d", d3.symbol(point.symbol ?? defaultFormatting.symbol).size(point.size ?? defaultFormatting.size))
-                .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`)
-                .attr("fill", point.color ? point.color : defaultFormatting.color),
+                .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`),
             x: point.x,
             y: point.y,
             symbol: point.symbol ?? defaultFormatting.symbol,
@@ -20,8 +19,12 @@ export default class SimplePointGroup extends PointGroup {
                 .text(point.label)
                 .attr("x", this.x.scale(point.x))
                 .attr("y", this.y.scale(point.y) - 10)
-                .attr("fill", point.color ? point.color : defaultFormatting.color) : null,
+                : null,
         });
+        if (point.color) {
+            p.element.attr("fill", point.color);
+            p.label?.attr("fill", point.color);
+        }
         if (this.capacity && this.length > this.capacity) {
             let removed = this.shift();
             removed.element.remove();

@@ -21,12 +21,25 @@ export default class PointGroup extends Array {
         this.x = parent.x;
         this.y = parent.y;
         this.element = this.g = parent.id ?
-            parent.g.insert("g", `#${parent[index]?.id}`):
+            parent.g.insert("g", `#${parent[index]?.id}`) :
             parent.g.append("g");
         this.id = parent.id ? `${parent.id}-${parent.length}` : "points";
+        this.applyFormatting(defaults?.formatting);
     }
 
     getAllPoints() {
         throw new Error(`getAllPoints is not implemented in ${this.constructor.name}`);
+    }
+
+    applyFormatting(formatting) {
+        if (!formatting) return;
+        if (formatting.color || formatting.rgb) {
+            let color = formatting.color ?? `#${formatting.rgb}`;
+            this.g.attr("fill", color)
+                .attr("color", color);
+        }
+        if (formatting.opacity) {
+            this.g.attr("fill-opacity", parseInt(formatting.opacity, 16) / 255);
+        }
     }
 }

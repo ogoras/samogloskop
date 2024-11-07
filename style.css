@@ -144,12 +144,17 @@ button {
 
 @media (hover: hover) {
     button:hover, .record-button:hover {
-        cursor: pointer;
         opacity: 0.9;
+        cursor: pointer;
     }
 
-    button:active, .record-button:active {
-        opacity: 1;
+    g.clickable:hover path {
+        filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
+        cursor: pointer;
+    }
+
+    g.clickable:hover text {
+        cursor: pointer;
     }
 
     /* checkboxes with pointer */
@@ -158,10 +163,8 @@ button {
     }
 }
 
-@media (hover: none) {
-    button:active, .record-button:active {
-        opacity: 1;
-    }
+button:active, .record-button:active {
+    opacity: 1;
 }
 
 .recording-container {
