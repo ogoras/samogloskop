@@ -25,6 +25,10 @@ export default class PointGroup extends Array {
             parent.g.append("g");
         this.id = parent.id ? `${parent.id}-${parent.length}` : "points";
         this.applyFormatting(defaults?.formatting);
+        if (defaults?.onClick) {
+            this.g.attr("class", "clickable")
+                .on("click", defaults.onClick);
+        }
     }
 
     getAllPoints() {

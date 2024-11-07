@@ -143,24 +143,27 @@ button {
 }
 
 @media (hover: hover) {
+    button:hover, .record-button:hover, g.clickable:hover, input[type="checkbox"] {
+        cursor: pointer;
+    }
+
     button:hover, .record-button:hover {
         opacity: 0.9;
-        cursor: pointer;
     }
 
     g.clickable:hover path {
         filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
-        cursor: pointer;
     }
+}
 
-    g.clickable:hover text {
-        cursor: pointer;
-    }
+g.clickable:active path {
+    filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
+}
 
-    /* checkboxes with pointer */
-    input[type="checkbox"] {
-        cursor: pointer;
-    }
+g.clickable text {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none;
 }
 
 button:active, .record-button:active {

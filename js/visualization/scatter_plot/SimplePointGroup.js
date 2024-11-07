@@ -1,13 +1,18 @@
 import { POINT_SIZES } from "../../const/POINT_SIZES.js";
 import PointGroup from "./PointGroup.js";
+import remToPx from "../../util/remToPx.js";
 
 export default class SimplePointGroup extends PointGroup {
     addPoint(point) {
         let defaultFormatting = this.defaultFormatting;
 
+        let symbol = point.symbol ?? defaultFormatting.symbol;
+        let size = point.size ?? defaultFormatting.size;
+        size = remToPx(size) / 12
+
         let p = ({
             element: this.g.append("path")
-                .attr("d", d3.symbol(point.symbol ?? defaultFormatting.symbol).size(point.size ?? defaultFormatting.size))
+                .attr("d", d3.symbol(symbol).size(size))
                 .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`),
             x: point.x,
             y: point.y,

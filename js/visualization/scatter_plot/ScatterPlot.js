@@ -97,7 +97,9 @@ export default class ScatterPlot {
     appendGroup(constructorDefaults, ids = [], points = []) {
         ids = this.convertToIdArray(ids);
         let group = this.allPointsGroup.navigate(ids);
-        this.insertGroup(constructorDefaults, ids.concat(group.length), points);
+        let newIds = ids.concat(group.length);
+        this.insertGroup(constructorDefaults, newIds, points);
+        return newIds;
     }
 
     insertGroup(constructorDefaults, ids, points = []) {

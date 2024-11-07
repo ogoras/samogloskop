@@ -36,21 +36,22 @@ export default class ScatterView extends SpeechView {
             this.div.removeChild(this.div.firstChild);
         }
         this.scatterPlot = new ScatterPlot("formants", true, unit);
-        this.scatterPlot.appendGroup({ nested: true, formatting: {
-            size: POINT_SIZES.USER_DATAPOINTS,
-            opacity: "80",
-        }});
-        this.scatterPlot.appendGroup({ nested: true, formatting: {
-            size: POINT_SIZES.VOWEL_CENTROID
-        }});
+        
         let vowelInv = VOWEL_INVENTORIES.PL;
         for (let i = 0; i < vowelInv.length; i++) {
             let vowel = vowelInv[i];
-            [0, 1].forEach(index => {
-                this.scatterPlot.appendGroup({ formatting: {
-                    rgb: vowel.rgb
-                }}, index);
+            let index = this.scatterPlot.appendGroup({ 
+                nested: true, 
+                formatting: { rgb: vowel.rgb },
+                onClick: () => this.vowelClicked(vowel)
             });
+            this.scatterPlot.appendGroup({ formatting: {
+                size: POINT_SIZES.USER_DATAPOINTS,
+                opacity: "80",
+            }}, index);
+            this.scatterPlot.appendGroup({ formatting: {
+                size: POINT_SIZES.VOWEL_CENTROID
+            }}, index);
         }
         this.scatterPlot.appendGroup({ capacity: formantCount, growSize: true, formatting: {
             size: POINT_SIZES.TRAIL,
@@ -63,11 +64,11 @@ export default class ScatterView extends SpeechView {
     }
 
     saveFormants(formants, vowelId = 0) {
-        this.scatterPlot.feed(formants, [0, vowelId]);
+        this.scatterPlot.feed(formants, [vowelId, 0]);
     }
 
     vowelCentroid(vowel) {
-        this.scatterPlot.feed(vowel.avg, [1, vowel.id]);
+        this.scatterPlot.feed(vowel.avg, [vowel.id, 1]);
     }
 
     feed(formants, rescale = true) {
@@ -78,5 +79,9 @@ export default class ScatterView extends SpeechView {
 
     feedSmoothed(formants, rescale = true) {
         this.scatterPlot.setSeriesSingle(formants, -1, 50, rescale);
+    }
+
+    vowelClicked(vowel) {
+        console.log(`Vowel ${vowel.letter} clicked`);
     }
 }
