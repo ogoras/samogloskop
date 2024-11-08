@@ -73,17 +73,17 @@ async function onStateChange(updates = {}, constructNewView = true) {
         if (consentPopup) view = new ConsentView(onStateChange);
         else if (state === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
         else {
-            view = new RecordingView(onStateChange);
             audioRecorder = new AudioRecorder();
+            view = new RecordingView(onStateChange, audioRecorder);
             formantProcessor = new FormantProcessor(audioRecorder.sampleRate, state, preset);
             view.updateView(state, formantProcessor);
             audioRecorder.onStart = () => {
                 formantProcessor.recordingStarted();
-                view.recordingStarted();
+                // view.recordingStarted();
             };
             audioRecorder.onStop = () => {
                 formantProcessor.recordingStopped();
-                view.recordingStopped();
+                // view.recordingStopped();
             };
             renderLoop();
         }

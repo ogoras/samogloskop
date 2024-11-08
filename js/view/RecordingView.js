@@ -2,6 +2,7 @@ import View from './View.js';
 import WaveformVisualizer from '../visualization/waveform/WaveformVisualizer.js';
 import { STATES, STATE_NAMES } from '../const/states.js';
 import SPEECH_VIEWS from './formant_view/SPEECH_VIEWS.js';
+import SettingsView from './SettingsView.js';
 
 export default class RecordingView extends View {
     #UPDATE_FUNCTION = {
@@ -15,8 +16,11 @@ export default class RecordingView extends View {
         startTime: (time) => { if (this.view) this.view.startTime = time; },
     }
 
-    constructor(onStateChange) {
+    constructor(onStateChange, recorder) {
         super(onStateChange);
+        if (!recorder) throw new Error("Recorder not given to RecordingView");
+        this.recorder = recorder;
+
         document.body.innerHTML = "";
 
         let formantsContainer = this.formantsContainer = document.createElement("div");
@@ -36,20 +40,42 @@ export default class RecordingView extends View {
         let recordingContainer = document.createElement("div");
         recordingContainer.classList.add("recording-container");
         this.sideContainer.appendChild(recordingContainer);
-        let recordButton = document.createElement("div");
+
+        async function toggleCallback() {
+            switch(await this.recorder.toggleRecording()) {
+                case "started":
+                    this.recordingStarted();
+                    break;
+                case "stopped":
+                    this.recordingStopped();
+                    break;
+            }
+        }
+        
+        let recordButton = this.recordButton = document.createElement("div");
         recordButton.classList.add("emoji-button");
         recordButton.classList.add("strikethrough-button");
         recordButton.id = "record-button";
         recordButton.innerHTML = "🎙️";
+        recordButton.addEventListener("click", toggleCallback.bind(this));
         recordingContainer.appendChild(recordButton);
-        let recordingIndicator = document.createElement("div");
+
+        addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                toggleCallback.bind(this)();
+            }
+        });
+
+        let recordingIndicator = this.recordingIndicator = document.createElement("div");
         recordingIndicator.classList.add("recording-indicator");
         recordingContainer.appendChild(recordingIndicator);
-        let hint = document.createElement("div");
+
+        let hint = this.hint = document.createElement("div");
         hint.classList.add("record-press-me");
         hint.innerHTML = `<h5><b>←</b></h5>
             <p class="gray">Naciśnij przycisk, żeby włączyć nasłuchiwanie</p>`;
         recordingContainer.appendChild(hint);
+
         let visualizer = document.createElement("div");
         visualizer.classList.add("visualizer");
         let canvas = document.createElement("canvas");
@@ -87,6 +113,7 @@ export default class RecordingView extends View {
     }
     
     updateView(state, formantProcessor) {
+        this.formantProcessor = formantProcessor;
         let Constructor = SPEECH_VIEWS[state];
         if (Constructor) {
             if (this.view) {
@@ -125,17 +152,25 @@ export default class RecordingView extends View {
     }
 
     recordingStarted() {
+        this.hint.style.display = "none";
+        this.recordButton.classList.add('hide-strikethrough');
+        this.recordingIndicator.style.backgroundColor = 'red';
         this.view?.recordingStarted();
         this.waveformVisualizer.reset();
     }
 
     recordingStopped() {
+        this.recordButton.classList.remove('hide-strikethrough');
+        this.recordingIndicator.style.backgroundColor = '#ff000000';
         this.view?.recordingStopped();
     }
 
     openSettings() {
+        this.recorder.stopRecording();
         this.formantsContainer.style.display = "none";
         this.sideContainer.style.display = "none";
+        if (!this.formantProcessor) throw new Error("FormantProcessor not given to RecordingView");
+        this.popup = new SettingsView(this.onStateChange, this.closeSettings.bind(this), this.formantProcessor);
     }
 
     closeSettings() {

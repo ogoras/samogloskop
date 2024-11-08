@@ -6,6 +6,8 @@ export default class AudioRecorder {
     recordingIndicator = document.querySelector('.recording-indicator');
     recordButton = document.querySelector('#record-button');
 
+    #currentlyToggling = false;
+
     get sampleRate() { 
         return this.audioCtx ? this.audioCtx.sampleRate : null;
     }
@@ -14,32 +16,7 @@ export default class AudioRecorder {
         return this.audioBufferData ? this.audioBufferData.length : 0;
     }
 
-    #currentlyToggling = false;
-
     constructor() {
-        async function toggleCallback() {
-            if (this.#currentlyToggling) return;
-            this.#currentlyToggling = true;
-
-            try {
-                if (this.recording) {
-                    this.stopRecording();
-                } else {
-                    await this.startRecording();
-                }
-            } catch (error) {
-                console.log("An error occured in toggleCallback: " + error);
-            } finally {
-                this.#currentlyToggling = false;
-            }
-        }
-        this.recordButton.addEventListener('mousedown', toggleCallback.bind(this));
-        addEventListener('keydown', (event) => {
-            if (event.code === 'Space') {
-                toggleCallback.bind(this)();
-            }
-        });
-
         this.audioCtx = new AudioContext();
     }
 
@@ -48,13 +25,24 @@ export default class AudioRecorder {
         await this.audioCtx.audioWorklet.addModule('js/recording/recorder-worklet-processor.js');
     }
 
-    async startRecording() {
-        let hintElements = document.getElementsByClassName("record-press-me");
-        for (let i = 0; i < hintElements.length; i++) {
-            hintElements[i].style.display = "none";
-        }
-        document.querySelector('#record-button').classList.add('hide-strikethrough');
+    async toggleRecording() {
+        if (this.#currentlyToggling) return null;
+        this.#currentlyToggling = true;
 
+        try {
+            if (this.recording) {
+                if (this.stopRecording()) return "stopped";
+            } else {
+                if (await this.startRecording()) return "started";
+            }
+        } catch (error) {
+            console.log("An error occured in toggleCallback: " + error);
+        } finally {
+            this.#currentlyToggling = false;
+        }
+    }
+
+    async startRecording() {
         if (this.recording) return;
         this.audioBufferData = [];
 
@@ -76,20 +64,19 @@ export default class AudioRecorder {
             this.audioBufferData.push(...inputData);
         };
         this.source.connect(this.recorderNode);
-        this.recordingIndicator.style.backgroundColor = 'red';
         this.recording = true;
         this.onStart();
+        return true;
     }
 
     stopRecording() {
-        document.querySelector('#record-button').classList.remove('hide-strikethrough');
         if (!this.recording) return;
         this.source.disconnect();
         this.recorderNode.disconnect();
         this.stream.getTracks().forEach(track => track.stop());
-        this.recordingIndicator.style.backgroundColor = '#ff000000';
         this.recording = false;
         this.onStop();
+        return true;
     }
 
     dump() {
