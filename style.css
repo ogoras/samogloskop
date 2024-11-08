@@ -78,7 +78,7 @@ h3 {
 
 .main-container {
     width: calc(100% - 1.4rem);
-    margin: 0.7rem;
+    margin: 0.5rem;
     display: flex;
     flex-direction: column;
 }
@@ -109,10 +109,12 @@ button {
     display: inline-block;
     margin: 0.3rem;
     padding: 0;
+    padding-left: 0.1rem;
+    padding-bottom: 0.2rem;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none;
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-family: 'Helvetica', sans-serif;
     position: relative; /* Required for the ::before pseudo-element to be positioned relative to the button */
 }
@@ -203,6 +205,10 @@ canvas {
     .formants-container {
         height: 100%;
         aspect-ratio: 1 / 1;
+    }
+
+    .main-container {
+        margin-left: 0;
     }
 
     body {
