@@ -4,7 +4,7 @@ export default class AudioRecorder {
     initialized = false; recording = false;
 
     recordingIndicator = document.querySelector('.recording-indicator');
-    recordButton = document.querySelector('.record-button');
+    recordButton = document.querySelector('#record-button');
 
     get sampleRate() { 
         return this.audioCtx ? this.audioCtx.sampleRate : null;
@@ -53,7 +53,7 @@ export default class AudioRecorder {
         for (let i = 0; i < hintElements.length; i++) {
             hintElements[i].style.display = "none";
         }
-        document.querySelector('.record-button').classList.add('hide-strikethrough');
+        document.querySelector('#record-button').classList.add('hide-strikethrough');
 
         if (this.recording) return;
         this.audioBufferData = [];
@@ -82,7 +82,7 @@ export default class AudioRecorder {
     }
 
     stopRecording() {
-        document.querySelector('.record-button').classList.remove('hide-strikethrough');
+        document.querySelector('#record-button').classList.remove('hide-strikethrough');
         if (!this.recording) return;
         this.source.disconnect();
         this.recorderNode.disconnect();

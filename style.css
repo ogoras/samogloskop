@@ -2,8 +2,11 @@ body {
     max-height: 100vh;
     max-width: 100vw;
     height: calc(100vh - 4px);
-    width: calc(100vw - 4px);
-    margin: auto;
+    /* width: calc(100vw - 14px); */
+    margin-right: 0;
+    margin-left: 0;
+    margin-top: auto;
+    margin-bottom: auto;
     padding: 0;
     display: flex;
 }
@@ -102,7 +105,7 @@ button {
     color: #008000;
 }
 
-.record-button {
+.emoji-button {
     display: inline-block;
     margin: 0.3rem;
     padding: 0;
@@ -114,7 +117,7 @@ button {
     position: relative; /* Required for the ::before pseudo-element to be positioned relative to the button */
 }
 
-button, .record-button {
+button, .emoji-button {
     opacity: 0.9;
     border-style: solid;
     border-width: 0.15rem;
@@ -123,7 +126,7 @@ button, .record-button {
     background-color: #ffffff;
 }
 
-.record-button::before {
+.strikethrough-button::before {
     content: '';
     position: absolute;
     top: 50%; /* Places the line across the middle */
@@ -137,16 +140,16 @@ button, .record-button {
     transition: opacity 0.3s ease; /* Smooth transition */
 }
 
-.record-button.hide-strikethrough::before {
+.strikethrough-button.hide-strikethrough::before {
     opacity: 0;
 }
 
 @media (hover: hover) {
-    button:hover, .record-button:hover, g.clickable:hover, input[type="checkbox"] {
+    button:hover, .emoji-button:hover, g.clickable:hover, input[type="checkbox"] {
         cursor: pointer;
     }
 
-    button:hover, .record-button:hover {
+    button:hover, .emoji-button:hover {
         filter: drop-shadow(0 0 0.2rem);
     }
 
@@ -165,7 +168,7 @@ g.clickable text {
     user-select: none;
 }
 
-button:active, .record-button:active {
+button:active, .emoji-button:active {
     filter: drop-shadow(0 0 0.2rem);
     opacity: 1;
 }

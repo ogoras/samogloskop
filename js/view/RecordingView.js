@@ -34,7 +34,9 @@ export default class RecordingView extends View {
         recordingContainer.classList.add("recording-container");
         this.mainContainer.appendChild(recordingContainer);
         let recordButton = document.createElement("div");
-        recordButton.classList.add("record-button");
+        recordButton.classList.add("emoji-button");
+        recordButton.classList.add("strikethrough-button");
+        recordButton.id = "record-button";
         recordButton.innerHTML = "🎙️";
         recordingContainer.appendChild(recordButton);
         let recordingIndicator = document.createElement("div");
@@ -53,6 +55,11 @@ export default class RecordingView extends View {
         recordingContainer.appendChild(visualizer);
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
+
+        let settingsButton = document.createElement("div");
+        settingsButton.classList.add("emoji-button");
+        settingsButton.innerHTML = "⚙️";
+        recordingContainer.appendChild(settingsButton);
 
         if (localStorage.getItem("accepted") === "true") {
             let localStorageInfo = document.createElement("div");
