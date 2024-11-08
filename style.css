@@ -89,13 +89,9 @@ h3 {
 }
 
 button {
-    /* sizeable padding, big text, and no edges */
-    padding: 1rem;
+    padding: 0.8rem;
     margin: 0.2rem;
     font-size: 1rem;
-    border-style: none;
-    border-radius: 0.2rem;
-    opacity: 0.8;
 }
 
 #deny {
@@ -117,11 +113,16 @@ button {
     user-select: none;
     font-size: 3rem;
     font-family: 'Helvetica', sans-serif;
-    opacity: 0.8;
+    position: relative; /* Required for the ::before pseudo-element to be positioned relative to the button */
+}
+
+button, .record-button {
+    opacity: 0.9;
     border-style: solid;
     border-width: 0.15rem;
-    border-color: rgba(0, 0, 0, 1);
-    position: relative; /* Required for the ::before pseudo-element to be positioned relative to the button */
+    border-color: var(--color);
+    border-radius: 0.2rem;
+    background-color: #ffffff;
 }
 
 .record-button::before {
@@ -148,7 +149,7 @@ button {
     }
 
     button:hover, .record-button:hover {
-        opacity: 0.9;
+        filter: drop-shadow(0 0 0.2rem);
     }
 
     g.clickable:hover path {
@@ -167,6 +168,7 @@ g.clickable text {
 }
 
 button:active, .record-button:active {
+    filter: drop-shadow(0 0 0.2rem);
     opacity: 1;
 }
 
