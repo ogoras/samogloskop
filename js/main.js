@@ -31,7 +31,7 @@ if (localStorageVersion !== `${VERSION_MAJOR}.${VERSION_MINOR}`) {
         dataConsentGiven = false;
     }
 }
-let preset = localStorage.getItem("preset");
+let preset = PRESETS[localStorage.getItem("preset")];
 let consentPopup = !dataConsentGiven;
 let state = STATES[localStorage.getItem("state")];
 if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
@@ -51,6 +51,7 @@ async function onStateChange(updates = {}, constructNewView = true) {
         if (dataConsentGiven) localStorage.setItem("preset", PRESET_NAMES[preset]);
         state = STATES.NO_SAMPLES_YET;
         if (dataConsentGiven) localStorage.setItem("state", STATE_NAMES[state]);
+        if (formantProcessor) formantProcessor.changePreset(preset);
     }
     if (updates.accepted !== undefined) {
         dataConsentGiven = updates.accepted;

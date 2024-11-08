@@ -32,6 +32,10 @@ export default class FormantProcessor {
         }
     }
 
+    changePreset(preset) {
+        this.preset = preset;
+    }
+
     vowelToScatterPlotEntry(vowel) {
         let [key, value] = vowel;
         return {

@@ -1,4 +1,5 @@
 import View from "./View.js";
+import PresetView from "./PresetView.js";
 import { VERSION_MAJOR, VERSION_MINOR } from '../const/version.js';
 
 export default class SettingsView extends View {
@@ -105,7 +106,22 @@ export default class SettingsView extends View {
     }
 
     createPresetSection() {
-        return document.createElement("div");
+        let div = document.createElement("div");
+
+        let title = document.createElement("h2");
+        title.classList.add("no-bottom-margin");
+        title.innerHTML = "<b>Kategoria głosu</b>";
+        div.appendChild(title);
+
+        let presetSelection = new PresetView((updates) => {
+            this.onStateChange(updates, false);
+            
+            let nextElement = div.nextElementSibling;
+            div.remove();
+            this.mainContainer.insertBefore(this.createPresetSection(), nextElement);
+        }, div, this.formantProcessor.preset);
+
+        return div;
     }
 
     createIntensityStatsSection() {

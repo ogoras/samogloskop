@@ -3,21 +3,24 @@ import View from './View.js';
 export default class ChoiceView extends View {
     choiceElement = document.createElement("div");
 
-    constructor(onStateChange, text, choices) {
+    constructor(onStateChange, text, choices, parent, selectedIndex) {
         super(onStateChange);
         if (this.constructor === ChoiceView) throw new Error("Cannot instantiate abstract class ChoiceView");
 
-        this.mainContainer = document.querySelector(".main-container");
+        if(!parent) parent = document.querySelector(".main-container");
 
         let choiceElement = this.choiceElement;
-        this.mainContainer.appendChild(choiceElement);
+        parent.appendChild(choiceElement);
         
         let p = document.createElement("p");
         p.innerHTML = text;
         choiceElement.appendChild(p);
 
-        for (let choice of choices) {
+        console.log(selectedIndex);
+        for (let i = 0; i < choices.length; i++) {
+            let choice = choices[i];
             let button = document.createElement("button");
+            if (i === selectedIndex) button.classList.add("selected");
             button.innerHTML = choice.text;
             if (choice.id) button.id = choice.id;
             button.onclick = () => {

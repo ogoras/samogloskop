@@ -1,14 +1,14 @@
 import arrToObj from "../util/arrToObj.js";
 
 export const PRESET_NAMES = [
-    "MALE",
     "FEMALE",
+    "MALE",
     "CHILD"
 ];
 export const PRESETS = arrToObj(PRESET_NAMES);
 export const PRESET_FREQUENCIES = [
-    5000,
     5500,
+    5000,
     8000
 ]
 

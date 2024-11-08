@@ -122,6 +122,16 @@ button.small {
     font-size: 0.9rem;
 }
 
+button.selected {
+    background-color: #f0f0f0;
+}
+
+button.selected::after {
+    content: '\2713';
+    margin-left: 0.3rem;
+    font-size: 0.9rem;
+}
+
 #deny {
     color: #a00000;
 }
