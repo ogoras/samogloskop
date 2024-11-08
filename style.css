@@ -76,11 +76,19 @@ h3 {
     align-items: center;
 }
 
-.main-container {
-    width: calc(100% - 1.4rem);
-    margin: 0.5rem;
+.main-container, .side-container {
     display: flex;
     flex-direction: column;
+}
+
+.side-container {
+    width: calc(100% - 1rem);
+    margin: 0.5rem;
+}
+
+.main-container {
+    width: calc(100% - 1.4rem);
+    margin: 0.7rem;
 }
 
 .recording-indicator {
@@ -207,7 +215,8 @@ canvas {
         aspect-ratio: 1 / 1;
     }
 
-    .main-container {
+    .side-container {
+        width: calc(100% - 0.5rem);
         margin-left: 0;
     }
 

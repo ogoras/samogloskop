@@ -47,8 +47,8 @@ export default class TrainingView extends ScatterView {
         this.visibleVowelsChoice.querySelector("#peterson-barney").onchange = (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 2, 3);
         }
-        let mainContainer = document.querySelector(".main-container");
-        mainContainer.appendChild(this.visibleVowelsChoice);
+        let sideContainer = document.querySelector(".side-container");
+        sideContainer.appendChild(this.visibleVowelsChoice);
         document.querySelector(".recording-container").after(this.visibleVowelsChoice);
     }
 }

@@ -17,12 +17,12 @@ export default class RecordingView extends View {
 
     constructor(onStateChange) {
         super(onStateChange);
+        document.body.innerHTML = "";
 
-        // add a div before the main container
         let formantsContainer = this.formantsContainer = document.createElement("div");
         formantsContainer.classList.add("formants-container");
         formantsContainer.id = "formants";
-        document.body.insertBefore(formantsContainer, this.mainContainer);
+        document.body.appendChild(formantsContainer);
         let centerDiv = document.createElement("div");
         centerDiv.classList.add("center");
         formantsContainer.appendChild(centerDiv);
@@ -30,9 +30,12 @@ export default class RecordingView extends View {
         stackDiv.classList.add("stack");
         centerDiv.appendChild(stackDiv);
 
+        let sideContainer = this.sideContainer = document.createElement("div");
+        sideContainer.classList.add("side-container");
+        document.body.appendChild(sideContainer);
         let recordingContainer = document.createElement("div");
         recordingContainer.classList.add("recording-container");
-        this.mainContainer.appendChild(recordingContainer);
+        this.sideContainer.appendChild(recordingContainer);
         let recordButton = document.createElement("div");
         recordButton.classList.add("emoji-button");
         recordButton.classList.add("strikethrough-button");
@@ -59,11 +62,12 @@ export default class RecordingView extends View {
         let settingsButton = document.createElement("div");
         settingsButton.classList.add("emoji-button");
         settingsButton.innerHTML = "⚙️";
+        settingsButton.addEventListener("click", this.openSettings.bind(this));
         recordingContainer.appendChild(settingsButton);
 
         if (localStorage.getItem("accepted") === "true") {
             let localStorageInfo = document.createElement("div");
-            this.mainContainer.appendChild(localStorageInfo);
+            this.sideContainer.appendChild(localStorageInfo);
             let p = document.createElement("p");
             p.innerHTML = `Zaakceptowano przechowywanie danych w pamięci lokalnej.
                 Po wycofaniu zgody aplikacja będzie pamiętać dane tylko do końca sesji lub odświeżenia strony.`;
@@ -127,5 +131,15 @@ export default class RecordingView extends View {
 
     recordingStopped() {
         this.view?.recordingStopped();
+    }
+
+    openSettings() {
+        this.formantsContainer.style.display = "none";
+        this.sideContainer.style.display = "none";
+    }
+
+    closeSettings() {
+        this.formantsContainer.style.display = "block";
+        this.sideContainer.style.display = "block";
     }
 }

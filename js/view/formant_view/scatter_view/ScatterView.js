@@ -28,8 +28,8 @@ export default class ScatterView extends SpeechView {
 
     initializePlot(unit) {
         // move the divStack element to .main-container below the recording container
-        let mainContainer = document.querySelector(".main-container");
-        mainContainer.appendChild(this.divStack);
+        let sideContainer = document.querySelector(".side-container");
+        sideContainer.appendChild(this.divStack);
         document.querySelector(".recording-container").after(this.divStack);
         // remove everything from div
         while (this.div.firstChild) {

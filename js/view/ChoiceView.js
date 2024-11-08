@@ -7,6 +7,8 @@ export default class ChoiceView extends View {
         super(onStateChange);
         if (this.constructor === ChoiceView) throw new Error("Cannot instantiate abstract class ChoiceView");
 
+        this.mainContainer = document.querySelector(".main-container");
+
         let choiceElement = this.choiceElement;
         this.mainContainer.appendChild(choiceElement);
         
