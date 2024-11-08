@@ -95,13 +95,11 @@ button {
 }
 
 #deny {
-    background-color: #ff0000;
-    color: white;
+    color: #a00000;
 }
 
 #accept {
-    background-color: #00aa00;
-    color: white;
+    color: #008000;
 }
 
 .record-button {
