@@ -46,7 +46,15 @@ div.center {
     align-items: center;
 }
 
+div.center-auto {
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 div.stack {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -92,6 +100,7 @@ h3 {
 .main-container {
     width: calc(100% - 1.4rem);
     margin: 0.7rem;
+    flex: 1;
 }
 
 .recording-indicator {
@@ -106,6 +115,11 @@ button {
     padding: 0.8rem;
     margin: 0.2rem;
     font-size: 1rem;
+}
+
+button.small {
+    padding: 0.5rem;
+    font-size: 0.9rem;
 }
 
 #deny {
@@ -160,6 +174,10 @@ button, .emoji-button {
 @media (hover: hover) {
     button:hover, .emoji-button:hover, g.clickable:hover, input[type="checkbox"] {
         cursor: pointer;
+    }
+
+    a:hover {
+        filter: drop-shadow(0 0 0.02em);
     }
 
     button:hover, .emoji-button:hover {
@@ -223,7 +241,12 @@ canvas {
         margin-left: 0;
     }
 
-    body {
+    body.recording-view {
+        flex-direction: row;
+    }
+
+    div.flex-oriented {
+        display: flex;
         flex-direction: row;
     }
 }
@@ -234,9 +257,14 @@ canvas {
         aspect-ratio: 1 / 1;
     }
 
-    body {
+    div.flex-oriented {
+        display: flex;
         flex-direction: column;
     }
+}
+
+body {
+    flex-direction: column;
 }
 
 .progress-bar {
@@ -252,4 +280,18 @@ canvas {
     width: 0%;
     background-color: #4CAF50;
     border-radius: 0.25rem;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+}
+
+.footer {
+    padding: 0.3rem;
+    text-align: right;
 }

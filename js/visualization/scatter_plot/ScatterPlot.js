@@ -37,13 +37,15 @@ export default class ScatterPlot {
         this.parent = document.getElementById(elementId);
         this.drawAxes();
 
-        window.addEventListener("resize", () => {
-            this.svg.attr("display", "none");
-            this.drawAxes();
-            this.svg.attr("display", "block");
-            this.rescalePoints(0, 0);
-            this.rescalePoints(0, 1);
-        });
+        window.addEventListener("resize", this.restore.bind(this));
+    }
+
+    restore() {
+        this.svg.attr("display", "none");
+        this.drawAxes();
+        this.svg.attr("display", "block");
+        this.rescalePoints(0, 0);
+        this.rescalePoints(0, 1);
     }
 
     drawAxes() {

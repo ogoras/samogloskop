@@ -22,6 +22,7 @@ export default class RecordingView extends View {
         this.recorder = recorder;
 
         document.body.innerHTML = "";
+        document.body.classList.add("recording-view");
 
         let formantsContainer = this.formantsContainer = document.createElement("div");
         formantsContainer.classList.add("formants-container");
@@ -91,24 +92,6 @@ export default class RecordingView extends View {
         settingsButton.addEventListener("click", this.openSettings.bind(this));
         recordingContainer.appendChild(settingsButton);
 
-        if (localStorage.getItem("accepted") === "true") {
-            let localStorageInfo = document.createElement("div");
-            this.sideContainer.appendChild(localStorageInfo);
-            let p = document.createElement("p");
-            p.innerHTML = `Zaakceptowano przechowywanie danych w pamięci lokalnej.
-                Po wycofaniu zgody aplikacja będzie pamiętać dane tylko do końca sesji lub odświeżenia strony.`;
-            localStorageInfo.appendChild(p);
-            let button = document.createElement("button");
-            button.innerHTML = "Wycofaj zgodę i wyczyść dane z pamięci lokalnej";
-            button.style = "color: #a00000"
-            button.addEventListener("click", () => {
-                if (!confirm("Czy na pewno chcesz wycofać zgodę i wyczyścić dane z pamięci lokalnej? Utracisz wszystkie swoje dane.")) return;
-                this.onStateChange({ accepted: false }, false);
-                localStorageInfo.remove();
-            });
-            localStorageInfo.appendChild(button);
-        }
-
         this.waveformVisualizer = new WaveformVisualizer();
     }
     
@@ -167,6 +150,7 @@ export default class RecordingView extends View {
 
     openSettings() {
         this.recorder.stopRecording();
+        document.body.classList.remove("recording-view");
         this.formantsContainer.style.display = "none";
         this.sideContainer.style.display = "none";
         if (!this.formantProcessor) throw new Error("FormantProcessor not given to RecordingView");
@@ -174,7 +158,9 @@ export default class RecordingView extends View {
     }
 
     closeSettings() {
+        document.body.classList.add("recording-view");
         this.formantsContainer.style.display = "block";
         this.sideContainer.style.display = "block";
+        this.view.restore?.();
     }
 }

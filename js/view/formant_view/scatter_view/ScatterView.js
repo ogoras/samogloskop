@@ -84,4 +84,8 @@ export default class ScatterView extends SpeechView {
     vowelClicked(vowel) {
         console.log(`Vowel ${vowel.letter} clicked`);
     }
+
+    restore() {
+        this.scatterPlot.restore();
+    }
 }
