@@ -50,6 +50,7 @@ export default class SettingsView extends View {
         let div = document.createElement("div");
 
         let title = document.createElement("h2");
+        title.classList.add("no-bottom-margin");
         title.innerHTML = "<b>Zgody</b>";
         div.appendChild(title);
 
@@ -64,7 +65,7 @@ export default class SettingsView extends View {
         button.classList.add("small");
         consent.appendChild(button);
         if (localStorage.getItem("accepted") === "true") {
-            info.innerHTML = `Zaakceptowano przechowywanie danych w pamięci lokalnej.
+            info.innerHTML = `<b>Zaakceptowano</b> przechowywanie danych w pamięci lokalnej.
                 Po wycofaniu zgody odświeżenie strony bądź zamknięcie przeglądarki spowoduje usunięcie wszystkich Twoich danych. <a href ="privacy.html" target=”_blank”>Polityka prywatności</a>`;
             button.innerHTML = "Wycofaj zgodę i wyczyść dane z pamięci lokalnej";
             button.style = "color: #ff0000"
@@ -79,16 +80,24 @@ export default class SettingsView extends View {
             secondButton.addEventListener("click", () => {
                 if (!confirm("Czy na pewno chcesz wycofać zgodę na korzystanie z pamięci lokalnej? Utracisz wszystkie swoje dane po odświeżeniu lub zamknięciu okna przeglądarki.")) return;
                 this.onStateChange({ accepted: false }, false);
+
+                let nextElement = div.nextElementSibling;
+                div.remove();
+                this.mainContainer.insertBefore(this.createConsentSection(), nextElement);
             });
             secondButton.classList.add("small");
             consent.appendChild(secondButton);
         }
         else {
-            info.innerHTML = `Nie wyrażono zgody na przechowywanie danych w pamięci lokalnej. Odświeżenie strony bądź zamknięcie przeglądarki spowoduje usunięcie wszystkich Twoich danych. <a href ="privacy.html" target=”_blank”>Polityka prywatności</a>`;
+            info.innerHTML = `<b>Nie wyrażono zgody</b> na przechowywanie danych w pamięci lokalnej. Odświeżenie strony bądź zamknięcie przeglądarki spowoduje usunięcie wszystkich Twoich danych. <a href ="privacy.html" target=”_blank”>Polityka prywatności</a>`;
             button.innerHTML = "Wyraź zgodę na przechowywanie danych w pamięci lokalnej";
             button.style = "color: #008000"
             button.addEventListener("click", () => {
                 this.onStateChange({ accepted: true }, false);
+
+                let nextElement = div.nextElementSibling;
+                div.remove();
+                this.mainContainer.insertBefore(this.createConsentSection(), nextElement);
             });
         }
         div.appendChild(consent);

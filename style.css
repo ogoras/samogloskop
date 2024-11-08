@@ -295,3 +295,7 @@ body {
     padding: 0.3rem;
     text-align: right;
 }
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
