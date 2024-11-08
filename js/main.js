@@ -23,7 +23,7 @@ if (localStorageVersion !== `${VERSION_MAJOR}.${VERSION_MINOR}`) {
         if (localStorage.getItem("state") === "DONE")
             localStorage.setItem("state", "CONFIRM_VOWELS");
     }
-    else {
+    else if (dataConsentGiven) {
         // for now, local storage v0.0 is not supported
         // TODO: implement a conversion mechanism for versions 1.x and higher
         console.log(`Conversion not implemented for version ${localStorageVersion}`);
