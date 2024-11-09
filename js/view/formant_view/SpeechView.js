@@ -1,7 +1,15 @@
-export default class SpeechView {
-    constructor() {
-        if (this.constructor === SpeechView)
+import View from "../View.js";
+
+export default class SpeechView extends View {
+    constructor(onStateChange, view) {
+        super(onStateChange);
+        if (this.constructor === SpeechView) {
             throw new Error("Cannot instantiate abstract class FormantView");
+        }
+
+        if (view !== undefined) {
+            this.#recording = view.recording;
+        }
     }
 
     #recording = false;
@@ -25,6 +33,10 @@ export default class SpeechView {
         else {
             this.recordingStopped();
         }
+    }
+
+    get recording() {
+        return this.#recording;
     }
 
     recordingStarted() {

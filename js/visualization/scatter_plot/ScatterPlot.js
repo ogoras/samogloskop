@@ -113,6 +113,12 @@ export default class ScatterPlot {
         }
     }
 
+    addGroupCallback(callback, ids = []) {
+        ids = this.convertToIdArray(ids);
+        let group = this.allPointsGroup.navigate(ids);
+        group.defaults.onClick = callback;
+    }
+
     addPoint(point, group, animationMs = 200, rescale = true) {
         if (typeof group === "number") {
             group = this.allPointsGroup[group];

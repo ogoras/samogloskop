@@ -5,8 +5,12 @@ import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from '../../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 export default class ScatterView extends SpeechView {
-    constructor(arg, state) {
-        super();
+    constructor(onStateChange, arg, state) {
+        if (state === undefined) {
+            super(onStateChange, arg);
+        } else {
+            super(onStateChange);
+        }
         if (this.constructor === ScatterView) {
             throw new Error("Cannot instantiate abstract class ScatterView");
         }
@@ -43,7 +47,7 @@ export default class ScatterView extends SpeechView {
             let index = this.scatterPlot.appendGroup({ 
                 nested: true, 
                 formatting: { rgb: vowel.rgb },
-                onClick: () => this.vowelClicked(vowel)
+                onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
             });
             this.scatterPlot.appendGroup({ formatting: {
                 size: POINT_SIZES.USER_DATAPOINTS,
@@ -79,10 +83,6 @@ export default class ScatterView extends SpeechView {
 
     feedSmoothed(formants, rescale = true) {
         this.scatterPlot.setSeriesSingle(formants, -1, 50, rescale);
-    }
-
-    vowelClicked(vowel) {
-        console.log(`Vowel ${vowel.letter} clicked`);
     }
 
     restore() {

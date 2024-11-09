@@ -1,8 +1,8 @@
 import ScatterView from "./ScatterView.js";
 
 export default class TrainingView extends ScatterView {
-    constructor(arg, formantProcessor, state) {
-        super(arg, state);
+    constructor(onStateChange, arg, formantProcessor, state) {
+        super(onStateChange, arg, state);
 
         this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;

@@ -1,10 +1,12 @@
 import ScatterView from './ScatterView.js';
+import { STATES } from '../../../const/states.js';
 
 export default class ConfirmVowelsView extends ScatterView {
     currentMessage = 0;
 
-    constructor(arg, formantProcessor, state) {
-        super(arg, state);
+    constructor(onStateChange, arg, formantProcessor, state) {
+        super(onStateChange, arg, state);
+        this.formantProcessor = formantProcessor;
 
         this.h2.innerHTML = (state === undefined
             ? `Kalibracja ukończona!`
@@ -26,8 +28,10 @@ export default class ConfirmVowelsView extends ScatterView {
         
         let userVowels = formantProcessor.userVowels;
         userVowels.vowelsProcessed.forEach(vowel => {
+            let id = vowel.id;
+            
             vowel.formants.forEach(formant => {
-                this.saveFormants(formant, vowel.id);
+                this.saveFormants(formant, id);
             });
             this.vowelCentroid(vowel);
         });
@@ -46,5 +50,10 @@ export default class ConfirmVowelsView extends ScatterView {
                 // TODO: implement callback to parent
                 break;
         }
+    }
+
+    vowelClicked(vowel) {
+        this.formantProcessor.userVowels.resetVowel(vowel);
+        this.onStateChange({tempState: STATES.WAITING_FOR_VOWELS}, false);
     }
 }

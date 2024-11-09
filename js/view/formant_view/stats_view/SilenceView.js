@@ -33,7 +33,7 @@ export default class SilenceView extends StatsView {
         }
     }
 
-    constructor(view, formantProcessor) {
+    constructor(onStateChange, view, formantProcessor) {
         super();
         this.div = view.div;
         this.timeRequired = formantProcessor.calibrationTime;

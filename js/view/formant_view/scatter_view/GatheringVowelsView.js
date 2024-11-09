@@ -1,3 +1,4 @@
+import ConfirmVowelsView from './ConfirmVowelsView.js';
 import ScatterView from './ScatterView.js';
 
 export default class GatheringVowelsView extends ScatterView {
@@ -41,8 +42,8 @@ export default class GatheringVowelsView extends ScatterView {
         this.refreshRecording();
     }
 
-    constructor(view, formantProcessor) {
-        super(view);
+    constructor(onStateChange, view, formantProcessor) {
+        super(onStateChange, view);
 
         this.userVowels = formantProcessor.userVowels;
         this.currentVowel = this.userVowels.nextVowel();
@@ -52,7 +53,12 @@ export default class GatheringVowelsView extends ScatterView {
         while (divStack.lastChild !== this.h2) {
             divStack.removeChild(divStack.lastChild);
         }
-        this.recordingStarted();
+        if (view.constructor === ConfirmVowelsView) {
+            // this.#speechDetected = true;
+            this.scatterPlot = view.scatterPlot;
+            this.#plotInitialized = true;
+        }
+        this.refreshRecording();
         this.h2.innerHTML = "Kalibracja samogłosek:<br>" + this.h2.innerHTML;
     }
 

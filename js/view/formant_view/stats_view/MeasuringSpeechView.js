@@ -17,7 +17,7 @@ export default class MeasuringSpeechView extends StatsView {
         this.resetStatsElements();
     }
 
-    constructor(arg, formantProcessor, state) {
+    constructor(onStateChange, arg, formantProcessor, state) {
         super();
         if (state === undefined) {
             let view = arg;

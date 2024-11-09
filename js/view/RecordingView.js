@@ -101,7 +101,7 @@ export default class RecordingView extends View {
         if (Constructor) {
             if (this.view) {
                 if (Constructor !== this.view.constructor) {
-                    this.view = new Constructor(this.view, formantProcessor);
+                    this.view = new Constructor(this.onStateChange, this.view, formantProcessor);
                 }
                 else switch(state) {
                     case STATES.SPEECH_MEASURED:
@@ -119,7 +119,7 @@ export default class RecordingView extends View {
                         break;
                 }
             }
-            else this.view = new Constructor(this.formantsContainer, formantProcessor, state);
+            else this.view = new Constructor(this.onStateChange, this.formantsContainer, formantProcessor, state);
         }
     }
 

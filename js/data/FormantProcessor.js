@@ -114,6 +114,7 @@ export default class FormantProcessor {
                     if (this.intensityStats.detectSpeech()) {
                         ret.newState = this.state = STATES.GATHERING_VOWELS;
                         this.formantsBuffer.clear();
+                        this.smoothedFormantsBuffer ??= new Buffer(minimumSmoothingCount);
                         this.smoothedFormantsBuffer.clear();
                     }
                 }

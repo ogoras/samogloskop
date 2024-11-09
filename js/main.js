@@ -62,6 +62,8 @@ async function onStateChange(updates = {}, constructNewView = true) {
     }
     if (updates.tempState !== undefined) {
         tempState = updates.tempState;
+        formantProcessor.state = tempState;
+        view?.updateView?.(tempState, formantProcessor);
     }
     if (updates.preset !== undefined) {
         preset = updates.preset;

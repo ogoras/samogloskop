@@ -9,15 +9,18 @@ export default class SpeakerVowels extends Vowels {
     lobanovScaled = false;
     #meanFormants; #formantsDeviation;
     #gatheredAnything = false;
+    #scaleCurrent = true;
 
     get gatheredAnything() {
         return this.#gatheredAnything || this.vowelsProcessed.length > 0;
     }
 
     get meanFormants() {
-        if (!this.isDone()) throw new Error("Trying to access mean formants before all vowels are gathered");
-        assertEqualNumberOfFormants(this.vowelsProcessed);
         if (!this.#meanFormants) {
+            if (!this.isDone()) {
+                throw new Error("Trying to calculate mean formants before all vowels are gathered");
+            }
+            assertEqualNumberOfFormants(this.vowelsProcessed);
             this.#meanFormants = this.vowelsProcessed.reduce(
                 (acc, vowel) => {
                     return {
@@ -34,9 +37,9 @@ export default class SpeakerVowels extends Vowels {
     }
 
     get formantsDeviation() {
-        if (!this.isDone()) throw new Error("Trying to access formants deviation before all vowels are gathered");
-        assertEqualNumberOfFormants(this.vowelsProcessed);
         if (!this.#formantsDeviation) {
+            if (!this.isDone()) throw new Error("Trying to calculate formants deviation before all vowels are gathered");
+            assertEqualNumberOfFormants(this.vowelsProcessed);
             let varianceTimesN = this.vowelsProcessed.reduce(
                 (acc, vowel) => {
                     return {
@@ -83,9 +86,17 @@ export default class SpeakerVowels extends Vowels {
     }
 
     scaleLobanov() {
-        if (this.lobanovScaled) return;
+        if (this.lobanovScaled && this.#scaleCurrent) return;
         this.lobanovScaled = true;
+        let oldMeanFormants = this.#meanFormants ?? 1;
+        let oldFormantsDeviation = this.#formantsDeviation ?? 1;
+        this.#meanFormants = undefined;
+        this.#formantsDeviation = undefined;
         this.vowelsProcessed.forEach(vowel => vowel.scaleLobanov(this.meanFormants, this.formantsDeviation));
+        this.#meanFormants.x = oldMeanFormants.x + this.meanFormants.x * oldFormantsDeviation.x;
+        this.#meanFormants.y = oldMeanFormants.y + this.meanFormants.y * oldFormantsDeviation.y;
+        this.#formantsDeviation.x *= oldFormantsDeviation.x;
+        this.#formantsDeviation.y *= oldFormantsDeviation.y;
     }
 
     scale(point) {
@@ -107,6 +118,19 @@ export default class SpeakerVowels extends Vowels {
             meanFormants: this.#meanFormants,
             formantsDeviation: this.#formantsDeviation
         });
+    }
+
+    resetVowel(vowel) {
+        vowel = new Vowel(vowel);
+        let index = this.vowelsProcessed.findIndex(v => v.id === vowel.id);
+        if (index === -1) {
+            console.log(vowel);
+            console.log(this.vowelsProcessed);
+            throw new Error("Vowel not found");
+        }
+        this.vowelsProcessed.splice(index, 1);
+        this.vowelsRemaining.push(vowel);
+        this.#scaleCurrent = false;
     }
 
     static fromString(string) {
