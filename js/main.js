@@ -35,6 +35,7 @@ let preset = PRESETS[localStorage.getItem("preset")];
 let consentPopup = !dataConsentGiven;
 let state = STATES[localStorage.getItem("state")];
 if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
+let tempState;
 let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null, audioRecorder = null, formantProcessor = null;
@@ -42,10 +43,24 @@ let petersonBarney = new Vowels("EN", "peterson_barney", datasetLoaded);
 
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
-        state = updates.newState;
-        if (dataConsentGiven && stateSaveable(state)) {
-            localStorage.setItem("state", STATE_NAMES[state]);
+        if (tempState !== undefined) {
+            console.log(`tempState updated to ${STATE_NAMES[updates.newState]}`);
+            tempState = updates.newState;
+            if (stateSaveable(tempState)) {
+                tempState = undefined;
+                formantProcessor.state = state;
+                constructNewView = true;
+            }
+        } else {
+            console.log(`state updated to ${STATE_NAMES[updates.newState]}`);
+            state = updates.newState;
+            if (dataConsentGiven && stateSaveable(state)) {
+                localStorage.setItem("state", STATE_NAMES[state]);
+            }
         }
+    }
+    if (updates.tempState !== undefined) {
+        tempState = updates.tempState;
     }
     if (updates.preset !== undefined) {
         preset = updates.preset;
@@ -80,13 +95,14 @@ async function onStateChange(updates = {}, constructNewView = true) {
         if (dataConsentGiven) localStorage.setItem("userVowels", updates.userVowels);
     }
     if (constructNewView) {
+        let viewState = tempState ?? state;
         if (consentPopup) view = new ConsentView(onStateChange);
-        else if (state === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
+        else if (viewState === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
         else {
             audioRecorder = new AudioRecorder();
             view = new RecordingView(onStateChange, audioRecorder);
-            formantProcessor = new FormantProcessor(audioRecorder.sampleRate, state, preset);
-            view.updateView(state, formantProcessor);
+            formantProcessor = new FormantProcessor(audioRecorder.sampleRate, viewState, preset);
+            view.updateView(viewState, formantProcessor);
             audioRecorder.onStart = () => {
                 formantProcessor.recordingStarted();
                 // view.recordingStarted();
@@ -101,6 +117,8 @@ async function onStateChange(updates = {}, constructNewView = true) {
 }
 
 function renderLoop() {
+    let viewState = tempState ?? state;
+
     if (audioRecorder.samplesCollected < 8) {
         requestAnimationFrame(renderLoop);
         return;
@@ -110,25 +128,26 @@ function renderLoop() {
 
     let updates = formantProcessor.feed(samples);
 
-    view.feed(samples, updates, state < STATES.CONFIRM_VOWELS);
+    view.feed(samples, updates, viewState < STATES.CONFIRM_VOWELS);
 
     let newState = updates.newState;
     if (newState !== undefined) {
-        state = newState;
         onStateChange({ 
             newState,
             intensityStats: updates.intensityStatsString,
             userVowels: updates.userVowelsString
         }, false);
-        view.updateView(newState, formantProcessor);
-        if (state === STATES.TRAINING && petersonBarney.initialized) view.addDataset(petersonBarney); 
+        viewState = tempState ?? state;
+        view.updateView(viewState, formantProcessor);
+        if (viewState === STATES.TRAINING && petersonBarney.initialized) view.addDataset(petersonBarney); 
     }
 
     requestAnimationFrame(renderLoop);
 }
 
 function datasetLoaded() {
-    if (state >= STATES.TRAINING) view.addDataset(petersonBarney);
+    let viewState = tempState ?? state;
+    if (viewState >= STATES.TRAINING) view.addDataset(petersonBarney);
 }
 
 const SAVEABLE_STATES = [

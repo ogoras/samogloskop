@@ -159,7 +159,7 @@ export default class SettingsView extends View {
         button.classList.add("small");
         button.onclick = () => {
             this.close();
-            this.onStateChange({ newState: STATES.NO_SAMPLES_YET }, true);
+            this.onStateChange({ tempState: STATES.NO_SAMPLES_YET }, true);
         }
         statsInfo.appendChild(button);
         div.appendChild(statsInfo);
