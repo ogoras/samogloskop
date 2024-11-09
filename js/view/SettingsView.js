@@ -39,7 +39,9 @@ export default class SettingsView extends View {
 
         this.mainContainer.appendChild(this.createConsentSection());
         this.mainContainer.appendChild(this.createPresetSection());
-        this.mainContainer.appendChild(this.createIntensityStatsSection());
+        if (this.formantProcessor.intensityStats.isCalibrated) {
+            this.mainContainer.appendChild(this.createIntensityStatsSection());
+        }
 
         this.footer = document.createElement("div");
         this.footer.classList.add("footer");
@@ -133,7 +135,36 @@ export default class SettingsView extends View {
     }
 
     createIntensityStatsSection() {
-        return document.createElement("div");
+        let div = document.createElement("div");
+
+        let title = document.createElement("h2");
+        title.classList.add("no-bottom-margin");
+        title.innerHTML = "<b>Kalibracja głośności</b>";
+        div.appendChild(title);
+
+        let stats = this.formantProcessor.intensityStats;
+        let statsInfo = document.createElement("div");
+        statsInfo.classList.add("flex-oriented");
+        statsInfo.style = "align-items: center";
+        statsInfo.innerHTML = `<h4>Poziomy ciszy: </h4>
+            <p><span>${stats.silenceStats.min.toExponential(2)}</span> / 
+            <span>${stats.silenceStats.mean.toExponential(2)} / </span>
+            <span>${stats.silenceStats.max.toExponential(2)}</span></p>
+            <h4>Poziomy mowy: </h4>
+            <p><span>${stats.speechStats.min.toExponential(2)}</span> / 
+            <span>${stats.speechStats.mean.toExponential(2)} / </span>
+            <span>${stats.speechStats.max.toExponential(2)}</span></p>`
+        let button = document.createElement("button");
+        button.innerHTML = "Kalibruj ponownie";
+        button.classList.add("small");
+        button.onclick = () => {
+            // TODO
+            console.log("Recalibrating (not implemented yet)");
+        }
+        statsInfo.appendChild(button);
+        div.appendChild(statsInfo);
+
+        return div;
     }
 
     close() {

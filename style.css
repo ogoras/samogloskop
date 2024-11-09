@@ -81,6 +81,11 @@ h3 {
     margin: 0.3rem;
 }
 
+h4 {
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+}
+
 .record-press-me {
     display: flex;
     flex-direction: row;
