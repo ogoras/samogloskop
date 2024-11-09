@@ -2,6 +2,7 @@ import ScatterView from './ScatterView.js';
 import { STATES } from '../../../const/states.js';
 
 export default class ConfirmVowelsView extends ScatterView {
+    static viewedAtLeastOnce = false;
     currentMessage = 0;
 
     constructor(onStateChange, arg, formantProcessor, state) {
@@ -22,6 +23,8 @@ export default class ConfirmVowelsView extends ScatterView {
         }
         this.divStack.appendChild(button);
 
+        if (ConfirmVowelsView.viewedAtLeastOnce) this.nextMessage();
+
         if (state === undefined) {
             this.initializePlot();
         }
@@ -35,6 +38,8 @@ export default class ConfirmVowelsView extends ScatterView {
             });
             this.vowelCentroid(vowel);
         });
+
+        ConfirmVowelsView.viewedAtLeastOnce = true;
     }
 
     nextMessage() {
