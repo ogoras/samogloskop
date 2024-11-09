@@ -1,6 +1,7 @@
 import View from "./View.js";
 import PresetView from "./PresetView.js";
 import { VERSION_MAJOR, VERSION_MINOR } from '../const/version.js';
+import { STATES } from '../const/states.js';
 
 export default class SettingsView extends View {
     constructor(onStateChange, closeCallback, formantProcessor) {
@@ -120,6 +121,13 @@ export default class SettingsView extends View {
             div.remove();
             this.mainContainer.insertBefore(this.createPresetSection(), nextElement);
         }, div, this.formantProcessor.preset);
+
+        if (this.formantProcessor.userVowels?.gatheredAnything) {
+            let notice = document.createElement("p");
+            notice.innerHTML = "Uwaga: Zmiana kategorii głosu ma wpływ tylko na przyszłe nagrania. Wszystkie dotychczas zebrane dane pozostaną niezmienione.";
+            notice.style = "color: #a00000";
+            div.appendChild(notice);
+        }
 
         return div;
     }

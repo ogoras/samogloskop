@@ -8,6 +8,11 @@ export default class SpeakerVowels extends Vowels {
     vowelsProcessed = [];
     lobanovScaled = false;
     #meanFormants; #formantsDeviation;
+    #gatheredAnything = false;
+
+    get gatheredAnything() {
+        return this.#gatheredAnything || this.vowelsProcessed.length > 0;
+    }
 
     get meanFormants() {
         if (!this.isDone()) throw new Error("Trying to access mean formants before all vowels are gathered");
@@ -62,6 +67,7 @@ export default class SpeakerVowels extends Vowels {
         if (!formants) return;
         if (!this.currentVowel) throw new Error("No current vowel");
         this.currentVowel.addFormants(formants);
+        this.#gatheredAnything = true;
     }
 
     isVowelGathered() {

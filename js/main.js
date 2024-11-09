@@ -50,7 +50,7 @@ async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.preset !== undefined) {
         preset = updates.preset;
         if (dataConsentGiven) localStorage.setItem("preset", PRESET_NAMES[preset]);
-        state = STATES.NO_SAMPLES_YET;
+        if (state === STATES.PRESET_SELECTION) state = STATES.NO_SAMPLES_YET;
         if (dataConsentGiven) localStorage.setItem("state", STATE_NAMES[state]);
         if (formantProcessor) formantProcessor.changePreset(preset);
     }
