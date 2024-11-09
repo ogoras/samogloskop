@@ -16,7 +16,6 @@ export default class ChoiceView extends View {
         p.innerHTML = text;
         choiceElement.appendChild(p);
 
-        console.log(selectedIndex);
         for (let i = 0; i < choices.length; i++) {
             let choice = choices[i];
             let button = document.createElement("button");

@@ -43,8 +43,9 @@ let petersonBarney = new Vowels("EN", "peterson_barney", datasetLoaded);
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
         state = updates.newState;
-        if (dataConsentGiven && stateSaveable(state)) 
+        if (dataConsentGiven && stateSaveable(state)) {
             localStorage.setItem("state", STATE_NAMES[state]);
+        }
     }
     if (updates.preset !== undefined) {
         preset = updates.preset;
@@ -57,7 +58,15 @@ async function onStateChange(updates = {}, constructNewView = true) {
         dataConsentGiven = updates.accepted;
         if (dataConsentGiven) {
             localStorage.setItem("accepted", "true");
+            localStorage.setItem("state", STATE_NAMES[findGreatestSaveableState(state)]);
             localStorage.setItem("version", `${VERSION_MAJOR}.${VERSION_MINOR}`);
+            if (preset) localStorage.setItem("preset", PRESET_NAMES[preset]);
+            if (state >= STATES.SPEECH_MEASURED) {
+                localStorage.setItem("intensityStats", formantProcessor.intensityStats.toString());
+            }
+            if (state >= STATES.CONFIRM_VOWELS) {
+                localStorage.setItem("userVowels", formantProcessor.userVowels.toString());
+            }
         }
         else {
             localStorage.clear();
@@ -131,6 +140,18 @@ const SAVEABLE_STATES = [
 
 function stateSaveable(state) {
     return SAVEABLE_STATES.includes(state);
+}
+
+function findGreatestSaveableState(state) {
+    if (state < SAVEABLE_STATES[0]) {
+        return SAVEABLE_STATES[0];
+    }
+    for (let i = 0; i < SAVEABLE_STATES.length - 1; i++) {
+        if (SAVEABLE_STATES[i] <= state && SAVEABLE_STATES[i+1] > state) {
+            return SAVEABLE_STATES[i];
+        }
+    }
+    return SAVEABLE_STATES[SAVEABLE_STATES.length - 1];
 }
 
 onStateChange();
