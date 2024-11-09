@@ -44,15 +44,16 @@ let petersonBarney = new Vowels("EN", "peterson_barney", datasetLoaded);
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
         if (tempState !== undefined) {
-            console.log(`tempState updated to ${STATE_NAMES[updates.newState]}`);
+            // console.log(`tempState updated to ${STATE_NAMES[updates.newState]}`);
             tempState = updates.newState;
             if (stateSaveable(tempState)) {
                 tempState = undefined;
                 formantProcessor.state = state;
+                audioRecorder.stopRecording();
                 constructNewView = true;
             }
         } else {
-            console.log(`state updated to ${STATE_NAMES[updates.newState]}`);
+            // console.log(`state updated to ${STATE_NAMES[updates.newState]}`);
             state = updates.newState;
             if (dataConsentGiven && stateSaveable(state)) {
                 localStorage.setItem("state", STATE_NAMES[state]);
