@@ -158,11 +158,14 @@ export default class SettingsView extends View {
         button.innerHTML = "Kalibruj ponownie";
         button.classList.add("small");
         button.onclick = () => {
-            // TODO
-            console.log("Recalibrating (not implemented yet)");
+            this.close();
+            this.onStateChange({ newState: STATES.NO_SAMPLES_YET }, true);
         }
         statsInfo.appendChild(button);
         div.appendChild(statsInfo);
+        let notice = document.createElement("p");
+        notice.innerHTML = "Kalibruj ponownie, jeśli używasz innego mikrofonu, jesteś teraz w innym otoczeniu albo po prostu uważasz, że aplikacja nie wychwytuje dobrze, kiedy mówisz.";
+        div.appendChild(notice);
 
         return div;
     }

@@ -38,7 +38,7 @@ export default class ConfirmVowelsView extends ScatterView {
             case 1:
                 this.h2.innerHTML = `Naciśnij na reprezentację samogłoski na wykresie, żeby poprawić jej pozycję. 
                     Jeśli uważasz, że wszystko się zgadza, możesz od razu przejść do kolejnego kroku.`;
-                this.divStack.querySelector("button").innerHTML = "Przejdź dalej";
+                this.divStack.querySelector("button").innerHTML = "Zatwierdź zebrane samogłoski";
                 break;
             case 2:
                 this.h2.innerHTML = `Niestety, następny krok jeszcze nie jest gotowy :(`
