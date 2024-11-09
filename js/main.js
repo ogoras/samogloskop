@@ -6,8 +6,8 @@ import AudioRecorder from './recording/Recorder.js';
 import FormantProcessor from './data/FormantProcessor.js';
 import Vowels from './data/Vowels.js';
 
-import { VERSION_MAJOR, VERSION_MINOR } from './const/version.js';
-console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}`,
+import { VERSION_MAJOR, VERSION_MINOR, PATCH } from './const/version.js';
+console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,
      "font-size: 3rem; font-weight: bold;");
 import { STATES, STATE_NAMES } from './const/states.js';
 import { PRESETS, PRESET_NAMES } from './const/presets.js';
