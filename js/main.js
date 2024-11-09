@@ -47,10 +47,10 @@ async function onStateChange(updates = {}, constructNewView = true) {
             // console.log(`tempState updated to ${STATE_NAMES[updates.newState]}`);
             tempState = updates.newState;
             if (stateSaveable(tempState)) {
+                constructNewView = state !== tempState;
                 tempState = undefined;
                 formantProcessor.state = state;
-                audioRecorder.stopRecording();
-                constructNewView = true;
+                if (constructNewView) audioRecorder.stopRecording();
             }
         } else {
             // console.log(`state updated to ${STATE_NAMES[updates.newState]}`);
