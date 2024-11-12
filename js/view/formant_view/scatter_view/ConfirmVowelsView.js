@@ -64,9 +64,9 @@ export default class ConfirmVowelsView extends ScatterView {
         this.onStateChange({tempState: STATES.WAITING_FOR_VOWELS}, false);
         let vowelInv = VOWEL_INVENTORIES.PL;
         let vowelDict = VOWEL_DICTS.PL;
-        this.scatterPlot.removePointsFromGroup(vowelDict[vowel.letter]);
+        this.scatterPlot.removePointsFromGroup([0, vowelDict[vowel.letter]]);
         for (let i = 0; i < vowelInv.length; i++) {
-            this.scatterPlot.setGroupClickability(false, i);
+            this.scatterPlot.setGroupClickability(false, [0, i]);
         }
     }
 }

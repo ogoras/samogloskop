@@ -162,6 +162,7 @@ const SAVEABLE_STATES = [
     STATES.NO_SAMPLES_YET,
     STATES.SPEECH_MEASURED,
     STATES.CONFIRM_VOWELS,
+    STATES.TRAINING,
 ]
 
 function stateSaveable(state) {

@@ -16,7 +16,7 @@ export default class SpeakerVowels extends Vowels {
     }
 
     get meanFormants() {
-        if (!this.#meanFormants) {
+        if (!this.#meanFormants || isNaN(this.#meanFormants.x) || isNaN(this.#meanFormants.y)) {
             if (!this.isDone()) {
                 throw new Error("Trying to calculate mean formants before all vowels are gathered");
             }
@@ -37,7 +37,7 @@ export default class SpeakerVowels extends Vowels {
     }
 
     get formantsDeviation() {
-        if (!this.#formantsDeviation) {
+        if (!this.#formantsDeviation || isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) {
             if (!this.isDone()) throw new Error("Trying to calculate formants deviation before all vowels are gathered");
             assertEqualNumberOfFormants(this.vowelsProcessed);
             let varianceTimesN = this.vowelsProcessed.reduce(
