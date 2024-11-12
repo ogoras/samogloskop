@@ -59,6 +59,7 @@ async function onStateChange(updates = {}, constructNewView = true) {
                 localStorage.setItem("state", STATE_NAMES[state]);
             }
             if (state === STATES.TRAINING) {
+                formantProcessor.state = state;
                 view.updateView(state, formantProcessor);
                 if (petersonBarney.initialized) view.addDataset(petersonBarney);
             }
