@@ -1,6 +1,7 @@
 import ScatterView from "./ScatterView.js";
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from "../../../const/vowel_inventories/VOWEL_INVENTORIES.js";
+import Vowel from "../../../data/Vowel.js";
 
 export default class TrainingView extends ScatterView {
     constructor(onStateChange, arg, formantProcessor, state) {
@@ -39,29 +40,38 @@ export default class TrainingView extends ScatterView {
     }
 
     addDataset(vowels) {
-        this.scatterPlot.insertGroup({ formatting: {
-            size: POINT_SIZES.USER_DATAPOINTS,
-            symbol: d3.symbolSquare,
-            opacity: "80",
-        }}, -2, vowels.singleMeasurements);
-        this.scatterPlot.insertGroup({ formatting: {
-            size: POINT_SIZES.VOWEL_CENTROID,
-            symbol: d3.symbolSquare,
-        }}, -2, vowels.centroids);
-        this.scatterPlot.setSeriesVisibility(false, -4, -3);
+        let vowelInv = VOWEL_INVENTORIES[vowels.language];
+        this.scatterPlot.insertGroup({ 
+            formatting: { symbol: d3.symbolSquare }, 
+            nested: true 
+        }, 1);
+        for (let i = 0; i < vowelInv.length; i++) {
+            let vowel = new Vowel(vowelInv[i]);
+            let ids = this.scatterPlot.appendGroup({ 
+                nested: true, 
+                formatting: { rgb: vowel.rgb },
+                onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
+            }, 1);
+            this.scatterPlot.appendGroup({ formatting: {
+                size: POINT_SIZES.USER_DATAPOINTS * 0.7,
+                opacity: "80",
+            }}, ids, vowels.getSingleMeasurements(vowel.letter));
+            this.scatterPlot.appendGroup({ formatting: {
+                size: POINT_SIZES.VOWEL_CENTROID * 0.7
+            }}, ids, vowels.getCentroids(vowel.letter));
+        }
+        this.scatterPlot.setSeriesVisibility(false, 1);
         this.visibleVowelsChoice = document.createElement("div");
         this.visibleVowelsChoice.innerHTML = 
             `<h3>Pokaż:</h3>
             <input type="checkbox" id="user-vowels" checked> moje samogłoski<br>
             <input type="checkbox" id="peterson-barney"> samogłoski angielskie
             <text class=gray>(General American, Peterson & Barney, 1952)</p>`;
-        let vowelInv = VOWEL_INVENTORIES.PL;
         this.visibleVowelsChoice.querySelector("#user-vowels").onchange = (e) => {
-            this.scatterPlot.setSeriesVisibility(e.target.checked,
-                ...Array(vowelInv.length).keys());
+            this.scatterPlot.setSeriesVisibility(e.target.checked, 0);
         }
         this.visibleVowelsChoice.querySelector("#peterson-barney").onchange = (e) => {
-            this.scatterPlot.setSeriesVisibility(e.target.checked, -4, -3);
+            this.scatterPlot.setSeriesVisibility(e.target.checked, 1);
         }
         let sideContainer = document.querySelector(".side-container");
         sideContainer.appendChild(this.visibleVowelsChoice);

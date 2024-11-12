@@ -44,45 +44,45 @@ export default class ScatterView extends SpeechView {
         let vowelInv = VOWEL_INVENTORIES.PL;
         for (let i = 0; i < vowelInv.length; i++) {
             let vowel = vowelInv[i];
-            let index = this.scatterPlot.appendGroup({ 
+            let ids = this.scatterPlot.appendGroup({ 
                 nested: true, 
                 formatting: { rgb: vowel.rgb },
                 onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
-            });
+            }, 0);
             this.scatterPlot.appendGroup({ formatting: {
                 size: POINT_SIZES.USER_DATAPOINTS,
                 opacity: "80",
-            }}, index);
+            }}, ids);
             this.scatterPlot.appendGroup({ formatting: {
                 size: POINT_SIZES.VOWEL_CENTROID
-            }}, index);
+            }}, ids);
         }
         this.scatterPlot.appendGroup({ capacity: formantCount, growSize: true, formatting: {
             size: POINT_SIZES.TRAIL,
             opacity: "80"
-        }});
+        }}, 1);
         this.scatterPlot.appendGroup({ formatting: {
             size: POINT_SIZES.CURRENT
-        }});
+        }}, 1);
         this.refreshRecording();
     }
 
     saveFormants(formants, vowelId = 0) {
-        this.scatterPlot.feed(formants, [vowelId, 0]);
+        this.scatterPlot.feed(formants, [0, vowelId, 0]);
     }
 
     vowelCentroid(vowel) {
-        this.scatterPlot.feed(vowel.avg, [vowel.id, 1]);
+        this.scatterPlot.feed(vowel.avg, [0, vowel.id, 1]);
     }
 
     feed(formants, rescale = true) {
         for (let formant of formants) {
-            this.scatterPlot.feed(formant, -2, rescale);
+            this.scatterPlot.feed(formant, [-1, 0], rescale);
         }
     }
 
     feedSmoothed(formants, rescale = true) {
-        this.scatterPlot.setSeriesSingle(formants, -1, 50, rescale);
+        this.scatterPlot.setSeriesSingle(formants, [-1, 1], 50, rescale);
     }
 
     restore() {

@@ -1,21 +1,28 @@
 import Vowel from './Vowel.js';
-import { VOWEL_INVENTORIES } from '../const/vowel_inventories/VOWEL_INVENTORIES.js';
+import { VOWEL_DICTS, VOWEL_INVENTORIES } from '../const/vowel_inventories/VOWEL_INVENTORIES.js';
 import { POINT_SIZES } from '../const/POINT_SIZES.js';
 
 export default class Vowels {
     initialized = false;
 
-    get singleMeasurements() {
+    getSingleMeasurements(letter) {
         if (!this.initialized) throw new Error("Data not initialized");
-        return [].concat(...this.vowels.map(vowel => vowel.formants));
+        if (letter === undefined) {
+            return [].concat(...this.vowels.map(vowel => vowel.formants));
+        }
+        return this.vowels[VOWEL_DICTS[this.language][letter]].formants;
     }
 
-    get centroids() {
+    getCentroids(letter) {
         if (!this.initialized) throw new Error("Data not initialized");
-        return this.vowels.map(vowel => vowel.avg);
+        if (letter === undefined) {
+            return this.vowels.map(vowel => vowel.avg);
+        }
+        return [this.vowels[VOWEL_DICTS[this.language][letter]].avg];
     }
 
     constructor(language = "PL", dataset, callback) {
+        this.language = language;
         if (!VOWEL_INVENTORIES[language]) {
             throw new Error(`Language ${language} not supported`);
         }

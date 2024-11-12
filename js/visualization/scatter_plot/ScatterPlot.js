@@ -99,7 +99,7 @@ export default class ScatterPlot {
 
     appendGroup(constructorDefaults, ids = [], points = []) {
         ids = this.convertToIdArray(ids);
-        let group = this.allPointsGroup.navigate(ids);
+        let group = this.allPointsGroup.navigate(ids, CREATE_MODES.IF_NOT_EXISTS, { nested: true });
         let newIds = ids.concat(group.length);
         this.insertGroup(constructorDefaults, newIds, points);
         return newIds;
@@ -140,13 +140,10 @@ export default class ScatterPlot {
         group.addPoint(point);
     }
 
-    setSeriesSingle(point, seriesId = -1, animationMs = 50, rescale = true) {
-        if (seriesId < 0) seriesId = this.allPointsGroup.length + seriesId;
+    setSeriesSingle(point, ids = [], animationMs = 50, rescale = true) {
+        ids = this.convertToIdArray(ids);
         if (rescale) this.resizeIfNeeded(point, animationMs);
-        let group = this.allPointsGroup[seriesId];
-        while(group.constructor !== SimplePointGroup) {
-            group = group.getOrCreateSubgroup(0, false);
-        }
+        let group = this.allPointsGroup.navigate(ids);
         if (!group.length) return this.addPoint(point, group, 0);
         group[0].element.transition()
             .duration(animationMs)
@@ -232,6 +229,7 @@ export default class ScatterPlot {
     setSeriesVisibility(visible, ...seriesIds) {
         for (let seriesId of seriesIds) {
             if (seriesId < 0) seriesId = this.allPointsGroup.length + seriesId;
+            if (!this.allPointsGroup[seriesId]) throw new Error(`setSeriesVisibility: series ${seriesId} not found`);
             this.allPointsGroup[seriesId].g.style("display", visible ? "block" : "none");
         }
     }

@@ -42,7 +42,7 @@ export default class NestedPointGroup extends PointGroup {
                     subgroup = this.insertSubgroup(
                         ids[0],
                         constructorDefaults,
-                        constructorDefaults.nested);
+                        constructorDefaults?.nested);
                     break;
                 }
                 // FALLTHROUGH otherwise
@@ -50,20 +50,20 @@ export default class NestedPointGroup extends PointGroup {
                 subgroup = this.getOrCreateSubgroup(
                     ids[0],
                     constructorDefaults,
-                    constructorDefaults.nested || ids.length > 1);
+                    constructorDefaults?.nested || ids.length > 1);
                 break;
         }
         if (!subgroup) throw new Error(`navigate: subgroup ${ids[0]} not found`);
         else if (subgroup.constructor === SimplePointGroup) {
-            if (ids.length > 1) throw new Error(`navigate: subgroup ${ids[0]} is a SimplePointGroup and\
-                 cannot have subgroups`);
+            if (ids.length > 1) throw new Error(`navigate: subgroup ${subgroup.id} is a SimplePointGroup and \
+cannot have subgroups`);
             return subgroup;
         } else if (subgroup.constructor === NestedPointGroup) {
             if (ids.length == 1) return subgroup;
             else return subgroup.navigate(ids.slice(1), createMode, constructorDefaults);
         } else {
-            throw new Error(`navigate: subgroup ${ids[0]} is of type ${subgroup.constructor.name}\
-                 which is not a valid PointGroup`);
+            throw new Error(`navigate: subgroup ${subgroup.id} is of type ${subgroup.constructor.name} \
+which is not a valid PointGroup`);
         }
     }
 }
