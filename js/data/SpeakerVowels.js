@@ -21,41 +21,51 @@ export default class SpeakerVowels extends Vowels {
                 throw new Error("Trying to calculate mean formants before all vowels are gathered");
             }
             assertEqualNumberOfFormants(this.vowelsProcessed);
-            this.#meanFormants = this.vowelsProcessed.reduce(
-                (acc, vowel) => {
-                    return {
-                        x: acc.x + vowel.avg.x,
-                        y: acc.y + vowel.avg.y
-                    };
-                },
-                {x: 0, y: 0}
-            );
-            this.#meanFormants.x /= this.vowelsProcessed.length;
-            this.#meanFormants.y /= this.vowelsProcessed.length;
+            this.calculateMeanFormants();
         }
+        if (isNaN(this.#meanFormants.x) || isNaN(this.#meanFormants.y)) throw new Error("Mean formants are NaN");
         return this.#meanFormants;
+    }
+
+    calculateMeanFormants() {
+        this.#meanFormants = this.vowelsProcessed.reduce(
+            (acc, vowel) => {
+                return {
+                    x: acc.x + vowel.avg.x,
+                    y: acc.y + vowel.avg.y
+                };
+            },
+            { x: 0, y: 0 }
+        );
+        this.#meanFormants.x /= this.vowelsProcessed.length;
+        this.#meanFormants.y /= this.vowelsProcessed.length;
     }
 
     get formantsDeviation() {
         if (!this.#formantsDeviation || isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) {
             if (!this.isDone()) throw new Error("Trying to calculate formants deviation before all vowels are gathered");
             assertEqualNumberOfFormants(this.vowelsProcessed);
-            let varianceTimesN = this.vowelsProcessed.reduce(
-                (acc, vowel) => {
-                    return {
-                        x: acc.x + (vowel.avg.x - this.meanFormants.x) ** 2 + vowel.variance.x,
-                        y: acc.y + (vowel.avg.y - this.meanFormants.y) ** 2 + vowel.variance.y
-                    };
-                },
-                {x: 0, y: 0}
-            );
-            let n = this.vowelsProcessed.length;
-            this.#formantsDeviation = {
-                x: Math.sqrt(varianceTimesN.x / n),
-                y: Math.sqrt(varianceTimesN.y / n)
-            };
+            this.calculateMeanFormantsDeviation();
         }
+        if (isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) throw new Error("Formants deviation are NaN");
         return this.#formantsDeviation;
+    }
+
+    calculateMeanFormantsDeviation() {
+        let varianceTimesN = this.vowelsProcessed.reduce(
+            (acc, vowel) => {
+                return {
+                    x: acc.x + (vowel.avg.x - this.meanFormants.x) ** 2 + vowel.variance.x,
+                    y: acc.y + (vowel.avg.y - this.meanFormants.y) ** 2 + vowel.variance.y
+                };
+            },
+            { x: 0, y: 0 }
+        );
+        let n = this.vowelsProcessed.length;
+        this.#formantsDeviation = {
+            x: Math.sqrt(varianceTimesN.x / n),
+            y: Math.sqrt(varianceTimesN.y / n)
+        };
     }
 
     nextVowel() {
@@ -88,13 +98,13 @@ export default class SpeakerVowels extends Vowels {
     scaleLobanov() {
         if (this.lobanovScaled && this.#scaleCurrent) return;
         this.lobanovScaled = true;
-        let oldMeanFormants = this.#meanFormants ?? 1;
-        let oldFormantsDeviation = this.#formantsDeviation ?? 1;
-        this.#meanFormants = undefined;
-        this.#formantsDeviation = undefined;
-        this.vowelsProcessed.forEach(vowel => vowel.scaleLobanov(this.meanFormants, this.formantsDeviation));
-        this.#meanFormants.x = oldMeanFormants.x + this.meanFormants.x * oldFormantsDeviation.x;
-        this.#meanFormants.y = oldMeanFormants.y + this.meanFormants.y * oldFormantsDeviation.y;
+        let oldMeanFormants = this.#meanFormants ?? {x: 0, y: 0};
+        let oldFormantsDeviation = this.#formantsDeviation ?? {x: 1, y: 1};
+        this.calculateMeanFormants();
+        this.calculateMeanFormantsDeviation();
+        this.vowelsProcessed.forEach(vowel => vowel.scaleLobanov(this.#meanFormants, this.#formantsDeviation));
+        this.#meanFormants.x = oldMeanFormants.x + this.#meanFormants.x * oldFormantsDeviation.x;
+        this.#meanFormants.y = oldMeanFormants.y + this.#meanFormants.y * oldFormantsDeviation.y;
         this.#formantsDeviation.x *= oldFormantsDeviation.x;
         this.#formantsDeviation.y *= oldFormantsDeviation.y;
     }
