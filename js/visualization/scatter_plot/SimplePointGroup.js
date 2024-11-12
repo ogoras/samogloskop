@@ -47,4 +47,12 @@ export default class SimplePointGroup extends PointGroup {
     getAllPoints() {
         return this;
     }
+
+    removeAllPoints() {
+        this.forEach(point => {
+            point.element.remove();
+            point.label?.remove();
+        });
+        this.length = 0;
+    }
 }

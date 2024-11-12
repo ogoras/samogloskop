@@ -19,6 +19,10 @@ export default class NestedPointGroup extends PointGroup {
         return this.flatMap(group => group.getAllPoints());
     }
 
+    removeAllPoints() {
+        this.forEach(group => group.removeAllPoints());
+    }
+
     navigate(ids, createifNotExists = false, constructorDefaults) {
         if (Array.isArray(ids) && ids.length === 0) return this;
         if (ids[0] < 0) ids[0] += this.length;

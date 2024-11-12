@@ -119,6 +119,18 @@ export default class ScatterPlot {
         group.defaults.onClick = callback;
     }
 
+    setGroupClickability(clickable, ids = []) {
+        ids = this.convertToIdArray(ids);
+        let group = this.allPointsGroup.navigate(ids);
+        group.setClickability(clickable);
+    }
+
+    removePointsFromGroup(ids = []) {
+        ids = this.convertToIdArray(ids);
+        let group = this.allPointsGroup.navigate(ids);
+        group.removeAllPoints();
+    }
+
     addPoint(point, group, animationMs = 200, rescale = true) {
         if (typeof group === "number") {
             group = this.allPointsGroup[group];

@@ -46,4 +46,12 @@ export default class PointGroup extends Array {
             this.g.attr("fill-opacity", parseInt(formatting.opacity, 16) / 255);
         }
     }
+
+    setClickability(clickable) {
+        if (clickable) {
+            this.g.attr("class", "clickable");
+        } else {
+            this.g.attr("class", "");
+        }
+    }
 }

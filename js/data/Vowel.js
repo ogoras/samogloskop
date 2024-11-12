@@ -1,5 +1,5 @@
 import { POINT_SIZES } from "../const/POINT_SIZES.js";
-import { VOWELS_DICTS, VOWEL_INVENTORIES } from "../const/vowel_inventories/VOWEL_INVENTORIES.js";
+import { VOWEL_DICTS, VOWEL_INVENTORIES } from "../const/vowel_inventories/VOWEL_INVENTORIES.js";
 
 export default class Vowel {
     formants = [];
@@ -31,13 +31,13 @@ export default class Vowel {
 
     constructor(vowel) {
         this.language = vowel.language ?? "PL";
-        let vowelDict = VOWELS_DICTS[this.language];
+        let vowelDict = VOWEL_DICTS[this.language];
         let vowelInv = VOWEL_INVENTORIES[this.language];
         if (!vowel?.IPA) {
             if (vowelDict?.[vowel?.letter] !== undefined) {
                 vowel.IPA = vowelInv[vowelDict[vowel.letter]].IPA;
             } else {
-                console.log(VOWELS_DICTS);
+                console.log(VOWEL_DICTS);
                 console.log(vowel);
                 throw new Error("Vowel must have an IPA description");
             }

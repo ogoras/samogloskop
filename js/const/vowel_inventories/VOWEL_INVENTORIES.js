@@ -3,7 +3,7 @@ import arrObjToObjArr from "../../util/arrObjToObjArr.js";
 
 const LANGUAGES = ["EN", "PL"]
 
-let VOWELS_DICTS = {};
+let VOWEL_DICTS = {};
 let VOWEL_INVENTORIES = {};
 let data = {};
 
@@ -13,11 +13,11 @@ async function readInventories() {
         let dataEntry = await response.json();
         dataEntry = {...dataEntry, language};
         data[language] = dataEntry;
-        VOWELS_DICTS[language] = arrToObj(dataEntry.letter ?? dataEntry.IPA.broad);
+        VOWEL_DICTS[language] = arrToObj(dataEntry.letter ?? dataEntry.IPA.broad);
         VOWEL_INVENTORIES[language] = arrObjToObjArr(dataEntry);
     }
 }
 
 await readInventories();
 
-export { VOWEL_INVENTORIES, VOWELS_DICTS };
+export { VOWEL_INVENTORIES, VOWEL_DICTS };
