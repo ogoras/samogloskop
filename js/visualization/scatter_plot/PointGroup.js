@@ -24,6 +24,7 @@ export default class PointGroup extends Array {
             parent.g.insert("g", `#${parent[index]?.id}`) :
             parent.g.append("g");
         this.id = parent.id ? `${parent.id}-${parent.length}` : "points";
+        this.g.attr("id", this.id);
         this.applyFormatting(defaults?.formatting);
         if (defaults?.onClick) {
             this.g.attr("class", "clickable")

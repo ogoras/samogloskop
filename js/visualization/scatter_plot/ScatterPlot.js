@@ -1,3 +1,4 @@
+import CREATE_MODES from "./CREATE_MODES.js";
 import NestedPointGroup from "./NestedPointGroup.js";
 import SimplePointGroup from "./SimplePointGroup.js";
 
@@ -106,7 +107,7 @@ export default class ScatterPlot {
 
     insertGroup(constructorDefaults, ids, points = []) {
         ids = this.convertToIdArray(ids);
-        let group = this.allPointsGroup.navigate(ids, true, constructorDefaults);
+        let group = this.allPointsGroup.navigate(ids, CREATE_MODES.INSERT, constructorDefaults);
 
         for (let point of points ?? []) {
             this.addPoint(point, group, 0);

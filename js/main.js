@@ -58,6 +58,10 @@ async function onStateChange(updates = {}, constructNewView = true) {
             if (dataConsentGiven && stateSaveable(state)) {
                 localStorage.setItem("state", STATE_NAMES[state]);
             }
+            if (state === STATES.TRAINING) {
+                view.updateView(state, formantProcessor);
+                if (petersonBarney.initialized) view.addDataset(petersonBarney);
+            }
         }
     }
     if (updates.tempState !== undefined) {
