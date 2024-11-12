@@ -61,6 +61,10 @@ div.stack {
     margin: 0.5rem;
 }
 
+body > div.stack {
+    width: calc(100% - 1rem);
+}
+
 h2 {
     font-family: 'Helvetica', sans-serif;
     font-size: 1.5em;

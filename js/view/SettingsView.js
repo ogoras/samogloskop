@@ -9,16 +9,6 @@ export default class SettingsView extends View {
         this.closeCallback = closeCallback;
         this.formantProcessor = formantProcessor;
 
-        // Settings:
-        // 1a. localStorage consent status + link to privacy policy
-        // 1b. Clear localStorage button
-        // 2. Change preset
-        // 3. List intensityStats with an option to recalibrate
-        // Footer:
-        // 1. Version number
-        // 2. Link to GitHub
-        // 3. Credits
-
         this.header = document.createElement("div");
         this.header.classList.add("header");
         document.body.appendChild(this.header);
@@ -41,6 +31,9 @@ export default class SettingsView extends View {
         this.mainContainer.appendChild(this.createPresetSection());
         if (this.formantProcessor.intensityStats.isCalibrated) {
             this.mainContainer.appendChild(this.createIntensityStatsSection());
+        }
+        if (this.formantProcessor.state >= STATES.CONFIRM_VOWELS) {
+            this.mainContainer.appendChild(this.createDeleteVowelsSection());
         }
 
         this.footer = document.createElement("div");
@@ -146,14 +139,17 @@ export default class SettingsView extends View {
         let statsInfo = document.createElement("div");
         statsInfo.classList.add("flex-oriented");
         statsInfo.style = "align-items: center";
-        statsInfo.innerHTML = `<h4>Poziomy ciszy: </h4>
-            <p><span>${stats.silenceStats.min.toExponential(2)}</span> / 
-            <span>${stats.silenceStats.mean.toExponential(2)} / </span>
-            <span>${stats.silenceStats.max.toExponential(2)}</span></p>
-            <h4>Poziomy mowy: </h4>
-            <p><span>${stats.speechStats.min.toExponential(2)}</span> / 
-            <span>${stats.speechStats.mean.toExponential(2)} / </span>
-            <span>${stats.speechStats.max.toExponential(2)}</span></p>`
+        [stats.silenceStats, stats.speechStats].forEach((stats, index) => {
+            let statsDiv = document.createElement("div");
+            statsDiv.classList.add("center-auto");
+            let title = document.createElement("h4");
+            title.innerHTML = index == 0 ? "Poziomy ciszy: " : "Poziomy mowy: ";
+            let statsP = document.createElement("p");
+            statsP.innerHTML = `<span>${stats.min.toExponential(2)}</span> / <span>${stats.mean.toExponential(2)}</span> / <span>${stats.max.toExponential(2)}</span>`;
+            statsDiv.appendChild(title);
+            statsDiv.appendChild(statsP);
+            statsInfo.appendChild(statsDiv);
+        });
         let button = document.createElement("button");
         button.innerHTML = "Kalibruj ponownie";
         button.classList.add("small");
@@ -166,6 +162,39 @@ export default class SettingsView extends View {
         let notice = document.createElement("p");
         notice.innerHTML = "Kalibruj ponownie, jeśli używasz innego mikrofonu, jesteś teraz w innym otoczeniu albo po prostu uważasz, że aplikacja nie wychwytuje dobrze, kiedy mówisz.";
         div.appendChild(notice);
+
+        return div;
+    }
+
+    createDeleteVowelsSection() {
+        let div = document.createElement("div");
+
+        let title = document.createElement("h2");
+        title.classList.add("no-bottom-margin");
+        title.innerHTML = "<b>Wyczyść dane o samogłoskach</b>";
+        div.appendChild(title);
+
+        let container = document.createElement("div");
+        container.classList.add("flex-oriented");
+        div.appendChild(container);
+
+        let button = document.createElement("button");
+        button.innerHTML = "Wyczyść dane o Twoich polskich samogłoskach";
+        button.classList.add("small");
+        button.style = "color: #a00000";
+        button.onclick = () => {
+            if (!confirm("Czy na pewno chcesz usunąć wszystkie dane o Twoich polskich samogłoskach?")) return;
+            localStorage.removeItem("userVowels");
+            localStorage.setItem("state", "SPEECH_MEASURED");
+            location.reload();
+        }
+        container.appendChild(button);
+
+        let notice = document.createElement("div");
+        notice.classList.add("center-auto");
+        notice.innerHTML = "<p>Uwaga: Usunięcie zebranych samogłosek automatycznie odświeża stronę i kieruje do ponownego nagrania próbek mowy.</p>";
+        notice.style = "color: #a00000";
+        container.appendChild(notice);
 
         return div;
     }
