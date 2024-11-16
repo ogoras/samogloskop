@@ -4,8 +4,6 @@ export default class TextGrid extends Array {
     static singleIndent = " ".repeat(4);
 
     loaded = false;
-    indent = "";
-    lineNumber = 0;
     #indentationLevel = 0;
 
     get indentationLevel() {
@@ -17,16 +15,32 @@ export default class TextGrid extends Array {
         this.indent = TextGrid.singleIndent.repeat(level);
     }
 
-    constructor(path, encoding = "utf-16be") {
+    constructor(path) {
         super();
         this.path = path;
-        this.encoding = encoding;
     }
 
-    async load() {
+    async load () {
+        let lastError;
+        for (let encoding of ["utf-16be", "utf-8"]) {
+            try {
+                await this.loadWithEncoding(encoding);
+                return;
+            }
+            catch (e) {
+                lastError = e;
+            }
+        }
+        throw new Error(`Failed to load TextGrid from ${this.path}. Last error: ${lastError}`);
+    }
+
+    async loadWithEncoding(encoding = "utf-16be") {
+        this.lineNumber = 0;
+        this.indentationLevel = 0;
+        
         let text = await fetch(this.path);
         text = await text.arrayBuffer();
-        text = new TextDecoder(this.encoding).decode(text);
+        text = new TextDecoder(encoding).decode(text);
 
         // iterate over lines, ignore whitespace-only lines
         this.lines = text.split("\n")

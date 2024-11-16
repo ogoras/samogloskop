@@ -7,13 +7,7 @@ export default class Recording {
 
     async load() {
         let textGrid = new TextGrid(`${this.path}.TextGrid`);
-        try {
-            await textGrid.load();
-        }
-        catch {
-            textGrid = new TextGrid(`${this.path}.textgrid`, "utf-8");
-            await textGrid.load();
-        }
+        await textGrid.load();
         // console.log(textGrid);
     }
 }
