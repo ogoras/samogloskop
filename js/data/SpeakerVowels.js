@@ -1,6 +1,7 @@
 import { POINT_SIZES } from '../const/POINT_SIZES.js';
 import Vowel from './Vowel.js';
 import Vowels from './Vowels.js';
+import Recording from './Recording.js';
 
 const REQUIRED_FORMANTS = 20;
 export default class SpeakerVowels extends Vowels {
@@ -25,6 +26,27 @@ export default class SpeakerVowels extends Vowels {
         }
         if (isNaN(this.#meanFormants.x) || isNaN(this.#meanFormants.y)) throw new Error("Mean formants are NaN");
         return this.#meanFormants;
+    }
+    
+    constructor(language, speaker, callback) {
+        super(language);
+        if (!speaker) return;
+        this.loadFromRecordings(speaker)
+            .then(() => {
+                console.log(this)
+                callback?.();
+            });
+    }
+
+    async loadFromRecordings(speaker) {
+        this.speaker = speaker;
+        let listing = await fetch(`./recordings/${this.language}/${speaker}/listing.json`);
+        listing = await listing.json();
+        let recording_names = listing.filter(filename => filename.endsWith(".wav") && listing.includes(filename.replace(".wav", ".TextGrid"))).map(filename => filename.replace(".wav", ""));
+// // for debugging
+// recording_names = recording_names.slice(0, 1);
+        let recordings = recording_names.map(name => new Recording(`./recordings/${this.language}/${speaker}/${name}`));
+        await Promise.all(recordings.map(recording => recording.load()));
     }
 
     calculateMeanFormants() {

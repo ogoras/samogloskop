@@ -5,6 +5,7 @@ import RecordingView from './view/RecordingView.js';
 import AudioRecorder from './recording/Recorder.js';
 import FormantProcessor from './data/FormantProcessor.js';
 import Vowels from './data/Vowels.js';
+import SpeakerVowels from './data/SpeakerVowels.js';
 
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from './const/version.js';
 console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,
@@ -40,6 +41,7 @@ let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null, audioRecorder = null, formantProcessor = null;
 let petersonBarney = new Vowels("EN", "peterson_barney", datasetLoaded);
+let donaldTrump = new SpeakerVowels("EN", "Trump");
 
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
@@ -155,7 +157,7 @@ function renderLoop() {
 
 function datasetLoaded() {
     let viewState = tempState ?? state;
-    if (viewState >= STATES.TRAINING) view.addDataset(petersonBarney);
+    if (viewState >= STATES.TRAINING) view?.addDataset(petersonBarney);
 }
 
 const SAVEABLE_STATES = [
