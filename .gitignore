@@ -1,3 +1,4 @@
 *.wav
 *.txt
 /data_processing/
+/recordings/
