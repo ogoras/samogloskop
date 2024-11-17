@@ -48,8 +48,8 @@ export default class Vowel {
         this.rgb = vowel.rgb ?? "000000";
     }
 
-    addFormants(formants) {
-        this.formants.push(formants);
+    addFormants(...formants) {
+        this.formants.push(...formants);
     }
 
     calculateAverage(newSize) {

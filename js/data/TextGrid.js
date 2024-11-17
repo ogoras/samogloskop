@@ -1,4 +1,5 @@
-import { assertEqualOnLine, assertStartsWithOnLine, assertEqualWithMargin } from "../util/asserts.js";
+import { assertEqualOnLine, assertStartsWithOnLine, assertEqualWithMargin, assertEqual } from "../util/asserts.js";
+import { VOWEL_INVENTORIES } from "../const/vowel_inventories/VOWEL_INVENTORIES.js";
 
 export default class TextGrid extends Array {
     static singleIndent = " ".repeat(4);
@@ -21,20 +22,20 @@ export default class TextGrid extends Array {
     }
 
     async load () {
-        let lastError;
+        let errors = [];
         for (let encoding of ["utf-16be", "utf-8"]) {
             try {
-                await this.loadWithEncoding(encoding);
+                await this.#loadWithEncoding(encoding);
                 return;
             }
             catch (e) {
-                lastError = e;
+                errors.push(e);
             }
         }
-        throw new Error(`Failed to load TextGrid from ${this.path}. Last error: ${lastError}`);
+        throw new Error(`Failed to load TextGrid from ${this.path}. Tried encodings utf-16be and utf-8. Errors: ${errors}`);
     }
 
-    async loadWithEncoding(encoding = "utf-16be") {
+    async #loadWithEncoding(encoding = "utf-16be") {
         this.lineNumber = 0;
         this.indentationLevel = 0;
         
@@ -47,51 +48,74 @@ export default class TextGrid extends Array {
             .map(line => line.trimEnd())
             .filter(line => line.length > 0);;
 
-        this.checkLine("File type = \"ooTextFile\"");
-        this.checkLine("Object class = \"TextGrid\"");
-        this.checkLine("xmin = 0");
+        this.#checkLine("File type = \"ooTextFile\"");
+        this.#checkLine("Object class = \"TextGrid\"");
+        this.#checkLine("xmin = 0");
 
-        this.duration = this.readPropertyFromLine("xmax", parseFloat);
+        this.duration = this.#readPropertyFromLine("xmax", parseFloat);
 
-        this.checkLine("tiers? <exists>");
+        this.#checkLine("tiers? <exists>");
 
-        this.length = this.readPropertyFromLine("size", parseInt);
+        this.length = this.#readPropertyFromLine("size", parseInt);
 
-        this.checkLine("item []:");
+        this.#checkLine("item []:");
         this.indentationLevel++;
         for (let j = 0; j < this.length; j++) {
-            this[j] = [];
-            this.checkLine(`item [${j + 1}]:`);
+            let tier = this[j] = [];
+            this.#checkLine(`item [${j + 1}]:`);
             this.indentationLevel++;
-            this.checkLine("class = \"IntervalTier\"");
-            this[j].name = this.readPropertyFromLine("name", stripQuotes);
-            this.checkLine("xmin = 0");
-            assertEqualWithMargin(this.readPropertyFromLine("xmax"), this.duration);
-            this[j].length = this.readPropertyFromLine("intervals: size", parseInt);
-            for (let k = 0; k < this[j].length; k++) {
-                this[j][k] = {};
-                this.checkLine(`intervals [${k + 1}]:`);
+            this.#checkLine("class = \"IntervalTier\"");
+            tier.name = this.#readPropertyFromLine("name", stripQuotes);
+            this.#checkLine("xmin = 0");
+            assertEqualWithMargin(this.#readPropertyFromLine("xmax"), this.duration);
+            tier.length = this.#readPropertyFromLine("intervals: size", parseInt);
+            for (let k = 0; k < tier.length; k++) {
+                let interval = this[j][k] = {};
+                this.#checkLine(`intervals [${k + 1}]:`);
                 this.indentationLevel++;
-                this[j][k].xmin = this.readPropertyFromLine("xmin", parseFloat);
-                this[j][k].xmax = this.readPropertyFromLine("xmax", parseFloat);
-                this[j][k].text = this.readPropertyFromLine("text", stripQuotes);
+                interval.xmin = this.#readPropertyFromLine("xmin", parseFloat);
+                interval.xmax = this.#readPropertyFromLine("xmax", parseFloat);
+                interval.text = this.#readPropertyFromLine("text", stripQuotes);
+                if (interval.text.endsWith("?")) {
+                    interval.text = interval.text.slice(0, -1);
+                    interval.uncertain = true;
+                } else interval.uncertain = false;
                 this.indentationLevel--;
             }
             this.indentationLevel--;
         }
         this.indentationLevel--;
         this.lines = null;
+
+        assertEqual(this[0].name, "phonemes");
+        assertEqual(this[1].name, "words");
+        assertEqual(this[2].name, "phrases");
+
         this.loaded = true;
     }
 
-    checkLine(expected) {
+    #checkLine(expected) {
         assertEqualOnLine(this.lines, this.lineNumber++, this.indent + expected);
     }
 
-    readPropertyFromLine(key, parseFunction) {
+    #readPropertyFromLine(key, parseFunction) {
         assertStartsWithOnLine(this.lines, this.lineNumber, `${this.indent}${key} = `);
         parseFunction ??= x => x;
         return parseFunction(this.lines[this.lineNumber++].split(" = ")[1]);
+    }
+
+    getVowelSegments(vowels) {
+        let phonemeTier = this[0];
+        let vowelSymbols = vowels.map(vowel => vowel.IPA.broad);
+        return phonemeTier.filter(interval => vowelSymbols.includes(interval.text));
+    }
+
+    getWordAt(time) {
+        return this[1].find(interval => interval.xmin <= time && time < interval.xmax)?.text;
+    }
+
+    getPhraseAt(time) {
+        return this[2].find(interval => interval.xmin <= time && time < interval.xmax)?.text;
     }
 }
 

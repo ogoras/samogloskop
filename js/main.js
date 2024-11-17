@@ -40,8 +40,9 @@ let tempState;
 let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null, audioRecorder = null, formantProcessor = null;
-let petersonBarney = new Vowels("EN", "peterson_barney", datasetLoaded);
-let donaldTrump = new SpeakerVowels("EN", "Trump");
+//let petersonBarney = new Vowels("EN", "peterson_barney", () => datasetLoaded(petersonBarney));
+let donaldTrump = new SpeakerVowels("EN", "Trump", () => datasetLoaded(donaldTrump));
+let datasets = [/*petersonBarney, */donaldTrump];
 
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {
@@ -63,7 +64,9 @@ async function onStateChange(updates = {}, constructNewView = true) {
             if (state === STATES.TRAINING) {
                 formantProcessor.state = state;
                 view.updateView(state, formantProcessor);
-                if (petersonBarney.initialized) view.addDataset(petersonBarney);
+                for (let dataset of datasets) {
+                    if (dataset.initialized) view.addDataset(dataset);
+                }
             }
         }
     }
@@ -149,15 +152,19 @@ function renderLoop() {
         }, false);
         viewState = tempState ?? state;
         view.updateView(viewState, formantProcessor);
-        if (viewState === STATES.TRAINING && petersonBarney.initialized) view.addDataset(petersonBarney); 
+        if (viewState === STATES.TRAINING) {
+            for (let dataset of datasets) {
+                if (dataset.initialized) view.addDataset(dataset);
+            }
+        }
     }
 
     requestAnimationFrame(renderLoop);
 }
 
-function datasetLoaded() {
+function datasetLoaded(dataset) {
     let viewState = tempState ?? state;
-    if (viewState >= STATES.TRAINING) view?.addDataset(petersonBarney);
+    if (viewState >= STATES.TRAINING) view?.addDataset(dataset);
 }
 
 const SAVEABLE_STATES = [

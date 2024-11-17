@@ -2,6 +2,7 @@ import { POINT_SIZES } from '../const/POINT_SIZES.js';
 import Vowel from './Vowel.js';
 import Vowels from './Vowels.js';
 import Recording from './Recording.js';
+import { VOWEL_DICTS } from '../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 const REQUIRED_FORMANTS = 20;
 export default class SpeakerVowels extends Vowels {
@@ -21,7 +22,6 @@ export default class SpeakerVowels extends Vowels {
             if (!this.isDone()) {
                 throw new Error("Trying to calculate mean formants before all vowels are gathered");
             }
-            assertEqualNumberOfFormants(this.vowelsProcessed);
             this.calculateMeanFormants();
         }
         if (isNaN(this.#meanFormants.x) || isNaN(this.#meanFormants.y)) throw new Error("Mean formants are NaN");
@@ -33,6 +33,7 @@ export default class SpeakerVowels extends Vowels {
         if (!speaker) return;
         this.loadFromRecordings(speaker)
             .then(() => {
+                this.initialized = true;
                 console.log(this)
                 callback?.();
             });
@@ -44,9 +45,21 @@ export default class SpeakerVowels extends Vowels {
         listing = await listing.json();
         let recording_names = listing.filter(filename => filename.endsWith(".wav") && listing.includes(filename.replace(".wav", ".TextGrid"))).map(filename => filename.replace(".wav", ""));
 // // for debugging
-// recording_names = recording_names.slice(0, 1);
+// recording_names = recording_names.slice(5, 6);
         let recordings = recording_names.map(name => new Recording(`./recordings/${this.language}/${speaker}/${name}`));
         await Promise.all(recordings.map(recording => recording.load()));
+        let measurements = recordings.flatMap(recording => recording.getVowelMeasurements(this.vowels));
+        measurements.forEach(measurements => {
+            let vowel = this.vowels[VOWEL_DICTS[this.language][measurements.vowel]];
+            vowel.addFormants(...measurements);
+        });
+        this.vowelsProcessed = this.vowelsRemaining;
+        this.vowelsRemaining = [];
+        this.#gatheredAnything = true;
+        this.vowels.forEach(vowel => {
+            vowel.calculateAverage(POINT_SIZES.USER_CENTROIDS)
+        });
+        this.scaleLobanov();
     }
 
     calculateMeanFormants() {
@@ -66,7 +79,6 @@ export default class SpeakerVowels extends Vowels {
     get formantsDeviation() {
         if (!this.#formantsDeviation || isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) {
             if (!this.isDone()) throw new Error("Trying to calculate formants deviation before all vowels are gathered");
-            assertEqualNumberOfFormants(this.vowelsProcessed);
             this.calculateMeanFormantsDeviation();
         }
         if (isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) throw new Error("Formants deviation are NaN");
@@ -177,16 +189,5 @@ export default class SpeakerVowels extends Vowels {
             speakerVowels.#formantsDeviation = obj.formantsDeviation;
         }
         return speakerVowels;
-    }
-}
-
-function assertEqualNumberOfFormants(vowelArray) {
-    if (vowelArray.length < 2) return;
-    let formantsLength = vowelArray[0].formants.length;
-    for (let i = 1; i < vowelArray.length; i++) {
-        let vowel = vowelArray[i];
-        if (vowel.formants.length !== formantsLength) {
-            throw new Error("Unfortunately, only operations on vowels with the same number of formants are supported for now.");
-        }
     }
 }
