@@ -1,5 +1,5 @@
-import { assertEqualOnLine, assertStartsWithOnLine, assertEqualWithMargin, assertEqual } from "../util/asserts.js";
-import { VOWEL_INVENTORIES } from "../const/vowel_inventories/VOWEL_INVENTORIES.js";
+import { assertEqualOnLine, assertStartsWithOnLine, assertEqualWithMargin, assertEqual } from "../../util/asserts.js";
+import { VOWEL_INVENTORIES } from "../../const/vowel_inventories/VOWEL_INVENTORIES.js";
 
 export default class TextGrid extends Array {
     static singleIndent = " ".repeat(4);

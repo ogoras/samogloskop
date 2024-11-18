@@ -1,8 +1,8 @@
 import Vowel from './Vowel.js';
-import { VOWEL_DICTS, VOWEL_INVENTORIES } from '../const/vowel_inventories/VOWEL_INVENTORIES.js';
-import { POINT_SIZES } from '../const/POINT_SIZES.js';
+import { VOWEL_DICTS, VOWEL_INVENTORIES } from '../../const/vowel_inventories/VOWEL_INVENTORIES.js';
+import { POINT_SIZES } from '../../const/POINT_SIZES.js';
 
-export default class Vowels {
+export default class Vowels {   // represents a set of vowels for a particular speaker (see SpeakerVowels), language or population
     initialized = false;
 
     getSingleMeasurements(letter) {

@@ -4,8 +4,8 @@ import RecordingView from './view/RecordingView.js';
 
 import AudioRecorder from './recording/Recorder.js';
 import FormantProcessor from './data/FormantProcessor.js';
-import Vowels from './data/Vowels.js';
-import SpeakerVowels from './data/SpeakerVowels.js';
+import Vowels from './data/vowels/Vowels.js';
+import ForeignRecordings from './data/recordings/ForeignRecordings.js';
 
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from './const/version.js';
 console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,
@@ -41,9 +41,8 @@ let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null, audioRecorder = null, formantProcessor = null;
 let petersonBarney = new Vowels("EN", "peterson_barney", () => datasetLoaded(petersonBarney));
-// let donaldTrump = new SpeakerVowels("EN", "Trump", () => datasetLoaded(donaldTrump));
-// let hillaryClinton = new SpeakerVowels("EN", "Hillary", () => datasetLoaded(hillaryClinton));
-let datasets = [petersonBarney, /* donaldTrump, hillaryClinton*/];
+let englishRecordings = new ForeignRecordings("EN");
+let datasets = [petersonBarney];
 
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {

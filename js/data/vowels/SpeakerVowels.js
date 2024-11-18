@@ -1,11 +1,11 @@
-import { POINT_SIZES } from '../const/POINT_SIZES.js';
+import { POINT_SIZES } from '../../const/POINT_SIZES.js';
 import Vowel from './Vowel.js';
 import Vowels from './Vowels.js';
-import Recording from './Recording.js';
-import { VOWEL_DICTS } from '../const/vowel_inventories/VOWEL_INVENTORIES.js';
+import Recording from '../recordings/Recording.js';
+import { VOWEL_DICTS } from '../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 const REQUIRED_FORMANTS = 20;
-export default class SpeakerVowels extends Vowels {
+export default class SpeakerVowels extends Vowels { // represents a set of vowels for a single speaker
     vowelsRemaining = [...this.vowels];
     vowelsProcessed = [];
     lobanovScaled = false;

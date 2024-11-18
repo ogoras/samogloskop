@@ -1,5 +1,5 @@
-import { POINT_SIZES } from "../const/POINT_SIZES.js";
-import { VOWEL_DICTS, VOWEL_INVENTORIES } from "../const/vowel_inventories/VOWEL_INVENTORIES.js";
+import { POINT_SIZES } from "../../const/POINT_SIZES.js";
+import { VOWEL_DICTS, VOWEL_INVENTORIES } from "../../const/vowel_inventories/VOWEL_INVENTORIES.js";
 
 export default class Vowel {
     formants = [];

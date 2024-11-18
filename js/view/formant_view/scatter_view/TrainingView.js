@@ -1,7 +1,7 @@
 import ScatterView from "./ScatterView.js";
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from "../../../const/vowel_inventories/VOWEL_INVENTORIES.js";
-import Vowel from "../../../data/Vowel.js";
+import Vowel from "../../../data/vowels/Vowel.js";
 
 export default class TrainingView extends ScatterView {
     constructor(onStateChange, arg, formantProcessor, state) {

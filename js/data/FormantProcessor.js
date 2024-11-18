@@ -1,7 +1,7 @@
 import soundToFormant from '../praat/formant.js';
 import IntensityStats from './IntensityStats.js';
 import Buffer from '../util/Buffer.js';
-import SpeakerVowels from './SpeakerVowels.js';
+import SpeakerVowels from './vowels/SpeakerVowels.js';
 import { STATES, STATE_NAMES } from '../const/states.js';
 import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from '../const/presets.js';
 import { POINT_SIZES } from '../const/POINT_SIZES.js';

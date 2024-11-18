@@ -1,8 +1,8 @@
 import TextGrid from './TextGrid.js';
-import soundToFormant from '../praat/formant.js';
-import { PRESETS, PRESET_FREQUENCIES } from '../const/presets.js';
+import soundToFormant from '../../praat/formant.js';
+import { PRESETS, PRESET_FREQUENCIES } from '../../const/presets.js';
 
-export default class Recording {
+export default class Recording {    // represents an audio recording along with its transcription in the form of a TextGrid
     constructor(path, preset) {
         this.path = path;
         this.preset = preset;
