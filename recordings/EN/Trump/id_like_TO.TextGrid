@@ -1,0 +1,58 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 0.9488394879907993 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "phonemes" 
+        xmin = 0 
+        xmax = 0.9488394879907993 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.33827388328205377 
+            text = "" 
+        intervals [2]:
+            xmin = 0.33827388328205377 
+            xmax = 0.49915873073301853 
+            text = "t" 
+        intervals [3]:
+            xmin = 0.49915873073301853 
+            xmax = 0.79
+            text = "u" 
+        intervals [4]:
+            xmin = 0.79
+            xmax = 0.9488394879907993 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 0.9488394879907993 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.33827388328205377 
+            text = "" 
+        intervals [2]:
+            xmin = 0.33827388328205377 
+            xmax = 0.8436849893653058 
+            text = "to" 
+        intervals [3]:
+            xmin = 0.8436849893653058 
+            xmax = 0.9488394879907993 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "phrases" 
+        xmin = 0 
+        xmax = 0.9488394879907993 
+        intervals: size = 1 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.9488394879907993 
+            text = "I'd like to..." 

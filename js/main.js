@@ -40,10 +40,10 @@ let tempState;
 let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null, audioRecorder = null, formantProcessor = null;
-//let petersonBarney = new Vowels("EN", "peterson_barney", () => datasetLoaded(petersonBarney));
+let petersonBarney = new Vowels("EN", "peterson_barney", () => datasetLoaded(petersonBarney));
 // let donaldTrump = new SpeakerVowels("EN", "Trump", () => datasetLoaded(donaldTrump));
-let hillaryClinton = new SpeakerVowels("EN", "Hillary", () => datasetLoaded(hillaryClinton));
-let datasets = [/*petersonBarney, donaldTrump, */ hillaryClinton];
+// let hillaryClinton = new SpeakerVowels("EN", "Hillary", () => datasetLoaded(hillaryClinton));
+let datasets = [petersonBarney, /* donaldTrump, hillaryClinton*/];
 
 async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.newState !== undefined) {

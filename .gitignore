@@ -1,4 +1,2 @@
-*.wav
-*.txt
+/my_files/
 /data_processing/
-/recordings/
