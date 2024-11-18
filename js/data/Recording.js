@@ -1,9 +1,11 @@
 import TextGrid from './TextGrid.js';
 import soundToFormant from '../praat/formant.js';
+import { PRESETS, PRESET_FREQUENCIES } from '../const/presets.js';
 
 export default class Recording {
-    constructor(path) {
+    constructor(path, preset) {
         this.path = path;
+        this.preset = preset;
     }
 
     async load() {
@@ -20,7 +22,7 @@ export default class Recording {
         let vowelSegments = this.textGrid.getVowelSegments(vowels);
         return vowelSegments.map(segment => {
             let samples = this.getSamples(segment);
-            let formants = soundToFormant(samples, this.sampleRate);
+            let formants = soundToFormant(samples, this.sampleRate, PRESET_FREQUENCIES[PRESETS[this.preset]]);
             let values = formants.map(formants => {
                 return {
                     x: formants.formant[1].frequency,

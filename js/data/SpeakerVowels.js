@@ -46,7 +46,8 @@ export default class SpeakerVowels extends Vowels {
         let recording_names = listing.filter(filename => filename.endsWith(".wav") && listing.includes(filename.replace(".wav", ".TextGrid"))).map(filename => filename.replace(".wav", ""));
 // // for debugging
 // recording_names = recording_names.slice(5, 6);
-        let recordings = recording_names.map(name => new Recording(`./recordings/${this.language}/${speaker}/${name}`));
+        let preset = await(await fetch(`./recordings/${this.language}/${speaker}/preset.json`)).json();
+        let recordings = recording_names.map(name => new Recording(`./recordings/${this.language}/${speaker}/${name}`, preset));
         await Promise.all(recordings.map(recording => recording.load()));
         let measurements = recordings.flatMap(recording => recording.getVowelMeasurements(this.vowels));
         measurements.forEach(measurements => {
