@@ -41,7 +41,9 @@ let intensityStats = localStorage.getItem("intensityStats");
 if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
 let view = null, audioRecorder = null, formantProcessor = null;
 let petersonBarney = new Vowels("EN", "peterson_barney", () => datasetLoaded(petersonBarney));
-let englishRecordings = new ForeignRecordings("EN");
+let englishRecordings;
+ForeignRecordings.create("EN")
+    .then(recordings => englishRecordings = recordings);
 let datasets = [petersonBarney];
 
 async function onStateChange(updates = {}, constructNewView = true) {

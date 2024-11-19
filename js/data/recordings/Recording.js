@@ -1,20 +1,29 @@
 import TextGrid from './TextGrid.js';
 import soundToFormant from '../../praat/formant.js';
 import { PRESETS, PRESET_FREQUENCIES } from '../../const/presets.js';
+import DataLoadedFromFile from '../DataLoadedFromFile.js';
 
-export default class Recording {    // represents an audio recording along with its transcription in the form of a TextGrid
+// represents an audio recording along with its transcription in the form of a TextGrid
+export default class Recording extends DataLoadedFromFile {
     constructor(path, preset) {
+        super();
         this.path = path;
         this.preset = preset;
     }
 
-    async load() {
-        this.textGrid = new TextGrid(`${this.path}.TextGrid`);
-        await this.textGrid.load();
+    static async create(path, preset, callback) {
+        return await super.create(callback, path, preset);
+    }
+
+    async _load() {
+        this.textGrid = await TextGrid.create(`${this.path}.TextGrid`);
         let wav = await fetch(`${this.path}.wav`);
-        this.sampleRate = 48000;
+
+        this.sampleRate = 48000;    // TODO: extract from file?
         let audioCtx = new AudioContext({ sampleRate: this.sampleRate });
-        let decodedData = await audioCtx.decodeAudioData(await wav.arrayBuffer());
+
+        let arrayBuffer = await wav.arrayBuffer();
+        let decodedData = await audioCtx.decodeAudioData(arrayBuffer);
         this.samples = decodedData.getChannelData(0);
     }
 

@@ -1,10 +1,9 @@
 import { assertEqualOnLine, assertStartsWithOnLine, assertEqualWithMargin, assertEqual } from "../../util/asserts.js";
-import { VOWEL_INVENTORIES } from "../../const/vowel_inventories/VOWEL_INVENTORIES.js";
+import { ArrayLoadedFromFile } from "../DataLoadedFromFile.js";
 
-export default class TextGrid extends Array {
+
+export default class TextGrid extends ArrayLoadedFromFile {
     static singleIndent = " ".repeat(4);
-
-    loaded = false;
     #indentationLevel = 0;
 
     get indentationLevel() {
@@ -21,7 +20,11 @@ export default class TextGrid extends Array {
         this.path = path;
     }
 
-    async load () {
+    static async create(path, callback) {
+        return await super.create(callback, path);
+    }
+
+    async _load () {
         let errors = [];
         for (let encoding of ["utf-16be", "utf-8"]) {
             try {
@@ -90,8 +93,6 @@ export default class TextGrid extends Array {
         assertEqual(this[0].name, "phonemes");
         assertEqual(this[1].name, "words");
         assertEqual(this[2].name, "phrases");
-
-        this.loaded = true;
     }
 
     #checkLine(expected) {
