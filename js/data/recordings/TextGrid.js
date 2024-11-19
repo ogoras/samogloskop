@@ -26,7 +26,8 @@ export default class TextGrid extends ArrayLoadedFromFile {
 
     async _load () {
         let errors = [];
-        for (let encoding of ["utf-16be", "utf-8"]) {
+        const encodings = ["utf-16be", "utf-8"];
+        for (let encoding of encodings) {
             try {
                 await this.#loadWithEncoding(encoding);
                 return;
@@ -35,7 +36,7 @@ export default class TextGrid extends ArrayLoadedFromFile {
                 errors.push(e);
             }
         }
-        throw new Error(`Failed to load TextGrid from ${this.path}. Tried encodings utf-16be and utf-8. Errors: ${errors}`);
+        throw new Error(`Failed to load TextGrid from ${this.path}. Tried encodings: ${encodings}. Errors: ${errors}`);
     }
 
     async #loadWithEncoding(encoding = "utf-16be") {
