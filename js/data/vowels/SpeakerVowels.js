@@ -4,7 +4,8 @@ import Vowels from './Vowels.js';
 import { VOWEL_DICTS } from '../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 const REQUIRED_FORMANTS = 20;
-export default class SpeakerVowels extends Vowels { // represents a set of vowels for a single speaker
+// represents a set of vowels for a single speaker
+export default class SpeakerVowels extends Vowels {
     vowelsRemaining = [...this.vowels];
     vowelsProcessed = [];
     lobanovScaled = false;
@@ -23,7 +24,9 @@ export default class SpeakerVowels extends Vowels { // represents a set of vowel
             }
             this.calculateMeanFormants();
         }
-        if (isNaN(this.#meanFormants.x) || isNaN(this.#meanFormants.y)) throw new Error("Mean formants are NaN");
+        if (isNaN(this.#meanFormants.x) || isNaN(this.#meanFormants.y)) {
+            throw new Error("Mean formants are NaN");
+        }
         return this.#meanFormants;
     }
     
@@ -61,10 +64,14 @@ export default class SpeakerVowels extends Vowels { // represents a set of vowel
 
     get formantsDeviation() {
         if (!this.#formantsDeviation || isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) {
-            if (!this.isDone()) throw new Error("Trying to calculate formants deviation before all vowels are gathered");
+            if (!this.isDone()) {
+                throw new Error("Trying to calculate formants deviation before all vowels are gathered");
+            }
             this.calculateMeanFormantsDeviation();
         }
-        if (isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) throw new Error("Formants deviation are NaN");
+        if (isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) { 
+            throw new Error("Formants deviation are NaN");
+        }
         return this.#formantsDeviation;
     }
 

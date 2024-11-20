@@ -65,12 +65,12 @@ async function onStateChange(updates = {}, constructNewView = true) {
             if (dataConsentGiven && stateSaveable(state)) {
                 localStorage.setItem("state", STATE_NAMES[state]);
             }
-            if (state === STATES.TRAINING) {
+            if (MANUALLY_STARTED_STATES.includes(state)) {
                 formantProcessor.state = state;
                 view.updateView(state, formantProcessor);
-                for (let dataset of datasets) {
-                    if (dataset.initialized) view.addDataset(dataset);
-                }
+                // for (let dataset of datasets) {
+                //     if (dataset.initialized) view.addDataset(dataset);
+                // }
             }
         }
     }
@@ -177,6 +177,11 @@ const SAVEABLE_STATES = [
     STATES.SPEECH_MEASURED,
     STATES.CONFIRM_VOWELS,
     STATES.TRAINING,
+]
+
+const MANUALLY_STARTED_STATES = [
+    STATES.INITIAL_FOREIGN,
+    STATES.REPEAT_FOREIGN
 ]
 
 function stateSaveable(state) {

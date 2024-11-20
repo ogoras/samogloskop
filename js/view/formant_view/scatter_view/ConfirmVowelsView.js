@@ -52,7 +52,7 @@ export default class ConfirmVowelsView extends ScatterView {
                 this.divStack.querySelector("button").innerHTML = "Zatwierdź zebrane samogłoski";
                 break;
             case 2:
-                this.onStateChange({newState: STATES.TRAINING}, false);
+                this.onStateChange({newState: STATES.INITIAL_FOREIGN}, false);
                 break;
         }
     }
