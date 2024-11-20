@@ -80,6 +80,8 @@ export default class TextGrid extends ArrayLoadedFromFile {
                 interval.xmin = this.#readPropertyFromLine("xmin", parseFloat);
                 interval.xmax = this.#readPropertyFromLine("xmax", parseFloat);
                 interval.text = this.#readPropertyFromLine("text", stripQuotes);
+                interval.translation = this.#readPropertyFromLine("translation", stripQuotes, true);
+                if (interval.translation === undefined) delete interval.translation;
                 if (interval.text.endsWith("?")) {
                     interval.text = interval.text.slice(0, -1);
                     interval.uncertain = true;
@@ -100,8 +102,15 @@ export default class TextGrid extends ArrayLoadedFromFile {
         assertEqualOnLine(this.lines, this.lineNumber++, this.indent + expected);
     }
 
-    #readPropertyFromLine(key, parseFunction) {
-        assertStartsWithOnLine(this.lines, this.lineNumber, `${this.indent}${key} = `);
+    #readPropertyFromLine(key, parseFunction, optional = false) {
+        if (optional) {
+            if (!this.lines[this.lineNumber]?.startsWith(`${this.indent}${key} = `)) {
+                return undefined;
+            }
+        }
+        else {
+            assertStartsWithOnLine(this.lines, this.lineNumber, `${this.indent}${key} = `);
+        }
         parseFunction ??= x => x;
         return parseFunction(this.lines[this.lineNumber++].split(" = ")[1]);
     }
