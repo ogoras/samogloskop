@@ -1,5 +1,6 @@
 import DataLoadedFromFile from "../DataLoadedFromFile.js";
 import SpeakerRecordings from "./SpeakerRecordings.js";
+import { VOWEL_DATA } from "../../const/vowel_inventories/VOWEL_INVENTORIES.js";
 
 export default class ForeignRecordings extends DataLoadedFromFile {
     speakers = [];
@@ -32,5 +33,10 @@ export default class ForeignRecordings extends DataLoadedFromFile {
                 });
             })
         }));
+        for (let vowelSymbol of VOWEL_DATA[this.language].IPA.broad) {
+            if (this.entriesByVowel[vowelSymbol]?.length < 2) {
+                throw new Error(`Not enough recordings for vowel ${vowelSymbol}`);
+            }
+        }
     }
 }
