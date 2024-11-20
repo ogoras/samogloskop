@@ -27,8 +27,8 @@ export default class Recording extends DataLoadedFromFile {
         this.samples = decodedData.getChannelData(0);
     }
 
-    getVowelMeasurements(vowels) {
-        let vowelSegments = this.textGrid.getVowelSegments(vowels);
+    getVowelMeasurements(vowelSymbols) {
+        let vowelSegments = this.textGrid.getVowelSegments(vowelSymbols);
         return vowelSegments.map(segment => {
             let samples = this.getSamples(segment);
             let formants = soundToFormant(samples, this.sampleRate, PRESET_FREQUENCIES[PRESETS[this.preset]]);

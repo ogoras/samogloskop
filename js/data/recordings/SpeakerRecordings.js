@@ -5,8 +5,14 @@ import Recording from "./Recording.js";
 export default class SpeakerRecordings extends ArrayLoadedFromFile {
     constructor(language, speaker) {
         super();
+        for (const [arg_key, arg] of Object.entries({language, speaker})) {
+            if (typeof arg !== "string") {
+                throw new Error(`${arg_key} must be a string, got ${arg} of type ${typeof arg} instead.`);
+            }
+        }
         this.language = language;
         this.speaker = speaker;
+        this.vowels = new SpeakerVowels(language);
     }
 
     static async create(language, speaker, callback) {
@@ -18,7 +24,9 @@ export default class SpeakerRecordings extends ArrayLoadedFromFile {
         let listing = await fetch(`${dir}/listing.json`);
         listing = await listing.json();
         let recording_names = this.recording_names = listing
-            .filter(filename => filename.endsWith(".wav") && listing.includes(filename.replace(".wav", ".TextGrid")))
+            .filter(filename => filename.endsWith(".wav") &&
+                listing.includes(filename.replace(".wav", ".TextGrid"))
+            )
             .map(filename => filename.replace(".wav", ""));
 // // for debugging
 // recording_names = recording_names.slice(5, 6);
@@ -27,5 +35,8 @@ export default class SpeakerRecordings extends ArrayLoadedFromFile {
             async recording_name => await Recording.create(`${dir}/${recording_name}`, info.preset)
         ));
         this.push(...recordings);
+        this.vowels.gatherMeasurements(this.flatMap(
+            recording => recording.getVowelMeasurements(this.vowels.getVowelSymbols())
+        ));
     }
 }

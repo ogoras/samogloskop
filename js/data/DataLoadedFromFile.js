@@ -5,6 +5,10 @@ export class ArrayLoadedFromFile extends SubclassLoadedFromFile(Array) {
         // return Array instead of ArrayLoadedFromFile
         return Array.from(this).map(...args);
     }
+
+    flatMap(...args) {
+        return Array.from(this).flatMap(...args);
+    }
 }
 
 export function SubclassLoadedFromFile(Parent) {
@@ -16,7 +20,10 @@ export function SubclassLoadedFromFile(Parent) {
         constructor(...args) {
             super(...args);
             if (this.constructor === SubclassLoadedFromFile) {
-                throw new Error(`${this.constructor.name ?? `SubclassLoadedFromFile extends ${Parent.name}`} is an abstract class and cannot be instantiated directly`);
+                throw new Error(`${
+                    this.constructor.name ??
+                    `SubclassLoadedFromFile extends ${Parent.name}`
+                } is an abstract class and cannot be instantiated directly`);
             }
         }
 

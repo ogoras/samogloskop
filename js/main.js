@@ -38,7 +38,9 @@ let state = STATES[localStorage.getItem("state")];
 if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
 let tempState;
 let intensityStats = localStorage.getItem("intensityStats");
-if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) state = STATES.NO_SAMPLES_YET;
+if (intensityStats === undefined && state > STATES.NO_SAMPLES_YET) {
+    state = STATES.NO_SAMPLES_YET;
+} 
 let view = null, audioRecorder = null, formantProcessor = null;
 let petersonBarney = new Vowels("EN", "peterson_barney", () => datasetLoaded(petersonBarney));
 let englishRecordings;

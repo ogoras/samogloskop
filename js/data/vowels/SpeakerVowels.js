@@ -1,7 +1,6 @@
 import { POINT_SIZES } from '../../const/POINT_SIZES.js';
 import Vowel from './Vowel.js';
 import Vowels from './Vowels.js';
-import Recording from '../recordings/Recording.js';
 import { VOWEL_DICTS } from '../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 const REQUIRED_FORMANTS = 20;
@@ -28,20 +27,11 @@ export default class SpeakerVowels extends Vowels { // represents a set of vowel
         return this.#meanFormants;
     }
     
-    constructor(language, speaker, callback) {
+    constructor(language) {
         super(language);
-        if (!speaker) return;
-        this.loadFromRecordings(speaker)
-            .then(() => {
-                this.initialized = true;
-                console.log(this)
-                callback?.();
-            });
     }
 
-    async loadFromRecordings(speaker) {
-        this.speaker = speaker;
-        let measurements = recordings.flatMap(recording => recording.getVowelMeasurements(this.vowels));
+    gatherMeasurements(measurements) {
         measurements.forEach(measurements => {
             let vowel = this.vowels[VOWEL_DICTS[this.language][measurements.vowel]];
             vowel.addFormants(...measurements);

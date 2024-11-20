@@ -106,9 +106,8 @@ export default class TextGrid extends ArrayLoadedFromFile {
         return parseFunction(this.lines[this.lineNumber++].split(" = ")[1]);
     }
 
-    getVowelSegments(vowels) {
+    getVowelSegments(vowelSymbols) {
         let phonemeTier = this[0];
-        let vowelSymbols = vowels.map(vowel => vowel.IPA.broad);
         return phonemeTier.filter(interval => vowelSymbols.includes(interval.text));
     }
 

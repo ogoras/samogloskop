@@ -45,4 +45,8 @@ export default class Vowels {   // represents a set of vowels for a particular s
                 callback();
             });
     }
+
+    getVowelSymbols() {
+        return this.vowels.map(vowel => vowel.IPA.broad ?? vowel.letter);
+    }
 }

@@ -18,7 +18,7 @@ export default class ForeignRecordings extends DataLoadedFromFile {
         let speakers = await fetch(`./recordings/${this.language}/listing.json`);
         this.speakers = speakers = await speakers.json();
         await Promise.all(speakers.map(async speaker => {
-            let entry = this.entriesBySpeaker[speaker] = await SpeakerRecordings.create(this.language, speaker);
+            this.entriesBySpeaker[speaker] = await SpeakerRecordings.create(this.language, speaker);
         }));
     }
 }
