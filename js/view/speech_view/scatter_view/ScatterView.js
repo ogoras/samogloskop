@@ -25,6 +25,7 @@ export default class ScatterView extends SpeechView {
             this.divStack = document.createElement("div");
             this.divStack.classList.add("stack");
             this.h2 = document.createElement("h2");
+            this.h2.classList.add("center");
             this.divStack.appendChild(this.h2);
             this.initializePlot();
         }

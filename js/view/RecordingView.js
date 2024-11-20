@@ -5,6 +5,21 @@ import SPEECH_VIEWS from './speech_view/SPEECH_VIEWS.js';
 import SettingsView from './SettingsView.js';
 
 export default class RecordingView extends View {
+    #disabled = false;
+
+    /**
+     * @param {boolean} value
+     */
+    set disabled(value) {
+        this.#disabled = value;
+        this.recordButton.classList.toggle("disabled", value);
+        if (value) this.recordingStopped();
+    }
+
+    get disabled() {
+        return this.#disabled;
+    }
+
     #UPDATE_FUNCTION = {
         intensityStats: (x) => { this.view?.update?.(x); },
         formants: (x, y) => { this.view?.feed?.(x, y); },
@@ -43,6 +58,7 @@ export default class RecordingView extends View {
         this.sideContainer.appendChild(recordingContainer);
 
         async function toggleCallback() {
+            if (this.disabled) return;
             switch(await this.recorder.toggleRecording()) {
                 case "started":
                     this.recordingStarted();

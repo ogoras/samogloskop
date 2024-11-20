@@ -172,6 +172,11 @@ button, .emoji-button {
     background-color: #ffffff;
 }
 
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .strikethrough-button::before {
     content: '';
     position: absolute;
@@ -205,6 +210,11 @@ button, .emoji-button {
 
     g.clickable:hover path {
         filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
+    }
+
+    .disabled:hover {
+        cursor: not-allowed;
+        filter: none;
     }
 }
 

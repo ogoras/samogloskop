@@ -111,6 +111,15 @@ async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.userVowels !== undefined) {
         if (dataConsentGiven) localStorage.setItem("userVowels", updates.userVowels);
     }
+    if (updates.disableMic !== undefined) {
+        if (updates.disableMic) {
+            audioRecorder.stopRecording();
+            audioRecorder.dump();
+            view.disabled = true;
+        } else {
+            view.disabled = false;
+        }
+    }
     if (constructNewView) {
         let viewState = tempState ?? state;
         if (consentPopup) view = new ConsentView(onStateChange);

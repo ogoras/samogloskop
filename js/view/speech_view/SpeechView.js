@@ -1,6 +1,8 @@
 import View from "../View.js";
 
 export default class SpeechView extends View {
+    #recording = false;
+
     constructor(onStateChange, view) {
         super(onStateChange);
         if (this.constructor === SpeechView) {
@@ -11,8 +13,6 @@ export default class SpeechView extends View {
             this.#recording = view.recording;
         }
     }
-
-    #recording = false;
 
     refreshRecording() {
         this.recording = this.#recording;

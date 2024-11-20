@@ -1,6 +1,9 @@
 import SpeechView from "./SpeechView.js";
 
 export default class CalibrationStartView extends SpeechView {
+    div;
+    divStack;
+
     constructor(onStateChange, container) {
         super();
 

@@ -2,7 +2,10 @@ import StatsView from "./StatsView.js";
 import ProgressBar from "../../../visualization/ProgressBar.js";
 
 export default class SilenceView extends StatsView {
-    silenceStats = {
+    div;
+    h2;
+
+    stats = {
         time: {
             text: "Nagrano: ",
             unit: "s",

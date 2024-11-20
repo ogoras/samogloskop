@@ -18,7 +18,7 @@ export default class ConfirmVowelsView extends ScatterView {
                 czy Twoje samogłoski są zgodne z danymi kalibracji.
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
         
-        let button = document.createElement("button");
+        let button = this.button = document.createElement("button");
         button.innerHTML = "OK";
         button.onclick = () => {
             this.nextMessage();
@@ -52,7 +52,8 @@ export default class ConfirmVowelsView extends ScatterView {
                 this.divStack.querySelector("button").innerHTML = "Zatwierdź zebrane samogłoski";
                 break;
             case 2:
-                this.onStateChange({newState: STATES.INITIAL_FOREIGN}, false);
+                this.button.remove();
+                this.onStateChange({ newState: STATES.INITIAL_FOREIGN, disableMic: true }, false);
                 break;
         }
     }

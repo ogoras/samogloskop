@@ -10,7 +10,12 @@
     <div class="main-container">
       <!-- <h1>Samogłoskop</h1> -->
     </div>
-    <script src="https://unpkg.com/mathjs@13.1.1/lib/browser/math.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/mathjs@14.0.0/lib/browser/math.js" type="text/javascript"></script>
+    <script>
+      if (typeof math == undefined) {
+        document.write('<script src="https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/mathjs\/14.0.0\/math.js"><\/script>');
+      }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script> 
       var module = {};

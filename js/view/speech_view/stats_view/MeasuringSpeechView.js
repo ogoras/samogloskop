@@ -5,6 +5,10 @@ import { STATE_NAMES, STATES } from "../../../const/states.js";
 import ProgressBar from "../../../visualization/ProgressBar.js";
 
 export default class MeasuringSpeechView extends StatsView {
+    div;
+    h2;
+    finished = false;
+
     #speechDetected = false;
 
     /**
@@ -21,10 +25,11 @@ export default class MeasuringSpeechView extends StatsView {
         super();
         if (state === undefined) {
             let view = arg;
-            this.silenceStats.min.diff = 0;
-            this.silenceStats.max.diff = 0;
-            this.silenceStats.mean.diff = 0;
-            this.silenceStats.time.text = "Nagrano głosu: ";
+            let stats = this.stats;
+            stats.min.diff = 0;
+            stats.max.diff = 0;
+            stats.mean.diff = 0;
+            stats.time.text = "Nagrano głosu: ";
 
             this.timeRequired = view.timeRequired;
 
