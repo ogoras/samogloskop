@@ -4,6 +4,7 @@ import SpeakerRecordings from "./SpeakerRecordings.js";
 export default class ForeignRecordings extends DataLoadedFromFile {
     speakers = [];
     entriesBySpeaker = {};
+    entriesByVowel = {};
 
     constructor(language = "EN") {
         super();
@@ -18,7 +19,18 @@ export default class ForeignRecordings extends DataLoadedFromFile {
         let speakers = await fetch(`./recordings/${this.language}/listing.json`);
         this.speakers = speakers = await speakers.json();
         await Promise.all(speakers.map(async speaker => {
-            this.entriesBySpeaker[speaker] = await SpeakerRecordings.create(this.language, speaker);
+            let recordings = this.entriesBySpeaker[speaker] = 
+                await SpeakerRecordings.create(this.language, speaker);
+            let vowelSymbols = recordings.vowels.getVowelSymbols();
+            recordings.forEach(recording => {
+                let textGrid = recording.textGrid;
+                let vowelIntervals = textGrid.getVowelIntervals(vowelSymbols);
+                vowelIntervals.forEach(interval => {
+                    let vowelSymbol = interval.text;
+                    this.entriesByVowel[vowelSymbol] ??= [];
+                    this.entriesByVowel[vowelSymbol].push({speaker, recording, interval});
+                });
+            })
         }));
     }
 }
