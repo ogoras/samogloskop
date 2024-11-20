@@ -17,7 +17,9 @@ export default class FormantProcessor {
     time = 0;
     div = document.getElementById("formants");
     intensityStats = new IntensityStats(calibrationTime, statsStep);
-    userVowels = new SpeakerVowels();
+    userVowels = new SpeakerVowels("PL");
+    foreignVowelsInital = new SpeakerVowels("EN");
+    foreignVowelsFinal = new SpeakerVowels("EN");
 
     constructor(sampleRate, state = STATES.NO_SAMPLES_YET, preset = PRESETS.FEMALE) {
         this.sampleRate = sampleRate;

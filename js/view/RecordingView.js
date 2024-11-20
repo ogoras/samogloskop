@@ -179,4 +179,8 @@ export default class RecordingView extends View {
         this.sideContainer.style.display = "block";
         this.view.restore?.();
     }
+
+    initializeRecordings(recordings) {
+        this.view?.initializeRecordings?.(recordings);
+    }
 }

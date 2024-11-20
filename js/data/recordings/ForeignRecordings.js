@@ -34,9 +34,14 @@ export default class ForeignRecordings extends DataLoadedFromFile {
             })
         }));
         for (let vowelSymbol of VOWEL_DATA[this.language].IPA.broad) {
-            if (this.entriesByVowel[vowelSymbol]?.length < 2) {
-                throw new Error(`Not enough recordings for vowel ${vowelSymbol}`);
+            if (!this.entriesByVowel[vowelSymbol]?.length) {
+                throw new Error(`No recordings for vowel ${vowelSymbol}`);
             }
         }
+    }
+
+    getRandomEntryForVowel(vowelSymbol) {
+        let entries = this.entriesByVowel[vowelSymbol];
+        return entries[Math.floor(Math.random() * entries.length)];
     }
 }

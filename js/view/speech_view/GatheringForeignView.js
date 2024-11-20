@@ -1,6 +1,8 @@
 import SpeechView from "./SpeechView.js";
 
 export default class GatheringForeignView extends SpeechView {
+    initialized = false;
+
     constructor(onStateChange, view, formantProcessor) {
         super(onStateChange, view);
 
@@ -21,13 +23,28 @@ export default class GatheringForeignView extends SpeechView {
         button.innerHTML = "Przejdź do pierwszego nagrania";
         button.onclick = () => this.showFirstRecording();
         this.divStack.appendChild(button);
+
+        this.userVowels = formantProcessor.foreignVowelsInital;
+    }
+
+    initializeRecordings(foreignRecordings) {
+        this.foreignRecordings = foreignRecordings;
+        this.initialized = true;
     }
 
     showFirstRecording() {
-        console.log("showFirstRecording");
+        if (!this.initialized) {
+            console.log("Unfortunately, the recordings have not been initialized yet.");
+            return;
+        }
         this.h2.innerHTML = "Wysłuchaj nagrania, w momencie gotowości włącz mikrofon i powtórz samogłoskę.";
 
         this.button.remove();
+
+        let vowel = this.userVowels.nextVowel();
+        let recording = this.foreignRecordings.getRandomEntryForVowel(vowel.letter);
+        console.log(recording);
+
         this.onStateChange({ disableMic: false }, false);
     }
 }

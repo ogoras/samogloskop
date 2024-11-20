@@ -72,6 +72,9 @@ async function onStateChange(updates = {}, constructNewView = true) {
                 //     if (dataset.initialized) view.addDataset(dataset);
                 // }
             }
+            if (state === STATES.INITIAL_FOREIGN) {
+                view.initializeRecordings(englishRecordings);
+            }
         }
     }
     if (updates.tempState !== undefined) {
