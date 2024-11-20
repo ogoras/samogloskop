@@ -1,7 +1,7 @@
 import View from './View.js';
 import WaveformVisualizer from '../visualization/waveform/WaveformVisualizer.js';
 import { STATES, STATE_NAMES } from '../const/states.js';
-import SPEECH_VIEWS from './formant_view/SPEECH_VIEWS.js';
+import SPEECH_VIEWS from './speech_view/SPEECH_VIEWS.js';
 import SettingsView from './SettingsView.js';
 
 export default class RecordingView extends View {
