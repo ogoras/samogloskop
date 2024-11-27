@@ -1,5 +1,6 @@
 import { VERSION_MAJOR, VERSION_MINOR } from "../const/version.js";
-import getState from "../const/states.js";
+import State from "../const/states.js";
+import Preset from "../const/presets.js";
 
 export default class LocalStorageMediator {
     static instance = null;
@@ -86,13 +87,13 @@ const localStorageProperties = [
     {
         name: "preset",
         localStorageName: "preset",
-        customGet: getState,
+        customGet: (key) => Preset.get(key),
         customSet: (value) => value.toString(),
     },
     {
         name: "state",
         localStorageName: "state",
-        customGet: getState,
+        customGet: (key) => State.get(key),
         customSet: (value) => value.toString(),
     },
     {

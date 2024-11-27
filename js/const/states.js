@@ -1,7 +1,7 @@
 import arrToObj from "../logic/util/arrToObj.js";
 import Enum from "./Enum.js";
 
-class State extends Enum {
+export default class State extends Enum {
     static allowNew = true;
 
     constructor(index, name) {
@@ -13,7 +13,7 @@ class State extends Enum {
 
     static #convertToState(state) {
         if (!(state instanceof State)) {
-            state = getState(state);
+            state = State.get(state);
         }
         return state;
     }
@@ -57,19 +57,3 @@ const STATE_NAMES = [
 ];
 const STATES = arrToObj(STATE_NAMES, (...args) => new State(...args));
 State.allowNew = false;
-
-export default function getState(argument) {
-    let ret;
-    if (parseInt(argument) == argument) {
-        ret = STATES[STATE_NAMES[parseInt(argument)]];
-        if (ret === undefined) {
-            throw new Error(`Invalid state index: ${argument}`);
-        }
-    } else {
-        ret = STATES[argument];
-        if (ret === undefined) {
-            throw new Error(`Invalid state name: ${argument}`);
-        }
-    }
-    return ret;
-}

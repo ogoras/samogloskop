@@ -12,7 +12,7 @@ import Buffer from './logic/util/Buffer.js';
 import SpeakerVowels from './data/vowels/SpeakerVowels.js';
 import LocalStorageMediator from './data/LocalStorageMediator.js';
 
-import getState from './const/states.js';
+import State from './const/states.js';
 import getPreset from './const/presets.js';
 import { POINT_SIZES } from './const/POINT_SIZES.js';
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from './const/version.js';
@@ -39,9 +39,9 @@ let consentPopup = !localStorageMediator.dataConsentGiven;
 let state = localStorageMediator.state, tempState;
 let preset = localStorageMediator.preset;
 
-if (state === undefined || preset === undefined) state = getState("PRESET_SELECTION");
+if (state === undefined || preset === undefined) state = State.get("PRESET_SELECTION");
 if (localStorageMediator.intensityStatsString === undefined && state.after("NO_SAMPLES_YET")) {
-    state = getState("NO_SAMPLES_YET");
+    state = State.get("NO_SAMPLES_YET");
 } 
 
 let view = null, audioRecorder = null;
@@ -84,7 +84,7 @@ async function onStateChange(updates = {}, constructNewView = true) {
     if (updates.preset !== undefined) {
         preset = updates.preset;
         if (dataConsentGiven) localStorageMediator.preset = preset;
-        if (state.is("PRESET_SELECTION")) state = getState("NO_SAMPLES_YET");
+        if (state.is("PRESET_SELECTION")) state = State.get("NO_SAMPLES_YET");
         if (dataConsentGiven) localStorageMediator.state = state;
     }
     if (updates.accepted !== undefined) {
@@ -163,7 +163,7 @@ function renderLoop() {
     let updates = {};
     {
         if (viewState.is("NO_SAMPLES_YET")) {
-            updates.newState = viewState = getState("GATHERING_SILENCE");
+            updates.newState = viewState = State.get("GATHERING_SILENCE");
         }
         samplesBuffer.pushMultiple(samples);
         const formants = soundToFormant(samplesBuffer.getCopy(), sampleRate, preset.frequency);
@@ -178,38 +178,38 @@ function renderLoop() {
         }
         time += samples.length / sampleRate;
         switch (viewState) {
-            case getState("GATHERING_SILENCE"):
+            case State.get("GATHERING_SILENCE"):
                 updates.progressTime = time;
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
                     updates.intensityStats = intensityStats;
                     formantsBuffer.clear();
                 }
                 if (intensityStats.isCalibrationFinished(time)) {
-                    updates.newState = viewState = getState("WAITING_FOR_SPEECH");
+                    updates.newState = viewState = State.get("WAITING_FOR_SPEECH");
                     intensityStats.saveStats("silence");
                 }
                 break;
-            case getState("WAITING_FOR_SPEECH"):
+            case State.get("WAITING_FOR_SPEECH"):
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer) 
                     && intensityStats.detectSpeech()) {
-                    updates.newState = viewState = getState("MEASURING_SPEECH");
+                    updates.newState = viewState = State.get("MEASURING_SPEECH");
                     updates.startTime = time;
                 }
                 break;
-            case getState("MEASURING_SPEECH"):
+            case State.get("MEASURING_SPEECH"):
                 updates.progressTime = time;
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
                     updates.intensityStats = intensityStats;
                     formantsBuffer.clear();
                 }
                 if (intensityStats.isCalibrationFinished(time)) {
-                    updates.newState = viewState = getState("SPEECH_MEASURED");
+                    updates.newState = viewState = State.get("SPEECH_MEASURED");
                     intensityStats.saveStats("speech");
                     updates.intensityStatsString = intensityStats.toString();
                     intensityStats.resetStart();
                 }
                 break;
-            case getState("SPEECH_MEASURED"):
+            case State.get("SPEECH_MEASURED"):
                 // wait for 2 seconds of silence
                 var silenceRequired = 2;
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
@@ -217,30 +217,30 @@ function renderLoop() {
                     updates.progress = length / silenceRequired;
                     if (intensityStats.silenceDuration >= silenceRequired) {
                         updates.progress = 1;
-                        updates.newState = viewState = getState("WAITING_FOR_VOWELS");
+                        updates.newState = viewState = State.get("WAITING_FOR_VOWELS");
                         smoothedFormantsBuffer = new Buffer(minimumSmoothingCount);
                     }
                 }
                 break;
-            case getState("WAITING_FOR_VOWELS"):
+            case State.get("WAITING_FOR_VOWELS"):
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
                     if (intensityStats.detectSpeech()) {
-                        updates.newState = viewState = getState("GATHERING_VOWELS");
+                        updates.newState = viewState = State.get("GATHERING_VOWELS");
                         formantsBuffer.clear();
                         smoothedFormantsBuffer ??= new Buffer(minimumSmoothingCount);
                         smoothedFormantsBuffer.clear();
                     }
                 }
                 break;
-            case getState("GATHERING_VOWELS"):
-            case getState("CONFIRM_VOWELS"):
-            case getState("TRAINING"):
+            case State.get("GATHERING_VOWELS"):
+            case State.get("CONFIRM_VOWELS"):
+            case State.get("TRAINING"):
                 intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer);
                 smoothedFormantsBuffer ??= new Buffer(minimumSmoothingCount);
                 if (!intensityStats.detectSpeech()) {
                     formantsBuffer.clear();
                     smoothedFormantsBuffer.clear();
-                    if (viewState.is("GATHERING_VOWELS")) updates.newState = viewState = getState("WAITING_FOR_VOWELS");
+                    if (viewState.is("GATHERING_VOWELS")) updates.newState = viewState = State.get("WAITING_FOR_VOWELS");
                     break;
                 }
                 updates.formants = [];
@@ -264,16 +264,16 @@ function renderLoop() {
                     if (userVowels.isVowelGathered()) {
                         updates.vowel = userVowels.saveVowel();
                         if (userVowels.isDone()) {
-                            updates.newState = viewState = getState("CONFIRM_VOWELS");
+                            updates.newState = viewState = State.get("CONFIRM_VOWELS");
                             userVowels.scaleLobanov();
                             updates.userVowelsString = userVowels.toString();
                         } else {
-                            updates.newState = viewState = getState("VOWEL_GATHERED");
+                            updates.newState = viewState = State.get("VOWEL_GATHERED");
                         }
                     }
                 }
                 break;
-            case getState("VOWEL_GATHERED"):
+            case State.get("VOWEL_GATHERED"):
                 // wait for 1 second of silence
                 var silenceRequired = 1;
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
@@ -281,7 +281,7 @@ function renderLoop() {
                     updates.progress = length / silenceRequired;
                     if (intensityStats.silenceDuration >= silenceRequired) {
                         updates.progress = 1;
-                        updates.newState = viewState = getState("WAITING_FOR_VOWELS");
+                        updates.newState = viewState = State.get("WAITING_FOR_VOWELS");
                         smoothedFormantsBuffer.clear();
                     }
                 }
@@ -323,12 +323,12 @@ const SAVEABLE_STATES = [
     "SPEECH_MEASURED",
     "CONFIRM_VOWELS",
     "TRAINING",
-].map(getState);
+].map((key) => State.get(key));
 
 const MANUALLY_STARTED_STATES = [
     "INITIAL_FOREIGN",
     "REPEAT_FOREIGN"
-].map(getState);
+].map((key) => State.get(key));
 
 function stateSaveable(state) {
     return SAVEABLE_STATES.includes(state);

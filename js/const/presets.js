@@ -1,7 +1,9 @@
 import arrToObj from "../logic/util/arrToObj.js";
 import Enum from "./Enum.js";
 
-class Preset extends Enum {
+export default class Preset extends Enum {
+    static allowNew = true;
+
     constructor(index, name, frequency) {
         super(index, name);
         this.frequency = frequency;
@@ -19,11 +21,4 @@ const PRESET_FREQUENCIES = [
     8000
 ]
 const PRESETS = arrToObj(PRESET_NAMES, (...args) => new Preset(...args), PRESET_FREQUENCIES);
-
-export default function getPreset(argument) {
-    if (typeof argument === "number") {
-        return PRESETS[PRESET_NAMES[argument]];
-    } else {
-        return PRESETS[argument];
-    }
-}
+Preset.allowNew = false;
