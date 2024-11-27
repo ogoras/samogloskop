@@ -111,15 +111,15 @@ export default class RecordingView extends View {
         this.waveformVisualizer = new WaveformVisualizer();
     }
     
-    updateView(state, formantProcessor) {
-        this.formantProcessor = formantProcessor;
-        let Constructor = SPEECH_VIEWS[state];
+    updateView(args) {
+        this.args = args;
+        let Constructor = SPEECH_VIEWS[args.state];
         if (Constructor) {
             if (this.view) {
                 if (Constructor !== this.view.constructor) {
-                    this.view = new Constructor(this.onStateChange, this.view, formantProcessor);
+                    this.view = new Constructor(this.onStateChange, this.view, args, true);
                 }
-                else switch(state) {
+                else switch(args.state) {
                     case STATES.SPEECH_MEASURED:
                         this.view.finish();
                         break;
@@ -135,7 +135,7 @@ export default class RecordingView extends View {
                         break;
                 }
             }
-            else this.view = new Constructor(this.onStateChange, this.formantsContainer, formantProcessor, state);
+            else this.view = new Constructor(this.onStateChange, this.formantsContainer, args);
         }
     }
 
@@ -169,8 +169,7 @@ export default class RecordingView extends View {
         document.body.classList.remove("recording-view");
         this.formantsContainer.style.display = "none";
         this.sideContainer.style.display = "none";
-        if (!this.formantProcessor) throw new Error("FormantProcessor not given to RecordingView");
-        this.popup = new SettingsView(this.onStateChange, this.closeSettings.bind(this), this.formantProcessor);
+        this.popup = new SettingsView(this.onStateChange, this.closeSettings.bind(this), this.args);
     }
 
     closeSettings() {

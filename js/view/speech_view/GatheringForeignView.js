@@ -3,13 +3,12 @@ import SpeechView from "./SpeechView.js";
 export default class GatheringForeignView extends SpeechView {
     initialized = false;
 
-    constructor(onStateChange, view, formantProcessor) {
+    constructor(onStateChange, view) {
         super(onStateChange, view);
 
         this.div = view.div;
         this.divStack = view.divStack;
         this.h2 = view.h2;
-        this.formantProcessor = formantProcessor;
 
         this.h2.innerHTML = `Teraz sprawdzimy Twoją umiejętność mówienia po angielsku z wymową amerykańską. Poproszę Cię o odsłuchanie nagrania, a następnie nagranie swojej próby wypowiedzenia usłyszanej samogłoski. Zrobimy tak dla wszystkich samogłosek występujących w dialekcie General American.`;
 
@@ -24,7 +23,7 @@ export default class GatheringForeignView extends SpeechView {
         button.onclick = () => this.showFirstRecording();
         this.divStack.appendChild(button);
 
-        this.userVowels = formantProcessor.foreignVowelsInital;
+        this.userVowels = null; // TODO set this
     }
 
     initializeRecordings(foreignRecordings) {

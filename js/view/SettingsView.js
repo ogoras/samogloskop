@@ -4,10 +4,21 @@ import { VERSION_MAJOR, VERSION_MINOR, PATCH } from '../const/version.js';
 import { STATES } from '../const/states.js';
 
 export default class SettingsView extends View {
-    constructor(onStateChange, closeCallback, formantProcessor) {
+    #state;
+    get state() {
+        return this.#state;
+    }
+    set state(value) {
+        throw new Error("State is read-only");
+    }
+    
+    constructor(onStateChange, closeCallback, args) {
         super(onStateChange);
         this.closeCallback = closeCallback;
-        this.formantProcessor = formantProcessor;
+        this.preset = args.preset;
+        this.userVowels = args.userVowels;
+        this.intensityStats = args.intensityStats;
+        this.#state = args.state;
 
         this.header = document.createElement("div");
         this.header.classList.add("header");
@@ -29,10 +40,10 @@ export default class SettingsView extends View {
 
         this.mainContainer.appendChild(this.createConsentSection());
         this.mainContainer.appendChild(this.createPresetSection());
-        if (this.formantProcessor.intensityStats.isCalibrated) {
+        if (this.intensityStats.isCalibrated) {
             this.mainContainer.appendChild(this.createIntensityStatsSection());
         }
-        if (this.formantProcessor.state >= STATES.CONFIRM_VOWELS) {
+        if (this.state >= STATES.CONFIRM_VOWELS) {
             this.mainContainer.appendChild(this.createDeleteVowelsSection());
         }
 
@@ -115,9 +126,9 @@ export default class SettingsView extends View {
             let nextElement = div.nextElementSibling;
             div.remove();
             this.mainContainer.insertBefore(this.createPresetSection(), nextElement);
-        }, div, this.formantProcessor.preset);
+        }, div, this.preset);
 
-        if (this.formantProcessor.userVowels?.gatheredAnything) {
+        if (this.userVowels?.gatheredAnything) {
             let notice = document.createElement("p");
             notice.innerHTML = "Uwaga: Zmiana kategorii głosu ma wpływ tylko na przyszłe nagrania. Wszystkie dotychczas zebrane dane pozostaną niezmienione.";
             notice.style = "color: #a00000";
@@ -135,7 +146,7 @@ export default class SettingsView extends View {
         title.innerHTML = "<b>Kalibracja głośności</b>";
         div.appendChild(title);
 
-        let stats = this.formantProcessor.intensityStats;
+        let stats = this.intensityStats;
         let statsInfo = document.createElement("div");
         statsInfo.classList.add("flex-oriented");
         statsInfo.style = "align-items: center";

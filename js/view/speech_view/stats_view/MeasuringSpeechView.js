@@ -21,9 +21,9 @@ export default class MeasuringSpeechView extends StatsView {
         this.resetStatsElements();
     }
 
-    constructor(onStateChange, arg, formantProcessor, state) {
+    constructor(onStateChange, arg, args, recycle = false) {
         super();
-        if (state === undefined) {
+        if (recycle) {
             let view = arg;
             let stats = this.stats;
             stats.min.diff = 0;
@@ -52,7 +52,7 @@ export default class MeasuringSpeechView extends StatsView {
                 divStack.insertBefore(p, this.progressBar.element);
             }
         }
-        else if (state === STATES.SPEECH_MEASURED) {
+        else if (args.state === STATES.SPEECH_MEASURED) {
             let div = this.div = arg;
             let divStack = this.divStack = div.querySelector(".stack");
             this.h2 = document.createElement("h2");

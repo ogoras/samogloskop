@@ -36,10 +36,10 @@ export default class SilenceView extends StatsView {
         }
     }
 
-    constructor(onStateChange, view, formantProcessor) {
+    constructor(onStateChange, view, args) {
         super();
         this.div = view.div;
-        this.timeRequired = formantProcessor.calibrationTime;
+        this.timeRequired = args.calibrationTime; // TODO set this
         let divStack = this.divStack = view.divStack;
         this.h2 = divStack.querySelector("h2");
         this.recordingStarted();

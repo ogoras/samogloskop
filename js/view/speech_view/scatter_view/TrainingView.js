@@ -4,8 +4,8 @@ import { VOWEL_INVENTORIES } from "../../../const/vowel_inventories/VOWEL_INVENT
 import Vowel from "../../../data/vowels/Vowel.js";
 
 export default class TrainingView extends ScatterView {
-    constructor(onStateChange, arg, formantProcessor, state) {
-        super(onStateChange, arg, state);
+    constructor(onStateChange, arg, args, recycle = false) {
+        super(onStateChange, arg, args, recycle);
 
         this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
@@ -20,7 +20,7 @@ export default class TrainingView extends ScatterView {
         }
         this.divStack.appendChild(button);
 
-        if (state === undefined) {
+        if (recycle) {
             // remove all elements from the div
             while (this.div.firstChild) {
                 this.div.removeChild(this.div.firstChild);
@@ -28,7 +28,7 @@ export default class TrainingView extends ScatterView {
             this.initializePlot();
         }
         
-        let userVowels = formantProcessor.userVowels;
+        let userVowels = args.userVowels;
         userVowels.vowelsProcessed.forEach(vowel => {
             let id = vowel.id;
             

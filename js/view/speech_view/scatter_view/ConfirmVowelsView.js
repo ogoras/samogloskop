@@ -7,11 +7,10 @@ export default class ConfirmVowelsView extends ScatterView {
     currentMessage = 0;
     editingVowel = false;
 
-    constructor(onStateChange, arg, formantProcessor, state) {
-        super(onStateChange, arg, state);
-        this.formantProcessor = formantProcessor;
+    constructor(onStateChange, arg, args, recycle = false) {
+        super(onStateChange, arg, args, recycle);
 
-        this.h2.innerHTML = (state === undefined
+        this.h2.innerHTML = (recycle
             ? `Kalibracja ukończona!`
             : `Wczytano dane kalibracji z poprzedniej sesji.`)
             + `<br>Możesz teraz swobodnie mówić i zobaczyć, 
@@ -27,11 +26,11 @@ export default class ConfirmVowelsView extends ScatterView {
 
         if (ConfirmVowelsView.viewedAtLeastOnce) this.nextMessage();
 
-        if (state === undefined) {
+        if (recycle) {
             this.initializePlot();
         }
         
-        let userVowels = formantProcessor.userVowels;
+        let userVowels = this.userVowels = args.userVowels;
         userVowels.vowelsProcessed.forEach(vowel => {
             let id = vowel.id;
             
@@ -61,7 +60,7 @@ export default class ConfirmVowelsView extends ScatterView {
     vowelClicked(vowel) {
         if (this.editingVowel) return;
         this.editingVowel = true;
-        this.formantProcessor.userVowels.resetVowel(vowel);
+        this.userVowels.resetVowel(vowel);
         this.onStateChange({tempState: STATES.WAITING_FOR_VOWELS}, false);
         let vowelInv = VOWEL_INVENTORIES.PL;
         let vowelDict = VOWEL_DICTS.PL;

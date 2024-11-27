@@ -1,20 +1,22 @@
 import SpeechView from '../SpeechView.js';
 import ScatterPlot from '../../../visualization/scatter_plot/ScatterPlot.js';
-import { formantCount } from '../../../data/FormantProcessor.js';
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from '../../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 export default class ScatterView extends SpeechView {
-    constructor(onStateChange, arg, state) {
-        if (state === undefined) {
+    constructor(onStateChange, arg, args, recycle = false) {
+        if (recycle) {
             super(onStateChange, arg);
         } else {
             super(onStateChange);
         }
+
+        this.formantCount = args.formantCount;
+
         if (this.constructor === ScatterView) {
             throw new Error("Cannot instantiate abstract class ScatterView");
         }
-        if (state === undefined) {
+        if (recycle) {
             let view = arg;
             this.div = view.div;
             this.divStack = view.divStack;
@@ -58,7 +60,7 @@ export default class ScatterView extends SpeechView {
                 size: POINT_SIZES.VOWEL_CENTROID
             }}, ids);
         }
-        this.scatterPlot.appendGroup({ capacity: formantCount, growSize: true, formatting: {
+        this.scatterPlot.appendGroup({ capacity: this.formantCount, growSize: true, formatting: {
             size: POINT_SIZES.TRAIL,
             opacity: "80"
         }}, 1);
