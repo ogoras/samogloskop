@@ -1,6 +1,6 @@
-import { POINT_SIZES } from "../../const/POINT_SIZES.js";
+import { POINT_SIZES } from "../../../const/POINT_SIZES.js";
 import PointGroup from "./PointGroup.js";
-import remToPx from "../../util/remToPx.js";
+import remToPx from "../../../logic/util/remToPx.js";
 
 export default class SimplePointGroup extends PointGroup {
     addPoint(point) {

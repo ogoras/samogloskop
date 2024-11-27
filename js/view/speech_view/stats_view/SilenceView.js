@@ -1,5 +1,5 @@
 import StatsView from "./StatsView.js";
-import ProgressBar from "../../../visualization/ProgressBar.js";
+import ProgressBar from "../../visualization/ProgressBar.js";
 
 export default class SilenceView extends StatsView {
     div;

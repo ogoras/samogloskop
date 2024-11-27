@@ -2,13 +2,13 @@ import ConsentView from './view/ConsentView.js';
 import PresetView from './view/PresetView.js';
 import RecordingView from './view/RecordingView.js';
 
-import AudioRecorder from './recording/Recorder.js';
+import AudioRecorder from './logic/recording/Recorder.js';
 import Vowels from './data/vowels/Vowels.js';
 import ForeignRecordings from './data/recordings/ForeignRecordings.js';
 
-import soundToFormant from './praat/formant.js';
+import soundToFormant from './logic/praat/formant.js';
 import IntensityStats from './data/IntensityStats.js';
-import Buffer from './util/Buffer.js';
+import Buffer from './logic/util/Buffer.js';
 import SpeakerVowels from './data/vowels/SpeakerVowels.js';
 
 import { STATES, STATE_NAMES } from './const/states.js';

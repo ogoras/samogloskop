@@ -1,5 +1,5 @@
 import TextGrid from './TextGrid.js';
-import soundToFormant from '../../praat/formant.js';
+import soundToFormant from '../../logic/praat/formant.js';
 import { PRESETS, PRESET_FREQUENCIES } from '../../const/presets.js';
 import DataLoadedFromFile from '../DataLoadedFromFile.js';
 

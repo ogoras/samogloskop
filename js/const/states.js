@@ -1,4 +1,4 @@
-import arrToObj from "../util/arrToObj.js";
+import arrToObj from "../logic/util/arrToObj.js";
 
 export const STATE_NAMES = [
     "PRESET_SELECTION",

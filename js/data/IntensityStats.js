@@ -1,4 +1,4 @@
-import Buffer from '../util/Buffer.js';
+import Buffer from '../logic/util/Buffer.js';
 
 export default class IntensityStats {
     min = Infinity;

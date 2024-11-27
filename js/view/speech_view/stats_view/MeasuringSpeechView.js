@@ -1,8 +1,8 @@
 import tonguetwisters from "../../../const/tonguetwisters.js";
-import choose from "../../../util/choose.js";
+import choose from "../../../logic/util/choose.js";
 import StatsView from "./StatsView.js";
 import { STATE_NAMES, STATES } from "../../../const/states.js";
-import ProgressBar from "../../../visualization/ProgressBar.js";
+import ProgressBar from "../../visualization/ProgressBar.js";
 
 export default class MeasuringSpeechView extends StatsView {
     div;

@@ -22,7 +22,7 @@ export default class AudioRecorder {
 
     async init() {
         this.audioCtx = new AudioContext();
-        await this.audioCtx.audioWorklet.addModule('js/recording/recorder-worklet-processor.js');
+        await this.audioCtx.audioWorklet.addModule('js/logic/recording/recorder-worklet-processor.js');
     }
 
     async toggleRecording() {

@@ -1,4 +1,4 @@
-import { assertEqualOnLine, assertStartsWithOnLine, assertEqualWithMargin, assertEqual } from "../../util/asserts.js";
+import { assertEqualOnLine, assertStartsWithOnLine, assertEqualWithMargin, assertEqual } from "../../logic/util/asserts.js";
 import { ArrayLoadedFromFile } from "../DataLoadedFromFile.js";
 
 

@@ -1,5 +1,5 @@
-import arrToObj from "../../util/arrToObj.js";
-import arrObjToObjArr from "../../util/arrObjToObjArr.js";
+import arrToObj from "../../logic/util/arrToObj.js";
+import arrObjToObjArr from "../../logic/util/arrObjToObjArr.js";
 
 const LANGUAGES = ["EN", "PL"]
 

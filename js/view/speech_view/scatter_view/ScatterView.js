@@ -1,5 +1,5 @@
 import SpeechView from '../SpeechView.js';
-import ScatterPlot from '../../../visualization/scatter_plot/ScatterPlot.js';
+import ScatterPlot from '../../visualization/scatter_plot/ScatterPlot.js';
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from '../../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
