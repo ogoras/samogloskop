@@ -1,6 +1,5 @@
 import View from './View.js';
 import WaveformVisualizer from './visualization/waveform/WaveformVisualizer.js';
-import { STATES, STATE_NAMES } from '../const/states.js';
 import SPEECH_VIEWS from './speech_view/SPEECH_VIEWS.js';
 import SettingsView from './SettingsView.js';
 
@@ -113,24 +112,24 @@ export default class RecordingView extends View {
     
     updateView(args) {
         this.args = args;
-        let Constructor = SPEECH_VIEWS[args.state];
+        let Constructor = SPEECH_VIEWS[args.state.name];
         if (Constructor) {
             if (this.view) {
                 if (Constructor !== this.view.constructor) {
                     this.view = new Constructor(this.onStateChange, this.view, args, true);
                 }
-                else switch(args.state) {
-                    case STATES.SPEECH_MEASURED:
+                else switch(args.state.name) {
+                    case "SPEECH_MEASURED":
                         this.view.finish();
                         break;
-                    case STATES.MEASURING_SPEECH:
-                    case STATES.GATHERING_VOWELS:
+                    case "MEASURING_SPEECH":
+                    case "GATHERING_VOWELS":
                         this.view.speechDetected = true;
                         break;
-                    case STATES.WAITING_FOR_VOWELS:
+                    case "WAITING_FOR_VOWELS":
                         this.view.speechDetected = false;
                         break;
-                    case STATES.VOWEL_GATHERED:
+                    case "VOWEL_GATHERED":
                         this.view.vowelGathered = true;
                         break;
                 }

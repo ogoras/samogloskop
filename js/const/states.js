@@ -1,6 +1,45 @@
 import arrToObj from "../logic/util/arrToObj.js";
+import Enum from "./Enum.js";
 
-export const STATE_NAMES = [
+class State extends Enum {
+    static allowNew = true;
+
+    constructor(index, name) {
+        super(index, name);
+        if (!State.allowNew) {
+            throw new Error("State instances cannot be created directly. Use getState() instead.");
+        }
+    }
+
+    static #convertToState(state) {
+        if (!(state instanceof State)) {
+            state = getState(state);
+        }
+        return state;
+    }
+
+    after(otherState) {
+        return this.index > State.#convertToState(otherState).index;
+    }
+
+    afterOrEqual(otherState) {
+        return this.index >= State.#convertToState(otherState).index;
+    }
+
+    before(otherState) {
+        return this.index < State.#convertToState(otherState).index;
+    }
+
+    beforeOrEqual(otherState) {
+        return this.index <= State.#convertToState(otherState).index;
+    }
+
+    is(otherState) {
+        return this === State.#convertToState(otherState);
+    }
+}
+
+const STATE_NAMES = [
     "PRESET_SELECTION",
     "NO_SAMPLES_YET",
     "GATHERING_SILENCE",
@@ -15,7 +54,22 @@ export const STATE_NAMES = [
     "TRAINING",
     "REPEAT_FOREIGN",
     "DONE"
-]
-export const STATES = arrToObj(STATE_NAMES);
+];
+const STATES = arrToObj(STATE_NAMES, (...args) => new State(...args));
+State.allowNew = false;
 
-export default STATES;
+export default function getState(argument) {
+    let ret;
+    if (parseInt(argument) == argument) {
+        ret = STATES[STATE_NAMES[parseInt(argument)]];
+        if (ret === undefined) {
+            throw new Error(`Invalid state index: ${argument}`);
+        }
+    } else {
+        ret = STATES[argument];
+        if (ret === undefined) {
+            throw new Error(`Invalid state name: ${argument}`);
+        }
+    }
+    return ret;
+}

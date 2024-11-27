@@ -10,9 +10,10 @@ import soundToFormant from './logic/praat/formant.js';
 import IntensityStats from './data/IntensityStats.js';
 import Buffer from './logic/util/Buffer.js';
 import SpeakerVowels from './data/vowels/SpeakerVowels.js';
+import LocalStorageMediator from './data/LocalStorageMediator.js';
 
-import { STATES, STATE_NAMES } from './const/states.js';
-import { PRESETS, PRESET_NAMES, PRESET_FREQUENCIES } from './const/presets.js';
+import getState from './const/states.js';
+import getPreset from './const/presets.js';
 import { POINT_SIZES } from './const/POINT_SIZES.js';
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from './const/version.js';
 console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,
@@ -31,39 +32,22 @@ let foreignVowelsInital = new SpeakerVowels("EN");
 let foreignVowelsFinal = new SpeakerVowels("EN");
 let sampleRate, samplesBuffer, smoothedFormantsBuffer, formantsToSave;
 
-let dataConsentGiven = localStorage.getItem("accepted") === "true";
-if (dataConsentGiven && !localStorage.getItem("version")) {
-    localStorage.setItem("version", "0.0");
-}
-let localStorageVersion = localStorage.getItem("version")
-if (localStorageVersion !== `${VERSION_MAJOR}.${VERSION_MINOR}`) {
-    if (localStorageVersion === "0.1") {
-        // 0.1 -> 0.2 conversion
-        if (localStorage.getItem("state") === "DONE")
-            localStorage.setItem("state", "CONFIRM_VOWELS");
-    }
-    else if (dataConsentGiven) {
-        // for now, local storage v0.0 is not supported
-        // TODO: implement a conversion mechanism for versions 1.x and higher
-        console.log(`Conversion not implemented for version ${localStorageVersion}`);
-        localStorage.clear();
-        dataConsentGiven = false;
-    }
-}
-let preset = PRESETS[localStorage.getItem("preset")];
-let consentPopup = !dataConsentGiven;
-let state = STATES[localStorage.getItem("state")];
-if (state === undefined || preset === undefined) state = STATES.PRESET_SELECTION;
-let tempState;
-let intensityStatsString = localStorage.getItem("intensityStats");
-if (intensityStatsString === undefined && state > STATES.NO_SAMPLES_YET) {
-    state = STATES.NO_SAMPLES_YET;
+let localStorageMediator = LocalStorageMediator.getInstance();
+localStorageMediator.load();
+let consentPopup = !localStorageMediator.dataConsentGiven;
+
+let state = localStorageMediator.state, tempState;
+let preset = localStorageMediator.preset;
+
+if (state === undefined || preset === undefined) state = getState("PRESET_SELECTION");
+if (localStorageMediator.intensityStatsString === undefined && state.after("NO_SAMPLES_YET")) {
+    state = getState("NO_SAMPLES_YET");
 } 
+
 let view = null, audioRecorder = null;
 let petersonBarney = new Vowels("EN", "peterson_barney", () => datasetLoaded(petersonBarney));
 let englishRecordings;
-ForeignRecordings.create("EN")
-    .then(recordings => englishRecordings = recordings);
+ForeignRecordings.create("EN").then(recordings => englishRecordings = recordings);
 let datasets = [petersonBarney];
 
 async function onStateChange(updates = {}, constructNewView = true) {
@@ -80,7 +64,7 @@ async function onStateChange(updates = {}, constructNewView = true) {
             // console.log(`state updated to ${STATE_NAMES[updates.newState]}`);
             state = updates.newState;
             if (dataConsentGiven && stateSaveable(state)) {
-                localStorage.setItem("state", STATE_NAMES[state]);
+                localStorageMediator.state = state;
             }
             if (MANUALLY_STARTED_STATES.includes(state)) {
                 view.updateView({state, preset, userVowels, foreignVowelsInital, foreignVowelsFinal, calibrationTime, formantCount, intensityStats});
@@ -88,7 +72,7 @@ async function onStateChange(updates = {}, constructNewView = true) {
                 //     if (dataset.initialized) view.addDataset(dataset);
                 // }
             }
-            if (state === STATES.INITIAL_FOREIGN) {
+            if (state.is("INITIAL_FOREIGN")) {
                 view.initializeRecordings(englishRecordings);
             }
         }
@@ -99,34 +83,34 @@ async function onStateChange(updates = {}, constructNewView = true) {
     }
     if (updates.preset !== undefined) {
         preset = updates.preset;
-        if (dataConsentGiven) localStorage.setItem("preset", PRESET_NAMES[preset]);
-        if (state === STATES.PRESET_SELECTION) state = STATES.NO_SAMPLES_YET;
-        if (dataConsentGiven) localStorage.setItem("state", STATE_NAMES[state]);
+        if (dataConsentGiven) localStorageMediator.preset = preset;
+        if (state.is("PRESET_SELECTION")) state = getState("NO_SAMPLES_YET");
+        if (dataConsentGiven) localStorageMediator.state = state;
     }
     if (updates.accepted !== undefined) {
         dataConsentGiven = updates.accepted;
         if (dataConsentGiven) {
-            localStorage.setItem("accepted", "true");
-            localStorage.setItem("state", STATE_NAMES[findGreatestSaveableState(state)]);
-            localStorage.setItem("version", `${VERSION_MAJOR}.${VERSION_MINOR}`);
-            if (preset) localStorage.setItem("preset", PRESET_NAMES[preset]);
-            if (state >= STATES.SPEECH_MEASURED) {
-                localStorage.setItem("intensityStats", intensityStats.toString());
+            localStorageMediator.dataConsentGiven = true;
+            localStorageMediator.state = findGreatestSaveableState(state);
+            localStorageMediator.version = `${VERSION_MAJOR}.${VERSION_MINOR}`;
+            if (preset) localStorageMediator.preset = preset;
+            if (state.afterOrEqual("SPEECH_MEASURED")) {
+                localStorageMediator.intensityStatsString = intensityStats.toString();
             }
-            if (state >= STATES.CONFIRM_VOWELS) {
-                localStorage.setItem("userVowels", userVowels.toString());
+            if (state.afterOrEqual("CONFIRM_VOWELS")) {
+                localStorageMediator.userVowelsString = userVowels.toString();
             }
         }
         else {
-            localStorage.clear();
+            localStorageMediator.clear();
         }
         consentPopup = false;
     }
     if (updates.intensityStats !== undefined) {
-        if (dataConsentGiven) localStorage.setItem("intensityStats", updates.intensityStats);
+        if (dataConsentGiven) localStorageMediator.intensityStatsString = updates.intensityStats;
     }
     if (updates.userVowels !== undefined) {
-        if (dataConsentGiven) localStorage.setItem("userVowels", updates.userVowels);
+        if (dataConsentGiven) localStorageMediator.userVowelsString = updates.userVowels;
     }
     if (updates.disableMic !== undefined) {
         if (updates.disableMic) {
@@ -140,17 +124,17 @@ async function onStateChange(updates = {}, constructNewView = true) {
     if (constructNewView) {
         let viewState = tempState ?? state;
         if (consentPopup) view = new ConsentView(onStateChange);
-        else if (viewState === STATES.PRESET_SELECTION) view = new PresetView(onStateChange);
+        else if (viewState.is("PRESET_SELECTION")) view = new PresetView(onStateChange);
         else {
             audioRecorder = new AudioRecorder();
             view = new RecordingView(onStateChange, audioRecorder);
             sampleRate = audioRecorder.sampleRate;
             samplesBuffer = new Buffer(sampleRate / 20);
-            if (state >= STATES.SPEECH_MEASURED) {
-                intensityStats = IntensityStats.fromString(localStorage.getItem("intensityStats"));
+            if (state.afterOrEqual("SPEECH_MEASURED")) {
+                intensityStats = IntensityStats.fromString(localStorageMediator.intensityStatsString);
             }
-            if (state >= STATES.CONFIRM_VOWELS) {
-                userVowels = SpeakerVowels.fromString(localStorage.getItem("userVowels"));
+            if (state.afterOrEqual("CONFIRM_VOWELS")) {
+                userVowels = SpeakerVowels.fromString(localStorageMediator.userVowelsString);
             }
             view.updateView({state: viewState, preset, userVowels, foreignVowelsInital, foreignVowelsFinal, calibrationTime, formantCount, intensityStats});
             audioRecorder.onStart = () => {
@@ -178,11 +162,11 @@ function renderLoop() {
 
     let updates = {};
     {
-        if (viewState === STATES.NO_SAMPLES_YET) {
-            updates.newState = viewState = STATES.GATHERING_SILENCE;
+        if (viewState.is("NO_SAMPLES_YET")) {
+            updates.newState = viewState = getState("GATHERING_SILENCE");
         }
         samplesBuffer.pushMultiple(samples);
-        const formants = soundToFormant(samplesBuffer.getCopy(), sampleRate, PRESET_FREQUENCIES[preset]);
+        const formants = soundToFormant(samplesBuffer.getCopy(), sampleRate, preset.frequency);
         for (let formant of formants) {
             formantsBuffer.push({
                 F1: formant.formant.length >= 1 ? formant.formant[0].frequency : null,
@@ -194,38 +178,38 @@ function renderLoop() {
         }
         time += samples.length / sampleRate;
         switch (viewState) {
-            case STATES.GATHERING_SILENCE:
+            case getState("GATHERING_SILENCE"):
                 updates.progressTime = time;
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
                     updates.intensityStats = intensityStats;
                     formantsBuffer.clear();
                 }
                 if (intensityStats.isCalibrationFinished(time)) {
-                    updates.newState = viewState = STATES.WAITING_FOR_SPEECH;
+                    updates.newState = viewState = getState("WAITING_FOR_SPEECH");
                     intensityStats.saveStats("silence");
                 }
                 break;
-            case STATES.WAITING_FOR_SPEECH:
+            case getState("WAITING_FOR_SPEECH"):
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer) 
                     && intensityStats.detectSpeech()) {
-                    updates.newState = viewState = STATES.MEASURING_SPEECH;
+                    updates.newState = viewState = getState("MEASURING_SPEECH");
                     updates.startTime = time;
                 }
                 break;
-            case STATES.MEASURING_SPEECH:
+            case getState("MEASURING_SPEECH"):
                 updates.progressTime = time;
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
                     updates.intensityStats = intensityStats;
                     formantsBuffer.clear();
                 }
                 if (intensityStats.isCalibrationFinished(time)) {
-                    updates.newState = viewState = STATES.SPEECH_MEASURED;
+                    updates.newState = viewState = getState("SPEECH_MEASURED");
                     intensityStats.saveStats("speech");
                     updates.intensityStatsString = intensityStats.toString();
                     intensityStats.resetStart();
                 }
                 break;
-            case STATES.SPEECH_MEASURED:
+            case getState("SPEECH_MEASURED"):
                 // wait for 2 seconds of silence
                 var silenceRequired = 2;
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
@@ -233,30 +217,30 @@ function renderLoop() {
                     updates.progress = length / silenceRequired;
                     if (intensityStats.silenceDuration >= silenceRequired) {
                         updates.progress = 1;
-                        updates.newState = viewState = STATES.WAITING_FOR_VOWELS;
+                        updates.newState = viewState = getState("WAITING_FOR_VOWELS");
                         smoothedFormantsBuffer = new Buffer(minimumSmoothingCount);
                     }
                 }
                 break;
-            case STATES.WAITING_FOR_VOWELS:
+            case getState("WAITING_FOR_VOWELS"):
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
                     if (intensityStats.detectSpeech()) {
-                        updates.newState = viewState = STATES.GATHERING_VOWELS;
+                        updates.newState = viewState = getState("GATHERING_VOWELS");
                         formantsBuffer.clear();
                         smoothedFormantsBuffer ??= new Buffer(minimumSmoothingCount);
                         smoothedFormantsBuffer.clear();
                     }
                 }
                 break;
-            case STATES.GATHERING_VOWELS:
-            case STATES.CONFIRM_VOWELS:
-            case STATES.TRAINING:
+            case getState("GATHERING_VOWELS"):
+            case getState("CONFIRM_VOWELS"):
+            case getState("TRAINING"):
                 intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer);
                 smoothedFormantsBuffer ??= new Buffer(minimumSmoothingCount);
                 if (!intensityStats.detectSpeech()) {
                     formantsBuffer.clear();
                     smoothedFormantsBuffer.clear();
-                    if (viewState === STATES.GATHERING_VOWELS) updates.newState = viewState = STATES.WAITING_FOR_VOWELS;
+                    if (viewState.is("GATHERING_VOWELS")) updates.newState = viewState = getState("WAITING_FOR_VOWELS");
                     break;
                 }
                 updates.formants = [];
@@ -273,23 +257,23 @@ function renderLoop() {
                     }
                 }
                 updates.formantsSmoothed = userVowels.scale(getSmoothedFormants());
-                if (viewState === STATES.GATHERING_VOWELS) {
+                if (viewState.is("GATHERING_VOWELS")) {
                     updates.formantsSaved = formantsToSave;
                     userVowels.addFormants(formantsToSave);
                     formantsToSave = undefined;
                     if (userVowels.isVowelGathered()) {
                         updates.vowel = userVowels.saveVowel();
                         if (userVowels.isDone()) {
-                            updates.newState = viewState = STATES.CONFIRM_VOWELS;
+                            updates.newState = viewState = getState("CONFIRM_VOWELS");
                             userVowels.scaleLobanov();
                             updates.userVowelsString = userVowels.toString();
                         } else {
-                            updates.newState = viewState = STATES.VOWEL_GATHERED;
+                            updates.newState = viewState = getState("VOWEL_GATHERED");
                         }
                     }
                 }
                 break;
-            case STATES.VOWEL_GATHERED:
+            case getState("VOWEL_GATHERED"):
                 // wait for 1 second of silence
                 var silenceRequired = 1;
                 if (intensityStats.update(time, formantsBuffer.buffer, samplesBuffer.buffer)) {
@@ -297,17 +281,17 @@ function renderLoop() {
                     updates.progress = length / silenceRequired;
                     if (intensityStats.silenceDuration >= silenceRequired) {
                         updates.progress = 1;
-                        updates.newState = viewState = STATES.WAITING_FOR_VOWELS;
+                        updates.newState = viewState = getState("WAITING_FOR_VOWELS");
                         smoothedFormantsBuffer.clear();
                     }
                 }
                 break;
             default:
-                throw new Error("Unknown viewState: " + STATE_NAMES[viewState] ?? viewState);
+                throw new Error("Unknown viewState: " + viewState);
         }
     }
 
-    view.feed(samples, updates, viewState < STATES.CONFIRM_VOWELS);
+    view.feed(samples, updates, viewState.before("CONFIRM_VOWELS"));
 
     let newState = updates.newState;
     if (newState !== undefined) {
@@ -318,7 +302,7 @@ function renderLoop() {
         }, false);
         viewState = tempState ?? state;
         view.updateView({state: viewState, preset, userVowels, foreignVowelsInital, foreignVowelsFinal, calibrationTime, formantCount, intensityStats});
-        if (viewState === STATES.TRAINING) {
+        if (viewState.is("TRAINING")) {
             for (let dataset of datasets) {
                 if (dataset.initialized) view.addDataset(dataset);
             }
@@ -330,32 +314,32 @@ function renderLoop() {
 
 function datasetLoaded(dataset) {
     let viewState = tempState ?? state;
-    if (viewState >= STATES.TRAINING) view?.addDataset(dataset);
+    if (viewState.afterOrEqual("TRAINING")) view?.addDataset(dataset);
 }
 
 const SAVEABLE_STATES = [
-    STATES.PRESET_SELECTION,
-    STATES.NO_SAMPLES_YET,
-    STATES.SPEECH_MEASURED,
-    STATES.CONFIRM_VOWELS,
-    STATES.TRAINING,
-]
+    "PRESET_SELECTION",
+    "NO_SAMPLES_YET",
+    "SPEECH_MEASURED",
+    "CONFIRM_VOWELS",
+    "TRAINING",
+].map(getState);
 
 const MANUALLY_STARTED_STATES = [
-    STATES.INITIAL_FOREIGN,
-    STATES.REPEAT_FOREIGN
-]
+    "INITIAL_FOREIGN",
+    "REPEAT_FOREIGN"
+].map(getState);
 
 function stateSaveable(state) {
     return SAVEABLE_STATES.includes(state);
 }
 
 function findGreatestSaveableState(state) {
-    if (state < SAVEABLE_STATES[0]) {
+    if (state.before(SAVEABLE_STATES[0])) {
         return SAVEABLE_STATES[0];
     }
     for (let i = 0; i < SAVEABLE_STATES.length - 1; i++) {
-        if (SAVEABLE_STATES[i] <= state && SAVEABLE_STATES[i+1] > state) {
+        if (SAVEABLE_STATES[i].beforeOrEqual(state) && SAVEABLE_STATES[i+1].after(state)) {
             return SAVEABLE_STATES[i];
         }
     }

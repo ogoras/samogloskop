@@ -1,7 +1,7 @@
 import View from "./View.js";
 import PresetView from "./PresetView.js";
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from '../const/version.js';
-import { STATES } from '../const/states.js';
+import getState from '../const/states.js';
 
 export default class SettingsView extends View {
     #state;
@@ -43,7 +43,7 @@ export default class SettingsView extends View {
         if (this.intensityStats.isCalibrated) {
             this.mainContainer.appendChild(this.createIntensityStatsSection());
         }
-        if (this.state >= STATES.CONFIRM_VOWELS) {
+        if (this.state.afterOrEqual("CONFIRM_VOWELS")) {
             this.mainContainer.appendChild(this.createDeleteVowelsSection());
         }
 
@@ -166,7 +166,7 @@ export default class SettingsView extends View {
         button.classList.add("small");
         button.onclick = () => {
             this.close();
-            this.onStateChange({ tempState: STATES.NO_SAMPLES_YET }, true);
+            this.onStateChange({ tempState: getState("NO_SAMPLES_YET") }, true);
         }
         statsInfo.appendChild(button);
         div.appendChild(statsInfo);

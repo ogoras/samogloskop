@@ -1,6 +1,6 @@
 import TextGrid from './TextGrid.js';
 import soundToFormant from '../../logic/praat/formant.js';
-import { PRESETS, PRESET_FREQUENCIES } from '../../const/presets.js';
+import getPreset from '../../const/presets.js';
 import DataLoadedFromFile from '../DataLoadedFromFile.js';
 
 // represents an audio recording along with its transcription in the form of a TextGrid
@@ -8,7 +8,7 @@ export default class Recording extends DataLoadedFromFile {
     constructor(path, preset) {
         super();
         this.path = path;
-        this.preset = preset;
+        this.preset = getPreset(preset);
     }
 
     static async create(path, preset, callback) {
@@ -31,7 +31,7 @@ export default class Recording extends DataLoadedFromFile {
         let vowelSegments = this.textGrid.getVowelIntervals(vowelSymbols);
         return vowelSegments.map(segment => {
             let samples = this.getSamples(segment);
-            let formants = soundToFormant(samples, this.sampleRate, PRESET_FREQUENCIES[PRESETS[this.preset]]);
+            let formants = soundToFormant(samples, this.sampleRate, this.preset.frequency);
             let values = formants.map(formants => {
                 return {
                     x: formants.formant[1].frequency,

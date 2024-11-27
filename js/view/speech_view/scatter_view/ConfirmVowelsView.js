@@ -1,5 +1,5 @@
 import ScatterView from './ScatterView.js';
-import { STATES } from '../../../const/states.js';
+import getState from '../../../const/states.js';
 import { VOWEL_INVENTORIES, VOWEL_DICTS } from '../../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 export default class ConfirmVowelsView extends ScatterView {
@@ -52,7 +52,7 @@ export default class ConfirmVowelsView extends ScatterView {
                 break;
             case 2:
                 this.button.remove();
-                this.onStateChange({ newState: STATES.INITIAL_FOREIGN, disableMic: true }, false);
+                this.onStateChange({ newState: getState("INITIAL_FOREIGN"), disableMic: true }, false);
                 break;
         }
     }
@@ -61,7 +61,7 @@ export default class ConfirmVowelsView extends ScatterView {
         if (this.editingVowel) return;
         this.editingVowel = true;
         this.userVowels.resetVowel(vowel);
-        this.onStateChange({tempState: STATES.WAITING_FOR_VOWELS}, false);
+        this.onStateChange({tempState: getState("WAITING_FOR_VOWELS")}, false);
         let vowelInv = VOWEL_INVENTORIES.PL;
         let vowelDict = VOWEL_DICTS.PL;
         this.scatterPlot.removePointsFromGroup([0, vowelDict[vowel.letter]]);

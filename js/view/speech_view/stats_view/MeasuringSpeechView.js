@@ -1,7 +1,6 @@
 import tonguetwisters from "../../../const/tonguetwisters.js";
 import choose from "../../../logic/util/choose.js";
 import StatsView from "./StatsView.js";
-import { STATE_NAMES, STATES } from "../../../const/states.js";
 import ProgressBar from "../../visualization/ProgressBar.js";
 
 export default class MeasuringSpeechView extends StatsView {
@@ -52,7 +51,7 @@ export default class MeasuringSpeechView extends StatsView {
                 divStack.insertBefore(p, this.progressBar.element);
             }
         }
-        else if (args.state === STATES.SPEECH_MEASURED) {
+        else if (args.state.is("SPEECH_MEASURED")) {
             let div = this.div = arg;
             let divStack = this.divStack = div.querySelector(".stack");
             this.h2 = document.createElement("h2");
@@ -61,7 +60,7 @@ export default class MeasuringSpeechView extends StatsView {
             this.finish();
             this.recordingStopped();
         }
-        else throw new Error("Restoring MeasuringSpeechView with state " + STATE_NAMES[state] + " is not supported");
+        else throw new Error("Restoring MeasuringSpeechView with state " + args.state + " is not supported");
     }
 
     recordingStarted() {
