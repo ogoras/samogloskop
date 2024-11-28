@@ -1,6 +1,6 @@
 import Controller from "../Controller.js";
 import ConsentView from "../../../view/ConsentView.js";
-import proceedToController from "../proceedToController.js";
+import nextController from "../nextController.js";
 
 export default class ConsentController extends Controller {
     init({sm, lsm}) {
@@ -14,6 +14,6 @@ export default class ConsentController extends Controller {
         this.lsm.dataConsentGiven = accepted;
         this.sm.advance();
 
-        proceedToController(this);
+        nextController(this);
     }
 }

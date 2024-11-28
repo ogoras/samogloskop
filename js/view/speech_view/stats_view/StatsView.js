@@ -33,8 +33,8 @@ export default class StatsView extends SpeechView {
         }
     }
 
-    constructor() {
-        super();
+    constructor(controller) {
+        super(controller);
         if (this.constructor === StatsView)
             throw new Error("Cannot instantiate abstract class StatsView");
     }

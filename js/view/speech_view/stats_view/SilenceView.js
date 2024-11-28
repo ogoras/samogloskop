@@ -36,10 +36,10 @@ export default class SilenceView extends StatsView {
         }
     }
 
-    constructor(onStateChange, view, args) {
-        super();
+    constructor(controller, view) {
+        super(controller);
         this.div = view.div;
-        this.timeRequired = args.calibrationTime; // TODO set this
+        this.timeRequired = controller.calibrationTime; // TODO set this
         let divStack = this.divStack = view.divStack;
         this.h2 = divStack.querySelector("h2");
         this.recordingStarted();

@@ -1,6 +1,6 @@
 import Controller from "../Controller.js";
 import PresetView from "../../../view/PresetView.js";
-import proceedToController from "../proceedToController.js";
+import nextController from "../nextController.js";
 
 export default class PresetController extends Controller {
     init({sm, lsm}) {
@@ -14,6 +14,6 @@ export default class PresetController extends Controller {
         this.lsm.preset = preset;
         this.sm.advance();
 
-        proceedToController(this);
+        nextController(this);
     }
 }

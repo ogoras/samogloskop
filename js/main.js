@@ -12,7 +12,7 @@ import Buffer from './logic/util/Buffer.js';
 import SpeakerVowels from './data/vowels/SpeakerVowels.js';
 import LocalStorageMediator from './data/LocalStorageMediator.js';
 import StateMachine from './logic/StateMachine.js';
-import proceedToController from './logic/controller/proceedToController.js';
+import nextController from './logic/controller/nextController.js';
 
 import State from './const/states.js';
 import { POINT_SIZES } from './const/POINT_SIZES.js';
@@ -21,6 +21,9 @@ console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,
      "font-size: 3rem; font-weight: bold;");
 
 // const minimumSmoothingCount = 20;
+// formantCount = 20;
+// statsStep = 0.1;    // 100 ms
+// calibrationTime = 10; // 10 s
 
 // let time = 0;
 // let foreignVowelsInital = new SpeakerVowels("EN");
@@ -40,7 +43,7 @@ sm.lsm = lsm;
 // ForeignRecordings.create("EN").then(recordings => englishRecordings = recordings);
 // let datasets = [petersonBarney];
 
-proceedToController({sm, lsm});
+nextController({sm, lsm});
 
 // async function onStateChange(updates = {}, constructNewView = true) {
 //     if (updates.advanceState) {

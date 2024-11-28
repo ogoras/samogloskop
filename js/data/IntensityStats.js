@@ -41,17 +41,17 @@ export default class IntensityStats {
         this.buffer = new Buffer(Math.ceil(2 * timeRequired / stepDuration));
     }
 
-    update(time, formants, samples) {
+    update(time, intensitiesBasedOnFormants, samples) {
         if (time < this.time + this.stepDuration) return false;
         let min = Infinity;
         let max = -Infinity;
         let sum = 0;
-        for (let formant of formants) {
-            min = Math.min(min, formant.intensity);
-            max = Math.max(max, formant.intensity);
-            sum += formant.intensity;
+        for (let intensity of intensitiesBasedOnFormants) {
+            min = Math.min(min, intensity);
+            max = Math.max(max, intensity);
+            sum += intensity;
         }
-        let mean = sum / formants.length;
+        let mean = sum / intensitiesBasedOnFormants.length;
         if (min === Infinity) {
             // calculate based on samples
             let zeroReached = false;

@@ -31,7 +31,7 @@ function GetControllerClass(state) {
     return controllerClass;
 }
 
-export default function proceedToController(previousController) {
+export default function nextController(previousController) {
     let controller = GetControllerClass(previousController.sm.state).getInstance();
     controller.init(previousController);
 }
