@@ -1,6 +1,6 @@
 import Controller from "../Controller.js";
 import ConsentView from "../../../view/ConsentView.js";
-import proceedToController from "../procedToController.js";
+import proceedToController from "../proceedToController.js";
 
 export default class ConsentController extends Controller {
     init({sm, lsm}) {
