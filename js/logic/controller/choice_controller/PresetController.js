@@ -1,6 +1,6 @@
 import Controller from "../Controller.js";
 import PresetView from "../../../view/PresetView.js";
-import proceedToController from "../proceedToController.js";
+import proceedToController from "../procedToController.js";
 
 export default class PresetController extends Controller {
     init({sm, lsm}) {

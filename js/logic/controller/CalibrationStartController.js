@@ -1,6 +1,6 @@
 import Controller from "./Controller.js";
 import RecordingView from "../../view/RecordingView.js";
-import proceedToController from "./proceedToController.js";
+import proceedToController from "./procedToController.js";
 import AudioRecorder from "../recording/Recorder.js";
 import Buffer from "../util/Buffer.js";
 import SettingsController from "./SettingsController.js";
