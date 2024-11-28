@@ -1,11 +1,12 @@
+import Controller from "../logic/controller/Controller.js";
 import Singleton from "../Singleton.js";
 
 export default class View {
-    constructor(parent) {
+    constructor(controller) {
         // super();
 
         if (this.constructor === View) throw new Error("Cannot instantiate abstract class View");
-        if (!parent || typeof parent !== "object") throw new Error("Parent must be an object");
-        this.parent = parent;
+        if (!controller || !(controller instanceof Controller)) throw new Error("Controller must be an instance of Controller");
+        this.controller = controller;
     }
 }

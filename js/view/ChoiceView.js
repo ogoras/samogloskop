@@ -3,11 +3,11 @@ import View from './View.js';
 export default class ChoiceView extends View {
     choiceElement = document.createElement("div");
 
-    constructor(parent, text, choices, parentContainer, selectedIndex) {
-        super(parent);
+    constructor(controller, text, choices, parentContainer, selectedIndex, extraAction) {
+        super(controller);
         if (this.constructor === ChoiceView) throw new Error("Cannot instantiate abstract class ChoiceView");
         // check if parent.choose is a function
-        if (typeof parent.choose !== "function") throw new Error("Parent must have a choose method");
+        if (typeof controller.choose !== "function") throw new Error("Controller must have a choose method");
 
         if(!parentContainer) parentContainer = document.querySelector(".main-container");
 
@@ -26,7 +26,8 @@ export default class ChoiceView extends View {
             if (choice.id) button.id = choice.id;
             button.onclick = () => {
                 this.choiceElement.remove();
-                parent.choose(choice.returnValue);
+                controller.choose(choice.returnValue);
+                extraAction?.();
             }
             choiceElement.appendChild(button);
         }

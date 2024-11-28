@@ -4,8 +4,8 @@ export default class CalibrationStartView extends SpeechView {
     div;
     divStack;
 
-    constructor(onStateChange, container) {
-        super();
+    constructor(controller, container) {
+        super(controller);
 
         this.div = container;
         // find a .stack element in the container

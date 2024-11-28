@@ -2,6 +2,8 @@ import { VERSION_MAJOR, VERSION_MINOR } from "../const/version.js";
 import State from "../const/states.js";
 import Preset from "../const/presets.js";
 import Singleton from "../Singleton.js";
+import IntensityStats from "./IntensityStats.js";
+import SpeakerVowels from "./vowels/SpeakerVowels.js";
 
 export default class LocalStorageMediator extends Singleton {
     constructor() {
@@ -94,11 +96,15 @@ const localStorageProperties = [
         customSet: (value) => value.toString(),
     },
     {
-        name: "intensityStatsString",
+        name: "intensityStats",
         localStorageName: "intensityStats",
+        customGet: (string) => IntensityStats.fromString(string),
+        customSet: (value) => value.toString(),
     },
     {
         name: "userVowelsString",
         localStorageName: "userVowels",
+        customGet: (string) => SpeakerVowels.fromString(string),
+        customSet: (value) => value.toString(),
     }
 ]

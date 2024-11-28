@@ -20,15 +20,9 @@ import { VERSION_MAJOR, VERSION_MINOR, PATCH } from './const/version.js';
 console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,
      "font-size: 3rem; font-weight: bold;");
 
-// const formantCount = 20;
 // const minimumSmoothingCount = 20;
-// const statsStep = 0.1;    // 100 ms
-// const calibrationTime = 10; // 10 s
 
-// let formantsBuffer = new Buffer(formantCount);
 // let time = 0;
-// let intensityStats = new IntensityStats(calibrationTime, statsStep);
-// let userVowels = new SpeakerVowels("PL");
 // let foreignVowelsInital = new SpeakerVowels("EN");
 // let foreignVowelsFinal = new SpeakerVowels("EN");
 // let sampleRate, samplesBuffer, smoothedFormantsBuffer, formantsToSave;

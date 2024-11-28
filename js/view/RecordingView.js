@@ -30,8 +30,8 @@ export default class RecordingView extends View {
         startTime: (time) => { if (this.view) this.view.startTime = time; },
     }
 
-    constructor(onStateChange, recorder) {
-        super(onStateChange);
+    constructor(controller, recorder) {
+        super(controller);
         if (!recorder) throw new Error("Recorder not given to RecordingView");
         this.recorder = recorder;
 
@@ -108,17 +108,19 @@ export default class RecordingView extends View {
         recordingContainer.appendChild(settingsButton);
 
         this.waveformVisualizer = new WaveformVisualizer();
+
+        this.updateView();
     }
     
-    updateView(args) {
-        this.args = args;
-        let Constructor = SPEECH_VIEWS[args.state.name];
+    updateView() {
+        let state = this.controller.sm.state;
+        let Constructor = SPEECH_VIEWS[state.name];
         if (Constructor) {
             if (this.view) {
                 if (Constructor !== this.view.constructor) {
-                    this.view = new Constructor(this.onStateChange, this.view, args, true);
+                    this.view = new Constructor(this.controller, this.view, true);
                 }
-                else switch(args.state.name) {
+                else switch(state.name) {
                     case "SPEECH_MEASURED":
                         this.view.finish();
                         break;
@@ -134,7 +136,7 @@ export default class RecordingView extends View {
                         break;
                 }
             }
-            else this.view = new Constructor(this.onStateChange, this.formantsContainer, args);
+            else this.view = new Constructor(this.controller, this.formantsContainer);
         }
     }
 
@@ -168,7 +170,7 @@ export default class RecordingView extends View {
         document.body.classList.remove("recording-view");
         this.formantsContainer.style.display = "none";
         this.sideContainer.style.display = "none";
-        this.popup = new SettingsView(this.onStateChange, this.closeSettings.bind(this), this.args);
+        this.popup = new SettingsView(this.controller.settingsController, this.closeSettings.bind(this), this.args);
     }
 
     closeSettings() {

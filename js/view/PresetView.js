@@ -19,7 +19,7 @@ const choices = [
 
 
 export default class PresetView extends ChoiceView {
-    constructor(parent, parentView, selectedPreset) {
-        super(parent, noticeText, choices, parentView, selectedPreset);
+    constructor(controller, parentView, selectedPreset, extraAction) {
+        super(controller, noticeText, choices, parentView, selectedPreset, extraAction);
     }
 }

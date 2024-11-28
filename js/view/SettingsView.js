@@ -12,13 +12,13 @@ export default class SettingsView extends View {
         throw new Error("State is read-only");
     }
     
-    constructor(onStateChange, closeCallback, args) {
-        super(onStateChange);
+    constructor(controller, closeCallback) {
+        super(controller);
         this.closeCallback = closeCallback;
-        this.preset = args.preset;
-        this.userVowels = args.userVowels;
-        this.intensityStats = args.intensityStats;
-        this.#state = args.state;
+        this.preset = controller.lsm.preset;
+        this.userVowels = controller.userVowels;
+        this.intensityStats = controller.intensityStats;
+        this.#state = controller.lsm.state;
 
         this.header = document.createElement("div");
         this.header.classList.add("header");
@@ -40,7 +40,7 @@ export default class SettingsView extends View {
 
         this.mainContainer.appendChild(this.createConsentSection());
         this.mainContainer.appendChild(this.createPresetSection());
-        if (this.intensityStats.isCalibrated) {
+        if (this.intensityStats?.isCalibrated) {
             this.mainContainer.appendChild(this.createIntensityStatsSection());
         }
         if (this.state.afterOrEqual("CONFIRM_VOWELS")) {
@@ -120,13 +120,13 @@ export default class SettingsView extends View {
         title.innerHTML = "<b>Kategoria głosu</b>";
         div.appendChild(title);
 
-        let presetSelection = new PresetView((updates) => {
-            this.onStateChange(updates, false);
-            
+        let presetSelection = new PresetView(this.controller,
+            div, this.controller.lsm.preset.index,
+            () => {
             let nextElement = div.nextElementSibling;
             div.remove();
             this.mainContainer.insertBefore(this.createPresetSection(), nextElement);
-        }, div, this.preset);
+        });
 
         if (this.userVowels?.gatheredAnything) {
             let notice = document.createElement("p");
