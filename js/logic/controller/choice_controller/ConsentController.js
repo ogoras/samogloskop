@@ -11,7 +11,7 @@ export default class ConsentController extends Controller {
     }
 
     choose(accepted) {
-        this.lsm.accepted = accepted;
+        this.lsm.dataConsentGiven = accepted;
         this.sm.advance();
 
         proceedToController(this);

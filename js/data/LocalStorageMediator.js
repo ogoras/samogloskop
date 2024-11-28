@@ -27,8 +27,17 @@ export default class LocalStorageMediator extends Singleton {
                         localStorage.removeItem(prop.localStorageName);
                     } else {
                         this.#cache[prop.name] = value;
-                        if (this.dataConsentGiven) {
+                        if (prop.name !== "dataConsentGiven" && this.dataConsentGiven) {
                             localStorage.setItem(prop.localStorageName, prop.customSet ? prop.customSet(value) : value);
+                        }
+                        else if (prop.name === "dataConsentGiven" && value) {
+                            localStorage.setItem(prop.localStorageName, prop.customSet ? prop.customSet(value) : value);
+                            // go through all cached properties and set them in local storage
+                            for (let key of Object.keys(this.#cache)) {
+                                if (key !== "dataConsentGiven") {
+                                    this[key] = this.#cache[key];
+                                }
+                            }
                         }
                     }
                 }
@@ -57,6 +66,7 @@ export default class LocalStorageMediator extends Singleton {
                 dataConsentGiven = false;
             }
         }
+        this.version = `${VERSION_MAJOR}.${VERSION_MINOR}`;
 
         if (!dataConsentGiven) {
             this.clear();
@@ -70,7 +80,6 @@ export default class LocalStorageMediator extends Singleton {
 
     clear() {
         localStorage.clear();
-        this.#cache = {};
     }
 }
 
