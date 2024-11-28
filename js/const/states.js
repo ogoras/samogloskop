@@ -40,19 +40,18 @@ export default class State extends Enum {
 }
 
 const STATE_NAMES = [
+    "DATA_CONSENT",
     "PRESET_SELECTION",
     "NO_SAMPLES_YET",
     "GATHERING_SILENCE",
     "WAITING_FOR_SPEECH",
     "MEASURING_SPEECH",
     "SPEECH_MEASURED",
-    "WAITING_FOR_VOWELS",
-    "GATHERING_VOWELS",
-    "VOWEL_GATHERED",
+    "GATHERING_NATIVE",
     "CONFIRM_VOWELS",
-    "INITIAL_FOREIGN",
+    "GATHERING_FOREIGN_INITIAL",
     "TRAINING",
-    "REPEAT_FOREIGN",
+    "GATHERING_FOREIGN_REPEAT",
     "DONE"
 ];
 const STATES = arrToObj(STATE_NAMES, (...args) => new State(...args));

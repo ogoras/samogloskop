@@ -11,13 +11,19 @@ export default class Enum {
 
     static get(key) {
         let instance = Enum.#instancesDict[this.name][key];
-        if (!instance) {
-            throw new Error(`No ${this.name} instance found for key ${key}`);
-        }
         return instance;
     }
 
     toString() {
         return this.name;
+    }
+
+    next() {
+        let nextIndex = this.index + 1;
+        let nextInstance = Enum.#instancesDict[this.constructor.name][nextIndex];
+        if (nextInstance === undefined) {
+            throw new Error(`No next instance for ${this}`);
+        }
+        return nextInstance;
     }
 }

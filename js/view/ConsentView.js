@@ -9,12 +9,12 @@ const choices = [
     {
         text: "Nie wyrażam zgody",
         id: "deny",
-        updates: { accepted: false }
+        returnValue: false
     },
     {
         text: "Wyrażam zgodę",
         id: "accept",
-        updates: { accepted: true }
+        returnValue: true
     }
 ]
 

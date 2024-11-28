@@ -1,25 +1,25 @@
 import ChoiceView from "./ChoiceView.js";
-import PRESETS from '../const/presets.js';
+import Preset from '../const/presets.js';
 
 const noticeText = `Wybierz kategorię, która najbardziej do Ciebie pasuje. Pamiętaj, aby kierować się charakterystyką swojego głosu, więc np. dla chłopca po mutacji najpewniej sprawdzi się opcja <q>mężczyzna</q>, niezależnie od wieku. <h3>Jestem:</h3>`;
 const choices = [
     {
         text: "kobietą",
-        updates: { preset: PRESETS.FEMALE }
+        returnValue: Preset.get("FEMALE")
     },
     {
         text: "mężczyzną",
-        updates: { preset: PRESETS.MALE }
+        returnValue: Preset.get("MALE")
     },
     {
         text: "dzieckiem",
-        updates: { preset: PRESETS.CHILD }
+        returnValue: Preset.get("CHILD")
     }
 ]
 
 
 export default class PresetView extends ChoiceView {
-    constructor(onStateChange, parent, selectedPreset) {
-        super(onStateChange, noticeText, choices, parent, selectedPreset);
+    constructor(parent, parentView, selectedPreset) {
+        super(parent, noticeText, choices, parentView, selectedPreset);
     }
 }

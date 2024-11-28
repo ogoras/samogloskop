@@ -12,11 +12,9 @@ export default {
     "WAITING_FOR_SPEECH": MeasuringSpeechView,
     "MEASURING_SPEECH": MeasuringSpeechView,
     "SPEECH_MEASURED": MeasuringSpeechView,
-    "WAITING_FOR_VOWELS": GatheringVowelsView,
-    "GATHERING_VOWELS": GatheringVowelsView,
-    "VOWEL_GATHERED": GatheringVowelsView,
+    "GATHERING_NATIVE": GatheringVowelsView,
     "CONFIRM_VOWELS": ConfirmVowelsView,
-    "INITIAL_FOREIGN": GatheringForeignView,
+    "GATHERING_FOREIGN_INITIAL": GatheringForeignView,
     "TRAINING": TrainingView,
-    "REPEAT_FOREIGN": GatheringForeignView
+    "GATHERING_FOREIGN_REPEAT": GatheringForeignView
 }

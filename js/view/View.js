@@ -1,10 +1,11 @@
-export default class View {
-    constructor(onStateChange) {
-        if (this.constructor === View) throw new Error("Cannot instantiate abstract class View");
-        this.onStateChange = onStateChange;
-    }
+import Singleton from "../Singleton.js";
 
-    close(updates = {}) {
-        this.onStateChange(updates);
+export default class View {
+    constructor(parent) {
+        // super();
+
+        if (this.constructor === View) throw new Error("Cannot instantiate abstract class View");
+        if (!parent || typeof parent !== "object") throw new Error("Parent must be an object");
+        this.parent = parent;
     }
 }

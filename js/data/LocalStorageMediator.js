@@ -1,16 +1,11 @@
 import { VERSION_MAJOR, VERSION_MINOR } from "../const/version.js";
 import State from "../const/states.js";
 import Preset from "../const/presets.js";
+import Singleton from "../Singleton.js";
 
-export default class LocalStorageMediator {
-    static instance = null;
-    static #isInternalConstructing = false;
-
+export default class LocalStorageMediator extends Singleton {
     constructor() {
-        if (!LocalStorageMediator.#isInternalConstructing) {
-            throw new Error("Singleton class. Use getInstance() method to get the single instance of this class.");
-        }
-        LocalStorageMediator.#isInternalConstructing = false;
+        super();
 
         for (let prop of localStorageProperties) {
             Object.defineProperty(this, prop.name, {
@@ -30,17 +25,13 @@ export default class LocalStorageMediator {
                         localStorage.removeItem(prop.localStorageName);
                     } else {
                         this.#cache[prop.name] = value;
-                        localStorage.setItem(prop.localStorageName, prop.customSet ? prop.customSet(value) : value);
+                        if (this.dataConsentGiven) {
+                            localStorage.setItem(prop.localStorageName, prop.customSet ? prop.customSet(value) : value);
+                        }
                     }
                 }
             });
         }
-    }
-
-    static getInstance() {
-        LocalStorageMediator.#isInternalConstructing = true;
-        LocalStorageMediator.instance ??= new LocalStorageMediator();
-        return LocalStorageMediator.instance;
     }
 
     #cache = {};
@@ -59,14 +50,20 @@ export default class LocalStorageMediator {
             else if (dataConsentGiven) {
                 // for now, local storage v0.0 is not supported
                 // TODO: implement a conversion mechanism for versions 1.x and higher
-                console.log(`Conversion not implemented for version ${localStorageVersion}`, "color: red;");
+                console.log(`%cConversion not implemented for version ${localStorageVersion}`, "color: red;");
                 localStorage.clear();
                 dataConsentGiven = false;
             }
         }
-        let preset = this.preset;
-        let state = this.state;
-        let intensityStatsString = this.intensityStatsString;
+
+        if (!dataConsentGiven) {
+            this.clear();
+            this.state = State.get("DATA_CONSENT");
+        } else if (this.state === undefined || this.preset === undefined) {
+            this.state = State.get("PRESET_SELECTION");
+        } else if (this.intensityStatsString === undefined && this.state.after("NO_SAMPLES_YET")) {
+            this.state = State.get("NO_SAMPLES_YET");
+        }
     }
 
     clear() {
