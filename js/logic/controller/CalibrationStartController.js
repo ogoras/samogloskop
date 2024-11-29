@@ -7,8 +7,8 @@ import SettingsController from "./SettingsController.js";
 
 export default class CalibrationStartController extends Controller {
     init(prev) {
-        let sm = this.sm = prev.sm;
-        let lsm = this.lsm = prev.lsm;
+        this.sm = prev.sm;
+        this.lsm = prev.lsm;
         this.settingsController = SettingsController.getInstance();
         this.settingsController.init(this);
         let recorder = this.recorder = new AudioRecorder();
