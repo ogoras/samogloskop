@@ -4,7 +4,7 @@ export default class Singleton {
 
     constructor() {
         if (!Singleton.#isInternalConstructing) {
-            throw new Error("Singleton class. Use getInstance() method to get the single instance of this class.");
+            throw new Error(`${this.constructor.name} is a Singleton class. Use getInstance() method to get the single instance of this class.`);
         }
         Singleton.#isInternalConstructing = false;
     }

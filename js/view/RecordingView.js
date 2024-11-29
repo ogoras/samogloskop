@@ -171,10 +171,12 @@ export default class RecordingView extends View {
 
     openSettings() {
         this.recorder.stopRecording();
+        this.recordingStopped();
         document.body.classList.remove("recording-view");
         this.formantsContainer.style.display = "none";
         this.sideContainer.style.display = "none";
         this.popup = new SettingsView(this.controller.settingsController, this.closeSettings.bind(this), this.args);
+        this.controller.pauseRendering?.();
     }
 
     closeSettings() {
@@ -182,6 +184,7 @@ export default class RecordingView extends View {
         this.formantsContainer.style.display = "block";
         this.sideContainer.style.display = "block";
         this.view.restore?.();
+        this.controller.resumeRendering?.();
     }
 
     initializeRecordings(recordings) {

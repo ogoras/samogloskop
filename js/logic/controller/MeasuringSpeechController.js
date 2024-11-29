@@ -8,17 +8,21 @@ import Buffer from "../util/Buffer.js";
 import { formantCount } from "./SilenceController.js";
 
 export default class MeasuringSpeechController extends Controller {
+    #breakRenderLoop = false;
+
     init(prev) {
         this.sm = prev.sm;
         this.lsm = prev.lsm;
 
-        this.settingsController = prev.settingsController ?? SettingsController.getInstance();
         this.recorder = prev.recorder ?? new AudioRecorder();
 
         this.samplesBuffer = prev.samplesBuffer ?? new Buffer(this.recorder.sampleRate / 20);
         this.formantsBuffer = prev.formantsBuffer ?? new Buffer(formantCount);
         this.time = prev.time ?? 0;
         this.intensityStats = prev.intensityStats ?? this.lsm.intensityStats;
+
+        this.settingsController = SettingsController.getInstance();
+        this.settingsController.init(this);
 
         if (prev.view) {
             this.view = prev.view;
@@ -31,6 +35,11 @@ export default class MeasuringSpeechController extends Controller {
     }
 
     renderLoop() {
+        if (this.#breakRenderLoop) {
+            this.#breakRenderLoop = false;
+            return;
+        }
+
         const recorder = this.recorder;
         const sampleRate = recorder.sampleRate;
         const samplesBuffer = this.samplesBuffer;
@@ -67,9 +76,13 @@ export default class MeasuringSpeechController extends Controller {
 
                 if (stats.isCalibrationFinished(this.time)) {
                     stats.saveStats("speech");
-                    this.sm.advance();
+                    const poppedState = this.sm.advance();
                     this.lsm.intensityStats = stats;
                     stats.resetStart();
+                    if (poppedState) {
+                        nextController(this);
+                        return;
+                    }
                     this.view.updateView();
                 }
                 break;
@@ -91,5 +104,13 @@ export default class MeasuringSpeechController extends Controller {
         }
 
         requestAnimationFrame(this.renderLoop.bind(this));
+    }
+
+    pauseRendering() {
+        this.#breakRenderLoop = true;
+    }
+
+    resumeRendering() {
+        this.renderLoop();
     }
 }

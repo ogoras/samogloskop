@@ -7,8 +7,8 @@ export default class ConfirmVowelsView extends ScatterView {
     currentMessage = 0;
     editingVowel = false;
 
-    constructor(onStateChange, arg, args, recycle = false) {
-        super(onStateChange, arg, args, recycle);
+    constructor(controller, arg, recycle = false) {
+        super(controller, arg, recycle);
 
         this.h2.innerHTML = (recycle
             ? `Kalibracja ukończona!`
@@ -30,7 +30,7 @@ export default class ConfirmVowelsView extends ScatterView {
             this.initializePlot();
         }
         
-        let userVowels = this.userVowels = args.userVowels;
+        let userVowels = this.userVowels = controller.userVowels;
         userVowels.vowelsProcessed.forEach(vowel => {
             let id = vowel.id;
             
@@ -52,7 +52,8 @@ export default class ConfirmVowelsView extends ScatterView {
                 break;
             case 2:
                 this.button.remove();
-                this.onStateChange({ newState: getState("INITIAL_FOREIGN"), disableMic: true }, false);
+                // this.onStateChange({ newState: getState("INITIAL_FOREIGN"), disableMic: true }, false);
+                this.controller.confirm();
                 break;
         }
     }
@@ -60,8 +61,7 @@ export default class ConfirmVowelsView extends ScatterView {
     vowelClicked(vowel) {
         if (this.editingVowel) return;
         this.editingVowel = true;
-        this.userVowels.resetVowel(vowel);
-        this.onStateChange({tempState: getState("WAITING_FOR_VOWELS")}, false);
+        this.controller.editVowel(vowel);
         let vowelInv = VOWEL_INVENTORIES.PL;
         let vowelDict = VOWEL_DICTS.PL;
         this.scatterPlot.removePointsFromGroup([0, vowelDict[vowel.letter]]);

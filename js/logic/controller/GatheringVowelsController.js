@@ -5,6 +5,7 @@ import { POINT_SIZES } from "../../const/POINT_SIZES.js";
 import Buffer from "../util/Buffer.js";
 import soundToFormant from "../praat/formant.js";
 import nextController from "./nextController.js";
+import SettingsController from "./SettingsController.js";
 
 const SUBSTATES = {
     "WAITING": 0,
@@ -12,10 +13,9 @@ const SUBSTATES = {
     "GATHERED": 2
 }
 
-const minimumSmoothingCount = 20;
+export const minimumSmoothingCount = 20;
 export default class GatheringVowelsController extends Controller {
-    substate = SUBSTATES.WAITING;
-    userVowels = new SpeakerVowels();
+    #breakRenderLoop = false;
     smoothedFormantsBuffer = new Buffer(minimumSmoothingCount);
 
     get formantCount() {
@@ -26,13 +26,18 @@ export default class GatheringVowelsController extends Controller {
         this.sm = prev.sm;
         this.lsm = prev.lsm;
 
-        this.settingsController = prev.settingsController;
+        this.settingsController = SettingsController.getInstance();
+        this.settingsController.init(this);
         this.recorder = prev.recorder;
 
         this.samplesBuffer = prev.samplesBuffer;
         this.formantsBuffer = prev.formantsBuffer;
         this.time = prev.time;
         this.intensityStats = prev.intensityStats;
+
+        // only will happen when correcting vowels (previous controller is ConfirmVowelsController)
+        this.userVowels = prev.userVowels ?? new SpeakerVowels();
+        this.substate = SUBSTATES.WAITING;
 
         this.view = prev.view;
         this.view.controller = this;
@@ -42,6 +47,11 @@ export default class GatheringVowelsController extends Controller {
     }
 
     renderLoop() {
+        if (this.#breakRenderLoop) {
+            this.#breakRenderLoop = false;
+            return;
+        }
+
         const recorder = this.recorder;
         const sampleRate = recorder.sampleRate;
         const samplesBuffer = this.samplesBuffer;
@@ -170,5 +180,13 @@ export default class GatheringVowelsController extends Controller {
         this.formantsToSave = smoothedFormantsBuffer.push(smoothedFormants)
         if (this.formantsToSave) this.formantsToSave.size = POINT_SIZES.USER_DATAPOINTS;
         return smoothedFormants;
+    }
+
+    pauseRendering() {
+        this.#breakRenderLoop = true;
+    }
+
+    resumeRendering() {
+        this.renderLoop();
     }
 }

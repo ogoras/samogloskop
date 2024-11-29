@@ -75,6 +75,8 @@ export default class LocalStorageMediator extends Singleton {
             this.state = State.get("PRESET_SELECTION");
         } else if (this.intensityStats === undefined && this.state.after("NO_SAMPLES_YET")) {
             this.state = State.get("NO_SAMPLES_YET");
+        } else if (this.userVowels === undefined && this.state.after("GATHERING_NATIVE")) {
+            this.state = State.get("SPEECH_MEASURED");
         }
     }
 
@@ -107,13 +109,13 @@ const localStorageProperties = [
     {
         name: "intensityStats",
         localStorageName: "intensityStats",
-        customGet: (string) => IntensityStats.fromString(string),
+        customGet: (string) => string ? IntensityStats.fromString(string) : string,
         customSet: (value) => value.toString(),
     },
     {
-        name: "userVowelsString",
+        name: "userVowels",
         localStorageName: "userVowels",
-        customGet: (string) => SpeakerVowels.fromString(string),
+        customGet: (string) => string ? SpeakerVowels.fromString(string) : string,
         customSet: (value) => value.toString(),
     }
 ]

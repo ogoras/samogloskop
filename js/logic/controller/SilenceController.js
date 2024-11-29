@@ -3,6 +3,7 @@ import Buffer from "../util/Buffer.js";
 import nextController from "./nextController.js";
 import soundToFormant from "../praat/formant.js";
 import IntensityStats from "../../data/IntensityStats.js";
+import SettingsController from "./SettingsController.js";
 
 export const formantCount = 20;
 const calibrationTime = 10;
@@ -29,7 +30,8 @@ export default class SilenceController extends Controller {
         };
 
         this.view = prev.view;
-        this.settingsController = prev.settingsController;
+        this.settingsController = SettingsController.getInstance();
+        this.settingsController.init(this);
         this.view.controller = this;
         this.view.updateView();
 
