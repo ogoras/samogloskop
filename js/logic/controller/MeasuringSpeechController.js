@@ -86,6 +86,8 @@ export default class MeasuringSpeechController extends Controller {
                 }
                 this.view.feed(samples, {progress})
                 break;
+            default:
+                throw new Error(`Invalid state in ${this.constructor.name}: ${this.sm.state.name}`);
         }
 
         requestAnimationFrame(this.renderLoop.bind(this));

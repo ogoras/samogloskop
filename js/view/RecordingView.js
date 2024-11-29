@@ -28,6 +28,8 @@ export default class RecordingView extends View {
         progressTime: (time) => { this.view?.updateProgress?.(time); },
         progress: (progress) => { this.view?.updateProgress?.(progress, false); },
         startTime: (time) => { if (this.view) this.view.startTime = time; },
+        vowelGathered: (value) => { this.view.vowelGathered = value; },
+        speechDetected: (value) => { this.view.speechDetected = value; },
     }
 
     constructor(controller, recorder) {
@@ -125,15 +127,15 @@ export default class RecordingView extends View {
                         this.view.finish();
                         break;
                     case "MEASURING_SPEECH":
-                    case "GATHERING_VOWELS":
+                    // case "GATHERING_VOWELS":
                         this.view.speechDetected = true;
                         break;
-                    case "WAITING_FOR_VOWELS":
-                        this.view.speechDetected = false;
-                        break;
-                    case "VOWEL_GATHERED":
-                        this.view.vowelGathered = true;
-                        break;
+                    // case "WAITING_FOR_VOWELS":
+                    //     this.view.speechDetected = false;
+                    //     break;
+                    // case "VOWEL_GATHERED":
+                    //     this.view.vowelGathered = true;
+                    //     break;
                 }
             }
             else this.view = new Constructor(this.controller, this.formantsContainer);
@@ -141,8 +143,10 @@ export default class RecordingView extends View {
     }
 
     feed(samples, updates, rescalePlots) {
-        for (let [key, value] of Object.entries(updates)) {
-            if (value !== undefined && value !== null) this.#UPDATE_FUNCTION[key]?.(value, rescalePlots);
+        if (updates) {
+            for (let [key, value] of Object.entries(updates)) {
+                if (value !== undefined && value !== null) this.#UPDATE_FUNCTION[key]?.(value, rescalePlots);
+            }
         }
         this.waveformVisualizer.feed(samples);
     }

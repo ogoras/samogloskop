@@ -42,10 +42,10 @@ export default class GatheringVowelsView extends ScatterView {
         this.refreshRecording();
     }
 
-    constructor(onStateChange, view, args, recycle = false) {
-        super(onStateChange, view, args, recycle);
+    constructor(controller, view, recycle = false) {
+        super(controller, view, recycle);
 
-        this.userVowels = args.userVowels;
+        this.userVowels = controller.userVowels;
         this.currentVowel = this.userVowels.nextVowel();
 
         // remove all elements from divStack except h2

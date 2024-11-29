@@ -4,14 +4,14 @@ import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from '../../../const/vowel_inventories/VOWEL_INVENTORIES.js';
 
 export default class ScatterView extends SpeechView {
-    constructor(onStateChange, arg, args, recycle = false) {
+    constructor(controller, arg, recycle = false) {
         if (recycle) {
-            super(onStateChange, arg);
+            super(controller, arg);
         } else {
-            super(onStateChange);
+            super(controller);
         }
 
-        this.formantCount = args.formantCount;
+        this.formantCount = controller.formantCount;
 
         if (this.constructor === ScatterView) {
             throw new Error("Cannot instantiate abstract class ScatterView");
