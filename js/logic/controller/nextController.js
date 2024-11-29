@@ -1,16 +1,15 @@
-import PresetController from "./choice_controller/PresetController.js";
-import ConsentController from "./choice_controller/ConsentController.js";
-import CalibrationStartController from "./CalibrationStartController.js";
-import SilenceController from "./SilenceController.js";
-import MeasuringSpeechController from "./MeasuringSpeechController.js";
-import GatheringVowelsController from "./GatheringVowelsController.js";
-import ConfirmVowelsController from "./ConfirmVowelsController.js";
-import GatheringForeignController from "./GatheringForeignController.js";
-import TrainingController from "./TrainingController.js";
+import ChoiceController from "./ChoiceController.js";
+import CalibrationStartController from "./recording/CalibrationStartController.js";
+import SilenceController from "./recording/render/SilenceController.js";
+import MeasuringSpeechController from "./recording/render/MeasuringSpeechController.js";
+import GatheringVowelsController from "./recording/render/GatheringVowelsController.js";
+import ConfirmVowelsController from "./recording/render/ConfirmVowelsController.js";
+import GatheringForeignController from "./recording/GatheringForeignController.js";
+import TrainingController from "./recording/TrainingController.js";
 
 const CONTROLLER_CLASSES = {
-    "DATA_CONSENT": ConsentController,
-    "PRESET_SELECTION": PresetController,
+    "DATA_CONSENT": ChoiceController,
+    "PRESET_SELECTION": ChoiceController,
     "NO_SAMPLES_YET": CalibrationStartController,
     "GATHERING_SILENCE": SilenceController,
     "WAITING_FOR_SPEECH": MeasuringSpeechController,
@@ -34,4 +33,5 @@ function GetControllerClass(state) {
 export default function nextController(previousController) {
     let controller = GetControllerClass(previousController.sm.state).getInstance();
     controller.init(previousController);
+    return controller;
 }

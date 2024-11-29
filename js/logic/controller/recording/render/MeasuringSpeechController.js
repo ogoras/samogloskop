@@ -1,45 +1,9 @@
-import Controller from "./Controller.js";
-import soundToFormant from "../praat/formant.js";
-import nextController from "./nextController.js";
-import RecordingView from "../../view/RecordingView.js";
-import SettingsController from "./SettingsController.js";
-import AudioRecorder from "../recording/Recorder.js";
-import Buffer from "../util/Buffer.js";
-import { formantCount } from "./SilenceController.js";
+import soundToFormant from "../../../praat/formant.js";
+import nextController from "../../nextController.js";
+import RenderController from "./RenderController.js";
 
-export default class MeasuringSpeechController extends Controller {
-    #breakRenderLoop = false;
-
-    init(prev) {
-        this.sm = prev.sm;
-        this.lsm = prev.lsm;
-
-        this.recorder = prev.recorder ?? new AudioRecorder();
-
-        this.samplesBuffer = prev.samplesBuffer ?? new Buffer(this.recorder.sampleRate / 20);
-        this.formantsBuffer = prev.formantsBuffer ?? new Buffer(formantCount);
-        this.time = prev.time ?? 0;
-        this.intensityStats = prev.intensityStats ?? this.lsm.intensityStats;
-
-        this.settingsController = SettingsController.getInstance();
-        this.settingsController.init(this);
-
-        if (prev.view) {
-            this.view = prev.view;
-            this.view.controller = this;
-            this.view.updateView();
-        }
-        else this.view = new RecordingView(this, this.recorder);
-
-        this.renderLoop();
-    }
-
+export default class MeasuringSpeechController extends RenderController {
     renderLoop() {
-        if (this.#breakRenderLoop) {
-            this.#breakRenderLoop = false;
-            return;
-        }
-
         const recorder = this.recorder;
         const sampleRate = recorder.sampleRate;
         const samplesBuffer = this.samplesBuffer;
@@ -104,13 +68,5 @@ export default class MeasuringSpeechController extends Controller {
         }
 
         requestAnimationFrame(this.renderLoop.bind(this));
-    }
-
-    pauseRendering() {
-        this.#breakRenderLoop = true;
-    }
-
-    resumeRendering() {
-        this.renderLoop();
     }
 }

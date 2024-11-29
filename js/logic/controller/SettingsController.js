@@ -3,8 +3,7 @@ import Controller from "./Controller.js";
 export default class SettingsController extends Controller {
     init(parent) {
         this.parent = parent;
-        this.sm = parent.sm;
-        this.lsm = parent.lsm;
+        super.init(parent);
         this.intensityStats = parent.intensityStats;
     }
 

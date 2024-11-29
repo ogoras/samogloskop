@@ -1,54 +1,22 @@
-import Controller from "./Controller.js";
-import SettingsController from "./SettingsController.js";
-import nextController from "./nextController.js";
-import Buffer from "../util/Buffer.js";
-import { formantCount } from "./SilenceController.js";
-import soundToFormant from "../praat/formant.js";
-import AudioRecorder from "../recording/Recorder.js";
+import nextController from "../../nextController.js";
+import Buffer from "../../../util/Buffer.js";
+import soundToFormant from "../../../praat/formant.js";
 import { minimumSmoothingCount } from "./GatheringVowelsController.js";
-import RecordingView from "../../view/RecordingView.js";
-import { POINT_SIZES } from "../../const/POINT_SIZES.js";
-import State from "../../const/states.js";
+import { POINT_SIZES } from "../../../../const/POINT_SIZES.js";
+import State from "../../../../const/states.js";
+import RenderController from "./RenderController.js";
 
-export default class ConfirmVowelsController extends Controller {
-    #breakRenderLoop = false;
-
-    get formantCount() {
-        return formantCount;
-    }
-
+export default class ConfirmVowelsController extends RenderController {
     init(prev) {
-        this.sm = prev.sm;
-        this.lsm = prev.lsm;
-
-        this.recorder = prev.recorder ?? new AudioRecorder();
-
-        this.samplesBuffer = prev.samplesBuffer ?? new Buffer(this.recorder.sampleRate / 20);
-        this.formantsBuffer = prev.formantsBuffer ?? new Buffer(formantCount);
-        this.time = prev.time ?? 0;
-        this.intensityStats = prev.intensityStats ?? this.lsm.intensityStats;
-
-        this.settingsController = SettingsController.getInstance();
-        this.settingsController.init(this);
-
-        this.userVowels = prev.userVowels ?? this.lsm.userVowels;
         this.smoothedFormantsBuffer = prev.smoothedFormantsBuffer ?? new Buffer(minimumSmoothingCount);
 
-        if (prev.view) {
-            this.view = prev.view;
-            this.view.controller = this;
-            this.view.updateView();
-        }
-        else this.view = new RecordingView(this, this.recorder);
-
-        this.renderLoop();
+        this.initStart(prev);
+        this.userVowels = prev.userVowels ?? this.lsm.userVowels;
+        this.initFinalAndRun(prev);
     }
 
     renderLoop() {
-        if (this.#breakRenderLoop) {
-            this.#breakRenderLoop = false;
-            return;
-        }
+        super.renderLoop();
         const recorder = this.recorder;
         const sampleRate = recorder.sampleRate;
         const samplesBuffer = this.samplesBuffer;
@@ -126,27 +94,19 @@ export default class ConfirmVowelsController extends Controller {
         this.userVowels.resetVowel(vowel);
         this.sm.state = State.get("GATHERING_NATIVE");
         nextController(this);
-        this.#breakRenderLoop = true;
+        this.breakRenderLoop();
     }
 
     confirm() {
         this.sm.advance();
         nextController(this);
-        this.#breakRenderLoop = true;
+        this.breakRenderLoop();
     }
 
     recalibrate() {
         delete this.intensityStats;
         this.sm.state = State.get("NO_SAMPLES_YET");
-        nextController(this);
-        this.#breakRenderLoop = true;
-    }
-
-    pauseRendering() {
-        this.#breakRenderLoop = true;
-    }
-
-    resumeRendering() {
-        this.renderLoop();
+        nextController(this).newIntensityStats();
+        this.breakRenderLoop();
     }
 }

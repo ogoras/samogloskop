@@ -1,11 +1,9 @@
-import Controller from "./Controller.js";
-import SpeakerVowels from "../../data/vowels/SpeakerVowels.js";
-import { formantCount } from "./SilenceController.js";
-import { POINT_SIZES } from "../../const/POINT_SIZES.js";
-import Buffer from "../util/Buffer.js";
-import soundToFormant from "../praat/formant.js";
-import nextController from "./nextController.js";
-import SettingsController from "./SettingsController.js";
+import SpeakerVowels from "../../../../data/vowels/SpeakerVowels.js";
+import { POINT_SIZES } from "../../../../const/POINT_SIZES.js";
+import Buffer from "../../../util/Buffer.js";
+import soundToFormant from "../../../praat/formant.js";
+import nextController from "../../nextController.js";
+import RenderController from "./RenderController.js";
 
 const SUBSTATES = {
     "WAITING": 0,
@@ -14,43 +12,18 @@ const SUBSTATES = {
 }
 
 export const minimumSmoothingCount = 20;
-export default class GatheringVowelsController extends Controller {
-    #breakRenderLoop = false;
+export default class GatheringVowelsController extends RenderController {
     smoothedFormantsBuffer = new Buffer(minimumSmoothingCount);
 
-    get formantCount() {
-        return formantCount;
-    }
-
     init(prev) {
-        this.sm = prev.sm;
-        this.lsm = prev.lsm;
-
-        this.settingsController = SettingsController.getInstance();
-        this.settingsController.init(this);
-        this.recorder = prev.recorder;
-
-        this.samplesBuffer = prev.samplesBuffer;
-        this.formantsBuffer = prev.formantsBuffer;
-        this.time = prev.time;
-        this.intensityStats = prev.intensityStats;
-
-        // only will happen when correcting vowels (previous controller is ConfirmVowelsController)
-        this.userVowels = prev.userVowels ?? new SpeakerVowels();
         this.substate = SUBSTATES.WAITING;
-
-        this.view = prev.view;
-        this.view.controller = this;
-        this.view.updateView();
-
-        this.renderLoop();
+        this.initStart(prev);
+        this.userVowels = prev.userVowels ?? new SpeakerVowels();
+        this.initFinalAndRun(prev);
     }
 
     renderLoop() {
-        if (this.#breakRenderLoop) {
-            this.#breakRenderLoop = false;
-            return;
-        }
+        super.renderLoop();
 
         const recorder = this.recorder;
         const sampleRate = recorder.sampleRate;
@@ -180,13 +153,5 @@ export default class GatheringVowelsController extends Controller {
         this.formantsToSave = smoothedFormantsBuffer.push(smoothedFormants)
         if (this.formantsToSave) this.formantsToSave.size = POINT_SIZES.USER_DATAPOINTS;
         return smoothedFormants;
-    }
-
-    pauseRendering() {
-        this.#breakRenderLoop = true;
-    }
-
-    resumeRendering() {
-        this.renderLoop();
     }
 }

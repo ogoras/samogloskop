@@ -1,6 +1,14 @@
 import Singleton from "../../Singleton.js";
 
 export default class Controller extends Singleton {
+    get state () {
+        return this.sm.state;
+    }
+
+    get stateName() {
+        return this.sm.state.name;
+    }
+
     constructor() {
         super();
 
@@ -9,7 +17,8 @@ export default class Controller extends Singleton {
         }
     }
 
-    init() {
-        throw new Error(`${this.constructor.name} must implement init()`);
+    init({sm, lsm}) {
+        this.sm = sm;
+        this.lsm = lsm;
     }
 }
