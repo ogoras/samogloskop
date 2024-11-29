@@ -79,7 +79,7 @@ export default class SettingsView extends View {
             button.style = "color: #ff0000"
             button.addEventListener("click", () => {
                 if (!confirm("Czy na pewno chcesz wycofać zgodę i wyczyścić dane z pamięci lokalnej? Utracisz wszystkie swoje dane.")) return;
-                this.onStateChange({ accepted: false }, false);
+                this.controller.lsm.clear();
                 location.reload();
             });
             let secondButton = document.createElement("button");
@@ -87,7 +87,7 @@ export default class SettingsView extends View {
             secondButton.style = "color: #a00000";
             secondButton.addEventListener("click", () => {
                 if (!confirm("Czy na pewno chcesz wycofać zgodę na korzystanie z pamięci lokalnej? Utracisz wszystkie swoje dane po odświeżeniu lub zamknięciu okna przeglądarki.")) return;
-                this.onStateChange({ accepted: false }, false);
+                this.controller.lsm.clear();
 
                 let nextElement = div.nextElementSibling;
                 div.remove();
@@ -101,7 +101,7 @@ export default class SettingsView extends View {
             button.innerHTML = "Wyraź zgodę na przechowywanie danych w pamięci lokalnej";
             button.style = "color: #008000"
             button.addEventListener("click", () => {
-                this.onStateChange({ accepted: true }, false);
+                this.controller.lsm.dataConsentGiven = true;
 
                 let nextElement = div.nextElementSibling;
                 div.remove();

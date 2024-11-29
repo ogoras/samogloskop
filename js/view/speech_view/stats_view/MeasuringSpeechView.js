@@ -20,8 +20,8 @@ export default class MeasuringSpeechView extends StatsView {
         this.resetStatsElements();
     }
 
-    constructor(onStateChange, arg, args, recycle = false) {
-        super();
+    constructor(controller, arg, recycle = false) {
+        super(controller);
         if (recycle) {
             let view = arg;
             let stats = this.stats;
@@ -51,7 +51,7 @@ export default class MeasuringSpeechView extends StatsView {
                 divStack.insertBefore(p, this.progressBar.element);
             }
         }
-        else if (args.state.is("SPEECH_MEASURED")) {
+        else if (controller.sm.state.is("SPEECH_MEASURED")) {
             let div = this.div = arg;
             let divStack = this.divStack = div.querySelector(".stack");
             this.h2 = document.createElement("h2");
@@ -60,7 +60,7 @@ export default class MeasuringSpeechView extends StatsView {
             this.finish();
             this.recordingStopped();
         }
-        else throw new Error("Restoring MeasuringSpeechView with state " + args.state + " is not supported");
+        else throw new Error("Restoring MeasuringSpeechView with state " + controller.sm.state + " is not supported");
     }
 
     recordingStarted() {

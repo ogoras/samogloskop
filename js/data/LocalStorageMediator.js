@@ -73,7 +73,7 @@ export default class LocalStorageMediator extends Singleton {
             this.state = State.get("DATA_CONSENT");
         } else if (this.state === undefined || this.preset === undefined) {
             this.state = State.get("PRESET_SELECTION");
-        } else if (this.intensityStatsString === undefined && this.state.after("NO_SAMPLES_YET")) {
+        } else if (this.intensityStats === undefined && this.state.after("NO_SAMPLES_YET")) {
             this.state = State.get("NO_SAMPLES_YET");
         }
     }
