@@ -1,21 +1,7 @@
-import ConsentView from './view/ConsentView.js';
-import PresetView from './view/PresetView.js';
-import RecordingView from './view/RecordingView.js';
-
-import AudioRecorder from './logic/recording/Recorder.js';
-import Vowels from './data/vowels/Vowels.js';
-import ForeignRecordings from './data/recordings/ForeignRecordings.js';
-
-import soundToFormant from './logic/praat/formant.js';
-import IntensityStats from './data/IntensityStats.js';
-import Buffer from './logic/util/Buffer.js';
-import SpeakerVowels from './data/vowels/SpeakerVowels.js';
 import LocalStorageMediator from './data/LocalStorageMediator.js';
 import StateMachine from './logic/StateMachine.js';
 import nextController from './logic/controller/nextController.js';
 
-import State from './const/states.js';
-import { POINT_SIZES } from './const/POINT_SIZES.js';
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from './const/version.js';
 console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,
      "font-size: 3rem; font-weight: bold;");
