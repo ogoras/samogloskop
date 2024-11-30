@@ -120,12 +120,16 @@ export default class TextGrid extends ArrayLoadedFromFile {
         return phonemeTier.filter(interval => vowelSymbols.includes(interval.text));
     }
 
-    getWordAt(time) {
-        return this[1].find(interval => interval.xmin <= time && time < interval.xmax)?.text;
+    getPhonemesIn({xmin, xmax}) {
+        return this[0].filter(interval => interval.xmin >= xmin && interval.xmax <= xmax);
     }
 
-    getPhraseAt(time) {
-        return this[2].find(interval => interval.xmin <= time && time < interval.xmax)?.text;
+    getWordIntervalAt(time) {
+        return this[1].find(interval => interval.xmin <= time && time < interval.xmax);
+    }
+
+    getPhraseIntervalAt(time) {
+        return this[2].find(interval => interval.xmin <= time && time < interval.xmax);
     }
 }
 

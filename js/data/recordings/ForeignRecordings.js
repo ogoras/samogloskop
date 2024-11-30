@@ -1,6 +1,7 @@
 import DataLoadedFromFile from "../DataLoadedFromFile.js";
 import SpeakerRecordings from "./SpeakerRecordings.js";
 import { VOWEL_DATA } from "../../const/vowel_inventories/VOWEL_INVENTORIES.js";
+import VowelRecording from "./VowelRecording.js";
 
 export default class ForeignRecordings extends DataLoadedFromFile {
     speakers = [];
@@ -29,7 +30,7 @@ export default class ForeignRecordings extends DataLoadedFromFile {
                 vowelIntervals.forEach(interval => {
                     let vowelSymbol = interval.text;
                     this.entriesByVowel[vowelSymbol] ??= [];
-                    this.entriesByVowel[vowelSymbol].push({speaker, recording, interval});
+                    this.entriesByVowel[vowelSymbol].push(new VowelRecording({speaker, recording, interval}, this.language));
                 });
             })
         }));

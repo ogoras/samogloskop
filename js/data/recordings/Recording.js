@@ -5,14 +5,15 @@ import DataLoadedFromFile from '../DataLoadedFromFile.js';
 
 // represents an audio recording along with its transcription in the form of a TextGrid
 export default class Recording extends DataLoadedFromFile {
-    constructor(path, preset) {
+    constructor(path, info) {
         super();
         this.path = path;
-        this.preset = Preset.get(preset);
+        this.speakerInfo = info;
+        this.preset = Preset.get(info.preset);
     }
 
-    static async create(path, preset, callback) {
-        return await super.create(callback, path, preset);
+    static async create(path, info, callback) {
+        return await super.create(callback, path, info);
     }
 
     async _load() {
@@ -39,15 +40,15 @@ export default class Recording extends DataLoadedFromFile {
                 };
             });
             values.vowel = segment.text;
-            values.word = this.textGrid.getWordAt(segment.xmin);
-            values.phrase = this.textGrid.getPhraseAt(segment.xmin);
+            values.word = this.textGrid.getWordIntervalAt(segment.xmin)?.text;
+            values.phrase = this.textGrid.getPhraseIntervalAt(segment.xmin)?.text;
             return values;
         })//.filter(values => values.length >= 3); TODO add more recordings with longer vowels
     }
 
-    getSamples(segment) {
-        let firstIndex = segment.xmin * this.sampleRate;
-        let lastIndex = segment.xmax * this.sampleRate;
+    getSamples({xmin, xmax}) {
+        let firstIndex = xmin * this.sampleRate;
+        let lastIndex = xmax * this.sampleRate;
         return this.samples.slice(firstIndex, lastIndex);
     }
 }

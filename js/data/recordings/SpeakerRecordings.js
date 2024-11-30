@@ -32,7 +32,7 @@ export default class SpeakerRecordings extends ArrayLoadedFromFile {
 // recording_names = recording_names.slice(5, 6);
         let info = this.info = await(await fetch(`${dir}/info.json`)).json();
         let recordings = await Promise.all(recording_names.map(
-            async recording_name => await Recording.create(`${dir}/${recording_name}`, info.preset)
+            async recording_name => await Recording.create(`${dir}/${recording_name}`, info)
         ));
         this.push(...recordings);
         this.vowels.gatherMeasurements(this.flatMap(
