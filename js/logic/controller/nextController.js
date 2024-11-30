@@ -30,8 +30,8 @@ function GetControllerClass(state) {
     return controllerClass;
 }
 
-export default function nextController(previousController) {
+export default function nextController(previousController, ...args) {
     let controller = GetControllerClass(previousController.sm.state).getInstance();
-    controller.init(previousController);
+    controller.init(previousController, ...args);
     return controller;
 }

@@ -26,5 +26,8 @@ export default class ChoiceController extends Controller {
         if (this.state.after("PRESET_SELECTION")) {
             nextController(this);
         }
+        else {
+            this.view = new VIEW_CONSTRUCTORS[this.stateName](this);
+        }
     }
 }

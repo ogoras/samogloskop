@@ -1,30 +1,16 @@
-import soundToFormant from "../../../praat/formant.js";
 import nextController from "../../nextController.js";
 import RenderController from "./RenderController.js";
 
 export default class MeasuringSpeechController extends RenderController {
     renderLoop() {
-        const recorder = this.recorder;
-        const sampleRate = recorder.sampleRate;
-        const samplesBuffer = this.samplesBuffer;
-        const formantsBuffer = this.formantsBuffer;
+        if (super.renderLoop()) return true;
+
+        const samples = this.samples;
         const stats = this.intensityStats;
 
-        if (recorder.samplesCollected < 8) {
-            requestAnimationFrame(this.renderLoop.bind(this));
-            return;
-        }
-
-        const samples = recorder.dump();
-        samplesBuffer.pushMultiple(samples);
-        formantsBuffer.pushMultiple(
-            soundToFormant(samplesBuffer.getCopy(), sampleRate, this.lsm.preset.frequency)
-            .map((formants) => formants.intensity));
-        this.time += samples.length / sampleRate;
-
-        if (stats.update(this.time, formantsBuffer.buffer, samplesBuffer.buffer)) {
-            formantsBuffer.clear();
-            samplesBuffer.clear();
+        if (this.statsUpdated) {
+            this.formantsBuffer.clear();
+            this.samplesBuffer.clear();
         }
 
         switch(this.sm.state.name) {

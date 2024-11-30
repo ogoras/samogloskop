@@ -1,32 +1,16 @@
 import nextController from "../../nextController.js";
-import soundToFormant from "../../../praat/formant.js";
 import RenderController from "./RenderController.js";
 
 export default class SilenceController extends RenderController {
     renderLoop() {
-        super.renderLoop();
+        if (super.renderLoop()) return true;
 
-        const recorder = this.recorder;
-        const sampleRate = recorder.sampleRate;
-        const samplesBuffer = this.samplesBuffer;
-        const formantsBuffer = this.formantsBuffer;
+        const samples = this.samples;
         const stats = this.intensityStats;
 
-        if (recorder.samplesCollected < 8) {
-            requestAnimationFrame(this.renderLoop.bind(this));
-            return;
-        }
-
-        const samples = recorder.dump();
-        samplesBuffer.pushMultiple(samples);
-        formantsBuffer.pushMultiple(
-            soundToFormant(samplesBuffer.getCopy(), sampleRate, this.lsm.preset.frequency)
-            .map((formants) => formants.intensity));
-        this.time += samples.length / sampleRate;
-
-        if (stats.update(this.time, formantsBuffer.buffer, samplesBuffer.buffer)) {
-            formantsBuffer.clear();
-            samplesBuffer.clear();
+        if (this.statsUpdated) {
+            this.formantsBuffer.clear();
+            this.samplesBuffer.clear();
         }
 
         this.view.feed(samples, {intensityStats: stats, progressTime: this.time})
@@ -35,9 +19,10 @@ export default class SilenceController extends RenderController {
             stats.saveStats("silence");
             this.sm.advance();
             nextController(this);
-            return;
+            return true;
         }
 
         requestAnimationFrame(this.renderLoop.bind(this));
+        return false;
     }
 }

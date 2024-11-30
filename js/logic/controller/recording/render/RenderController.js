@@ -1,11 +1,18 @@
 import RecordingController from "../RecordingController.js";
 import Buffer from "../../../util/Buffer.js";
 import IntensityStats from "../../../../data/IntensityStats.js";
+import State from "../../../../const/states.js";
+import nextController from "../../nextController.js";
+import soundToFormant from "../../../praat/formant.js";
 
 const formantCount = 20;
 const calibrationTime = 10;
 const statsStep = 0.1;    // 100 ms
 export default class RenderController extends RecordingController {
+    get calibrationTime() {
+        return calibrationTime;
+    }
+
     #breakRenderLoop = false;
 
     get formantCount() {
@@ -19,12 +26,12 @@ export default class RenderController extends RecordingController {
         }
     }
     
-    init(prev) {
-        this.initStart(prev);
+    init(prev, newIntensityStats = false) {
+        this.initStart(prev, newIntensityStats);
         this.initFinalAndRun(prev);
     }
 
-    initStart(prev) {
+    initStart(prev, newIntensityStats = false) {
         this.initRecorder(prev);
 
         this.recorder.onStart = () => {
@@ -37,6 +44,7 @@ export default class RenderController extends RecordingController {
         this.time = prev.time ?? 0;
 
         this.intensityStats = prev.intensityStats ?? this.lsm.intensityStats ?? new IntensityStats(calibrationTime, statsStep);
+        if (newIntensityStats) this.intensityStats = new IntensityStats(calibrationTime, statsStep);
     }
 
     initFinalAndRun(prev) {
@@ -44,19 +52,44 @@ export default class RenderController extends RecordingController {
         this.renderLoop();
     }
 
-    newIntensityStats() {
-        this.intensityStats = new IntensityStats(calibrationTime, statsStep);
-    }
-
     breakRenderLoop() {
         this.#breakRenderLoop = true;
     }
 
-    renderLoop() {
+    renderLoop() {  // return true if returning early
         if (this.#breakRenderLoop) {
             this.#breakRenderLoop = false;
-            return;
+            return true;
         }
+
+        const recorder = this.recorder;
+        const sampleRate = recorder.sampleRate;
+        const samplesBuffer = this.samplesBuffer;
+        const formantsBuffer = this.formantsBuffer;
+        const stats = this.intensityStats;
+
+        if (recorder.samplesCollected < 8) {
+            requestAnimationFrame(this.renderLoop.bind(this));
+            return true;
+        }
+    
+        const samples = this.samples = recorder.dump();
+        samplesBuffer.pushMultiple(samples);
+        const formants = this.formants = soundToFormant(samples, sampleRate, this.lsm.preset.frequency);
+        formantsBuffer.pushMultiple(
+            formants.map((formants) => {
+                return {
+                F1: formants.formant.length >= 1 ? formants.formant[0].frequency : null,
+                F2: formants.formant.length >= 2 ? formants.formant[1].frequency : null,
+                length: formants.formant.length,
+                endTime: this.time,
+                intensity: formants.intensity
+            };}));
+        this.time += samples.length / sampleRate;
+
+        this.statsUpdated = stats.update(this.time, formantsBuffer.buffer.map((formants) => formants.intensity), samplesBuffer.buffer);
+
+        return false;
     }
 
     pauseRendering() {
@@ -65,5 +98,12 @@ export default class RenderController extends RecordingController {
 
     resumeRendering() {
         this.renderLoop();
+    }
+
+    recalibrate() {
+        delete this.intensityStats;
+        this.sm.state = State.get("NO_SAMPLES_YET");
+        nextController(this).newIntensityStats();
+        this.breakRenderLoop();
     }
 }

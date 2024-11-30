@@ -2,6 +2,8 @@ import RecordingController from "./RecordingController.js";
 import nextController from "../nextController.js";
 
 export default class CalibrationStartController extends RecordingController {
+    #newIntensityStats = false;
+
     init(prev) {
         super.init(prev);
 
@@ -15,6 +17,13 @@ export default class CalibrationStartController extends RecordingController {
 
     continue() {
         this.sm.advance();
-        nextController(this);
+        let controller = nextController(this, this.#newIntensityStats);
+        if (this.#newIntensityStats) {
+            this.#newIntensityStats = false;
+        }
+    }
+
+    newIntensityStats() {
+        this.#newIntensityStats = true;
     }
 }

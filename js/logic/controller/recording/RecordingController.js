@@ -24,7 +24,7 @@ export default class RecordingController extends Controller {
     initSettingsAndView(prev) {
         this.settingsController = SettingsController.getInstance();
         this.settingsController.init(this);
-        if (prev.view) {
+        if (prev.view instanceof RecordingView) {
             this.view = prev.view;
             this.view.controller = this;
             this.view.updateView();
