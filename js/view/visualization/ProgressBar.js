@@ -12,13 +12,14 @@ export default class ProgressBar {
         return this.background;
     }
 
-    constructor(div) {
+    constructor(div, color) {
         let background = this.background = document.createElement("div");
         background.classList.add("progress-bar");
         div.appendChild(background);
         let bar = this.bar = document.createElement("div");
         bar.classList.add("progress");
         background.appendChild(bar);
+        if (color) this.bar.style.backgroundColor = color;
     }
 
     reset() {

@@ -1,9 +1,11 @@
 import SpeechView from "./SpeechView.js";
 import View from "../View.js";
+import ProgressBar from "../visualization/ProgressBar.js";
 
 export default class GatheringForeignView extends SpeechView {
     initialized = false;
     #currentlyPlaying = false;
+    #startedRecording = false;
 
     constructor(controller, view) {
         super(controller, view);
@@ -35,7 +37,7 @@ export default class GatheringForeignView extends SpeechView {
         this.foreignRecordings = foreignRecordings;
         this.initialized = true;
 
-        let button = this.button = document.createElement("button");
+        const button = this.button = document.createElement("button");
         button.innerHTML = "Przejdź do pierwszego nagrania";
         button.onclick = () => this.showFirstRecording();
         this.divStack.appendChild(button);
@@ -48,57 +50,57 @@ export default class GatheringForeignView extends SpeechView {
         }
         this.button.remove();
         
-        let vowelRecording = this.controller.getRecordingEntry();
-        let color = `#${vowelRecording.phoneme.rgb}`;
+        const vowelRecording = this.controller.getRecordingEntry();
+        const color = `#${vowelRecording.phoneme.rgb}`;
         console.log(vowelRecording);
-        let vowelIPA = vowelRecording.phoneme.IPA.broad;
+        const vowelIPA = vowelRecording.phoneme.IPA.broad;
         this.h2.innerHTML = `Wysłuchaj nagrania, w momencie gotowości włącz mikrofon i powtórz samogłoskę. 
             <b>Powiedz tylko "${vowelIPA}", a nie całe słowo!</b>`;
 
-        let recordingTable = document.createElement("div");
+        const recordingTable = document.createElement("div");
         this.divStack.appendChild(recordingTable);
         // recordingTable is a vertical flexbox
         recordingTable.classList.add("recording-table");
 
-        let vowelIPA_element = this.#appendRowToTable(recordingTable, "Powtórz samogłoskę:", () => this.#playSamples(vowelRecording.vowelSamples, vowelRecording.recording.sampleRate), color);
+        const vowelIPA_element = this.#appendRowToTable(recordingTable, "Powtórz samogłoskę:", () => this.#playSamples(vowelRecording.vowelSamples, vowelRecording.recording.sampleRate), color);
         vowelIPA_element.innerHTML = vowelIPA;    
         vowelIPA_element.classList.add("double-bold");
         vowelIPA_element.style.color = color;
 
-        let wordDescription = this.#appendRowToTable(recordingTable, "jak w słowie:", () => this.#playSamples(vowelRecording.wordSamples, vowelRecording.recording.sampleRate));
+        const wordDescription = this.#appendRowToTable(recordingTable, "jak w słowie:", () => this.#playSamples(vowelRecording.wordSamples, vowelRecording.recording.sampleRate));
         // wordDescription is a 2x2 grid with centered elements
         wordDescription.classList.add("grid");
         // top left element is the word
-        let wordElement = document.createElement("div");
+        const wordElement = document.createElement("div");
         wordDescription.appendChild(wordElement);
         wordElement.innerHTML = vowelRecording.word;
         // top right element is the transcription
-        let transcriptionElement = document.createElement("div");
+        const transcriptionElement = document.createElement("div");
         wordDescription.appendChild(transcriptionElement);
         transcriptionElement.innerHTML = `/${vowelRecording.wordTranscription}/`;
         // bottom left element is the translation
-        let translationElement = document.createElement("div");
+        const translationElement = document.createElement("div");
         wordDescription.appendChild(translationElement);
         translationElement.style.fontSize = "1rem";
         translationElement.innerHTML = `<i>${vowelRecording.wordTranslation}</i>`;
 
-        let phraseDescription = this.#appendRowToTable(recordingTable, "w wyrażeniu:", () => this.#playSamples(vowelRecording.phraseSamples, vowelRecording.recording.sampleRate));
+        const phraseDescription = this.#appendRowToTable(recordingTable, "w wyrażeniu:", () => this.#playSamples(vowelRecording.phraseSamples, vowelRecording.recording.sampleRate));
         // phraseDescription is a 2x1 grid with centered elements
         phraseDescription.classList.add("grid");
         phraseDescription.style.gridTemplateColumns = "auto";
         // top element is the phrase
-        let phraseElement = document.createElement("div");
+        const phraseElement = document.createElement("div");
         phraseDescription.appendChild(phraseElement);
         phraseElement.style.textAlign = "right";
         phraseElement.innerHTML = vowelRecording.phrase;
         // bottom element is the translation
-        let phraseTranslationElement = document.createElement("div");
+        const phraseTranslationElement = document.createElement("div");
         phraseDescription.appendChild(phraseTranslationElement);
         phraseTranslationElement.style.fontSize = "1rem";
         phraseTranslationElement.style.textAlign = "right";
         phraseTranslationElement.innerHTML = `<i>${vowelRecording.phraseTranslation}</i>`;
 
-        let speakerInfo = vowelRecording.speakerInfo;
+        const speakerInfo = vowelRecording.speakerInfo;
         let speakerElement = document.createElement("div");
         // force the speaker element to be right-aligned
         speakerElement.classList.add("speaker-element")
@@ -110,28 +112,28 @@ export default class GatheringForeignView extends SpeechView {
     }
 
     #appendRowToTable(table, text, playCallback, color) {
-        let row = document.createElement("div");
+        const row = document.createElement("div");
         table.appendChild(row);
         row.classList.add("recording-row");
 
-        let textElement = document.createElement("div");
+        const textElement = document.createElement("div");
         row.appendChild(textElement);
         textElement.classList.add("text-element", color ? "double" : "single");
         // add spacer to the right of the text
-        let spacer = document.createElement("div");
+        const spacer = document.createElement("div");
         row.appendChild(spacer);
         spacer.style.width = "2rem";
         textElement.innerHTML = text;
         
-        let recordingDescription = document.createElement("div");
+        const recordingDescription = document.createElement("div");
         row.appendChild(recordingDescription);
         recordingDescription.classList.add("description");
 
-        let fragmentDescription = document.createElement("div");
+        const fragmentDescription = document.createElement("div");
         recordingDescription.appendChild(fragmentDescription);
         fragmentDescription.classList.add("fragment-description");
 
-        let playButton = document.createElement("button");
+        const playButton = document.createElement("button");
         playButton.innerHTML = "▶";
         playButton.onclick = playCallback;
         recordingDescription.appendChild(playButton);
@@ -147,13 +149,13 @@ export default class GatheringForeignView extends SpeechView {
         // disable mic while playing
         this.controller.disableMic();
 
-        let audioCtx = new AudioContext({ sampleRate });
-        let audioBuffer = audioCtx.createBuffer(1, samples.length, sampleRate);
+        const audioCtx = new AudioContext({ sampleRate });
+        const audioBuffer = audioCtx.createBuffer(1, samples.length, sampleRate);
         let channelData = audioBuffer.getChannelData(0);
         for (let i = 0; i < samples.length; i++) {
             channelData[i] = samples[i];
         }
-        let source = audioCtx.createBufferSource();
+        const source = audioCtx.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(audioCtx.destination);
         source.start();
@@ -163,5 +165,19 @@ export default class GatheringForeignView extends SpeechView {
             this.controller.enableMic();
             this.#currentlyPlaying = false;
         };
+    }
+
+    recordingStarted() {
+        super.recordingStarted();
+
+        if (this.#startedRecording) return;
+        this.#startedRecording = true;
+        
+        this.#addProgressBar();
+    }
+
+    #addProgressBar() {
+        const color = `#${this.controller.currentEntry.phoneme.rgb}`
+        const progressBar = this.progressBar = new ProgressBar(this.divStack, color);
     }
 }
