@@ -18,21 +18,21 @@ export default class Recording extends DataLoadedFromFile {
 
     async _load() {
         this.textGrid = await TextGrid.create(`${this.path}.TextGrid`);
-        let wav = await fetch(`${this.path}.wav`);
+        const wav = await fetch(`${this.path}.wav`);
 
         this.sampleRate = 48000;    // TODO: extract from file?
-        let audioCtx = new AudioContext({ sampleRate: this.sampleRate });
+        const audioCtx = new AudioContext({ sampleRate: this.sampleRate });
 
-        let arrayBuffer = await wav.arrayBuffer();
-        let decodedData = await audioCtx.decodeAudioData(arrayBuffer);
+        const arrayBuffer = await wav.arrayBuffer();
+        const decodedData = await audioCtx.decodeAudioData(arrayBuffer);
         this.samples = decodedData.getChannelData(0);
     }
 
     getVowelMeasurements(vowelSymbols) {
         let vowelSegments = this.textGrid.getVowelIntervals(vowelSymbols);
         return vowelSegments.map(segment => {
-            let samples = this.getSamples(segment);
-            let formants = soundToFormant(samples, this.sampleRate, this.preset.frequency);
+            const samples = this.getSamples(segment);
+            const formants = soundToFormant(samples, this.sampleRate, this.preset.frequency);
             let values = formants.map(formants => {
                 return {
                     x: formants.formant[1].frequency,
@@ -46,9 +46,14 @@ export default class Recording extends DataLoadedFromFile {
         })//.filter(values => values.length >= 3); TODO add more recordings with longer vowels
     }
 
-    getSamples({xmin, xmax}) {
-        let firstIndex = xmin * this.sampleRate;
-        let lastIndex = xmax * this.sampleRate;
-        return this.samples.slice(firstIndex, lastIndex);
+    getSamples({xmin, xmax}, paddingDuration = 0) {
+        const firstIndex = xmin * this.sampleRate;
+        const lastIndex = xmax * this.sampleRate;
+        const samples = this.samples.slice(firstIndex, lastIndex);
+        if (!paddingDuration) return samples;
+        const paddingNumber = Math.floor(paddingDuration * this.sampleRate);
+        const padding = new Float32Array(paddingNumber);
+        samples = new Float32Array([...padding, ...samples, ...padding]);
+        return samples;
     }
 }

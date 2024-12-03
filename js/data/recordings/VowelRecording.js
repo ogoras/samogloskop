@@ -10,7 +10,10 @@ export default class VowelRecording {
     }
 
     get wordTranscription() {
-        return this.wordPhonemes.join("");
+        const phonemes = this.wordPhonemes;
+        const index = this.phonemeIndexInWord;
+        phonemes[index] = `<b>${phonemes[index]}</b>`;
+        return phonemes.join("");
     }
 
     get phrase() {
@@ -22,11 +25,11 @@ export default class VowelRecording {
     }
 
     get vowelSamples() {
-        return this.recording.getSamples(this.vowelInterval);
+        return this.recording.getSamples(this.vowelInterval, 0.05);
     }
 
     get wordSamples() {
-        return this.recording.getSamples(this.wordInterval);
+        return this.recording.getSamples(this.wordInterval, 0.05);
     }
 
     get phraseSamples() {
@@ -46,7 +49,8 @@ export default class VowelRecording {
 
         this.wordInterval = this.recording.textGrid.getWordIntervalAt(this.vowelInterval.xmin);
         this.phraseInterval = this.recording.textGrid.getPhraseIntervalAt(this.vowelInterval.xmin);
-        this.wordPhonemes = this.recording.textGrid.getPhonemesIn(this.wordInterval)
-            .map(interval => interval.text);
+        const wordIntervals = this.recording.textGrid.getPhonemesIn(this.wordInterval)
+        this.phonemeIndexInWord = wordIntervals.indexOf(this.vowelInterval);
+        this.wordPhonemes = wordIntervals.map(interval => interval.text);
     }
 }
