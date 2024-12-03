@@ -1,6 +1,6 @@
 export default function arrObjToObjArr(arrObj) {
     // console.log(arrObj);
-    let objArr = [];
+    const objArr = [];
     for (let [key, values] of Object.entries(arrObj)) {
         if (!Array.isArray(values)) {
             if (typeof values === 'object') {

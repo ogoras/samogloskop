@@ -21,14 +21,14 @@ export default class ForeignRecordings extends DataLoadedFromFile {
         let speakers = await fetch(`./recordings/${this.language}/listing.json`);
         this.speakers = speakers = await speakers.json();
         await Promise.all(speakers.map(async speaker => {
-            let recordings = this.entriesBySpeaker[speaker] = 
+            const recordings = this.entriesBySpeaker[speaker] = 
                 await SpeakerRecordings.create(this.language, speaker);
-            let vowelSymbols = recordings.vowels.getVowelSymbols();
+            const vowelSymbols = recordings.vowels.getVowelSymbols();
             recordings.forEach(recording => {
-                let textGrid = recording.textGrid;
-                let vowelIntervals = textGrid.getVowelIntervals(vowelSymbols);
+                const textGrid = recording.textGrid;
+                const vowelIntervals = textGrid.getVowelIntervals(vowelSymbols);
                 vowelIntervals.forEach(interval => {
-                    let vowelSymbol = interval.text;
+                    const vowelSymbol = interval.text;
                     this.entriesByVowel[vowelSymbol] ??= [];
                     this.entriesByVowel[vowelSymbol].push(new VowelRecording({speaker, recording, interval}, this.language));
                 });
@@ -42,7 +42,7 @@ export default class ForeignRecordings extends DataLoadedFromFile {
     }
 
     getRandomEntryForVowel(vowelSymbol) {
-        let entries = this.entriesByVowel[vowelSymbol];
+        const entries = this.entriesByVowel[vowelSymbol];
         return entries[Math.floor(Math.random() * entries.length)];
     }
 }

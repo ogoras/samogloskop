@@ -12,7 +12,7 @@ export default class PointGroup extends Array {
         if (this.constructor === PointGroup) {
             throw new Error("Cannot instantiate abstract class Group");
         } 
-        let [parent, index, defaults] = args;
+        const [parent, index, defaults] = args;
         this.parent = parent;
         if (parent.defaultFormatting) this.defaultFormatting = parent.defaultFormatting.copy();
         this.defaultFormatting.update(defaults?.formatting);
@@ -39,7 +39,7 @@ export default class PointGroup extends Array {
     applyFormatting(formatting) {
         if (!formatting) return;
         if (formatting.color || formatting.rgb) {
-            let color = formatting.color ?? `#${formatting.rgb}`;
+            const color = formatting.color ?? `#${formatting.rgb}`;
             this.g.attr("fill", color)
                 .attr("color", color);
         }

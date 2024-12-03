@@ -14,7 +14,7 @@ export default class Vowel {
 
     get variance() {
         if (!this.avg) this.calculateAverage();
-        let sumSqrDiffs = this.formants.reduce(
+        const sumSqrDiffs = this.formants.reduce(
             (acc, formant) => {
                 return {
                     x: acc.x + (formant.x - this.avg.x) ** 2,
@@ -31,8 +31,8 @@ export default class Vowel {
 
     constructor(vowel) {
         this.language = vowel.language ?? "PL";
-        let vowelDict = VOWEL_DICTS[this.language];
-        let vowelInv = VOWEL_INVENTORIES[this.language];
+        const vowelDict = VOWEL_DICTS[this.language];
+        const vowelInv = VOWEL_INVENTORIES[this.language];
         if (!vowel?.IPA) {
             if (vowelDict?.[vowel?.letter] !== undefined) {
                 vowel.IPA = vowelInv[vowelDict[vowel.letter]].IPA;
@@ -42,7 +42,7 @@ export default class Vowel {
                 throw new Error("Vowel must have an IPA description");
             }
         }
-        let IPA = this.IPA = vowel.IPA;
+        const IPA = this.IPA = vowel.IPA;
         this.letter = vowel.letter ?? IPA.broad ?? IPA.narrow;
         this.id = vowelDict[this.letter];
         this.rgb = vowel.rgb ?? "000000";
@@ -90,7 +90,7 @@ export default class Vowel {
     }
 
     static fromSimpleObject(obj) {
-        let vowel = new Vowel(obj);
+        const vowel = new Vowel(obj);
         vowel.formants = obj.formants.map(formants => { 
             return {...formants, size: POINT_SIZES.USER_DATAPOINTS, rgb: vowel.rgb};
         });

@@ -16,10 +16,10 @@ console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,
 // let foreignVowelsFinal = new SpeakerVowels("EN");
 // let sampleRate, samplesBuffer, smoothedFormantsBuffer, formantsToSave;
 
-let lsm = LocalStorageMediator.getInstance();
+const lsm = LocalStorageMediator.getInstance();
 lsm.load();
 
-let sm = StateMachine.getInstance();
+const sm = StateMachine.getInstance();
 sm.state = lsm.state;
 sm.lsm = lsm;
 

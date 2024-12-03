@@ -27,7 +27,7 @@ export default class GatheringForeignController extends RenderController {
     }
 
     getRecordingEntry() {
-        let vowel = this.foreignInitial.nextVowel();
+        const vowel = this.foreignInitial.nextVowel();
         this.currentEntry = this.englishRecordings.getRandomEntryForVowel(vowel.letter);
         return this.currentEntry;
     }

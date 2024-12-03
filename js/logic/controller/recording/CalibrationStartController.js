@@ -7,7 +7,7 @@ export default class CalibrationStartController extends RecordingController {
     init(prev) {
         super.init(prev);
 
-        let interval = setInterval(() => {
+        const interval = setInterval(() => {
             if (this.recorder.samplesCollected >= 8) {
                 clearInterval(interval);
                 this.continue();
@@ -17,7 +17,7 @@ export default class CalibrationStartController extends RecordingController {
 
     continue() {
         this.sm.advance();
-        let controller = nextController(this, this.#newIntensityStats);
+        nextController(this, this.#newIntensityStats);
         if (this.#newIntensityStats) {
             this.#newIntensityStats = false;
         }

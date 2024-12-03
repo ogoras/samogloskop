@@ -80,9 +80,9 @@ export default class AudioRecorder {
     }
 
     dump() {
-        let tmp = this.audioBufferData;
+        const ret = this.audioBufferData;
         this.audioBufferData = [];
-        return tmp;
+        return ret;
     }
 
     onStop() {}

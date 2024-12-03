@@ -52,7 +52,7 @@ export default class GatheringVowelsController extends RenderController {
                 const formantPoints = formants
                     .filter((formants) => formants.formant.length >= 2)
                     .map((formants) => {
-                        let point = {x: formants.formant[1].frequency, y: formants.formant[0].frequency};
+                        const point = {x: formants.formant[1].frequency, y: formants.formant[0].frequency};
                         userVowels.scale(point);
                         return point;
                     });
@@ -121,7 +121,7 @@ export default class GatheringVowelsController extends RenderController {
             weightSum += weight;
             weight *= ratio;
         }
-        let smoothedFormants = {
+        const smoothedFormants = {
             x: xSum / weightSum,
             y: ySum / weightSum,
             size: POINT_SIZES.CURRENT,

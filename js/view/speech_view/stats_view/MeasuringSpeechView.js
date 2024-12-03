@@ -23,8 +23,8 @@ export default class MeasuringSpeechView extends StatsView {
     constructor(controller, arg, recycle = false) {
         super(controller);
         if (recycle) {
-            let view = arg;
-            let stats = this.stats;
+            const view = arg;
+            const stats = this.stats;
             stats.min.diff = 0;
             stats.max.diff = 0;
             stats.mean.diff = 0;
@@ -33,27 +33,27 @@ export default class MeasuringSpeechView extends StatsView {
             this.timeRequired = view.timeRequired;
 
             this.div = view.div;
-            let divStack = this.divStack = view.divStack;
+            const divStack = this.divStack = view.divStack;
             this.h2 = view.h2;
-            let progressBar = this.progressBar = view.progressBar;
+            const progressBar = this.progressBar = view.progressBar;
             progressBar.color = "lightblue";
             progressBar.reset();
             this.h2.innerHTML = "Nagranie ciszy zakończone. Teraz mów cokolwiek, głośno i wyraźnie, do mikrofonu przez 10 sekund..."
             // add a p element to the divStack between h2 and progressBar
-            let p = document.createElement("p");
+            const p = document.createElement("p");
             p.innerHTML = "<b>Jeśli nie wiesz, co powiedzieć, spróbuj tych łamańców językowych:</b>";
             divStack.insertBefore(p, this.progressBar.element);
             // add two random tongue twisters after the p element
-            let choices = choose(tonguetwisters, 2);
+            const choices = choose(tonguetwisters, 2);
             for (let choice of choices) {
-                let p = document.createElement("p");
+                const p = document.createElement("p");
                 p.innerHTML = choice;
                 divStack.insertBefore(p, this.progressBar.element);
             }
         }
         else if (controller.sm.state.is("SPEECH_MEASURED")) {
-            let div = this.div = arg;
-            let divStack = this.divStack = div.querySelector(".stack");
+            const div = this.div = arg;
+            const divStack = this.divStack = div.querySelector(".stack");
             this.h2 = document.createElement("h2");
             divStack.appendChild(this.h2);
             this.progressBar = new ProgressBar(divStack);
@@ -87,7 +87,7 @@ export default class MeasuringSpeechView extends StatsView {
 
     resetStatsElements() {
         // remove everything after the progressBar
-        let divStack = this.div.querySelector(".center").querySelector(".stack");
+        const divStack = this.div.querySelector(".center").querySelector(".stack");
         while (divStack.lastChild !== this.progressBar.element) {
             divStack.removeChild(divStack.lastChild);
         }
@@ -101,8 +101,8 @@ export default class MeasuringSpeechView extends StatsView {
         this.progressBar.enableTransition(100);
         this.progressBar.reset();
         // remove all the p elements
-        let divStack = this.div.querySelector(".center").querySelector(".stack");
-        let ps = divStack.querySelectorAll("p");
+        const divStack = this.div.querySelector(".center").querySelector(".stack");
+        const ps = divStack.querySelectorAll("p");
         for (let p of ps) {
             p.remove();
         }

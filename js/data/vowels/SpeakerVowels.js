@@ -36,7 +36,7 @@ export default class SpeakerVowels extends Vowels {
 
     gatherMeasurements(measurements) {
         measurements.forEach(measurements => {
-            let vowel = this.vowels[VOWEL_DICTS[this.language][measurements.vowel]];
+            const vowel = this.vowels[VOWEL_DICTS[this.language][measurements.vowel]];
             vowel.addFormants(...measurements);
         });
         this.vowelsProcessed = this.vowelsRemaining;
@@ -76,7 +76,7 @@ export default class SpeakerVowels extends Vowels {
     }
 
     calculateMeanFormantsDeviation() {
-        let varianceTimesN = this.vowelsProcessed.reduce(
+        const varianceTimesN = this.vowelsProcessed.reduce(
             (acc, vowel) => {
                 return {
                     x: acc.x + (vowel.avg.x - this.meanFormants.x) ** 2 + vowel.variance.x,
@@ -85,17 +85,17 @@ export default class SpeakerVowels extends Vowels {
             },
             { x: 0, y: 0 }
         );
-        let n = this.vowelsProcessed.length;
+        const N = this.vowelsProcessed.length;
         this.#formantsDeviation = {
-            x: Math.sqrt(varianceTimesN.x / n),
-            y: Math.sqrt(varianceTimesN.y / n)
+            x: Math.sqrt(varianceTimesN.x / N),
+            y: Math.sqrt(varianceTimesN.y / N)
         };
     }
 
     nextVowel() {
         if (this.vowelsRemaining.length === 0) return undefined;
-        let index = Math.floor(Math.random() * this.vowelsRemaining.length);
-        let vowel = this.currentVowel = this.vowelsRemaining[index];
+        const index = Math.floor(Math.random() * this.vowelsRemaining.length);
+        const vowel = this.currentVowel = this.vowelsRemaining[index];
         this.vowelsRemaining.splice(index, 1);
         return vowel;
     }
@@ -113,7 +113,7 @@ export default class SpeakerVowels extends Vowels {
 
     saveVowel() {
         this.currentVowel.calculateAverage(POINT_SIZES.USER_CENTROIDS);
-        let ret = this.currentVowel;
+        const ret = this.currentVowel;
         this.vowelsProcessed.push(ret);
         this.currentVowel = undefined;
         return ret;
@@ -122,8 +122,8 @@ export default class SpeakerVowels extends Vowels {
     scaleLobanov() {
         if (this.lobanovScaled && this.#scaleCurrent) return;
         this.lobanovScaled = true;
-        let oldMeanFormants = this.#meanFormants ?? {x: 0, y: 0};
-        let oldFormantsDeviation = this.#formantsDeviation ?? {x: 1, y: 1};
+        const oldMeanFormants = this.#meanFormants ?? {x: 0, y: 0};
+        const oldFormantsDeviation = this.#formantsDeviation ?? {x: 1, y: 1};
         this.calculateMeanFormants();
         this.calculateMeanFormantsDeviation();
         this.vowelsProcessed.forEach(vowel => vowel.scaleLobanov(this.#meanFormants, this.#formantsDeviation));
@@ -156,7 +156,7 @@ export default class SpeakerVowels extends Vowels {
 
     resetVowel(vowel) {
         vowel = new Vowel(vowel);
-        let index = this.vowelsProcessed.findIndex(v => v.id === vowel.id);
+        const index = this.vowelsProcessed.findIndex(v => v.id === vowel.id);
         if (index === -1) {
             console.log(vowel);
             console.log(this.vowelsProcessed);
@@ -168,8 +168,8 @@ export default class SpeakerVowels extends Vowels {
     }
 
     static fromString(string) {
-        let obj = JSON.parse(string);
-        let speakerVowels = new SpeakerVowels();
+        const obj = JSON.parse(string);
+        const speakerVowels = new SpeakerVowels();
         speakerVowels.vowelsRemaining = [];
         speakerVowels.vowelsProcessed = obj.vowelsProcessed.map(Vowel.fromSimpleObject);
         if (!obj.lobanovScaled) speakerVowels.scaleLobanov();

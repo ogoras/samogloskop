@@ -20,18 +20,18 @@ export default class SpeakerRecordings extends ArrayLoadedFromFile {
     }
 
     async _load() {
-        let dir = `./recordings/${this.language}/${this.speaker}`;
+        const dir = `./recordings/${this.language}/${this.speaker}`;
         let listing = await fetch(`${dir}/listing.json`);
         listing = await listing.json();
-        let recording_names = this.recording_names = listing
+        const recording_names = this.recording_names = listing
             .filter(filename => filename.endsWith(".wav") &&
                 listing.includes(filename.replace(".wav", ".TextGrid"))
             )
             .map(filename => filename.replace(".wav", ""));
 // // for debugging
 // recording_names = recording_names.slice(5, 6);
-        let info = this.info = await(await fetch(`${dir}/info.json`)).json();
-        let recordings = await Promise.all(recording_names.map(
+        const info = this.info = await(await fetch(`${dir}/info.json`)).json();
+        const recordings = await Promise.all(recording_names.map(
             async recording_name => await Recording.create(`${dir}/${recording_name}`, info)
         ));
         this.push(...recordings);

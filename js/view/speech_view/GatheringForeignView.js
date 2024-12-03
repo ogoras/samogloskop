@@ -101,7 +101,7 @@ export default class GatheringForeignView extends SpeechView {
         phraseTranslationElement.innerHTML = `<i>${vowelRecording.phraseTranslation}</i>`;
 
         const speakerInfo = vowelRecording.speakerInfo;
-        let speakerElement = document.createElement("div");
+        const speakerElement = document.createElement("div");
         // force the speaker element to be right-aligned
         speakerElement.classList.add("speaker-element")
         this.divStack.appendChild(speakerElement);
@@ -151,7 +151,7 @@ export default class GatheringForeignView extends SpeechView {
 
         const audioCtx = new AudioContext({ sampleRate });
         const audioBuffer = audioCtx.createBuffer(1, samples.length, sampleRate);
-        let channelData = audioBuffer.getChannelData(0);
+        const channelData = audioBuffer.getChannelData(0);
         for (let i = 0; i < samples.length; i++) {
             channelData[i] = samples[i];
         }

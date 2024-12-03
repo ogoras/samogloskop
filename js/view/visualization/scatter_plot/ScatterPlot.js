@@ -23,7 +23,7 @@ export default class ScatterPlot {
     #lastSeriesId = 0;
 
     constructor(elementId, flip = false, unit = null) {
-        let [flipX, flipY] = [ this.flipX, this.flipY ] = parseFlipParameter(flip);
+        const [flipX, flipY] = [ this.flipX, this.flipY ] = parseFlipParameter(flip);
         this.margin = {
             top: flipY ? 30 : 10,
             right: flipX ? 60 : 30,
@@ -50,7 +50,7 @@ export default class ScatterPlot {
     }
 
     drawAxes() {
-        let [flipX, flipY] = [ this.flipX, this.flipY ];
+        const [flipX, flipY] = [ this.flipX, this.flipY ];
         this.width = this.parent.clientWidth - this.margin.left - this.margin.right;
         this.height = this.parent.clientHeight - this.margin.top - this.margin.bottom;
         
@@ -99,15 +99,15 @@ export default class ScatterPlot {
 
     appendGroup(constructorDefaults, ids = [], points = []) {
         ids = this.convertToIdArray(ids);
-        let group = this.allPointsGroup.navigate(ids, CREATE_MODES.IF_NOT_EXISTS, { nested: true });
-        let newIds = ids.concat(group.length);
+        const group = this.allPointsGroup.navigate(ids, CREATE_MODES.IF_NOT_EXISTS, { nested: true });
+        const newIds = ids.concat(group.length);
         this.insertGroup(constructorDefaults, newIds, points);
         return newIds;
     }
 
     insertGroup(constructorDefaults, ids, points = []) {
         ids = this.convertToIdArray(ids);
-        let group = this.allPointsGroup.navigate(ids, CREATE_MODES.INSERT, constructorDefaults);
+        const group = this.allPointsGroup.navigate(ids, CREATE_MODES.INSERT, constructorDefaults);
 
         for (let point of points ?? []) {
             this.addPoint(point, group, 0);
@@ -116,19 +116,19 @@ export default class ScatterPlot {
 
     addGroupCallback(callback, ids = []) {
         ids = this.convertToIdArray(ids);
-        let group = this.allPointsGroup.navigate(ids);
+        const group = this.allPointsGroup.navigate(ids);
         group.defaults.onClick = callback;
     }
 
     setGroupClickability(clickable, ids = []) {
         ids = this.convertToIdArray(ids);
-        let group = this.allPointsGroup.navigate(ids);
+        const group = this.allPointsGroup.navigate(ids);
         group.setClickability(clickable);
     }
 
     removePointsFromGroup(ids = []) {
         ids = this.convertToIdArray(ids);
-        let group = this.allPointsGroup.navigate(ids);
+        const group = this.allPointsGroup.navigate(ids);
         group.removeAllPoints();
     }
 
@@ -143,7 +143,7 @@ export default class ScatterPlot {
     setSeriesSingle(point, ids = [], animationMs = 50, rescale = true) {
         ids = this.convertToIdArray(ids);
         if (rescale) this.resizeIfNeeded(point, animationMs);
-        let group = this.allPointsGroup.navigate(ids);
+        const group = this.allPointsGroup.navigate(ids);
         if (!group.length) return this.addPoint(point, group, 0);
         group[0].element.transition()
             .duration(animationMs)
@@ -153,16 +153,16 @@ export default class ScatterPlot {
     }
 
     resizeIfNeeded(point, animationMs = 200) {
-        let xChanged = this.resizeDomain(0, point.x);
-        let yChanged = this.resizeDomain(1, point.y);
+        const xChanged = this.resizeDomain(0, point.x);
+        const yChanged = this.resizeDomain(1, point.y);
         if (xChanged || yChanged) this.transition(xChanged, yChanged, animationMs);
         this.domainDefined = true;
     }
 
     resizeDomain(axisId, value) {
-        let axis = axisId ? this.y : this.x;
-        let domain = axis.domain;
-        let range = axis.range;
+        const axis = axisId ? this.y : this.x;
+        const domain = axis.domain;
+        const range = axis.range;
         let changed = false;
         if (this.domainDefined) {
             if (value < range[0]) {
@@ -184,15 +184,14 @@ export default class ScatterPlot {
             changed = true;
         }
         if (changed) {
-            let axisScale = axis.scale;
-            axisScale.domain(domain);
+            axis.scale.domain(domain);
         }
         return changed;
     }
 
     transition(xChanged, yChanged, animationMs) {
-        let [flipX, flipY] = [ this.flipX, this.flipY ];
-        let t = d3.transition().duration(animationMs);
+        const [flipX, flipY] = [ this.flipX, this.flipY ];
+        const t = d3.transition().duration(animationMs);
         if (xChanged) this.x.g.transition(t)
                 .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
         if (yChanged) this.y.g.transition(t)
@@ -212,7 +211,7 @@ export default class ScatterPlot {
 
     feed(point, ids = -1, rescale = true) {
         ids = this.convertToIdArray(ids);
-        let group = this.allPointsGroup.navigate(ids);
+        const group = this.allPointsGroup.navigate(ids);
         this.addPoint(point, group, undefined, rescale);
     }
 

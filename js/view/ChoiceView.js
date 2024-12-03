@@ -11,16 +11,16 @@ export default class ChoiceView extends View {
 
         if(!parentContainer) parentContainer = document.querySelector(".main-container");
 
-        let choiceElement = this.choiceElement;
+        const choiceElement = this.choiceElement;
         parentContainer.appendChild(choiceElement);
         
-        let p = document.createElement("p");
+        const p = document.createElement("p");
         p.innerHTML = text;
         choiceElement.appendChild(p);
 
         for (let i = 0; i < choices.length; i++) {
-            let choice = choices[i];
-            let button = document.createElement("button");
+            const choice = choices[i];
+            const button = document.createElement("button");
             if (i === selectedIndex) button.classList.add("selected");
             button.innerHTML = choice.text;
             if (choice.id) button.id = choice.id;

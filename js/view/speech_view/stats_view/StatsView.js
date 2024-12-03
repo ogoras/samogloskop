@@ -42,7 +42,7 @@ export default class StatsView extends SpeechView {
     updateProgress(value, isTime = true) {
         if (isTime) {
             if (this.startTime === undefined) throw new Error("startTime is not set");
-            let timeElapsed = value - this.startTime;
+            const timeElapsed = value - this.startTime;
             this.progressBar.progress = timeElapsed >= this.timeRequired 
                 ? 100 
                 : timeElapsed / this.timeRequired * 100;
@@ -53,7 +53,7 @@ export default class StatsView extends SpeechView {
     }
 
     update(intensityStats) {
-        let stats = this.stats;
+        const stats = this.stats;
         stats.time.value = intensityStats.isCalibrated ? this.timeRequired : intensityStats.timeElapsed;
         stats.min.value = intensityStats.zeroReached ? 0 : intensityStats.min;
         if (stats.min.diff !== undefined) stats.min.diff = intensityStats.diff(0);
@@ -63,7 +63,7 @@ export default class StatsView extends SpeechView {
         if (stats.mean.diff !== undefined) stats.mean.diff = intensityStats.diff(2);
         if (stats.range !== undefined) stats.range.value = intensityStats.range;
         for (let key in stats) {
-            let object = stats[key];
+            const object = stats[key];
             object.span.innerHTML = object.roundFunction(object.value);
             if (object.diff !== undefined)  {
                 object.diffElement.innerHTML = `(${object.diff > 0 ? "+" : ""}${object.diff.toFixed(2)} dB)`;
@@ -74,21 +74,21 @@ export default class StatsView extends SpeechView {
     addStatsElements() {
         // add multiple div.center elements to the stack
         for (let key in this.stats) {
-            let object = this.stats[key];
-            let element = object.element = document.createElement("div");
+            const object = this.stats[key];
+            const element = object.element = document.createElement("div");
             element.classList.add("center");
             this.divStack.appendChild(element);
-            let h3 = document.createElement("h3");
+            const h3 = document.createElement("h3");
             h3.innerHTML = object.text;
             element.appendChild(h3);
             element.appendChild(document.createElement("hr"));
-            let span = document.createElement("span");
+            const span = document.createElement("span");
             if (object.color) span.style.color = object.color
             element.appendChild(span);
             object.span = span;
             if (object.diff !== undefined) {
                 element.appendChild(document.createElement("hr"));
-                let diff = document.createElement("span");
+                const diff = document.createElement("span");
                 if (object.color) diff.style.color = object.color
                 diff.innerHTML = "( dB)";
                 element.appendChild(diff);
@@ -96,7 +96,7 @@ export default class StatsView extends SpeechView {
             }
             if (object.unit) {
                 element.appendChild(document.createElement("hr"));
-                let unit = document.createElement("span");
+                const unit = document.createElement("span");
                 if (object.color) unit.style.color = object.color
                 unit.innerHTML = object.unit;
                 element.appendChild(unit);

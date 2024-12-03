@@ -1,4 +1,4 @@
-export let DataLoadedFromFile = SubclassLoadedFromFile();
+export const DataLoadedFromFile = SubclassLoadedFromFile();
 export default DataLoadedFromFile;
 export class ArrayLoadedFromFile extends SubclassLoadedFromFile(Array) {
     map(...args) {
@@ -28,7 +28,7 @@ export function SubclassLoadedFromFile(Parent) {
         }
 
         static async create(callback, ...args) {
-            let instance = new this(...args);
+            const instance = new this(...args);
             await instance.load();
             callback?.();
             return instance;
@@ -37,7 +37,7 @@ export function SubclassLoadedFromFile(Parent) {
         async load() {
             if (this.#loading) {
                 await new Promise(resolve => {
-                    let interval = setInterval(() => {
+                    const interval = setInterval(() => {
                         if (!this.#loading) {
                             clearInterval(interval);
                             resolve();

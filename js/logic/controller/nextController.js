@@ -23,7 +23,7 @@ const CONTROLLER_CLASSES = {
 }
 
 function GetControllerClass(state) {
-    let controllerClass = CONTROLLER_CLASSES[state.name];
+    const controllerClass = CONTROLLER_CLASSES[state.name];
     if (controllerClass === undefined) {
         throw new Error(`No controller class found for state ${state}`);
     }
@@ -31,7 +31,7 @@ function GetControllerClass(state) {
 }
 
 export default function nextController(previousController, ...args) {
-    let controller = GetControllerClass(previousController.sm.state).getInstance();
+    const controller = GetControllerClass(previousController.sm.state).getInstance();
     controller.init(previousController, ...args);
     return controller;
 }

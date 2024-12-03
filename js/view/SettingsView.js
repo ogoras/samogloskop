@@ -55,21 +55,21 @@ export default class SettingsView extends View {
     }
 
     createConsentSection() {
-        let div = document.createElement("div");
+        const div = document.createElement("div");
 
-        let title = document.createElement("h2");
+        const title = document.createElement("h2");
         title.classList.add("no-bottom-margin");
         title.innerHTML = "<b>Zgody</b>";
         div.appendChild(title);
 
-        let consent = document.createElement("div");
+        const consent = document.createElement("div");
         consent.classList.add("flex-oriented")
-        let center = document.createElement("div");
+        const center = document.createElement("div");
         center.classList.add("center-auto");
         consent.appendChild(center);
-        let info = document.createElement("p");
+        const info = document.createElement("p");
         center.appendChild(info);
-        let button = document.createElement("button");
+        const button = document.createElement("button");
         button.classList.add("small");
         consent.appendChild(button);
         if (localStorage.getItem("accepted") === "true") {
@@ -82,14 +82,14 @@ export default class SettingsView extends View {
                 this.controller.lsm.clear();
                 location.reload();
             });
-            let secondButton = document.createElement("button");
+            const secondButton = document.createElement("button");
             secondButton.innerHTML = "Tylko wycofaj zgodę";
             secondButton.style = "color: #a00000";
             secondButton.addEventListener("click", () => {
                 if (!confirm("Czy na pewno chcesz wycofać zgodę na korzystanie z pamięci lokalnej? Utracisz wszystkie swoje dane po odświeżeniu lub zamknięciu okna przeglądarki.")) return;
                 this.controller.lsm.clear();
 
-                let nextElement = div.nextElementSibling;
+                const nextElement = div.nextElementSibling;
                 div.remove();
                 this.mainContainer.insertBefore(this.createConsentSection(), nextElement);
             });
@@ -103,7 +103,7 @@ export default class SettingsView extends View {
             button.addEventListener("click", () => {
                 this.controller.lsm.dataConsentGiven = true;
 
-                let nextElement = div.nextElementSibling;
+                const nextElement = div.nextElementSibling;
                 div.remove();
                 this.mainContainer.insertBefore(this.createConsentSection(), nextElement);
             });
@@ -113,23 +113,23 @@ export default class SettingsView extends View {
     }
 
     createPresetSection() {
-        let div = document.createElement("div");
+        const div = document.createElement("div");
 
-        let title = document.createElement("h2");
+        const title = document.createElement("h2");
         title.classList.add("no-bottom-margin");
         title.innerHTML = "<b>Kategoria głosu</b>";
         div.appendChild(title);
 
-        let presetSelection = new PresetView(this.controller,
+        new PresetView(this.controller,
             div, this.controller.lsm.preset.index,
             () => {
-            let nextElement = div.nextElementSibling;
+            const nextElement = div.nextElementSibling;
             div.remove();
             this.mainContainer.insertBefore(this.createPresetSection(), nextElement);
         });
 
         if (this.userVowels?.gatheredAnything) {
-            let notice = document.createElement("p");
+            const notice = document.createElement("p");
             notice.innerHTML = "Uwaga: Zmiana kategorii głosu ma wpływ tylko na przyszłe nagrania. Wszystkie dotychczas zebrane dane pozostaną niezmienione.";
             notice.style = "color: #a00000";
             div.appendChild(notice);
@@ -139,29 +139,29 @@ export default class SettingsView extends View {
     }
 
     createIntensityStatsSection() {
-        let div = document.createElement("div");
+        const div = document.createElement("div");
 
-        let title = document.createElement("h2");
+        const title = document.createElement("h2");
         title.classList.add("no-bottom-margin");
         title.innerHTML = "<b>Kalibracja głośności</b>";
         div.appendChild(title);
 
-        let stats = this.intensityStats;
-        let statsInfo = document.createElement("div");
+        const stats = this.intensityStats;
+        const statsInfo = document.createElement("div");
         statsInfo.classList.add("flex-oriented");
         statsInfo.style = "align-items: center";
         [stats.silenceStats, stats.speechStats].forEach((stats, index) => {
-            let statsDiv = document.createElement("div");
+            const statsDiv = document.createElement("div");
             statsDiv.classList.add("center-auto");
-            let title = document.createElement("h4");
+            const title = document.createElement("h4");
             title.innerHTML = index == 0 ? "Poziomy ciszy: " : "Poziomy mowy: ";
-            let statsP = document.createElement("p");
+            const statsP = document.createElement("p");
             statsP.innerHTML = `<span>${stats.min.toExponential(2)}</span> / <span>${stats.mean.toExponential(2)}</span> / <span>${stats.max.toExponential(2)}</span>`;
             statsDiv.appendChild(title);
             statsDiv.appendChild(statsP);
             statsInfo.appendChild(statsDiv);
         });
-        let button = document.createElement("button");
+        const button = document.createElement("button");
         button.innerHTML = "Kalibruj ponownie";
         button.classList.add("small");
         button.onclick = () => {
@@ -170,7 +170,7 @@ export default class SettingsView extends View {
         }
         statsInfo.appendChild(button);
         div.appendChild(statsInfo);
-        let notice = document.createElement("p");
+        const notice = document.createElement("p");
         notice.innerHTML = "Kalibruj ponownie, jeśli używasz innego mikrofonu, jesteś teraz w innym otoczeniu albo po prostu uważasz, że aplikacja nie wychwytuje dobrze, kiedy mówisz.";
         div.appendChild(notice);
 
@@ -178,18 +178,18 @@ export default class SettingsView extends View {
     }
 
     createDeleteVowelsSection() {
-        let div = document.createElement("div");
+        const div = document.createElement("div");
 
-        let title = document.createElement("h2");
+        const title = document.createElement("h2");
         title.classList.add("no-bottom-margin");
         title.innerHTML = "<b>Wyczyść dane o samogłoskach</b>";
         div.appendChild(title);
 
-        let container = document.createElement("div");
+        const container = document.createElement("div");
         container.classList.add("flex-oriented");
         div.appendChild(container);
 
-        let button = document.createElement("button");
+        const button = document.createElement("button");
         button.innerHTML = "Wyczyść dane o Twoich polskich samogłoskach";
         button.classList.add("small");
         button.style = "color: #a00000";
@@ -201,7 +201,7 @@ export default class SettingsView extends View {
         }
         container.appendChild(button);
 
-        let notice = document.createElement("div");
+        const notice = document.createElement("div");
         notice.classList.add("center-auto");
         notice.innerHTML = "<p>Uwaga: Usunięcie zebranych samogłosek automatycznie odświeża stronę i kieruje do ponownego nagrania próbek mowy.</p>";
         notice.style = "color: #a00000";

@@ -40,7 +40,7 @@ export default class SilenceView extends StatsView {
         super(controller);
         this.div = view.div;
         this.timeRequired = controller.calibrationTime; // TODO set this
-        let divStack = this.divStack = view.divStack;
+        const divStack = this.divStack = view.divStack;
         this.h2 = divStack.querySelector("h2");
         this.recordingStarted();
         // remove the p element

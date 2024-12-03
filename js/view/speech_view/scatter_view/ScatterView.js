@@ -17,13 +17,13 @@ export default class ScatterView extends SpeechView {
             throw new Error("Cannot instantiate abstract class ScatterView");
         }
         if (recycle) {
-            let view = arg;
+            const view = arg;
             this.div = view.div;
             this.divStack = view.divStack;
             this.h2 = view.h2;
         }
         else {
-            let div = this.div = arg;
+            this.div = arg;
             this.divStack = document.createElement("div");
             this.divStack.classList.add("stack");
             this.h2 = document.createElement("h2");
@@ -35,7 +35,7 @@ export default class ScatterView extends SpeechView {
 
     initializePlot(unit) {
         // move the divStack element to .main-container below the recording container
-        let sideContainer = document.querySelector(".side-container");
+        const sideContainer = document.querySelector(".side-container");
         sideContainer.appendChild(this.divStack);
         document.querySelector(".recording-container").after(this.divStack);
         // remove everything from div
@@ -44,10 +44,10 @@ export default class ScatterView extends SpeechView {
         }
         this.scatterPlot = new ScatterPlot("formants", true, unit);
         
-        let vowelInv = VOWEL_INVENTORIES.PL;
+        const vowelInv = VOWEL_INVENTORIES.PL;
         for (let i = 0; i < vowelInv.length; i++) {
-            let vowel = vowelInv[i];
-            let ids = this.scatterPlot.appendGroup({ 
+            const vowel = vowelInv[i];
+            const ids = this.scatterPlot.appendGroup({ 
                 nested: true, 
                 formatting: { rgb: vowel.rgb },
                 onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined

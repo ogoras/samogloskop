@@ -4,13 +4,13 @@ import remToPx from "../../../logic/util/remToPx.js";
 
 export default class SimplePointGroup extends PointGroup {
     addPoint(point) {
-        let defaultFormatting = this.defaultFormatting;
+        const defaultFormatting = this.defaultFormatting;
 
-        let symbol = point.symbol ?? defaultFormatting.symbol;
+        const symbol = point.symbol ?? defaultFormatting.symbol;
         let size = point.size ?? defaultFormatting.size;
         size = remToPx(size) / 12
 
-        let p = ({
+        const p = ({
             element: this.g.append("path")
                 .attr("d", d3.symbol(symbol).size(size))
                 .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`),
@@ -31,10 +31,10 @@ export default class SimplePointGroup extends PointGroup {
             p.label?.attr("fill", point.color);
         }
         if (this.capacity && this.length > this.capacity) {
-            let removed = this.shift();
+            const removed = this.shift();
             removed.element.remove();
         }
-        let pointCount = this.length;
+        const pointCount = this.length;
         if (this.growSize) {
             this.forEach((point, i) => {
                 point.element.attr("d", d3.symbol(point.symbol).size((i + 1) / pointCount * POINT_SIZES.TRAIL));

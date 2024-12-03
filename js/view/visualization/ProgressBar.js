@@ -1,4 +1,7 @@
 export default class ProgressBar {
+    /**
+     * @param {string} value
+     */
     set color(value) {
         this.background.style.backgroundColor = window.getComputedStyle(this.bar).backgroundColor;
         this.bar.style.backgroundColor = value;
@@ -13,10 +16,10 @@ export default class ProgressBar {
     }
 
     constructor(div, color) {
-        let background = this.background = document.createElement("div");
+        const background = this.background = document.createElement("div");
         background.classList.add("progress-bar");
         div.appendChild(background);
-        let bar = this.bar = document.createElement("div");
+        const bar = this.bar = document.createElement("div");
         bar.classList.add("progress");
         background.appendChild(bar);
         if (color) this.bar.style.backgroundColor = color;

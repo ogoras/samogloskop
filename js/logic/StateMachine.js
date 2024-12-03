@@ -27,7 +27,7 @@ export default class StateMachine extends Singleton {
         if (this.#tempState !== undefined) {
             this.#tempState = this.#tempState.next();
             if (stateSaveable(this.#tempState)) {
-                let ret = this.#tempState;
+                const ret = this.#tempState;
                 this.#tempState = undefined;
                 return ret;
             }

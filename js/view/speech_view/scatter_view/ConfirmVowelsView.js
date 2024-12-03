@@ -17,7 +17,7 @@ export default class ConfirmVowelsView extends ScatterView {
                 czy Twoje samogłoski są zgodne z danymi kalibracji.
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
         
-        let button = this.button = document.createElement("button");
+        const button = this.button = document.createElement("button");
         button.innerHTML = "OK";
         button.onclick = () => {
             this.nextMessage();
@@ -30,9 +30,9 @@ export default class ConfirmVowelsView extends ScatterView {
             this.initializePlot();
         }
         
-        let userVowels = this.userVowels = controller.userVowels;
+        const userVowels = this.userVowels = controller.userVowels;
         userVowels.vowelsProcessed.forEach(vowel => {
-            let id = vowel.id;
+            const id = vowel.id;
             
             vowel.formants.forEach(formant => {
                 this.saveFormants(formant, id);
@@ -62,8 +62,8 @@ export default class ConfirmVowelsView extends ScatterView {
         if (this.editingVowel) return;
         this.editingVowel = true;
         this.controller.editVowel(vowel);
-        let vowelInv = VOWEL_INVENTORIES.PL;
-        let vowelDict = VOWEL_DICTS.PL;
+        const vowelInv = VOWEL_INVENTORIES.PL;
+        const vowelDict = VOWEL_DICTS.PL;
         this.scatterPlot.removePointsFromGroup([0, vowelDict[vowel.letter]]);
         for (let i = 0; i < vowelInv.length; i++) {
             this.scatterPlot.setGroupClickability(false, [0, i]);

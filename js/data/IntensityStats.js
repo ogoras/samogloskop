@@ -109,7 +109,7 @@ export default class IntensityStats {
         if (this.speechStats !== undefined) {
             return !this.isSilence();
         }
-        let val = this.max > this.silenceStats.max;
+        const val = this.max > this.silenceStats.max;
         if (val) {
             this.resetStart();
         }
@@ -144,7 +144,7 @@ export default class IntensityStats {
     }
 
     toString() {
-        let object = {
+        const object = {
             speechStats: this.speechStats,
             silenceStats: this.silenceStats,
             timeRequired: this.timeRequired,
@@ -154,8 +154,8 @@ export default class IntensityStats {
     }
 
     static fromString(string) {
-        let object = JSON.parse(string);
-        let stats = new IntensityStats(object.timeRequired, object.stepDuration);
+        const object = JSON.parse(string);
+        const stats = new IntensityStats(object.timeRequired, object.stepDuration);
         stats.speechStats = object.speechStats;
         stats.silenceStats = object.silenceStats;
         return stats;

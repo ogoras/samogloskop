@@ -40,21 +40,21 @@ export default class RecordingView extends View {
         document.body.innerHTML = "";
         document.body.classList.add("recording-view");
 
-        let formantsContainer = this.formantsContainer = document.createElement("div");
+        const formantsContainer = this.formantsContainer = document.createElement("div");
         formantsContainer.classList.add("formants-container");
         formantsContainer.id = "formants";
         document.body.appendChild(formantsContainer);
-        let centerDiv = document.createElement("div");
+        const centerDiv = document.createElement("div");
         centerDiv.classList.add("center");
         formantsContainer.appendChild(centerDiv);
-        let stackDiv = document.createElement("div");
+        const stackDiv = document.createElement("div");
         stackDiv.classList.add("stack");
         centerDiv.appendChild(stackDiv);
 
-        let sideContainer = this.sideContainer = document.createElement("div");
+        const sideContainer = this.sideContainer = document.createElement("div");
         sideContainer.classList.add("side-container");
         document.body.appendChild(sideContainer);
-        let recordingContainer = document.createElement("div");
+        const recordingContainer = document.createElement("div");
         recordingContainer.classList.add("recording-container");
         this.sideContainer.appendChild(recordingContainer);
 
@@ -70,7 +70,7 @@ export default class RecordingView extends View {
             }
         }
         
-        let recordButton = this.recordButton = document.createElement("div");
+        const recordButton = this.recordButton = document.createElement("div");
         recordButton.classList.add("emoji-button");
         recordButton.classList.add("strikethrough-button");
         recordButton.id = "record-button";
@@ -84,26 +84,26 @@ export default class RecordingView extends View {
             }
         });
 
-        let recordingIndicator = this.recordingIndicator = document.createElement("div");
+        const recordingIndicator = this.recordingIndicator = document.createElement("div");
         recordingIndicator.classList.add("recording-indicator");
         recordingContainer.appendChild(recordingIndicator);
 
-        let hint = this.hint = document.createElement("div");
+        const hint = this.hint = document.createElement("div");
         hint.classList.add("record-press-me");
         hint.innerHTML = `<h5><b>←</b></h5>
             <p class="gray">Naciśnij przycisk, żeby włączyć nasłuchiwanie</p>`;
         recordingContainer.appendChild(hint);
 
-        let visualizer = document.createElement("div");
+        const visualizer = document.createElement("div");
         visualizer.classList.add("visualizer");
-        let canvas = document.createElement("canvas");
+        const canvas = document.createElement("canvas");
         canvas.width = canvas.height = 0;
         visualizer.appendChild(canvas);
         recordingContainer.appendChild(visualizer);
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
 
-        let settingsButton = document.createElement("div");
+        const settingsButton = document.createElement("div");
         settingsButton.classList.add("emoji-button");
         settingsButton.innerHTML = "⚙️";
         settingsButton.addEventListener("click", this.openSettings.bind(this));
@@ -115,8 +115,8 @@ export default class RecordingView extends View {
     }
     
     updateView() {
-        let state = this.controller.sm.state;
-        let Constructor = SPEECH_VIEWS[state.name];
+        const state = this.controller.sm.state;
+        const Constructor = SPEECH_VIEWS[state.name];
         if (Constructor) {
             if (this.view) {
                 if (Constructor !== this.view.constructor) {

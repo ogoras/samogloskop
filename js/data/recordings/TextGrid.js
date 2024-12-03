@@ -25,7 +25,7 @@ export default class TextGrid extends ArrayLoadedFromFile {
     }
 
     async _load () {
-        let errors = [];
+        const errors = [];
         const encodings = ["utf-16be", "utf-8"];
         for (let encoding of encodings) {
             try {
@@ -65,7 +65,7 @@ export default class TextGrid extends ArrayLoadedFromFile {
         this.#checkLine("item []:");
         this.indentationLevel++;
         for (let j = 0; j < this.length; j++) {
-            let tier = this[j] = [];
+            const tier = this[j] = [];
             this.#checkLine(`item [${j + 1}]:`);
             this.indentationLevel++;
             this.#checkLine("class = \"IntervalTier\"");
@@ -74,7 +74,7 @@ export default class TextGrid extends ArrayLoadedFromFile {
             assertEqualWithMargin(this.#readPropertyFromLine("xmax"), this.duration);
             tier.length = this.#readPropertyFromLine("intervals: size", parseInt);
             for (let k = 0; k < tier.length; k++) {
-                let interval = this[j][k] = {};
+                const interval = this[j][k] = {};
                 this.#checkLine(`intervals [${k + 1}]:`);
                 this.indentationLevel++;
                 interval.xmin = this.#readPropertyFromLine("xmin", parseFloat);
@@ -116,8 +116,7 @@ export default class TextGrid extends ArrayLoadedFromFile {
     }
 
     getVowelIntervals(vowelSymbols) {
-        let phonemeTier = this[0];
-        return phonemeTier.filter(interval => vowelSymbols.includes(interval.text));
+        return this[0].filter(interval => vowelSymbols.includes(interval.text));
     }
 
     getPhonemesIn({xmin, xmax}) {

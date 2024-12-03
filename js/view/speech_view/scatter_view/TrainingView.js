@@ -10,10 +10,10 @@ export default class TrainingView extends ScatterView {
         this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
 
-        let buttons = this.divStack.querySelectorAll("button");
+        const buttons = this.divStack.querySelectorAll("button");
         buttons.forEach(button => button.remove());
         
-        let button = document.createElement("button");
+        const button = document.createElement("button");
         button.innerHTML = "OK";
         button.onclick = () => {
             this.divStack.remove();
@@ -28,9 +28,9 @@ export default class TrainingView extends ScatterView {
             this.initializePlot();
         }
         
-        let userVowels = args.userVowels;
+        const userVowels = args.userVowels;
         userVowels.vowelsProcessed.forEach(vowel => {
-            let id = vowel.id;
+            const id = vowel.id;
             
             vowel.formants.forEach(formant => {
                 this.saveFormants(formant, id);
@@ -40,14 +40,14 @@ export default class TrainingView extends ScatterView {
     }
 
     addDataset(vowels) {
-        let vowelInv = VOWEL_INVENTORIES[vowels.language];
+        const vowelInv = VOWEL_INVENTORIES[vowels.language];
         this.scatterPlot.insertGroup({ 
             formatting: { symbol: d3.symbolSquare }, 
             nested: true 
         }, 1);
         for (let i = 0; i < vowelInv.length; i++) {
-            let vowel = new Vowel(vowelInv[i]);
-            let ids = this.scatterPlot.appendGroup({ 
+            const vowel = new Vowel(vowelInv[i]);
+            const ids = this.scatterPlot.appendGroup({ 
                 nested: true, 
                 formatting: { rgb: vowel.rgb },
                 onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
@@ -73,7 +73,7 @@ export default class TrainingView extends ScatterView {
         this.visibleVowelsChoice.querySelector("#peterson-barney").onchange = (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 1);
         }
-        let sideContainer = document.querySelector(".side-container");
+        const sideContainer = document.querySelector(".side-container");
         sideContainer.appendChild(this.visibleVowelsChoice);
         document.querySelector(".recording-container").after(this.visibleVowelsChoice);
     }

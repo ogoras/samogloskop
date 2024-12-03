@@ -29,11 +29,11 @@ export default class Recording extends DataLoadedFromFile {
     }
 
     getVowelMeasurements(vowelSymbols) {
-        let vowelSegments = this.textGrid.getVowelIntervals(vowelSymbols);
+        const vowelSegments = this.textGrid.getVowelIntervals(vowelSymbols);
         return vowelSegments.map(segment => {
             const samples = this.getSamples(segment);
             const formants = soundToFormant(samples, this.sampleRate, this.preset.frequency);
-            let values = formants.map(formants => {
+            const values = formants.map(formants => {
                 return {
                     x: formants.formant[1].frequency,
                     y: formants.formant[0].frequency

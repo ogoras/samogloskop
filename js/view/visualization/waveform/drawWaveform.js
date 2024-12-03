@@ -14,11 +14,11 @@ export default function drawWaveform(dataArray, bufferLength, canvas, canvasCtx)
 
     canvasCtx.beginPath();
 
-    let sliceWidth = (WIDTH * 1.0) / bufferLength;
+    const sliceWidth = (WIDTH * 1.0) / bufferLength;
     let x = 0;
 
     for (let i = 0; i < bufferLength; i++) {
-        let v = dataArray[i];
+        const v = dataArray[i];
         let y = (v * HEIGHT) / 2;
         y += HEIGHT / 2;
 

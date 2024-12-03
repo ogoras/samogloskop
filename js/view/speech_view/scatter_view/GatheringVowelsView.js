@@ -49,7 +49,7 @@ export default class GatheringVowelsView extends ScatterView {
         this.currentVowel = this.userVowels.nextVowel();
 
         // remove all elements from divStack except h2
-        let divStack = this.divStack;
+        const divStack = this.divStack;
         while (divStack.lastChild !== this.h2) {
             divStack.removeChild(divStack.lastChild);
         }

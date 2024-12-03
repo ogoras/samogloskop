@@ -52,7 +52,7 @@ export default class LocalStorageMediator extends Singleton {
         if (dataConsentGiven && !this.version) {
             this.version = "0.0";
         }
-        let localStorageVersion = this.version;
+        const localStorageVersion = this.version;
         if (localStorageVersion !== `${VERSION_MAJOR}.${VERSION_MINOR}`) {
             if (localStorageVersion === "0.1") {
                 // 0.1 -> 0.2 conversion

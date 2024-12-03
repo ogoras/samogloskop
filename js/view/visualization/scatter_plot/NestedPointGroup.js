@@ -14,8 +14,8 @@ export default class NestedPointGroup extends PointGroup {
         if (index < 0 || index > this.length) {
             throw new Error(`insertSubgroup: index out of bounds: ${index}`);
         }
-        let GroupConstructor = nested ? NestedPointGroup : SimplePointGroup;
-        let newGroup = new GroupConstructor(this, index, constructorDefaults);
+        const GroupConstructor = nested ? NestedPointGroup : SimplePointGroup;
+        const newGroup = new GroupConstructor(this, index, constructorDefaults);
         this.splice(index, 0, newGroup);
         return newGroup;
     }

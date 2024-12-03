@@ -10,8 +10,7 @@ export default class Enum {
     }
 
     static get(key) {
-        let instance = Enum.#instancesDict[this.name][key];
-        return instance;
+        return Enum.#instancesDict[this.name][key];
     }
 
     toString() {
@@ -19,8 +18,8 @@ export default class Enum {
     }
 
     next() {
-        let nextIndex = this.index + 1;
-        let nextInstance = Enum.#instancesDict[this.constructor.name][nextIndex];
+        const nextIndex = this.index + 1;
+        const nextInstance = Enum.#instancesDict[this.constructor.name][nextIndex];
         if (nextInstance === undefined) {
             throw new Error(`No next instance for ${this}`);
         }
