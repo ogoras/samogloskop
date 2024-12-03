@@ -85,7 +85,7 @@ export default class GatheringForeignView extends SpeechView {
         // phraseDescription is a 2x1 grid with centered elements
         phraseDescription.style.display = "grid";
         phraseDescription.style.gridTemplateColumns = "1fr";
-        phraseDescription.style.gridTemplateRows = "1fr 1fr";
+        phraseDescription.style.gridTemplateRows = "auto auto";
         phraseDescription.style.gap = "10px";
         // top element is the phrase
         let phraseElement = document.createElement("div");
