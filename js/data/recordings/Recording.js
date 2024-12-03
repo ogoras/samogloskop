@@ -53,7 +53,6 @@ export default class Recording extends DataLoadedFromFile {
         if (!paddingDuration) return samples;
         const paddingNumber = Math.floor(paddingDuration * this.sampleRate);
         const padding = new Float32Array(paddingNumber);
-        samples = new Float32Array([...padding, ...samples, ...padding]);
-        return samples;
+        return new Float32Array([...padding, ...samples, ...padding]);
     }
 }
