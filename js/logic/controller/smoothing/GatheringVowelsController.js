@@ -1,8 +1,6 @@
-import SpeakerVowels from "../../../../data/vowels/SpeakerVowels.js";
-import { POINT_SIZES } from "../../../../const/POINT_SIZES.js";
-import Buffer from "../../../util/Buffer.js";
-import nextController from "../../nextController.js";
-import RenderController from "./RenderController.js";
+import { POINT_SIZES } from "../../../const/POINT_SIZES.js";
+import nextController from "../nextController.js";
+import SmoothingController from "./SmoothingController.js";
 
 const SUBSTATES = {
     "WAITING": 0,
@@ -10,15 +8,10 @@ const SUBSTATES = {
     "GATHERED": 2
 }
 
-export const minimumSmoothingCount = 20;
-export default class GatheringVowelsController extends RenderController {
-    smoothedFormantsBuffer = new Buffer(minimumSmoothingCount);
-
+export default class GatheringVowelsController extends SmoothingController {
     init(prev) {
         this.substate = SUBSTATES.WAITING;
-        this.initStart(prev);
-        this.userVowels = prev.userVowels ?? new SpeakerVowels();
-        this.initFinalAndRun(prev);
+        super.init(prev);
     }
 
     renderLoop() {
@@ -75,11 +68,12 @@ export default class GatheringVowelsController extends RenderController {
                         this.lsm.userVowels = userVowels;
                         this.sm.advance();
                         nextController(this);
-                        return;
+                        return false;
                     }
                 }
                 else {
                     this.view.feed(samples, {formantsSaved, formantsSmoothed, formants: formantPoints});
+                    // TODO: get rid of this view.feed method and replace it with more specific methods
                 }
                 break;
             case SUBSTATES.GATHERED:
@@ -104,31 +98,7 @@ export default class GatheringVowelsController extends RenderController {
         }
 
         requestAnimationFrame(this.renderLoop.bind(this));
-    }
 
-    getSmoothedFormants() {
-        const formantsBuffer = this.formantsBuffer;
-        const smoothedFormantsBuffer = this.smoothedFormantsBuffer;
-        if (formantsBuffer.length < minimumSmoothingCount) return undefined;
-        const ratio = 0.5;
-        let weightSum = 0;
-        let xSum = 0;
-        let ySum = 0;
-        let weight = 1;
-        for (let formants of formantsBuffer.buffer) {
-            xSum += formants.F2 * weight;
-            ySum += formants.F1 * weight;
-            weightSum += weight;
-            weight *= ratio;
-        }
-        const smoothedFormants = {
-            x: xSum / weightSum,
-            y: ySum / weightSum,
-            size: POINT_SIZES.CURRENT,
-            //color: !userVowels.isDone() ? userVowels.currentVowel.rgb : "black"
-        };
-        this.formantsToSave = smoothedFormantsBuffer.push(smoothedFormants)
-        if (this.formantsToSave) this.formantsToSave.size = POINT_SIZES.USER_DATAPOINTS;
-        return smoothedFormants;
+        return false;
     }
 }

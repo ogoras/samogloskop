@@ -1,8 +1,8 @@
-import RenderController from './RenderController.js';
-import ForeignRecordings from '../../../../data/recordings/ForeignRecordings.js';
-import SpeakerVowels from '../../../../data/vowels/SpeakerVowels.js';
+import SmoothingController from "./SmoothingController.js";
+import ForeignRecordings from '../../../data/recordings/ForeignRecordings.js';
+import SpeakerVowels from '../../../data/vowels/SpeakerVowels.js';
 
-export default class GatheringForeignController extends RenderController {
+export default class GatheringForeignController extends SmoothingController {
     async init(prev) {
         this.initStart(prev);
 
@@ -30,5 +30,18 @@ export default class GatheringForeignController extends RenderController {
         const vowel = this.foreignInitial.nextVowel();
         this.currentEntry = this.englishRecordings.getRandomEntryForVowel(vowel.letter);
         return this.currentEntry;
+    }
+
+    renderLoop() {
+        if (super.renderLoop()) return true;
+
+        const samples = this.samples;
+        const formants = this.formants;
+        const stats = this.intensityStats;
+        const statsUpdated = this.statsUpdated;
+
+        
+
+        return false;
     }
 }

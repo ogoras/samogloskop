@@ -1,11 +1,11 @@
 import ChoiceController from "./ChoiceController.js";
 import CalibrationStartController from "./recording/CalibrationStartController.js";
-import SilenceController from "./recording/render/SilenceController.js";
-import MeasuringSpeechController from "./recording/render/MeasuringSpeechController.js";
-import GatheringVowelsController from "./recording/render/GatheringVowelsController.js";
-import ConfirmVowelsController from "./recording/render/ConfirmVowelsController.js";
-import GatheringForeignController from "./recording/render/GatheringForeignController.js";
-import TrainingController from "./recording/render/TrainingController.js";
+import SilenceController from "./render/SilenceController.js";
+import MeasuringSpeechController from "./render/MeasuringSpeechController.js";
+import GatheringVowelsController from "./smoothing/GatheringVowelsController.js";
+import ConfirmVowelsController from "./smoothing/ConfirmVowelsController.js";
+import GatheringForeignController from "./smoothing/GatheringForeignController.js";
+import TrainingController from "./smoothing/TrainingController.js";
 
 const CONTROLLER_CLASSES = {
     "DATA_CONSENT": ChoiceController,

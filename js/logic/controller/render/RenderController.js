@@ -1,9 +1,9 @@
-import RecordingController from "../RecordingController.js";
-import Buffer from "../../../util/Buffer.js";
-import IntensityStats from "../../../../data/IntensityStats.js";
-import State from "../../../../const/states.js";
-import nextController from "../../nextController.js";
-import soundToFormant from "../../../praat/formant.js";
+import RecordingController from "../recording/RecordingController.js";
+import Buffer from "../../util/Buffer.js";
+import IntensityStats from "../../../data/IntensityStats.js";
+import State from "../../../const/states.js";
+import nextController from "../nextController.js";
+import soundToFormant from "../../praat/formant.js";
 
 const formantCount = 20;
 const calibrationTime = 10;

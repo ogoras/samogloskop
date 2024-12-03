@@ -1,4 +1,4 @@
-import nextController from "../../nextController.js";
+import nextController from "../nextController.js";
 import RenderController from "./RenderController.js";
 
 export default class MeasuringSpeechController extends RenderController {
