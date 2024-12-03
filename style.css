@@ -120,6 +120,174 @@ h4 {
     aspect-ratio: 1 / 1;
 }
 
+.recording-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.fl {
+    float: left;
+    margin: 0.3rem;
+}
+
+.formants {
+    height: 100%;
+    width: 100%;
+}
+
+canvas {
+    height: 100%;
+    width: 100%;
+}
+
+.visualizer {
+    height: 100%;
+    width: 100%;
+}
+
+@media (orientation: landscape) {
+    .formants-container {
+        height: 100%;
+        aspect-ratio: 1 / 1;
+    }
+
+    .side-container {
+        width: calc(100% - 0.5rem);
+        margin-left: 0;
+    }
+
+    body.recording-view {
+        flex-direction: row;
+    }
+
+    div.flex-oriented {
+        display: flex;
+        flex-direction: row;
+    }
+}
+
+@media (orientation: portrait) {
+    .formants-container {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+    }
+
+    div.flex-oriented {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+body {
+    flex-direction: column;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 0.5rem;
+    background-color: lightgray;
+    border-radius: 0.25rem;
+    margin: 0.3rem;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background-color: #4CAF50;
+    border-radius: 0.25rem;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+}
+
+.footer {
+    padding: 0.3rem;
+    text-align: right;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.recording-table {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.recording-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.recording-row > .text-element {
+    display: flex;
+    align-items: center;
+}
+
+.recording-row > .single {
+    height: 1.8rem;
+}
+
+.recording-row > .double {
+    height: 3.8rem;
+}
+
+/* recordingDescription is a horizontal flexbox aligned to the right */
+.recording-row > .description {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.recording-row .fragment-description {
+    margin-right: 1rem;
+}
+
+.play-button {
+    padding: 0;
+    width: 2em;
+    height: 2em;
+}
+
+.play-button.big {
+    padding: 0;
+    font-size: 2rem;
+}
+
+.play-button.small {
+    padding: 0;
+    font-size: 1rem;
+    margin-right: 2.2rem;
+}
+
+.double-bold {
+    font-weight: bold;
+    font-size: 3.8rem;
+}
+
+.recording-row .grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    gap: 0.1rem 1rem;
+    font-size: 1.8rem;
+}
+
+.speaker-element {
+    margin: 0.5rem;
+    margin-left: auto;
+    text-align: right;
+}
+
 button {
     padding: 0.8rem;
     margin: 0.2rem;
@@ -231,100 +399,4 @@ g.clickable text {
 button:active, .emoji-button:active {
     filter: drop-shadow(0 0 0.2rem);
     opacity: 1;
-}
-
-.recording-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.fl {
-    float: left;
-    margin: 0.3rem;
-}
-
-.formants {
-    height: 100%;
-    width: 100%;
-}
-
-canvas {
-    height: 100%;
-    width: 100%;
-}
-
-.visualizer {
-    height: 100%;
-    width: 100%;
-}
-
-@media (orientation: landscape) {
-    .formants-container {
-        height: 100%;
-        aspect-ratio: 1 / 1;
-    }
-
-    .side-container {
-        width: calc(100% - 0.5rem);
-        margin-left: 0;
-    }
-
-    body.recording-view {
-        flex-direction: row;
-    }
-
-    div.flex-oriented {
-        display: flex;
-        flex-direction: row;
-    }
-}
-
-@media (orientation: portrait) {
-    .formants-container {
-        width: 100%;
-        aspect-ratio: 1 / 1;
-    }
-
-    div.flex-oriented {
-        display: flex;
-        flex-direction: column;
-    }
-}
-
-body {
-    flex-direction: column;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 0.5rem;
-    background-color: lightgray;
-    border-radius: 0.25rem;
-    margin: 0.3rem;
-}
-
-.progress {
-    height: 100%;
-    width: 0%;
-    background-color: #4CAF50;
-    border-radius: 0.25rem;
-}
-
-.header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem;
-    background-color: #f0f0f0;
-}
-
-.footer {
-    padding: 0.3rem;
-    text-align: right;
-}
-
-.no-bottom-margin {
-    margin-bottom: 0;
 }

@@ -9,7 +9,7 @@ export default class SpeechView extends View {
             throw new Error("Cannot instantiate abstract class FormantView");
         }
 
-        if (view !== undefined) {
+        if (view instanceof View) {
             this.#recording = view.recording;
         }
     }

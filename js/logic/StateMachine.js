@@ -50,6 +50,7 @@ const SAVEABLE_STATES = [
     "NO_SAMPLES_YET",
     "SPEECH_MEASURED",
     "CONFIRM_VOWELS",
+    "GATHERING_FOREIGN_INITIAL",
     "TRAINING",
 ].map((key) => State.get(key));
 

@@ -6,20 +6,20 @@ export default class CalibrationStartView extends SpeechView {
 
     constructor(controller, arg, recycle = false) {
         if (recycle) {
-            let view = arg;
+            const view = arg;
             super(controller, view);
             this.div = view.div;
             this.divStack = view.divStack;
             // clear div
             this.div.innerHTML = "";
             // append center div to div
-            let centerDiv = document.createElement("div");
+            const centerDiv = document.createElement("div");
             centerDiv.classList.add("center");
             this.div.appendChild(centerDiv);
             centerDiv.appendChild(this.divStack);
         }
         else {
-            let container = arg;
+            const container = arg;
             super(controller);
 
             this.div = container;
