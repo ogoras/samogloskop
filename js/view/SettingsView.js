@@ -1,7 +1,7 @@
 import View from "./View.js";
 import PresetView from "./PresetView.js";
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from '../const/version.js';
-import getState from '../const/states.js';
+import State from "../const/states.js";
 
 export default class SettingsView extends View {
     #state;
@@ -16,7 +16,7 @@ export default class SettingsView extends View {
         super(controller);
         this.closeCallback = closeCallback;
         this.preset = controller.lsm.preset;
-        this.userVowels = controller.userVowels;
+        this.nativeVowels = controller.nativeVowels;
         this.intensityStats = controller.intensityStats;
         this.#state = controller.lsm.state;
 
@@ -128,7 +128,7 @@ export default class SettingsView extends View {
             this.mainContainer.insertBefore(this.createPresetSection(), nextElement);
         });
 
-        if (this.userVowels?.gatheredAnything) {
+        if (this.nativeVowels?.gatheredAnything) {
             const notice = document.createElement("p");
             notice.innerHTML = "Uwaga: Zmiana kategorii głosu ma wpływ tylko na przyszłe nagrania. Wszystkie dotychczas zebrane dane pozostaną niezmienione.";
             notice.style = "color: #a00000";
@@ -195,8 +195,8 @@ export default class SettingsView extends View {
         button.style = "color: #a00000";
         button.onclick = () => {
             if (!confirm("Czy na pewno chcesz usunąć wszystkie dane o Twoich polskich samogłoskach?")) return;
-            localStorage.removeItem("userVowels");
-            localStorage.setItem("state", "SPEECH_MEASURED");
+            this.controller.lsm.nativeVowels = undefined;
+            this.controller.lsm.state = State.get("SPEECH_MEASURED");
             location.reload();
         }
         container.appendChild(button);

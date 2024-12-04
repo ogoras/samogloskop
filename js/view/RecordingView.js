@@ -71,7 +71,7 @@ export default class RecordingView extends View {
         this.view?.feedSmoothed?.(formants, rescalePlots);
     }
 
-    saveFormants(formants) {
+    feedSaved(formants) {
         if (!formants) return;
         this.view?.saveFormants?.(formants);
     }
@@ -79,18 +79,6 @@ export default class RecordingView extends View {
     feedVowel(vowel) {
         this.view?.vowelCentroid?.(vowel);
     }
-
-    // #UPDATE_FUNCTION = {
-    //     formants: (x, y) => { this.view?.feed?.(x, y); },
-    //     formantsSmoothed: (x, y) => { this.view?.feedSmoothed?.(x, y); },
-    //     formantsSaved: (x) => { this.view?.saveFormants?.(x); },
-    //     vowel: (vowel) => { this.view?.vowelCentroid?.(vowel); },
-    //     progressTime: (time) => { this.view?.updateProgress?.(time); },
-    //     progress: (progress) => { this.view?.updateProgress?.(progress, false); },
-    //     startTime: (time) => { if (this.view) this.view.startTime = time; },
-    //     vowelGathered: (value) => { this.view.vowelGathered = value; },
-    //     speechDetected: (value) => { this.view.speechDetected = value; },
-    // }
 
     constructor(controller, recorder) {
         super(controller);
@@ -195,12 +183,7 @@ export default class RecordingView extends View {
         }
     }
 
-    feed(samples /*, updates, rescalePlots */) {
-        // if (updates) {
-        //     for (let [key, value] of Object.entries(updates)) {
-        //         if (value !== undefined && value !== null) this.#UPDATE_FUNCTION[key]?.(value, rescalePlots);
-        //     }
-        // }
+    feed(samples) {
         this.waveformVisualizer.feed(samples);
     }
 

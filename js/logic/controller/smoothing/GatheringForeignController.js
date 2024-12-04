@@ -26,7 +26,7 @@ export default class GatheringForeignController extends SmoothingController {
         this.view.disabled = false;
     }
 
-    getRecordingEntry() {
+    newVowelRecording() {
         const vowel = this.foreignInitial.nextVowel();
         this.currentEntry = this.englishRecordings.getRandomEntryForVowel(vowel.letter);
         return this.currentEntry;
@@ -35,7 +35,6 @@ export default class GatheringForeignController extends SmoothingController {
     renderLoop() {
         if (super.renderLoop()) return true;
 
-        const samples = this.samples;
         const formants = this.formants;
         const stats = this.intensityStats;
         const statsUpdated = this.statsUpdated;

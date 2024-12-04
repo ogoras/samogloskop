@@ -5,11 +5,22 @@ import { POINT_SIZES } from "../../../const/POINT_SIZES.js";
 
 const minimumSmoothingCount = 20;
 export default class SmoothingController extends RenderController {
+    constructor() {
+        super();
+        if (this.constructor === SmoothingController) {
+            throw new TypeError(`Abstract class "${this.constructor.name}" cannot be instantiated directly.`);
+        }
+    }
+
     init(prev) {
-        this.smoothedFormantsBuffer = prev.smoothedFormantsBuffer ?? new Buffer(minimumSmoothingCount);
         this.initStart(prev);
-        this.userVowels = prev.userVowels ?? this.lsm.userVowels ?? new SpeakerVowels();
+        this.nativeVowels = prev.nativeVowels ?? this.lsm.nativeVowels ?? new SpeakerVowels();
         this.initFinalAndRun(prev);
+    }
+
+    initStart(prev) {
+        this.smoothedFormantsBuffer = prev.smoothedFormantsBuffer ?? new Buffer(minimumSmoothingCount);
+        super.initStart(prev);
     }
 
     getSmoothedFormants() {
@@ -31,11 +42,35 @@ export default class SmoothingController extends RenderController {
             x: xSum / weightSum,
             y: ySum / weightSum,
             size: POINT_SIZES.CURRENT,
-            //color: !userVowels.isDone() ? userVowels.currentVowel.rgb : "black"
         };
         // this.formantsToSave can be ignored
         this.formantsToSave = smoothedFormantsBuffer.push(smoothedFormants);
         if (this.formantsToSave) this.formantsToSave.size = POINT_SIZES.USER_DATAPOINTS;
         return smoothedFormants;
+    }
+
+    processFormants(rescalePlot = true) {
+        const formants = this.formants;
+        const stats = this.intensityStats;
+        const nativeVowels = this.nativeVowels;      
+
+        if (!stats.detectSpeech()) {
+            this.formantsBuffer.clear();
+            this.smoothedFormantsBuffer.clear();
+            return false;
+        }
+        
+        const formantPoints = formants
+            .filter((formants) => formants.formant.length >= 2)
+            .map((formants) => {
+                const point = {x: formants.formant[1].frequency, y: formants.formant[0].frequency};
+                nativeVowels.scale(point);
+                return point;
+            });
+        const formantsSmoothed = nativeVowels.scale(this.getSmoothedFormants());
+        this.view.feedSmoothed(formantsSmoothed, false);
+        this.view.feedFormants(formantPoints, false);
+
+        return true;
     }
 }

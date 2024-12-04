@@ -5,7 +5,6 @@ export default class MeasuringSpeechController extends RenderController {
     renderLoop() {
         if (super.renderLoop()) return true;
 
-        const samples = this.samples;
         const stats = this.intensityStats;
         const view = this.view;
 
@@ -13,8 +12,6 @@ export default class MeasuringSpeechController extends RenderController {
             this.formantsBuffer.clear();
             this.samplesBuffer.clear();
         }
-
-        view.feed(samples);
 
         switch(this.sm.state.name) {
             case "WAITING_FOR_SPEECH":
@@ -42,16 +39,11 @@ export default class MeasuringSpeechController extends RenderController {
                 break;
             case "SPEECH_MEASURED":
                 // wait for 2 seconds of silence
-                const silenceRequired = 2;
-                const duration = stats.silenceDuration;
-                const progress = duration / silenceRequired;
-                if (duration >= silenceRequired) {
-                    view.progress = 1;
+                if (this.waitFor(2)) {
                     this.sm.advance();
                     nextController(this);
                     return false;
                 }
-                view.progress = progress;
                 break;
             default:
                 throw new Error(`Invalid state in ${this.constructor.name}: ${this.sm.state.name}`);

@@ -28,8 +28,8 @@ export default class TrainingView extends ScatterView {
             this.initializePlot();
         }
         
-        const userVowels = args.userVowels;
-        userVowels.vowelsProcessed.forEach(vowel => {
+        const nativeVowels = args.nativeVowels;
+        nativeVowels.vowelsProcessed.forEach(vowel => {
             const id = vowel.id;
             
             vowel.formants.forEach(formant => {

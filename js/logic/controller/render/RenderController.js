@@ -73,7 +73,7 @@ export default class RenderController extends RecordingController {
             return true;
         }
     
-        const samples = this.samples = recorder.dump();
+        const samples = recorder.dump();
         samplesBuffer.pushMultiple(samples);
         const formants = this.formants = soundToFormant(samples, sampleRate, this.lsm.preset.frequency);
         formantsBuffer.pushMultiple(
@@ -88,6 +88,8 @@ export default class RenderController extends RecordingController {
         this.time += samples.length / sampleRate;
 
         this.statsUpdated = stats.update(this.time, formantsBuffer.buffer.map((formants) => formants.intensity), samplesBuffer.buffer);
+
+        this.view.feed(samples);
 
         return false;
     }
@@ -105,5 +107,17 @@ export default class RenderController extends RecordingController {
         this.sm.state = State.get("NO_SAMPLES_YET");
         nextController(this).newIntensityStats();
         this.breakRenderLoop();
+    }
+
+    waitFor(silenceRequired) {
+        if (this.statsUpdated) {
+            const duration = this.intensityStats.silenceDuration;
+            if (duration >= silenceRequired) {
+                this.view.progress = 1;
+                return true;
+            }
+            this.view.progress = duration / silenceRequired;
+        }
+        return false;
     }
 }

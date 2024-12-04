@@ -50,7 +50,7 @@ export default class GatheringForeignView extends SpeechView {
         }
         this.button.remove();
         
-        const vowelRecording = this.controller.getRecordingEntry();
+        const vowelRecording = this.controller.newVowelRecording();
         const color = `#${vowelRecording.phoneme.rgb}`;
         console.log(vowelRecording);
         const vowelIPA = vowelRecording.phoneme.IPA.broad;

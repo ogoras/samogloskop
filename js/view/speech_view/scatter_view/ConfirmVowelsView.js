@@ -30,8 +30,8 @@ export default class ConfirmVowelsView extends ScatterView {
             this.initializePlot();
         }
         
-        const userVowels = this.userVowels = controller.userVowels;
-        userVowels.vowelsProcessed.forEach(vowel => {
+        const nativeVowels = this.nativeVowels = controller.nativeVowels;
+        nativeVowels.vowelsProcessed.forEach(vowel => {
             const id = vowel.id;
             
             vowel.formants.forEach(formant => {

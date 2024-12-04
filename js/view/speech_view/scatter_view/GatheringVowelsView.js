@@ -22,7 +22,7 @@ export default class GatheringVowelsView extends ScatterView {
         }
         if (!value) {
             if (this.#vowelGathered) {
-                this.currentVowel = this.userVowels.nextVowel();
+                this.currentVowel = this.nativeVowels.nextVowel();
                 this.#vowelGathered = false;
             }
             else {
@@ -45,8 +45,8 @@ export default class GatheringVowelsView extends ScatterView {
     constructor(controller, view, recycle = false) {
         super(controller, view, recycle);
 
-        this.userVowels = controller.userVowels;
-        this.currentVowel = this.userVowels.nextVowel();
+        this.nativeVowels = controller.nativeVowels;
+        this.currentVowel = this.nativeVowels.nextVowel();
 
         // remove all elements from divStack except h2
         const divStack = this.divStack;
