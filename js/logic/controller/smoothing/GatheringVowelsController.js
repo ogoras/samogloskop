@@ -21,25 +21,31 @@ export default class GatheringVowelsController extends SmoothingController {
         const formants = this.formants;
         const stats = this.intensityStats;
         const statsUpdated = this.statsUpdated;
+        const view = this.view;
+
+        view.feed(samples);
 
         switch(this.substate) {
             case SUBSTATES.WAITING:
                 if (statsUpdated && stats.detectSpeech()) {
                     this.substate = SUBSTATES.GATHERING;
-                    this.view.feed(samples, {speechDetected: true});
+
                     this.formantsBuffer.clear();
                     this.smoothedFormantsBuffer.clear();
+                    
+                    view.speechDetected = true;
                 }
-                else this.view.feed(samples);
                 break;
             case SUBSTATES.GATHERING:
                 const userVowels = this.userVowels;
 
                 if (!stats.detectSpeech()) {
+                    this.substate = SUBSTATES.WAITING;
+
                     this.formantsBuffer.clear();
                     this.smoothedFormantsBuffer.clear();
-                    this.substate = SUBSTATES.WAITING;
-                    this.view.feed(samples, {speechDetected: false});
+                    
+                    view.speechDetected = false;
                     break;
                 }
                 const formantPoints = formants
@@ -53,16 +59,16 @@ export default class GatheringVowelsController extends SmoothingController {
                 const formantsSaved = this.formantsToSave;
                 userVowels.addFormants(this.formantsToSave);
                 delete this.formantsToSave;
+                view.feedFormants(formantPoints);
+                view.feedSmoothed(formantsSmoothed);
+                view.saveFormants(formantsSaved);
+
                 if (userVowels.isVowelGathered()) {
-                    const vowel = userVowels.saveVowel();
                     this.substate = SUBSTATES.GATHERED;
-                    this.view.feed(samples, {
-                        vowel,
-                        formantsSaved,
-                        formantsSmoothed,
-                        formants: formantPoints,
-                        vowelGathered: true
-                    });
+
+                    const vowel = userVowels.saveVowel();
+                    view.feedVowel(vowel);
+                    view.vowelGathered = true;
                     if (userVowels.isDone()) {
                         userVowels.scaleLobanov();
                         this.lsm.userVowels = userVowels;
@@ -70,10 +76,6 @@ export default class GatheringVowelsController extends SmoothingController {
                         nextController(this);
                         return false;
                     }
-                }
-                else {
-                    this.view.feed(samples, {formantsSaved, formantsSmoothed, formants: formantPoints});
-                    // TODO: get rid of this view.feed method and replace it with more specific methods
                 }
                 break;
             case SUBSTATES.GATHERED:
@@ -84,13 +86,13 @@ export default class GatheringVowelsController extends SmoothingController {
                     const progress = length / silenceRequired;
                     if (length >= silenceRequired) {
                         this.substate = SUBSTATES.WAITING;
-                        this.view.feed(samples, {
-                            progress: 1,
-                            speechDetected: false
-                        });
+
                         this.smoothedFormantsBuffer.clear();
+
+                        view.progress = 1;
+                        view.speechDetected = false;
                     }
-                    else this.view.feed(samples, {progress});
+                    else view.progress = progress;
                 }
                 break;
             default:

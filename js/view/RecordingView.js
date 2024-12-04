@@ -19,18 +19,78 @@ export default class RecordingView extends View {
         return this.#disabled;
     }
 
-    #UPDATE_FUNCTION = {
-        intensityStats: (x) => { this.view?.update?.(x); },
-        formants: (x, y) => { this.view?.feed?.(x, y); },
-        formantsSmoothed: (x, y) => { this.view?.feedSmoothed?.(x, y); },
-        formantsSaved: (x) => { this.view?.saveFormants?.(x); },
-        vowel: (vowel) => { this.view?.vowelCentroid?.(vowel); },
-        progressTime: (time) => { this.view?.updateProgress?.(time); },
-        progress: (progress) => { this.view?.updateProgress?.(progress, false); },
-        startTime: (time) => { if (this.view) this.view.startTime = time; },
-        vowelGathered: (value) => { this.view.vowelGathered = value; },
-        speechDetected: (value) => { this.view.speechDetected = value; },
+    /**
+     * @param {number} time
+     */
+    set startTime(time) {
+        if (this.view) this.view.startTime = time;
     }
+
+    /**
+     * @param {IntensityStats} stats
+     */
+    set intensityStats(stats) {
+        if (this.view) this.view.intensityStats = stats;
+    }
+
+    /**
+     * @param {number} time
+     */
+    set progressTime(time) {
+        this.view?.updateProgress?.(time);
+    }
+
+    /**
+     * @param {number} time
+     */
+    set progress(time) {
+        this.view?.updateProgress?.(time, false);
+    }
+
+    /**
+     * @param {boolean} value
+     */
+    set speechDetected(value) {
+        if (this.view) this.view.speechDetected = value;
+    }
+
+    /**
+     * @param {boolean} value
+     */
+    set vowelGathered(value) {
+        if (this.view) this.view.vowelGathered = value;
+    }
+
+    feedFormants(formants, rescalePlots = true) {
+        if (!formants) return;
+        this.view?.feed?.(formants, rescalePlots);
+    }
+
+    feedSmoothed(formants, rescalePlots = true) {
+        if (!formants) return;
+        this.view?.feedSmoothed?.(formants, rescalePlots);
+    }
+
+    saveFormants(formants) {
+        if (!formants) return;
+        this.view?.saveFormants?.(formants);
+    }
+
+    feedVowel(vowel) {
+        this.view?.vowelCentroid?.(vowel);
+    }
+
+    // #UPDATE_FUNCTION = {
+    //     formants: (x, y) => { this.view?.feed?.(x, y); },
+    //     formantsSmoothed: (x, y) => { this.view?.feedSmoothed?.(x, y); },
+    //     formantsSaved: (x) => { this.view?.saveFormants?.(x); },
+    //     vowel: (vowel) => { this.view?.vowelCentroid?.(vowel); },
+    //     progressTime: (time) => { this.view?.updateProgress?.(time); },
+    //     progress: (progress) => { this.view?.updateProgress?.(progress, false); },
+    //     startTime: (time) => { if (this.view) this.view.startTime = time; },
+    //     vowelGathered: (value) => { this.view.vowelGathered = value; },
+    //     speechDetected: (value) => { this.view.speechDetected = value; },
+    // }
 
     constructor(controller, recorder) {
         super(controller);
@@ -127,27 +187,20 @@ export default class RecordingView extends View {
                         this.view.finish();
                         break;
                     case "MEASURING_SPEECH":
-                    // case "GATHERING_VOWELS":
                         this.view.speechDetected = true;
                         break;
-                    // case "WAITING_FOR_VOWELS":
-                    //     this.view.speechDetected = false;
-                    //     break;
-                    // case "VOWEL_GATHERED":
-                    //     this.view.vowelGathered = true;
-                    //     break;
                 }
             }
             else this.view = new Constructor(this.controller, this.formantsContainer);
         }
     }
 
-    feed(samples, updates, rescalePlots) {
-        if (updates) {
-            for (let [key, value] of Object.entries(updates)) {
-                if (value !== undefined && value !== null) this.#UPDATE_FUNCTION[key]?.(value, rescalePlots);
-            }
-        }
+    feed(samples /*, updates, rescalePlots */) {
+        // if (updates) {
+        //     for (let [key, value] of Object.entries(updates)) {
+        //         if (value !== undefined && value !== null) this.#UPDATE_FUNCTION[key]?.(value, rescalePlots);
+        //     }
+        // }
         this.waveformVisualizer.feed(samples);
     }
 

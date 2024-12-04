@@ -56,7 +56,7 @@ export default class RenderController extends RecordingController {
         this.#breakRenderLoop = true;
     }
 
-    renderLoop() {  // return true if returning early
+    renderLoop() {  // true if returning early
         if (this.#breakRenderLoop) {
             this.#breakRenderLoop = false;
             return true;

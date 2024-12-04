@@ -1,12 +1,12 @@
 import RenderController from "../render/RenderController.js";
 import SpeakerVowels from "../../../data/vowels/SpeakerVowels.js";
 import Buffer from "../../util/Buffer.js";
+import { POINT_SIZES } from "../../../const/POINT_SIZES.js";
 
 const minimumSmoothingCount = 20;
 export default class SmoothingController extends RenderController {
     init(prev) {
-        this.smoothedFormantsBuffer = prev.smoothedFormantsBuffer 
-            ?? new Buffer(minimumSmoothingCount);
+        this.smoothedFormantsBuffer = prev.smoothedFormantsBuffer ?? new Buffer(minimumSmoothingCount);
         this.initStart(prev);
         this.userVowels = prev.userVowels ?? this.lsm.userVowels ?? new SpeakerVowels();
         this.initFinalAndRun(prev);

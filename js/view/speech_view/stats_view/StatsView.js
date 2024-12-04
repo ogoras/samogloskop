@@ -47,21 +47,22 @@ export default class StatsView extends SpeechView {
                 ? 100 
                 : timeElapsed / this.timeRequired * 100;
         }
-        else {
-            this.progressBar.progress = value * 100;
-        }
+        else this.progressBar.progress = value * 100;
     }
 
-    update(intensityStats) {
+    /**
+     * @param {IntensityStats} statsGiven
+     */
+    set intensityStats(statsGiven) {
         const stats = this.stats;
-        stats.time.value = intensityStats.isCalibrated ? this.timeRequired : intensityStats.timeElapsed;
-        stats.min.value = intensityStats.zeroReached ? 0 : intensityStats.min;
-        if (stats.min.diff !== undefined) stats.min.diff = intensityStats.diff(0);
-        stats.max.value = intensityStats.max;
-        if (stats.max.diff !== undefined) stats.max.diff = intensityStats.diff(1);
-        stats.mean.value = intensityStats.mean;
-        if (stats.mean.diff !== undefined) stats.mean.diff = intensityStats.diff(2);
-        if (stats.range !== undefined) stats.range.value = intensityStats.range;
+        stats.time.value = statsGiven.isCalibrated ? this.timeRequired : statsGiven.timeElapsed;
+        stats.min.value = statsGiven.zeroReached ? 0 : statsGiven.min;
+        if (stats.min.diff !== undefined) stats.min.diff = statsGiven.diff(0);
+        stats.max.value = statsGiven.max;
+        if (stats.max.diff !== undefined) stats.max.diff = statsGiven.diff(1);
+        stats.mean.value = statsGiven.mean;
+        if (stats.mean.diff !== undefined) stats.mean.diff = statsGiven.diff(2);
+        if (stats.range !== undefined) stats.range.value = statsGiven.range;
         for (let key in stats) {
             const object = stats[key];
             object.span.innerHTML = object.roundFunction(object.value);

@@ -7,22 +7,26 @@ export default class MeasuringSpeechController extends RenderController {
 
         const samples = this.samples;
         const stats = this.intensityStats;
+        const view = this.view;
 
         if (this.statsUpdated) {
             this.formantsBuffer.clear();
             this.samplesBuffer.clear();
         }
 
+        view.feed(samples);
+
         switch(this.sm.state.name) {
             case "WAITING_FOR_SPEECH":
                 if (stats.detectSpeech()) {
                     this.sm.advance();
-                    this.view.feed(samples, {startTime: this.time})
-                    this.view.updateView();
+                    view.startTime = this.time;
+                    view.updateView();
                 }
                 break;
             case "MEASURING_SPEECH":
-                this.view.feed(samples, {intensityStats: stats, progressTime: this.time})
+                view.intensityStats = stats;
+                view.progressTime = this.time;
 
                 if (stats.isCalibrationFinished(this.time)) {
                     stats.saveStats("speech");
@@ -31,9 +35,9 @@ export default class MeasuringSpeechController extends RenderController {
                     stats.resetStart();
                     if (poppedState) {
                         nextController(this);
-                        return;
+                        return false;
                     }
-                    this.view.updateView();
+                    view.updateView();
                 }
                 break;
             case "SPEECH_MEASURED":
@@ -42,17 +46,18 @@ export default class MeasuringSpeechController extends RenderController {
                 const duration = stats.silenceDuration;
                 const progress = duration / silenceRequired;
                 if (duration >= silenceRequired) {
-                    this.view.feed(samples, {progress : 1})
+                    view.progress = 1;
                     this.sm.advance();
                     nextController(this);
-                    return;
+                    return false;
                 }
-                this.view.feed(samples, {progress})
+                view.progress = progress;
                 break;
             default:
                 throw new Error(`Invalid state in ${this.constructor.name}: ${this.sm.state.name}`);
         }
 
         requestAnimationFrame(this.renderLoop.bind(this));
+        return false;
     }
 }

@@ -4,12 +4,6 @@ import State from "../../../const/states.js";
 import SmoothingController from "./SmoothingController.js";
 
 export default class ConfirmVowelsController extends SmoothingController {
-    init(prev) {
-        this.initStart(prev);
-        this.userVowels = prev.userVowels ?? this.lsm.userVowels;
-        this.initFinalAndRun(prev);
-    }
-
     renderLoop() {
         if (super.renderLoop()) return true;
         
@@ -18,10 +12,11 @@ export default class ConfirmVowelsController extends SmoothingController {
         const stats = this.intensityStats;
         const userVowels = this.userVowels;      
 
+        this.view.feed(samples);
+
         if (!stats.detectSpeech()) {
             this.formantsBuffer.clear();
             this.smoothedFormantsBuffer.clear();
-            this.view.feed(samples);
         }
         else {
             const formantPoints = formants
@@ -32,7 +27,8 @@ export default class ConfirmVowelsController extends SmoothingController {
                     return point;
                 });
             const formantsSmoothed = userVowels.scale(this.getSmoothedFormants());
-            this.view.feed(samples, {formantsSmoothed, formants: formantPoints});
+            this.view.feedSmoothed(formantsSmoothed, false);
+            this.view.feedFormants(formantPoints, false);
         }
 
         requestAnimationFrame(this.renderLoop.bind(this));
