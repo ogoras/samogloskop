@@ -7,8 +7,11 @@ export default class TrainingView extends ScatterView {
     constructor(controller, arg, recycle = false) {
         super(controller, arg, recycle);
 
-        this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
-                Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
+        this.h2.innerHTML = `Niestety, tryb ćwiczenia nie jest jeszcze w pełni gotowy.
+            Możesz wciąż mówić samogłoski i porównywać je z Twoimi samogłoskami podstawowymi.
+            Ocena Twoich samogłosek angielskich będzie dostępna wkrótce.`;
+        /*`Jesteś teraz w trybie ćwiczenia. 
+                Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;*/
 
         const buttons = this.divStack.querySelectorAll("button");
         buttons.forEach(button => button.remove());
@@ -37,6 +40,8 @@ export default class TrainingView extends ScatterView {
             });
             this.vowelCentroid(vowel);
         });
+
+        this.divStack.style.width = "auto";
     }
 
     addDataset(vowels) {
