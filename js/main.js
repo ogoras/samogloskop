@@ -13,7 +13,4 @@ const sm = StateMachine.getInstance();
 sm.state = lsm.state;
 sm.lsm = lsm;
 
-// let petersonBarney = new Vowels("EN", "peterson_barney", () => datasetLoaded(petersonBarney));=
-// let datasets = [petersonBarney];
-
 nextController({sm, lsm});
