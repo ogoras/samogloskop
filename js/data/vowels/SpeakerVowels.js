@@ -168,12 +168,15 @@ export default class SpeakerVowels extends Vowels {
         this.#scaleCurrent = false;
     }
 
-    static fromString(string) {
+    static fromString(string, language = "PL", scaleLobanov = true) {
         const obj = JSON.parse(string);
-        const speakerVowels = new SpeakerVowels();
+        const speakerVowels = new SpeakerVowels(language);
         speakerVowels.vowelsRemaining = [];
-        speakerVowels.vowelsProcessed = obj.vowelsProcessed.map(Vowel.fromSimpleObject);
-        if (!obj.lobanovScaled) speakerVowels.scaleLobanov();
+        speakerVowels.vowelsProcessed = obj.vowelsProcessed.map(
+            vowel => Vowel.fromSimpleObject({...vowel, language}));
+        if (!obj.lobanovScaled) {
+            if (scaleLobanov) speakerVowels.scaleLobanov();
+        }
         else {
             speakerVowels.lobanovScaled = true;
             speakerVowels.#meanFormants = obj.meanFormants;

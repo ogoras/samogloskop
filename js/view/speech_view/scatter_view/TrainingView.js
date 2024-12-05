@@ -4,8 +4,8 @@ import { VOWEL_INVENTORIES } from "../../../const/vowel_inventories/VOWEL_INVENT
 import Vowel from "../../../data/vowels/Vowel.js";
 
 export default class TrainingView extends ScatterView {
-    constructor(onStateChange, arg, args, recycle = false) {
-        super(onStateChange, arg, args, recycle);
+    constructor(controller, arg, recycle = false) {
+        super(controller, arg, recycle);
 
         this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
@@ -28,7 +28,7 @@ export default class TrainingView extends ScatterView {
             this.initializePlot();
         }
         
-        const nativeVowels = args.nativeVowels;
+        const nativeVowels = controller.nativeVowels;
         nativeVowels.vowelsProcessed.forEach(vowel => {
             const id = vowel.id;
             

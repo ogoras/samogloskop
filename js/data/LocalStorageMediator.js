@@ -121,13 +121,13 @@ const localStorageProperties = [
     {
         name: "foreignInitial",
         localStorageName: "foreignInitial",
-        customGet: (string) => string ? SpeakerVowels.fromString(string) : string,
+        customGet: (string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
         customSet: (value) => value.toString(),
     },
     {
         name: "foreignRepeat",
         localStorageName: "foreignRepeat",
-        customGet: (string) => string ? SpeakerVowels.fromString(string) : string,
+        customGet: (string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
         customSet: (value) => value.toString(),
     }
 ]
