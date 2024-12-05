@@ -7,6 +7,14 @@ export default class TrainingView extends ScatterView {
     constructor(controller, arg, recycle = false) {
         super(controller, arg, recycle);
 
+        // iterate through all children of divStack and remove them except h2
+        const children = this.divStack.children;
+        for (let i = 0; i < children.length; i++) {
+            if (children[i] !== this.h2) {
+                children[i].remove();
+            }
+        }
+
         this.h2.innerHTML = `Niestety, tryb ćwiczenia nie jest jeszcze w pełni gotowy.
             Możesz wciąż mówić samogłoski i porównywać je ze swoimi samogłoskami podstawowymi.
             Ocena Twoich samogłosek angielskich będzie dostępna wkrótce.`;

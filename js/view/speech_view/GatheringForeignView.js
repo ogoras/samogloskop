@@ -135,7 +135,6 @@ export default class GatheringForeignView extends SpeechView {
 
         const vowelRecording = this.vowelRecording = this.controller.newVowelRecording();
         const color = `#${vowelRecording.phoneme.rgb}`;
-        console.log(vowelRecording);
         const vowelIPA = this.vowelIPA = vowelRecording.phoneme.IPA.broad;
         const sayOnlyMessage = this.sayOnlyMessage = `<b>Powiedz tylko <q>${vowelIPA}</q>, a nie całe słowo!</b>`
         this.h2.innerHTML = `Wysłuchaj nagrania, w momencie gotowości włącz mikrofon i powtórz samogłoskę. ${sayOnlyMessage}`;

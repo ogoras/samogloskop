@@ -3,6 +3,7 @@ import GatheringVowelsController from "./GatheringVowelsController.js";
 
 export default class GatheringForeignController extends GatheringVowelsController {
     async init(prev) {
+        prev.lsm.foreignInitial = undefined;
         super.init(prev);
         this.vowelsBeingGathered = this.sm.state.is("GATHERING_FOREIGN_INITIAL") ? "foreignInitial" : "foreignRepeat";
 
