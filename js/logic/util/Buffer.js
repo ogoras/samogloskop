@@ -1,6 +1,10 @@
 export default class Buffer {
     buffer = [];
 
+    get fillLevel() {
+        return this.buffer.length / this.capacity;
+    }
+
     constructor(capacity) {
         this.capacity = capacity;
     }

@@ -28,6 +28,7 @@ export default class GatheringVowelsController extends SmoothingController {
 
                     this.formantsBuffer.clear();
                     this.smoothedFormantsBuffer.clear();
+                    this.view.secondaryProgress = 0;
                     
                     view.speechDetected = true;
                 }
@@ -70,6 +71,7 @@ export default class GatheringVowelsController extends SmoothingController {
                 if (this.waitFor(1)) {
                     this.substate = SUBSTATES.WAITING;
                     this.smoothedFormantsBuffer.clear();
+                    this.view.secondaryProgress = 0;
                     view.speechDetected = false;
                 }
                 break;

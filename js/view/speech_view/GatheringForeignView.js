@@ -1,6 +1,6 @@
 import SpeechView from "./SpeechView.js";
 import View from "../View.js";
-import ProgressBar from "../visualization/ProgressBar.js";
+import DoubleProgressBar from "../visualization/progress_bar/DoubleProgressBar.js";
 import GatheringVowelsView from "../GatheringVowelsView.js";
 
 export default class GatheringForeignView extends SpeechView {
@@ -246,11 +246,15 @@ export default class GatheringForeignView extends SpeechView {
 
     #addProgressBar() {
         const color = `#${this.controller.currentEntry.phoneme.rgb}`
-        this.progressBar = new ProgressBar(this.divStack, color);
+        this.progressBar = new DoubleProgressBar(this.divStack, color);
     }
 
     updateProgress(value, isTime = true) {
         if (isTime) throw new Error("Time-based progress is not supported in GatheringForeignView");
         else this.progressBar.progress = value * 100;
+    }
+
+    updateSecondaryProgress(value) {
+        this.progressBar.secondaryProgress = value * 100;
     }
 }

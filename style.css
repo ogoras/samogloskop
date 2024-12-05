@@ -189,6 +189,7 @@ body {
     background-color: lightgray;
     border-radius: 0.25rem;
     margin: 0.3rem;
+    position: relative;
 }
 
 .progress {
@@ -196,6 +197,7 @@ body {
     width: 0%;
     background-color: #4CAF50;
     border-radius: 0.25rem;
+    position: absolute;
 }
 
 .header {

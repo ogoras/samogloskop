@@ -8,7 +8,7 @@ export default class TrainingView extends ScatterView {
         super(controller, arg, recycle);
 
         this.h2.innerHTML = `Niestety, tryb ćwiczenia nie jest jeszcze w pełni gotowy.
-            Możesz wciąż mówić samogłoski i porównywać je z Twoimi samogłoskami podstawowymi.
+            Możesz wciąż mówić samogłoski i porównywać je ze swoimi samogłoskami podstawowymi.
             Ocena Twoich samogłosek angielskich będzie dostępna wkrótce.`;
         /*`Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;*/

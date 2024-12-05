@@ -51,6 +51,7 @@ export default class SmoothingController extends RenderController {
         };
         // this.formantsToSave can be ignored
         this.formantsToSave = smoothedFormantsBuffer.push(smoothedFormants);
+        this.view.secondaryProgress = smoothedFormantsBuffer.fillLevel;
         if (this.formantsToSave) this.formantsToSave.size = POINT_SIZES.USER_DATAPOINTS;
         return smoothedFormants;
     }
@@ -63,6 +64,7 @@ export default class SmoothingController extends RenderController {
         if (!stats.detectSpeech()) {
             this.formantsBuffer.clear();
             this.smoothedFormantsBuffer.clear();
+            this.view.secondaryProgress = 0;
             return false;
         }
         

@@ -41,10 +41,17 @@ export default class RecordingView extends View {
     }
 
     /**
-     * @param {number} time
+     * @param {number} percentage
      */
-    set progress(time) {
-        this.view?.updateProgress?.(time, false);
+    set progress(percentage) {
+        this.view?.updateProgress?.(percentage, false);
+    }
+
+    /**
+     * @param {number} percentage
+     */
+    set secondaryProgress(percentage) {
+        this.view?.updateSecondaryProgress?.(percentage);
     }
 
     /**
