@@ -23,6 +23,7 @@ export default class GatheringNativeView extends ScatterView {
         }
         if (this.gatheringVowelsView.vowelGatheredOnSpeechDetected(value)) {
             this.currentVowel = this.nativeVowels.nextVowel();
+            this.refreshRecording();
         }
     }
 

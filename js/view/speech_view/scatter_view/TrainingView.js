@@ -8,7 +8,7 @@ export default class TrainingView extends ScatterView {
         super(controller, arg, recycle);
 
         // iterate through all children of divStack and remove them except h2
-        const children = this.divStack.children;
+        const children = [...this.divStack.children];
         for (let i = 0; i < children.length; i++) {
             if (children[i] !== this.h2) {
                 children[i].remove();

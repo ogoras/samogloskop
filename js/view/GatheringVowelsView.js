@@ -30,8 +30,6 @@ export default class GatheringVowelsView extends View {
         else {
             this.#hintKeepGoing = true;
         }
-
-        this.parent.refreshRecording();
         return ret;
     }
 

@@ -18,6 +18,7 @@ export default class GatheringForeignView extends SpeechView {
             this.showNextRecording();
             this.progressBar.color = `#${this.vowelRecording.phoneme.rgb}`;
             this.progressBar.reset();
+            this.refreshRecording();
         }
     }
 
