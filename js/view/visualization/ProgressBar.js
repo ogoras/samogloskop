@@ -7,6 +7,9 @@ export default class ProgressBar {
         this.bar.style.backgroundColor = value;
     }
 
+    /**
+     * @param {number} percentage
+     */
     set progress(percentage) {
         this.bar.style.width = percentage + "%";
     }
@@ -31,5 +34,10 @@ export default class ProgressBar {
 
     enableTransition(duration) {
         this.bar.style.transition = `width ${duration}ms`;
+    }
+
+    swapColors() {
+        const tmp = window.getComputedStyle(this.background).backgroundColor;
+        this.color = tmp;
     }
 }

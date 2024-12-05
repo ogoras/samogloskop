@@ -1,11 +1,12 @@
 import ConfirmVowelsView from './ConfirmVowelsView.js';
 import ScatterView from './ScatterView.js';
+import GatheringVowelsView from '../../GatheringVowelsView.js';
 
-export default class GatheringVowelsView extends ScatterView {
+export default class GatheringNativeView extends ScatterView {
     #speechDetected = false;
     #plotInitialized = false;
-    #hintKeepGoing = false;
-    #vowelGathered = false;
+
+    gatheringVowelsView = new GatheringVowelsView(this);
 
     /**
      * @param {boolean} value
@@ -20,15 +21,8 @@ export default class GatheringVowelsView extends ScatterView {
             this.initializePlot();
             this.recordingStarted();
         }
-        if (!value) {
-            if (this.#vowelGathered) {
-                this.currentVowel = this.nativeVowels.nextVowel();
-                this.#vowelGathered = false;
-            }
-            else {
-                this.#hintKeepGoing = true;
-            }
-            this.refreshRecording();
+        if (this.gatheringVowelsView.vowelGatheredOnSpeechDetected(value)) {
+            this.currentVowel = this.nativeVowels.nextVowel();
         }
     }
 
@@ -36,10 +30,7 @@ export default class GatheringVowelsView extends ScatterView {
      * @param {boolean} value
      */
     set vowelGathered(value) {
-        if (!value) throw new Error("Cannot unset vowelGathered");
-        this.#vowelGathered = true;
-        this.#hintKeepGoing = false;
-        this.refreshRecording();
+        this.gatheringVowelsView.vowelGathered = value;
     }
 
     constructor(controller, view, recycle = false) {
@@ -79,14 +70,7 @@ export default class GatheringVowelsView extends ScatterView {
 
     recordingStarted() {
         super.recordingStarted();
-        if (this.#vowelGathered) {
-            this.h2.innerHTML = "Świetnie! Sekunda przerwy...";
-        }
-        else {
-            this.h2.innerHTML = 
-                (this.#hintKeepGoing ? "Jeszcze trochę, mów" : "Powiedz")
-                + ` <q>${this.currentVowel.letter.repeat(3)}</q>, głośno i wyraźnie...`;
-        }
+        this.gatheringVowelsView.recordingStarted(` <q>${this.currentVowel.letter.repeat(3)}</q>, głośno i wyraźnie...`)
     }
 
     recordingStopped() {

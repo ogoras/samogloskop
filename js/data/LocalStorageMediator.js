@@ -114,7 +114,19 @@ const localStorageProperties = [
     },
     {
         name: "nativeVowels",
-        localStorageName: "userVowels",
+        localStorageName: "userVowels", // name for backwards compatibility
+        customGet: (string) => string ? SpeakerVowels.fromString(string) : string,
+        customSet: (value) => value.toString(),
+    },
+    {
+        name: "foreignInitial",
+        localStorageName: "foreignInitial",
+        customGet: (string) => string ? SpeakerVowels.fromString(string) : string,
+        customSet: (value) => value.toString(),
+    },
+    {
+        name: "foreignRepeat",
+        localStorageName: "foreignRepeat",
         customGet: (string) => string ? SpeakerVowels.fromString(string) : string,
         customSet: (value) => value.toString(),
     }

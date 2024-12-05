@@ -1,4 +1,3 @@
-import { POINT_SIZES } from "../../../const/POINT_SIZES.js";
 import nextController from "../nextController.js";
 import SmoothingController from "./SmoothingController.js";
 
@@ -10,6 +9,7 @@ const SUBSTATES = {
 
 export default class GatheringVowelsController extends SmoothingController {
     init(prev) {
+        this.vowelsBeingGathered = "nativeVowels";
         this.substate = SUBSTATES.WAITING;
         super.init(prev);
     }
@@ -33,7 +33,7 @@ export default class GatheringVowelsController extends SmoothingController {
                 }
                 break;
             case SUBSTATES.GATHERING:
-                const nativeVowels = this.nativeVowels;
+                const vowelsBeingGathered = this[this.vowelsBeingGathered];
 
                 if (!this.processFormants()) {
                     this.substate = SUBSTATES.WAITING;
@@ -42,24 +42,28 @@ export default class GatheringVowelsController extends SmoothingController {
                 }
                 
                 const formantsSaved = this.formantsToSave;
-                nativeVowels.addFormants(this.formantsToSave);
+                const progress = vowelsBeingGathered.addFormants(this.formantsToSave);
                 delete this.formantsToSave;
                 view.feedSaved(formantsSaved);
 
-                if (nativeVowels.isVowelGathered()) {
+                if (vowelsBeingGathered.isVowelGathered()) {
+                    view.progress = 1;
                     this.substate = SUBSTATES.GATHERED;
 
-                    const vowel = nativeVowels.saveVowel();
+                    const vowel = vowelsBeingGathered.saveVowel();
                     view.feedVowel(vowel);
                     view.vowelGathered = true;
-                    if (nativeVowels.isDone()) {
-                        nativeVowels.scaleLobanov();
-                        this.lsm.nativeVowels = nativeVowels;
+                    if (vowelsBeingGathered.isDone()) {
+                        if (this.sm.state.is("GATHERING_NATIVE")) {
+                            vowelsBeingGathered.scaleLobanov();
+                        }
+                        this.lsm[this.vowelsBeingGathered] = vowelsBeingGathered;
                         this.sm.advance();
                         nextController(this);
                         return false;
                     }
                 }
+                else view.progress = progress;
                 break;
             case SUBSTATES.GATHERED:
                 // wait for 1 second of silence

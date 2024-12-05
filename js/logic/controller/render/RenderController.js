@@ -103,6 +103,8 @@ export default class RenderController extends RecordingController {
     }
 
     recalibrate() {
+        this.enableMic?.();
+
         delete this.intensityStats;
         this.sm.state = State.get("NO_SAMPLES_YET");
         nextController(this).newIntensityStats();

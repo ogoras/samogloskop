@@ -1,17 +1,12 @@
-import SmoothingController from "./SmoothingController.js";
 import ForeignRecordings from '../../../data/recordings/ForeignRecordings.js';
-import SpeakerVowels from '../../../data/vowels/SpeakerVowels.js';
+import GatheringVowelsController from "./GatheringVowelsController.js";
 
-export default class GatheringForeignController extends SmoothingController {
+export default class GatheringForeignController extends GatheringVowelsController {
     async init(prev) {
-        this.initStart(prev);
-
-        this.foreignInitial = new SpeakerVowels("EN");
-
-        this.initFinalAndRun(prev);
+        super.init(prev);
+        this.vowelsBeingGathered = this.sm.state.is("GATHERING_FOREIGN_INITIAL") ? "foreignInitial" : "foreignRepeat";
 
         this.disableMic();
-
         this.englishRecordings = await ForeignRecordings.create("EN");
         this.view.initializeRecordings(this.englishRecordings);
     }
@@ -27,20 +22,8 @@ export default class GatheringForeignController extends SmoothingController {
     }
 
     newVowelRecording() {
-        const vowel = this.foreignInitial.nextVowel();
+        const vowel = this[this.vowelsBeingGathered].nextVowel();
         this.currentEntry = this.englishRecordings.getRandomEntryForVowel(vowel.letter);
         return this.currentEntry;
-    }
-
-    renderLoop() {
-        if (super.renderLoop()) return true;
-
-        const formants = this.formants;
-        const stats = this.intensityStats;
-        const statsUpdated = this.statsUpdated;
-
-        
-
-        return false;
     }
 }

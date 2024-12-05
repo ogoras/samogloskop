@@ -101,10 +101,11 @@ export default class SpeakerVowels extends Vowels {
     }
 
     addFormants(formants) {
-        if (!formants) return;
         if (!this.currentVowel) throw new Error("No current vowel");
+        if (!formants) return this.currentVowel.formants.length / REQUIRED_FORMANTS;
         this.currentVowel.addFormants(formants);
         this.#gatheredAnything = true;
+        return this.currentVowel.formants.length / REQUIRED_FORMANTS;
     }
 
     isVowelGathered() {
