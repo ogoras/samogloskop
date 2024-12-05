@@ -138,7 +138,7 @@ export default class GatheringForeignView extends SpeechView {
         const color = `#${vowelRecording.phoneme.rgb}`;
         const vowelIPA = this.vowelIPA = vowelRecording.phoneme.IPA.broad;
         const sayOnlyMessage = this.sayOnlyMessage = `<b>Powiedz tylko <q>${vowelIPA}</q>, a nie całe słowo!</b>`
-        this.h2.innerHTML = `Wysłuchaj nagrania, w momencie gotowości włącz mikrofon i powtórz samogłoskę. ${sayOnlyMessage}`;
+        this.h2.innerHTML = `Wysłuchaj nagrania${this.recording ? "" : ", w momencie gotowości włącz mikrofon"} i powtórz samogłoskę. ${sayOnlyMessage}`;
 
         this.vowelIPA_element.innerHTML = vowelIPA;
         this.vowelIPA_element.style.color = color;
@@ -242,6 +242,15 @@ export default class GatheringForeignView extends SpeechView {
         if (this.#startedRecording) return;
         this.#startedRecording = true;
         this.#addProgressBar();
+    }
+
+    recordingStopped() {
+        super.recordingStopped();
+
+        if (this.#startedRecording) {
+            this.h2.innerHTML = this.gatheringVowelsView.startedSpeakingVowel ? "Włącz mikrofon, aby kontynuować..." :
+            "Wysłuchaj nagrania, w momencie gotowości włącz mikrofon i powtórz samogłoskę... " + this.sayOnlyMessage;
+        }
     }
 
     #addProgressBar() {

@@ -9,6 +9,10 @@ export default class GatheringVowelsView extends View {
     #hintKeepGoing = false;
     #vowelGathered = false;
 
+    get startedSpeakingVowel() {
+        return this.#vowelGathered || this.#hintKeepGoing;
+    }
+
     /**
      * @param {boolean} value
      */
