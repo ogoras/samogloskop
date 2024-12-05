@@ -5,6 +5,12 @@ import Singleton from "../Singleton.js";
 import IntensityStats from "./IntensityStats.js";
 import SpeakerVowels from "./vowels/SpeakerVowels.js";
 
+const GATHERING_NATIVE_LEGACY = [
+    "WAITING_FOR_VOWELS",
+    "GATHERING_VOWELS",
+    "CONFIRM_VOWELS",
+].map((key) => State.get(key));
+
 export default class LocalStorageMediator extends Singleton {
     constructor() {
         super();
@@ -54,16 +60,31 @@ export default class LocalStorageMediator extends Singleton {
         }
         const localStorageVersion = this.version;
         if (localStorageVersion !== `${VERSION_MAJOR}.${VERSION_MINOR}`) {
-            if (localStorageVersion === "0.1") {
-                // 0.1 -> 0.2 conversion
-                if (this.state === "DONE") this.state = "CONFIRM_VOWELS";
-            }
-            else if (dataConsentGiven) {
-                // for now, local storage v0.0 is not supported
-                // TODO: implement a conversion mechanism for versions 1.x and higher
-                console.log(`%cConversion not implemented for version ${localStorageVersion}`, "color: red;");
-                localStorage.clear();
-                dataConsentGiven = false;
+            switch(localStorageVersion) {
+                case "0.1":
+                    // 0.1 -> 0.2 conversion
+                    if (this.state.is?.("DONE")) this.state = State.get("CONFIRM_VOWELS");
+                // FALL THROUGH
+                case "0.2":
+                    // 0.2 -> 0.3 conversion
+                    if (GATHERING_NATIVE_LEGACY.includes(this.state)) {
+                        this.state = State.get("SPEECH_MEASURED");
+                    }
+                    // try to get nativeVowels under the name userVowels
+                    if (!this.nativeVowels) {
+                        const nativeVowelsString = localStorage.getItem("userVowels");
+                        if (nativeVowelsString) {
+                            this.nativeVowels = SpeakerVowels.fromString(nativeVowelsString);
+                            localStorage.removeItem("userVowels");
+                        }
+                    }
+                    break;
+                default:
+                    if (dataConsentGiven) {
+                        console.log(`%cConversion not implemented for version ${localStorageVersion}`, "color: red;");
+                        localStorage.clear();
+                        dataConsentGiven = false;
+                    }
             }
         }
         this.version = `${VERSION_MAJOR}.${VERSION_MINOR}`;
@@ -77,6 +98,10 @@ export default class LocalStorageMediator extends Singleton {
             this.state = State.get("NO_SAMPLES_YET");
         } else if (this.nativeVowels === undefined && this.state.after("GATHERING_NATIVE")) {
             this.state = State.get("SPEECH_MEASURED");
+        } else if (this.foreignInitial === undefined && this.state.after("GATHERING_FOREIGN_INITIAL")) {
+            this.state = State.get("GATHERING_FOREIGN_INITIAL");
+        } else if (this.foreignRepeat === undefined && this.state.after("GATHERING_FOREIGN_REPEAT")) {
+            this.state = State.get("GATHERING_FOREIGN_REPEAT");
         }
     }
 
@@ -114,7 +139,7 @@ const localStorageProperties = [
     },
     {
         name: "nativeVowels",
-        localStorageName: "userVowels", // name for backwards compatibility
+        localStorageName: "nativeVowels",
         customGet: (string) => string ? SpeakerVowels.fromString(string) : string,
         customSet: (value) => value.toString(),
     },
