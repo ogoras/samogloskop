@@ -53,7 +53,11 @@ export default class NestedPointGroup extends PointGroup {
                     constructorDefaults?.nested || ids.length > 1);
                 break;
         }
-        if (!subgroup) throw new Error(`navigate: subgroup ${ids[0]} od ${this.id} not found`);
+        if (!subgroup) {
+            // TODO fix this bug
+            console.log(ids);
+            throw new Error(`navigate: subgroup ${ids[0]} of ${this.id} not found`);
+        }
         else if (subgroup.constructor === SimplePointGroup) {
             if (ids.length > 1) throw new Error(`navigate: subgroup ${subgroup.id} is a SimplePointGroup and \
 cannot have subgroups`);

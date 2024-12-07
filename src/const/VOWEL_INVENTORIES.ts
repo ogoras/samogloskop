@@ -3,14 +3,16 @@ import arrObjToObjArr from "../logic/util/arrObjToObjArr.js";
 
 const LANGUAGES = ["EN", "PL"]
 
+export type IPA_type = {broad: string, narrow?: string};
+
 type inventoryTransposed = {
-    IPA: {broad: string[], narrow?: string[]},
+    IPA: IPA_type,
     rgb?: string[],
     letter?: string[],
     language: string
 };
 
-type vowel = {
+export type vowel = {
     IPA: {broad: string, narrow?: string},
     rgb?: string,
     letter?: string,
