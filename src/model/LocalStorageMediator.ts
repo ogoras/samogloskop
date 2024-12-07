@@ -12,6 +12,8 @@ const GATHERING_NATIVE_LEGACY = [
 ];
 
 export default class LocalStorageMediator extends Singleton {
+    [index: string]: any;
+
     constructor() {
         super();
 
@@ -19,7 +21,7 @@ export default class LocalStorageMediator extends Singleton {
             Object.defineProperty(this, prop.name, {
                 get() {
                     if (this.#cache[prop.name] === undefined) {
-                        let item = localStorage.getItem(prop.localStorageName);
+                        let item: any = localStorage.getItem(prop.localStorageName);
                         if (prop.customGet) {
                             item = prop.customGet(item);
                         }
@@ -67,7 +69,7 @@ export default class LocalStorageMediator extends Singleton {
                 // FALL THROUGH
                 case "0.2":
                     // 0.2 -> 0.3 conversion
-                    if (GATHERING_NATIVE_LEGACY.includes(localStorage.getItem("state"))) {
+                    if (GATHERING_NATIVE_LEGACY.includes(localStorage.getItem("state") ?? "")) {
                         this.state = State.get("SPEECH_MEASURED");
                     }
                     // try to get nativeVowels under the name userVowels
@@ -122,37 +124,37 @@ const localStorageProperties = [
     {
         name: "preset",
         localStorageName: "preset",
-        customGet: (key) => Preset.get(key),
-        customSet: (value) => value.toString(),
+        customGet: (key: string) => Preset.get(key),
+        customSet: (value: Preset) => value.toString(),
     },
     {
         name: "state",
         localStorageName: "state",
-        customGet: (key) => State.get(key),
-        customSet: (value) => value.toString(),
+        customGet: (key: string) => State.get(key),
+        customSet: (value: State) => value.toString(),
     },
     {
         name: "intensityStats",
         localStorageName: "intensityStats",
-        customGet: (string) => string ? IntensityStats.fromString(string) : string,
-        customSet: (value) => value.toString(),
+        customGet: (string: string) => string ? IntensityStats.fromString(string) : string,
+        customSet: (value: IntensityStats) => value.toString(),
     },
     {
         name: "nativeVowels",
         localStorageName: "nativeVowels",
-        customGet: (string) => string ? SpeakerVowels.fromString(string) : string,
-        customSet: (value) => value.toString(),
+        customGet: (string: string) => string ? SpeakerVowels.fromString(string) : string,
+        customSet: (value: SpeakerVowels) => value.toString(),
     },
     {
         name: "foreignInitial",
         localStorageName: "foreignInitial",
-        customGet: (string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
-        customSet: (value) => value.toString(),
+        customGet: (string: string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
+        customSet: (value: SpeakerVowels) => value.toString(),
     },
     {
         name: "foreignRepeat",
         localStorageName: "foreignRepeat",
-        customGet: (string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
-        customSet: (value) => value.toString(),
+        customGet: (string: string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
+        customSet: (value: SpeakerVowels) => value.toString(),
     }
 ]
