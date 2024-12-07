@@ -5,7 +5,7 @@ export default class Enum {
     index: number;
     name: string;
 
-    constructor(index: number, name: string) {
+    constructor(index: number, name: string, ...args: any[]) {
         Enum.#instancesDict[this.constructor.name] ??= {};
         this.index = index;
         Enum.#instancesDict[this.constructor.name]![index] = this;
