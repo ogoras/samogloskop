@@ -26,7 +26,7 @@ export default class IntensityStats {
     silenceStats?: statsType;
     speechStats?: statsType;
     [index: string]: any;
-    buffer: Buffer;
+    buffer: Buffer<minMaxMean>;
 
     get range() {
         return 10 * Math.log10(this.max / this.min);
