@@ -1,6 +1,6 @@
-export default function arrObjToObjArr(arrObj) {
+export default function arrObjToObjArr(arrObj: any) {
     // console.log(arrObj);
-    const objArr = [];
+    const objArr: {[index: string]: any}[] = [];
     for (let [key, values] of Object.entries(arrObj)) {
         if (!Array.isArray(values)) {
             if (typeof values === 'object') {
@@ -9,9 +9,10 @@ export default function arrObjToObjArr(arrObj) {
                 values = Array(objArr.length).fill(values); // TODO: figure out length properly
             }
         }
-        for (let i = 0; i < values.length; i++) {
+        const valuesAsArray = values as any[];
+        for (let i = 0; i < valuesAsArray.length; i++) {
             if (!objArr[i]) objArr[i] = {};
-            objArr[i][key] = values[i];
+            objArr[i]![key] = valuesAsArray[i];
         }
     }
     // console.log(objArr);

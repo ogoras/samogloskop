@@ -3,9 +3,24 @@ import arrObjToObjArr from "../logic/util/arrObjToObjArr.js";
 
 const LANGUAGES = ["EN", "PL"]
 
-let VOWEL_DICTS = {};
-let VOWEL_INVENTORIES = {};
-let VOWEL_DATA = {};
+type inventoryTransposed = {
+    IPA: {broad: string[], narrow?: string[]},
+    rgb?: string[],
+    letter?: string[],
+    language: string
+};
+
+type vowel = {
+    IPA: {broad: string, narrow?: string},
+    rgb?: string,
+    letter?: string,
+    language: string
+}
+type inventory = vowel[];
+
+let VOWEL_DICTS: {[index: string]: {[index: string]: number}} = {};
+let VOWEL_INVENTORIES: {[index: string]: vowel[]} = {};
+let VOWEL_DATA: {[index: string]: inventoryTransposed} = {};
 
 async function readInventories() {
     for (let language of LANGUAGES) {
@@ -14,7 +29,7 @@ async function readInventories() {
         dataEntry = {...dataEntry, language};
         VOWEL_DATA[language] = dataEntry;
         VOWEL_DICTS[language] = arrToObj(dataEntry.letter ?? dataEntry.IPA.broad);
-        VOWEL_INVENTORIES[language] = arrObjToObjArr(dataEntry);
+        VOWEL_INVENTORIES[language] = arrObjToObjArr(dataEntry) as vowel[];
     }
 }
 
