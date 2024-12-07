@@ -1,6 +1,6 @@
-import LocalStorageMediator from './model/LocalStorageMediator.js';
-import StateMachine from './logic/StateMachine.js';
-import nextController from './logic/controller/nextController.js';
+import LocalStorageMediator from './model/LocalStorageMediator';
+import StateMachine from './logic/StateMachine';
+import nextController from './logic/controller/nextController';
 
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from './const/version.js';
 console.log(`%cSamogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`,

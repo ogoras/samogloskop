@@ -21,7 +21,7 @@
     "useUnknownInCatchVariables": true
   },
   "files": [
-    "src/main.js",
+    "src/main.ts",
     "src/logic/recording/recorder-worklet-processor.js"
   ]
 }

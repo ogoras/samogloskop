@@ -1,25 +1,27 @@
-import Singleton from '../Singleton.js';
-import State from '../const/states.js';
+import Singleton from '../Singleton';
+import State from '../const/states';
+import LocalStorageMediator from '../model/LocalStorageMediator';
 
 export default class StateMachine extends Singleton {
-    #state;
-    #tempState;
+    #state? : State;
+    #tempState : State | undefined;
+    lsm? : LocalStorageMediator;
 
     /**
      * @param {State} state
      */
-    set state(state) {
+    set state(state: State | undefined) {
         if (state === undefined) state = State.get(0);
         if (this.#state === undefined) {
-            this.#state = state;
+            this.#state = state!;
         } else if (this.#tempState === undefined) {
-            this.#tempState = state;
+            this.#tempState = state!;
         } else {
             throw new Error(`Tried to set state to ${state} while tempState is already set to ${this.#tempState} and state is already set to ${this.#state}`);
         }
     }
 
-    get state() {
+    get state() : State | undefined {
         return this.#tempState ?? this.#state;
     }
 
@@ -45,7 +47,7 @@ export default class StateMachine extends Singleton {
     }
 }
 
-const SAVEABLE_STATES = [
+const SAVEABLE_STATES : State[] = [
     "PRESET_SELECTION",
     "NO_SAMPLES_YET",
     "SPEECH_MEASURED",
@@ -54,23 +56,24 @@ const SAVEABLE_STATES = [
     "TRAINING",
 ].map((key) => State.get(key));
 
-const MANUALLY_STARTED_STATES = [
+const MANUALLY_STARTED_STATES : State[] = [
     "INITIAL_FOREIGN",
     "REPEAT_FOREIGN"
 ].map((key) => State.get(key));
 
-function stateSaveable(state) {
+function stateSaveable(state : State | undefined) : boolean {
+    if (!state) return false;
     return SAVEABLE_STATES.includes(state);
 }
 
-function findGreatestSaveableState(state) {
-    if (state.before(SAVEABLE_STATES[0])) {
-        return SAVEABLE_STATES[0];
+function findGreatestSaveableState(state : State | undefined) : State {
+    if (!state || state.before(SAVEABLE_STATES[0])) {
+        return SAVEABLE_STATES[0]!;
     }
     for (let i = 0; i < SAVEABLE_STATES.length - 1; i++) {
-        if (SAVEABLE_STATES[i].beforeOrEqual(state) && SAVEABLE_STATES[i+1].after(state)) {
-            return SAVEABLE_STATES[i];
+        if (SAVEABLE_STATES[i]?.beforeOrEqual(state) && SAVEABLE_STATES[i+1]?.after(state)) {
+            return SAVEABLE_STATES[i]!;
         }
     }
-    return SAVEABLE_STATES[SAVEABLE_STATES.length - 1];
+    return SAVEABLE_STATES[SAVEABLE_STATES.length - 1]!;
 }
