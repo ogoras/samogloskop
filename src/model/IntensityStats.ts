@@ -1,5 +1,19 @@
 import Buffer from '../logic/util/Buffer.js';
 
+type statsType = {
+    min: number;
+    max: number;
+    mean: number;
+    range: number;
+    zeroReached: boolean;
+}
+
+type minMaxMean = {
+    min: number;
+    max: number;
+    mean: number;
+}
+
 export default class IntensityStats {
     min = Infinity;
     max = -Infinity;
@@ -9,12 +23,17 @@ export default class IntensityStats {
     startStep = 0;
     step = 0;
     zeroReached = false;
+    silenceStats?: statsType;
+    speechStats?: statsType;
+    [index: string]: any;
+    buffer: Buffer;
 
     get range() {
         return 10 * Math.log10(this.max / this.min);
     }
 
     get SNR() {
+        if (!this.silenceStats) return undefined;
         return 10 * Math.log10(this.max / this.silenceStats.max);
     }
 
@@ -28,20 +47,20 @@ export default class IntensityStats {
 
     get silenceDuration() {
         return this.buffer.getLastElements(this.stepsElapsed)
-            .reduce((acc, val) => this.isSilence(val) ? acc + this.stepDuration : 0, 0);
+            .reduce((acc: number, val: minMaxMean) => this.isSilence(val) ? acc + this.stepDuration : 0, 0);
     }
 
     get isCalibrated() {
         return this.silenceStats !== undefined && this.speechStats !== undefined;
     }
 
-    constructor(timeRequired, stepDuration) {
+    constructor(timeRequired: number, stepDuration: number) {
         this.timeRequired = timeRequired;
         this.stepDuration = stepDuration;
         this.buffer = new Buffer(Math.ceil(2 * timeRequired / stepDuration));
     }
 
-    update(time, intensitiesBasedOnFormants, samples) {
+    update(time: number, intensitiesBasedOnFormants: number[], samples: number[]) {
         if (time < this.time + this.stepDuration) return false;
         let min = Infinity;
         let max = -Infinity;
@@ -95,7 +114,7 @@ export default class IntensityStats {
         return true;
     }
 
-    saveStats(name) {
+    saveStats(name: string) {
         this[`${name}Stats`] = {
             min: this.min,
             max: this.max,
@@ -109,7 +128,7 @@ export default class IntensityStats {
         if (this.speechStats !== undefined) {
             return !this.isSilence();
         }
-        const val = this.max > this.silenceStats.max;
+        const val = this.max > this.silenceStats!.max;
         if (val) {
             this.resetStart();
         }
@@ -121,11 +140,12 @@ export default class IntensityStats {
         this.startStep = this.step;
     }
 
-    isCalibrationFinished(time) {
+    isCalibrationFinished(time: number) {
         return time - this.startTime >= this.timeRequired;
     }
     
-    diff(index) {
+    diff(index: number) {
+        if (!this.silenceStats) return undefined;
         switch(index) {
             case 0:
                 return 10 * Math.log10(this.min / this.silenceStats.min);
@@ -139,7 +159,7 @@ export default class IntensityStats {
     }
 
     isSilence(stats = this.buffer.getLastElement()) {
-        if (!stats) return false;
+        if (!stats || !this.speechStats) return false;
         return stats.mean < adjustdB(this.speechStats.max, -30);
     }
 
@@ -153,7 +173,7 @@ export default class IntensityStats {
         return JSON.stringify(object);
     }
 
-    static fromString(string) {
+    static fromString(string: string) {
         const object = JSON.parse(string);
         const stats = new IntensityStats(object.timeRequired, object.stepDuration);
         stats.speechStats = object.speechStats;
@@ -162,6 +182,6 @@ export default class IntensityStats {
     }
 }
 
-function adjustdB(value, dB) {
+function adjustdB(value: number, dB: number) {
     return value * Math.pow(10, dB / 10);
 }
