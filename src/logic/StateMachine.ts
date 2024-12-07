@@ -1,6 +1,6 @@
-import Singleton from '../Singleton';
-import State from '../const/states';
-import LocalStorageMediator from '../model/LocalStorageMediator';
+import Singleton from '../Singleton.js';
+import State from '../const/states.js';
+import LocalStorageMediator from '../model/LocalStorageMediator.js';
 
 export default class StateMachine extends Singleton {
     #state? : State;
