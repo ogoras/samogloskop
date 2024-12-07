@@ -9,7 +9,7 @@ const GATHERING_NATIVE_LEGACY = [
     "WAITING_FOR_VOWELS",
     "GATHERING_VOWELS",
     "CONFIRM_VOWELS",
-].map((key) => State.get(key));
+];
 
 export default class LocalStorageMediator extends Singleton {
     constructor() {
@@ -67,7 +67,7 @@ export default class LocalStorageMediator extends Singleton {
                 // FALL THROUGH
                 case "0.2":
                     // 0.2 -> 0.3 conversion
-                    if (GATHERING_NATIVE_LEGACY.includes(this.state)) {
+                    if (GATHERING_NATIVE_LEGACY.includes(localStorage.getItem("state"))) {
                         this.state = State.get("SPEECH_MEASURED");
                     }
                     // try to get nativeVowels under the name userVowels
