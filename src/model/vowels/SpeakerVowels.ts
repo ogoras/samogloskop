@@ -1,17 +1,26 @@
 import { POINT_SIZES } from '../../const/POINT_SIZES.js';
-import Vowel from './Vowel.js';
+import Vowel, { formant } from './Vowel.js';
 import Vowels from './Vowels.js';
-import { VOWEL_DICTS } from '../../const/VOWEL_INVENTORIES.js';
+import { vowel, vowelLetterToIndex } from '../../const/VOWEL_INVENTORIES.js';
+import xy from "../../types/xy.js"
+import RecursivePartial from '../../types/RecursivePartial.js';
+
+interface vowelMeasurements extends Array<xy> {
+    vowel: string,
+    word: string,
+    phrase: string
+}
 
 const REQUIRED_FORMANTS = 20;
 // represents a set of vowels for a single speaker
 export default class SpeakerVowels extends Vowels {
     vowelsRemaining = [...this.vowels];
-    vowelsProcessed = [];
+    vowelsProcessed: Vowel[] = [];
     lobanovScaled = false;
-    #meanFormants; #formantsDeviation;
+    #meanFormants?: xy; #formantsDeviation?: xy;
     #gatheredAnything = false;
     #scaleCurrent = true;
+    currentVowel?: Vowel | undefined;
 
     get gatheredAnything() {
         return this.#gatheredAnything || this.vowelsProcessed.length > 0;
@@ -24,19 +33,21 @@ export default class SpeakerVowels extends Vowels {
             }
             this.calculateMeanFormants();
         }
+        if (!this.#meanFormants) throw new Error("Mean formants are not defined");
         if (isNaN(this.#meanFormants.x) || isNaN(this.#meanFormants.y)) {
             throw new Error("Mean formants are NaN");
         }
         return this.#meanFormants;
     }
     
-    constructor(language) {
+    constructor(language: string) {
         super(language);
     }
 
-    gatherMeasurements(measurements) {
+    gatherMeasurements(measurements: vowelMeasurements[]) {
         measurements.forEach(measurements => {
-            const vowel = this.vowels[VOWEL_DICTS[this.language][measurements.vowel]];
+            const vowel = this.vowels[vowelLetterToIndex(measurements.vowel, this.language)];
+            if (!vowel) throw new Error(`Could not find vowel ${measurements.vowel} in SpeakerVowels`);
             vowel.addFormants(...measurements);
         });
         this.vowelsProcessed = this.vowelsRemaining;
@@ -52,8 +63,8 @@ export default class SpeakerVowels extends Vowels {
         this.#meanFormants = this.vowelsProcessed.reduce(
             (acc, vowel) => {
                 return {
-                    x: acc.x + vowel.avg.x,
-                    y: acc.y + vowel.avg.y
+                    x: acc.x + vowel.avg!.x!,
+                    y: acc.y + vowel.avg!.y!
                 };
             },
             { x: 0, y: 0 }
@@ -69,6 +80,7 @@ export default class SpeakerVowels extends Vowels {
             }
             this.calculateMeanFormantsDeviation();
         }
+        if (!this.#formantsDeviation) throw new Error(`Formants deviation is undefined in ${this.constructor.name}`);
         if (isNaN(this.#formantsDeviation.x) || isNaN(this.#formantsDeviation.y)) { 
             throw new Error("Formants deviation are NaN");
         }
@@ -79,8 +91,8 @@ export default class SpeakerVowels extends Vowels {
         const varianceTimesN = this.vowelsProcessed.reduce(
             (acc, vowel) => {
                 return {
-                    x: acc.x + (vowel.avg.x - this.meanFormants.x) ** 2 + vowel.variance.x,
-                    y: acc.y + (vowel.avg.y - this.meanFormants.y) ** 2 + vowel.variance.y
+                    x: acc.x + (vowel.avg!.x! - this.meanFormants.x) ** 2 + vowel.variance.x,
+                    y: acc.y + (vowel.avg!.y! - this.meanFormants.y) ** 2 + vowel.variance.y
                 };
             },
             { x: 0, y: 0 }
@@ -100,7 +112,7 @@ export default class SpeakerVowels extends Vowels {
         return vowel;
     }
 
-    addFormants(formants) {
+    addFormants(formants: formant) {
         if (!this.currentVowel) throw new Error("No current vowel");
         if (!formants) return this.currentVowel.formants.length / REQUIRED_FORMANTS;
         this.currentVowel.addFormants(formants);
@@ -109,10 +121,11 @@ export default class SpeakerVowels extends Vowels {
     }
 
     isVowelGathered() {
-        return this.currentVowel.formants.length >= REQUIRED_FORMANTS;
+        return this.currentVowel && this.currentVowel.formants.length >= REQUIRED_FORMANTS;
     }
 
     saveVowel() {
+        if (!this.currentVowel) throw new Error(`Could not save vowel: No current vowel`);
         this.currentVowel.calculateAverage(POINT_SIZES.USER_CENTROIDS);
         const ret = this.currentVowel;
         this.vowelsProcessed.push(ret);
@@ -127,14 +140,14 @@ export default class SpeakerVowels extends Vowels {
         const oldFormantsDeviation = this.#formantsDeviation ?? {x: 1, y: 1};
         this.calculateMeanFormants();
         this.calculateMeanFormantsDeviation();
-        this.vowelsProcessed.forEach(vowel => vowel.scaleLobanov(this.#meanFormants, this.#formantsDeviation));
-        this.#meanFormants.x = oldMeanFormants.x + this.#meanFormants.x * oldFormantsDeviation.x;
-        this.#meanFormants.y = oldMeanFormants.y + this.#meanFormants.y * oldFormantsDeviation.y;
-        this.#formantsDeviation.x *= oldFormantsDeviation.x;
-        this.#formantsDeviation.y *= oldFormantsDeviation.y;
+        this.vowelsProcessed.forEach(vowel => vowel.scaleLobanov(this.#meanFormants!, this.#formantsDeviation!));
+        this.#meanFormants!.x = oldMeanFormants.x + this.#meanFormants!.x * oldFormantsDeviation.x;
+        this.#meanFormants!.y = oldMeanFormants.y + this.#meanFormants!.y * oldFormantsDeviation.y;
+        this.#formantsDeviation!.x *= oldFormantsDeviation.x;
+        this.#formantsDeviation!.y *= oldFormantsDeviation.y;
     }
 
-    scale(point) {
+    scale(point: xy) {
         // modifies the point in place
         if (!point || !this.lobanovScaled) return point;
         point.x = (point.x - this.meanFormants.x) / this.formantsDeviation.x;
@@ -146,7 +159,7 @@ export default class SpeakerVowels extends Vowels {
         return this.vowelsRemaining.length === 0 && !this.currentVowel;
     }
 
-    toString() {
+    override toString() {
         return JSON.stringify({
             vowelsProcessed: this.vowelsProcessed.map(vowel => { return vowel.toSimpleObject();}),
             lobanovScaled: this.lobanovScaled,
@@ -155,25 +168,25 @@ export default class SpeakerVowels extends Vowels {
         });
     }
 
-    resetVowel(vowel) {
-        vowel = new Vowel(vowel);
-        const index = this.vowelsProcessed.findIndex(v => v.id === vowel.id);
+    resetVowel(vowel?: RecursivePartial<vowel> | Vowel) {
+        const vowelObject = new Vowel(vowel);
+        const index = this.vowelsProcessed.findIndex(v => v.id === vowelObject.id);
         if (index === -1) {
-            console.log(vowel);
+            console.log(vowelObject);
             console.log(this.vowelsProcessed);
             throw new Error("Vowel not found");
         }
         this.vowelsProcessed.splice(index, 1);
-        this.vowelsRemaining.push(vowel);
+        this.vowelsRemaining.push(vowelObject);
         this.#scaleCurrent = false;
     }
 
-    static fromString(string, language = "PL", scaleLobanov = true) {
+    static fromString(string: string, language = "PL", scaleLobanov = true) {
         const obj = JSON.parse(string);
         const speakerVowels = new SpeakerVowels(language);
         speakerVowels.vowelsRemaining = [];
         speakerVowels.vowelsProcessed = obj.vowelsProcessed.map(
-            vowel => Vowel.fromSimpleObject({...vowel, language}));
+            (vowel: RecursivePartial<vowel> & {letter: string, formants: formant[]}) => Vowel.fromSimpleObject({...vowel, language}));
         if (!obj.lobanovScaled) {
             if (scaleLobanov) speakerVowels.scaleLobanov();
         }

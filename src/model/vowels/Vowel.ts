@@ -1,11 +1,7 @@
 import { POINT_SIZES } from "../../const/POINT_SIZES.js";
 import { VOWEL_DICTS, VOWEL_INVENTORIES, vowel, IPA_type } from "../../const/VOWEL_INVENTORIES.js";
 import RecursivePartial from "../../types/RecursivePartial.js";
-
-type xy = {
-    x: number,
-    y: number
-}
+import xy from "../../types/xy.js"
 
 export type formant = {
     x: number,
@@ -131,7 +127,7 @@ export default class Vowel {
         return this.IPA?.broad ?? this.letter
     }
 
-    static fromSimpleObject(obj : {letter: string, formants: xy[]}) {
+    static fromSimpleObject(obj : {letter: string, formants: xy[], [index: string]: any}) {
         const vowel = new Vowel(obj);
         vowel.formants = obj.formants.map(formants => { 
             return {...formants, size: POINT_SIZES.USER_DATAPOINTS, rgb: vowel.rgb};

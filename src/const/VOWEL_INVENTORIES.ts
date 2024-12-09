@@ -18,7 +18,6 @@ export type vowel = {
     letter?: string,
     language: string
 }
-type inventory = vowel[];
 
 let VOWEL_DICTS: {[index: string]: {[index: string]: number}} = {};
 let VOWEL_INVENTORIES: {[index: string]: vowel[]} = {};
@@ -36,5 +35,11 @@ async function readInventories() {
 }
 
 await readInventories();
+
+export function vowelLetterToIndex(letter: string, language: string) {
+    const id = VOWEL_DICTS[language]?.[letter];
+    if (id === undefined) throw new Error(`Could not find vowel ${letter} in language ${language}`);
+    return id;
+}
 
 export { VOWEL_INVENTORIES, VOWEL_DICTS, VOWEL_DATA };

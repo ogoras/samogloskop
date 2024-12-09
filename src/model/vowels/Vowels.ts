@@ -1,5 +1,5 @@
 import Vowel, { formant } from './Vowel.js';
-import { VOWEL_DICTS, VOWEL_INVENTORIES } from '../../const/VOWEL_INVENTORIES.js';
+import { VOWEL_DICTS, VOWEL_INVENTORIES, vowelLetterToIndex } from '../../const/VOWEL_INVENTORIES.js';
 import { POINT_SIZES } from '../../const/POINT_SIZES.js';
 
 type vowelMeasurements = {
@@ -17,8 +17,7 @@ export default class Vowels {   // represents a set of vowels for a particular s
     language: string;
 
     private getVowelByLetter(letter: string): Vowel {
-        const id = VOWEL_DICTS[this.language]?.[letter];
-        if (id === undefined) throw new Error(`Could not find vowel ${letter} in language ${this.language}`);
+        const id = vowelLetterToIndex(letter, this.language);
         const vowel = this.vowels[id];
         if (!vowel) throw new Error(`Vowels object doesn't have the ${letter} vowel. Language: ${this.language}`);
         return vowel;
