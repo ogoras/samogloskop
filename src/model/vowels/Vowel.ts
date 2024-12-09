@@ -29,7 +29,7 @@ export default class Vowel {
     rgb: string;
     language: string;
     IPA?: Partial<IPA_type>;
-    id?: number;
+    id: number;
 
     get meanFormants() {
         if (!this.avg) this.calculateAverage();
@@ -59,11 +59,12 @@ export default class Vowel {
     constructor(vowel?: RecursivePartial<vowel>) {
         this.language = vowel?.language ?? "PL";
         const vowelDict = VOWEL_DICTS[this.language];
+        if (!vowelDict) throw new Error(`Language ${this.language} unsupported`)
         const vowelInv = VOWEL_INVENTORIES[this.language];
         if (!vowel?.IPA) {
-            if (vowelDict?.[vowel?.letter ?? ""] !== undefined) {
+            if (vowelDict[vowel?.letter ?? ""] !== undefined) {
                 vowel ??= {};
-                const IPA = vowelInv?.[vowelDict?.[vowel.letter ?? ""] ?? 0]?.IPA;
+                const IPA = vowelInv?.[vowelDict[vowel.letter ?? ""] ?? 0]?.IPA;
                 if (IPA) vowel.IPA = IPA;
             } else {
                 console.log(VOWEL_DICTS);
@@ -77,8 +78,12 @@ export default class Vowel {
         if (letter) this.letter = letter;
         else throw new Error("Vowel must have a letter description");
 
-        const id = vowelDict?.[this.letter ?? ""];
-        if (id) this.id = id;
+        const id = vowelDict[this.letter];
+        if (id !== undefined) this.id = id;
+        else {
+            console.log(vowelDict);
+            throw new Error(`Could not find vowel ${this.letter} in language ${this.language}`);
+        }
         this.rgb = vowel.rgb ?? "000000";
     }
 
