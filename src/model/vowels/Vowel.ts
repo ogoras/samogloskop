@@ -7,12 +7,13 @@ type xy = {
     y: number
 }
 
-type formant = {
+export type formant = {
     x: number,
     y: number,
     size?: number,
-    rgb: string,
-    [index: string]: string | number
+    rgb?: string,
+    identified?: boolean | undefined,
+    [index: string]: string | number | boolean | undefined
 }
 
 export default class Vowel {
@@ -127,7 +128,7 @@ export default class Vowel {
     }
 
     key() {
-        return this.IPA?.broad // TODO take language into account
+        return this.IPA?.broad ?? this.letter
     }
 
     static fromSimpleObject(obj : {letter: string, formants: xy[]}) {

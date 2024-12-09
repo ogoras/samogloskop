@@ -1,25 +1,43 @@
-import Vowel from './Vowel.js';
+import Vowel, { formant } from './Vowel.js';
 import { VOWEL_DICTS, VOWEL_INVENTORIES } from '../../const/VOWEL_INVENTORIES.js';
 import { POINT_SIZES } from '../../const/POINT_SIZES.js';
+
+type vowelMeasurements = {
+    [index: string]: {
+        F1: number,
+        F2: number,
+        identified?: boolean
+    }[]
+}
 
 export default class Vowels {   // represents a set of vowels for a particular speaker (see SpeakerVowels), language or population
     initialized = false;
     static #canCreate = false;
+    vowels: Vowel[];
+    language: string;
 
-    getSingleMeasurements(letter) {
-        if (!this.initialized) throw new Error("Data not initialized");
-        if (letter === undefined) {
-            return [].concat(...this.vowels.map(vowel => vowel.formants));
-        }
-        return this.vowels[VOWEL_DICTS[this.language][letter]].formants;
+    private getVowelByLetter(letter: string): Vowel {
+        const id = VOWEL_DICTS[this.language]?.[letter];
+        if (id === undefined) throw new Error(`Could not find vowel ${letter} in language ${this.language}`);
+        const vowel = this.vowels[id];
+        if (!vowel) throw new Error(`Vowels object doesn't have the ${letter} vowel. Language: ${this.language}`);
+        return vowel;
     }
 
-    getCentroids(letter) {
+    getSingleMeasurements(letter: string) {
+        if (!this.initialized) throw new Error("Data not initialized");
+        if (letter === undefined) {
+            return ([] as formant[]).concat(...this.vowels.map(vowel => vowel.formants));
+        }
+        return this.getVowelByLetter(letter).formants;
+    }
+
+    getCentroids(letter: string) {
         if (!this.initialized) throw new Error("Data not initialized");
         if (letter === undefined) {
             return this.vowels.map(vowel => vowel.avg);
         }
-        return [this.vowels[VOWEL_DICTS[this.language][letter]].avg];
+        return [this.getVowelByLetter(letter).avg];
     }
 
     constructor(language = "PL") {
@@ -37,21 +55,23 @@ export default class Vowels {   // represents a set of vowels for a particular s
         this.vowels = VOWEL_INVENTORIES[language].map(vowel => new Vowel(vowel));
     }
 
-    static async create(language, dataset) {
+    static async create(language: string, dataset: string) {
         this.#canCreate = true;
         const instance = new Vowels(language);
 
         const response = await fetch(`./data/vowel_measurements/${dataset}.json`);
-        const data = await response.json();
+        const data: vowelMeasurements = await response.json();
 
         for (let vowel of instance.vowels) {
-            vowel.formants = data[vowel.key()].map(formants => {
+            const formants = data[vowel.key()]?.map(formants => {
                 return { 
                     y: formants.F1 * 0.8,     // TODO: implement it better
                     x: formants.F2,
-                    identified: formants.identified,
+                    identified: formants.identified
                 }
             });
+            if (!formants) throw new Error(`Dataset ${dataset} doesn't have formants for the vowel ${vowel.key()}`);
+            vowel.formants = formants;
             vowel.calculateAverage(POINT_SIZES.CENTROIDS);
         }
         instance.initialized = true;
@@ -59,6 +79,6 @@ export default class Vowels {   // represents a set of vowels for a particular s
     }
 
     getVowelSymbols() {
-        return this.vowels.map(vowel => vowel.IPA.broad ?? vowel.letter);
+        return this.vowels.map(vowel => vowel.IPA?.broad ?? vowel.letter);
     }
 }
