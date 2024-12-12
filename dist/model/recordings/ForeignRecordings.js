@@ -2,16 +2,24 @@ import DataLoadedFromFile from "../DataLoadedFromFile.js";
 import SpeakerRecordings from "./SpeakerRecordings.js";
 import { VOWEL_DATA } from "../../const/VOWEL_INVENTORIES.js";
 import VowelRecording from "./VowelRecording.js";
+import Vowels from "../vowels/Vowels.js";
 export default class ForeignRecordings extends DataLoadedFromFile {
     speakers = [];
     entriesBySpeaker = {};
     entriesByVowel = {};
+    #combinedVowels;
     constructor(language = "EN") {
         super();
         this.language = language;
     }
     static async create(language, callback) {
         return await super.create(callback, language);
+    }
+    get combinedVowels() {
+        if (this.#combinedVowels)
+            return this.#combinedVowels;
+        const combinedVowels = this.#combinedVowels = Vowels.combine(...Object.values(this.entriesBySpeaker).map(recordings => recordings.vowels));
+        return combinedVowels;
     }
     async _load() {
         let speakers = await fetch(`./data/recordings/${this.language}/listing.json`);

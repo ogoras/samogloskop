@@ -194,8 +194,8 @@ export default class RecordingView extends View {
         this.waveformVisualizer.feed(samples);
     }
 
-    addDataset(vowels) {
-        this.view?.addDataset?.(vowels);
+    addDatasets(...args) {
+        this.view?.addDatasets?.(...args);
     }
 
     recordingStarted() {

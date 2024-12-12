@@ -77,7 +77,31 @@ export default class Vowels {   // represents a set of vowels for a particular s
         return instance;
     }
 
+    static combine(...vowels: Vowels[]): Vowels {
+        if (!vowels.length) throw new Error("No vowels to combine");
+        this.#canCreate = true;
+        const instance = new Vowels(vowels[0]!.language);
+        vowels.forEach(vowels => {
+            if (!vowels.initialized) throw new Error("Data not initialized");
+            if (vowels.language !== instance.language) {
+                throw new Error(`Cannot combine vowels from different languages: ${vowels.language} and ${instance.language}`);
+            }
+        })
+
+        for (let i = 0; i < instance.vowels.length; i++) {
+            instance.vowels[i]!.formants = vowels.flatMap(vowels => vowels.vowels[i]!.formants);
+            instance.vowels[i]!.calculateAverage(POINT_SIZES.CENTROIDS);
+        }
+
+        instance.initialized = true;
+        return instance;
+    }
+
     getVowelSymbols() {
         return this.vowels.map(vowel => vowel.IPA?.broad ?? vowel.letter);
+    }
+
+    sortByID() {
+        this.vowels.sort((a, b) => a.id - b.id);
     }
 }

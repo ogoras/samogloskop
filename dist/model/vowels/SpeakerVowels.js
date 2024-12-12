@@ -47,6 +47,7 @@ export default class SpeakerVowels extends Vowels {
             vowel.calculateAverage(POINT_SIZES.USER_CENTROIDS);
         });
         this.scaleLobanov();
+        this.initialized = true;
     }
     calculateMeanFormants() {
         this.#meanFormants = this.vowelsProcessed.reduce((acc, vowel) => {
@@ -163,7 +164,7 @@ export default class SpeakerVowels extends Vowels {
         const obj = JSON.parse(string);
         const speakerVowels = new SpeakerVowels(language);
         speakerVowels.vowelsRemaining = [];
-        speakerVowels.vowelsProcessed = obj.vowelsProcessed.map((vowel) => Vowel.fromSimpleObject({ ...vowel, language }));
+        speakerVowels.vowels = speakerVowels.vowelsProcessed = obj.vowelsProcessed.map((vowel) => Vowel.fromSimpleObject({ ...vowel, language }));
         if (!obj.lobanovScaled) {
             if (scaleLobanov)
                 speakerVowels.scaleLobanov();
@@ -173,6 +174,9 @@ export default class SpeakerVowels extends Vowels {
             speakerVowels.#meanFormants = obj.meanFormants;
             speakerVowels.#formantsDeviation = obj.formantsDeviation;
         }
+        speakerVowels.initialized = true;
+        speakerVowels.#gatheredAnything = true;
+        speakerVowels.sortByID();
         return speakerVowels;
     }
 }

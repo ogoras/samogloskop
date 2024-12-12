@@ -2,7 +2,9 @@ import ScatterView from "./ScatterView.js";
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from "../../../const/VOWEL_INVENTORIES.js";
 import Vowel from "../../../model/vowels/Vowel.js";
+import { append_checkbox, append_h4 } from "../../dom/dom_utils.js";
 export default class TrainingView extends ScatterView {
+    #datasetAdded = false;
     constructor(controller, arg, recycle = false) {
         super(controller, arg, recycle);
         // iterate through all children of divStack and remove them except h2
@@ -12,11 +14,8 @@ export default class TrainingView extends ScatterView {
                 children[i].remove();
             }
         }
-        this.h2.innerHTML = `Niestety, tryb ćwiczenia nie jest jeszcze w pełni gotowy.
-            Możesz wciąż mówić samogłoski i porównywać je ze swoimi samogłoskami podstawowymi.
-            Ocena Twoich samogłosek angielskich będzie dostępna wkrótce.`;
-        /*`Jesteś teraz w trybie ćwiczenia.
-                Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;*/
+        this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
+                Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
         const buttons = this.divStack.querySelectorAll("button");
         buttons.forEach(button => button.remove());
         const button = document.createElement("button");
@@ -40,44 +39,65 @@ export default class TrainingView extends ScatterView {
             });
             this.vowelCentroid(vowel);
         });
+        this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle);
         this.divStack.style.width = "auto";
     }
-    addDataset(vowels) {
+    addDatasets(petersonBarney, politicians) {
+        if (this.#datasetAdded)
+            return;
+        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond);
+        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare);
+        this.visibleVowelsChoice = document.createElement("div");
+        append_h4(this.visibleVowelsChoice, "Język polski:");
+        append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
+            this.scatterPlot.setSeriesVisibility(e.target.checked, 0);
+        }, true);
+        append_h4(this.visibleVowelsChoice, "Język angielski (General American):");
+        append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
+            this.scatterPlot.setSeriesVisibility(e.target.checked, 3);
+        });
+        this.visibleVowelsChoice.appendChild(document.createElement("br"));
+        append_checkbox(this.visibleVowelsChoice, "badanie Peterson & Barney, 1952", (e) => {
+            this.scatterPlot.setSeriesVisibility(e.target.checked, 1);
+        });
+        this.visibleVowelsChoice.appendChild(document.createElement("br"));
+        append_checkbox(this.visibleVowelsChoice, "nagrania polityków", (e) => {
+            this.scatterPlot.setSeriesVisibility(e.target.checked, 2);
+        });
+        const sideContainer = document.querySelector(".side-container");
+        sideContainer.appendChild(this.visibleVowelsChoice);
+        document.querySelector(".recording-container").after(this.visibleVowelsChoice);
+        this.#datasetAdded = true;
+    }
+    #addVowelMeasurements(vowels, index, symbol) {
+        if (!symbol)
+            throw new Error("Symbol must be provided.");
+        if (!index)
+            throw new Error("Index must be provided.");
         const vowelInv = VOWEL_INVENTORIES[vowels.language];
         this.scatterPlot.insertGroup({
-            formatting: { symbol: d3.symbolSquare },
+            formatting: { symbol },
             nested: true
-        }, 1);
+        }, index);
         for (let i = 0; i < vowelInv.length; i++) {
             const vowel = new Vowel(vowelInv[i]);
             const ids = this.scatterPlot.appendGroup({
                 nested: true,
                 formatting: { rgb: vowel.rgb },
                 onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
-            }, 1);
-            this.scatterPlot.appendGroup({ formatting: {
+            }, index);
+            this.scatterPlot.appendGroup({
+                formatting: {
                     size: POINT_SIZES.USER_DATAPOINTS * 0.7,
                     opacity: "80",
-                } }, ids, vowels.getSingleMeasurements(vowel.letter));
-            this.scatterPlot.appendGroup({ formatting: {
+                }
+            }, ids, vowels.getSingleMeasurements(vowel.letter));
+            this.scatterPlot.appendGroup({
+                formatting: {
                     size: POINT_SIZES.VOWEL_CENTROID * 0.7
-                } }, ids, vowels.getCentroids(vowel.letter));
+                }
+            }, ids, vowels.getCentroids(vowel.letter));
         }
         this.scatterPlot.setSeriesVisibility(false, 1);
-        this.visibleVowelsChoice = document.createElement("div");
-        this.visibleVowelsChoice.innerHTML =
-            `<h3>Pokaż:</h3>
-            <input type="checkbox" id="user-vowels" checked> moje samogłoski<br>
-            <input type="checkbox" id="peterson-barney"> samogłoski angielskie
-            <text class=gray>(General American, Peterson & Barney, 1952)</p>`;
-        this.visibleVowelsChoice.querySelector("#user-vowels").onchange = (e) => {
-            this.scatterPlot.setSeriesVisibility(e.target.checked, 0);
-        };
-        this.visibleVowelsChoice.querySelector("#peterson-barney").onchange = (e) => {
-            this.scatterPlot.setSeriesVisibility(e.target.checked, 1);
-        };
-        const sideContainer = document.querySelector(".side-container");
-        sideContainer.appendChild(this.visibleVowelsChoice);
-        document.querySelector(".recording-container").after(this.visibleVowelsChoice);
     }
 }
