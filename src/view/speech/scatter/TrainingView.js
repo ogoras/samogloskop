@@ -126,6 +126,9 @@ export default class TrainingView extends ScatterView {
             this.button.innerHTML = "Przejdź dalej";
             this.#currentMessage++;
         } else if (this.#currentMessage == 1) {
+            this.button.remove();
+            this.visibleVowelsChoice?.remove();
+            this.divStack.style = "";
             this.controller.next();
         }
     }
