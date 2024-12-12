@@ -1,9 +1,9 @@
 import CalibrationStartView from "./CalibrationStartView.js";
-import SilenceView from "./stats_view/SilenceView.js";
-import MeasuringSpeechView from "./stats_view/MeasuringSpeechView.js";
-import GatheringNativeView from "./scatter_view/GatheringNativeView.js";
-import TrainingView from "./scatter_view/TrainingView.js";
-import ConfirmVowelsView from "./scatter_view/ConfirmVowelsView.js";
+import SilenceView from "./stats/SilenceView.js";
+import MeasuringSpeechView from "./stats/MeasuringSpeechView.js";
+import GatheringNativeView from "./scatter/GatheringNativeView.js";
+import TrainingView from "./scatter/TrainingView.js";
+import ConfirmVowelsView from "./scatter/ConfirmVowelsView.js";
 import GatheringForeignView from "./GatheringForeignView.js";
 export default {
     "NO_SAMPLES_YET": CalibrationStartView,

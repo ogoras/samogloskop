@@ -1,4 +1,4 @@
-import View from './View.js';
+import View from '../View.js';
 export default class ChoiceView extends View {
     choiceElement = document.createElement("div");
     constructor(controller, text, choices, parentContainer, selectedIndex, extraAction) {

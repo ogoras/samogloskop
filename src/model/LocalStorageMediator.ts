@@ -11,6 +11,10 @@ const GATHERING_NATIVE_LEGACY = [
     "CONFIRM_VOWELS",
 ];
 
+function nullish(value: any) {
+    return value === undefined || value === null;
+}
+
 export default class LocalStorageMediator extends Singleton {
     [index: string]: any;
 
@@ -31,6 +35,7 @@ export default class LocalStorageMediator extends Singleton {
                 },
                 set(value) {
                     if (value === undefined) {
+                        if (prop.name === "foreignInitial") console.log("Setting foreignInitial to undefined");
                         delete this.#cache[prop.name];
                         localStorage.removeItem(prop.localStorageName);
                     } else {
@@ -94,15 +99,15 @@ export default class LocalStorageMediator extends Singleton {
         if (!dataConsentGiven) {
             this.clear();
             this.state = State.get("DATA_CONSENT");
-        } else if (this.state === undefined || this.preset === undefined) {
+        } else if (nullish(this.state) || nullish(this.preset)) {
             this.state = State.get("PRESET_SELECTION");
-        } else if (this.intensityStats === undefined && this.state.after("NO_SAMPLES_YET")) {
+        } else if (nullish(this.intensityStats) && this.state.after("NO_SAMPLES_YET")) {
             this.state = State.get("NO_SAMPLES_YET");
-        } else if (this.nativeVowels === undefined && this.state.after("GATHERING_NATIVE")) {
+        } else if (nullish(this.nativeVowels) && this.state.after("GATHERING_NATIVE")) {
             this.state = State.get("SPEECH_MEASURED");
-        } else if (this.foreignInitial === undefined && this.state.after("GATHERING_FOREIGN_INITIAL")) {
+        } else if (nullish(this.foreignInitial) && this.state.after("GATHERING_FOREIGN_INITIAL")) {
             this.state = State.get("GATHERING_FOREIGN_INITIAL");
-        } else if (this.foreignRepeat === undefined && this.state.after("GATHERING_FOREIGN_REPEAT")) {
+        } else if (nullish(this.foreignRepeat) && this.state.after("GATHERING_FOREIGN_REPEAT")) {
             this.state = State.get("GATHERING_FOREIGN_REPEAT");
         }
     }

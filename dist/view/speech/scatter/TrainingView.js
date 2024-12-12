@@ -2,15 +2,12 @@ import ScatterView from "./ScatterView.js";
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from "../../../const/VOWEL_INVENTORIES.js";
 import Vowel from "../../../model/vowels/Vowel.js";
-
 import { append_checkbox, append_h4 } from "../../dom/dom_utils.js";
-
 export default class TrainingView extends ScatterView {
     #datasetAdded = false;
-
+    #currentMessage = 0;
     constructor(controller, arg, recycle = false) {
         super(controller, arg, recycle);
-
         // iterate through all children of divStack and remove them except h2
         const children = [...this.divStack.children];
         for (let i = 0; i < children.length; i++) {
@@ -18,20 +15,16 @@ export default class TrainingView extends ScatterView {
                 children[i].remove();
             }
         }
-
         this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
-
         const buttons = this.divStack.querySelectorAll("button");
         buttons.forEach(button => button.remove());
-        
-        const button = document.createElement("button");
+        const button = this.button = document.createElement("button");
         button.innerHTML = "OK";
         button.onclick = () => {
-            this.divStack.remove();
-        }
+            this.nextMessage();
+        };
         this.divStack.appendChild(button);
-
         if (recycle) {
             // remove all elements from the div
             while (this.div.firstChild) {
@@ -39,36 +32,27 @@ export default class TrainingView extends ScatterView {
             }
             this.initializePlot();
         }
-        
         const nativeVowels = controller.nativeVowels;
         nativeVowels.vowelsProcessed.forEach(vowel => {
             const id = vowel.id;
-            
             vowel.formants.forEach(formant => {
                 this.saveFormants(formant, id);
             });
             this.vowelCentroid(vowel);
         });
-
-        this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle)
-
+        this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle);
         this.divStack.style.width = "auto";
     }
-
     addDatasets(petersonBarney, politicians) {
-        if (this.#datasetAdded) return;
-
+        if (this.#datasetAdded)
+            return;
         this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond);
-
         this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare);
-
         this.visibleVowelsChoice = document.createElement("div");
-
         append_h4(this.visibleVowelsChoice, "Język polski:");
         append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 0);
         }, true);
-    
         append_h4(this.visibleVowelsChoice, "Język angielski (General American):");
         append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 3);
@@ -81,17 +65,16 @@ export default class TrainingView extends ScatterView {
         append_checkbox(this.visibleVowelsChoice, "nagrania polityków", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 2);
         });
-
         const sideContainer = document.querySelector(".side-container");
         sideContainer.appendChild(this.visibleVowelsChoice);
         document.querySelector(".recording-container").after(this.visibleVowelsChoice);
-
         this.#datasetAdded = true;
     }
-
     #addVowelMeasurements(vowels, index, symbol) {
-        if (!symbol) throw new Error("Symbol must be provided.");
-        if (!index) throw new Error("Index must be provided.");
+        if (!symbol)
+            throw new Error("Symbol must be provided.");
+        if (!index)
+            throw new Error("Index must be provided.");
         const vowelInv = VOWEL_INVENTORIES[vowels.language];
         this.scatterPlot.insertGroup({
             formatting: { symbol },
@@ -117,5 +100,15 @@ export default class TrainingView extends ScatterView {
             }, ids, vowels.getCentroids(vowel.letter));
         }
         this.scatterPlot.setSeriesVisibility(false, 1);
+    }
+    nextMessage() {
+        if (this.#currentMessage == 0) {
+            this.h2.innerHTML = `W dowolnym momencie, jeśli czujesz, że lepiej już wymawiasz te samogłoski, możesz przejść dalej do testu końcowego.`;
+            this.button.innerHTML = "Przejdź dalej";
+            this.#currentMessage++;
+        }
+        else if (this.#currentMessage == 1) {
+            this.controller.next();
+        }
     }
 }

@@ -6,6 +6,7 @@ import GatheringVowelsController from "./smoothing/GatheringVowelsController.js"
 import ConfirmVowelsController from "./smoothing/ConfirmVowelsController.js";
 import GatheringForeignController from "./smoothing/GatheringForeignController.js";
 import TrainingController from "./smoothing/TrainingController.js";
+import DataDownloadController from "./DataDownloadController.js";
 
 const CONTROLLER_CLASSES = {
     "DATA_CONSENT": ChoiceController,
@@ -19,7 +20,8 @@ const CONTROLLER_CLASSES = {
     "CONFIRM_VOWELS": ConfirmVowelsController,
     "GATHERING_FOREIGN_INITIAL": GatheringForeignController,
     "TRAINING": TrainingController,
-    "GATHERING_FOREIGN_REPEAT": GatheringForeignController
+    "GATHERING_FOREIGN_REPEAT": GatheringForeignController,
+    "DONE": DataDownloadController
 }
 
 function GetControllerClass(state) {

@@ -1,6 +1,6 @@
 import View from './View.js';
 import WaveformVisualizer from './visualization/waveform/WaveformVisualizer.js';
-import SPEECH_VIEWS from './speech_view/SPEECH_VIEWS.js';
+import SPEECH_VIEWS from './speech/SPEECH_VIEWS.js';
 import SettingsView from './SettingsView.js';
 export default class RecordingView extends View {
     #disabled = false;

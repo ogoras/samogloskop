@@ -1,6 +1,6 @@
 import Controller from "./Controller.js";
-import ConsentView from "../../view/ConsentView.js";
-import PresetView from "../../view/PresetView.js";
+import ConsentView from "../../view/choice/ConsentView.js";
+import PresetView from "../../view/choice/PresetView.js";
 import nextController from "./nextController.js";
 const VIEW_CONSTRUCTORS = {
     "DATA_CONSENT": ConsentView,

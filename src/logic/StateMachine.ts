@@ -54,6 +54,7 @@ const SAVEABLE_STATES: State[] = [
     "CONFIRM_VOWELS",
     "GATHERING_FOREIGN_INITIAL",
     "TRAINING",
+    "DONE"
 ].map((key) => State.get(key));
 
 const MANUALLY_STARTED_STATES: State[] = [

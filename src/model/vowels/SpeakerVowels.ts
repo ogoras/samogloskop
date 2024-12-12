@@ -42,6 +42,7 @@ export default class SpeakerVowels extends Vowels {
     
     constructor(language: string) {
         super(language);
+        this.initialized = true;
     }
 
     gatherMeasurements(measurements: vowelMeasurements[]) {
@@ -57,7 +58,6 @@ export default class SpeakerVowels extends Vowels {
             vowel.calculateAverage(POINT_SIZES.USER_CENTROIDS);
         });
         this.scaleLobanov();
-        this.initialized = true;
     }
 
     calculateMeanFormants() {
@@ -196,7 +196,6 @@ export default class SpeakerVowels extends Vowels {
             speakerVowels.#meanFormants = obj.meanFormants;
             speakerVowels.#formantsDeviation = obj.formantsDeviation;
         }
-        speakerVowels.initialized = true;
         speakerVowels.#gatheredAnything = true;
         speakerVowels.sortByID();
         return speakerVowels;

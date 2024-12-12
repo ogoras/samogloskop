@@ -1,5 +1,5 @@
 import View from "./View.js";
-import PresetView from "./PresetView.js";
+import PresetView from "./choice/PresetView.js";
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from '../const/version.js';
 import State from "../const/states.js";
 
