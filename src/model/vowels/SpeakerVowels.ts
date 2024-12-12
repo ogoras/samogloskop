@@ -20,7 +20,7 @@ export default class SpeakerVowels extends Vowels {
     #meanFormants?: xy; #formantsDeviation?: xy;
     #gatheredAnything = false;
     #scaleCurrent = true;
-    currentVowel?: Vowel | undefined;
+    currentVowel: Vowel | undefined;
 
     get gatheredAnything() {
         return this.#gatheredAnything || this.vowelsProcessed.length > 0;
