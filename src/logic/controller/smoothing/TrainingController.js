@@ -11,7 +11,7 @@ export default class TrainingController extends SmoothingController {
         super.init(prev);
 
         this.petersonBarney = await Vowels.create("EN", "peterson_barney");
-        this.englishRecordings = prev.foreignRecordings ?? await ForeignRecordings.create("EN");
+        this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");
         this.view.addDatasets(this.petersonBarney, this.englishRecordings.combinedVowels);
     }
 
