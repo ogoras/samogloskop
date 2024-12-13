@@ -140,13 +140,16 @@ export default class SpeakerVowels extends Vowels {
     isDone() {
         return this.vowelsRemaining.length === 0 && !this.currentVowel;
     }
-    toString() {
-        return JSON.stringify({
+    compact() {
+        return {
             vowelsProcessed: this.vowelsProcessed.map(vowel => { return vowel.toSimpleObject(); }),
             lobanovScaled: this.lobanovScaled,
             meanFormants: this.#meanFormants,
             formantsDeviation: this.#formantsDeviation
-        });
+        };
+    }
+    toString() {
+        return JSON.stringify(this.compact());
     }
     resetVowel(vowel) {
         const vowelObject = new Vowel(vowel);

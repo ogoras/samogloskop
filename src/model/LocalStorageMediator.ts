@@ -115,6 +115,14 @@ export default class LocalStorageMediator extends Singleton {
     clear() {
         localStorage.clear();
     }
+
+    getJSON() {
+        let object: {[index: string]: any} = {};
+        for (let prop of localStorageProperties) {
+            object[prop.name] = this[prop.name]?.compact?.() ?? this[prop.name];
+        }
+        return JSON.stringify(object);
+    }
 }
 
 const localStorageProperties = [

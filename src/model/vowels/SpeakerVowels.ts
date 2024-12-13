@@ -160,13 +160,17 @@ export default class SpeakerVowels extends Vowels {
         return this.vowelsRemaining.length === 0 && !this.currentVowel;
     }
 
-    override toString() {
-        return JSON.stringify({
+    compact() {
+        return {
             vowelsProcessed: this.vowelsProcessed.map(vowel => { return vowel.toSimpleObject();}),
             lobanovScaled: this.lobanovScaled,
             meanFormants: this.#meanFormants,
             formantsDeviation: this.#formantsDeviation
-        });
+        };
+    }
+
+    override toString() {
+        return JSON.stringify(this.compact());
     }
 
     resetVowel(vowel?: RecursivePartial<vowel> | Vowel) {

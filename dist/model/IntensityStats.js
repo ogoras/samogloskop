@@ -140,14 +140,16 @@ export default class IntensityStats {
             return false;
         return stats.mean < adjustdB(this.speechStats.max, -30);
     }
-    toString() {
-        const object = {
+    compact() {
+        return {
             speechStats: this.speechStats,
             silenceStats: this.silenceStats,
             timeRequired: this.timeRequired,
             stepDuration: this.stepDuration
         };
-        return JSON.stringify(object);
+    }
+    toString() {
+        return JSON.stringify(this.compact());
     }
     static fromString(string) {
         const object = JSON.parse(string);
