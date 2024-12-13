@@ -7,8 +7,14 @@ import ConfirmVowelsController from "./smoothing/ConfirmVowelsController.js";
 import GatheringForeignController from "./smoothing/GatheringForeignController.js";
 import TrainingController from "./smoothing/TrainingController.js";
 import DataDownloadController from "./DataDownloadController.js";
+import State from "../../const/states.js";
+import Controller from "./Controller.js";
+import LocalStorageMediator from "../../model/LocalStorageMediator.js";
+import StateMachine from "../StateMachine.js";
 
-const CONTROLLER_CLASSES = {
+const CONTROLLER_CLASSES: {
+    [key: string]: typeof Controller
+} = {
     "DATA_CONSENT": ChoiceController,
     "PRESET_SELECTION": ChoiceController,
     "NO_SAMPLES_YET": CalibrationStartController,
@@ -24,7 +30,7 @@ const CONTROLLER_CLASSES = {
     "DONE": DataDownloadController
 }
 
-function GetControllerClass(state) {
+function GetControllerClass(state: State) {
     const controllerClass = CONTROLLER_CLASSES[state.name];
     if (controllerClass === undefined) {
         throw new Error(`No controller class found for state ${state}`);
@@ -32,7 +38,10 @@ function GetControllerClass(state) {
     return controllerClass;
 }
 
-export default function nextController(previousController, ...args) {
+type controllerLike = Controller | {sm: StateMachine, lsm: LocalStorageMediator};
+
+export default function nextController(previousController: controllerLike, ...args: any[]) {
+    if (!previousController.sm?.state) throw new Error("StateMachine not initialized");
     const controller = GetControllerClass(previousController.sm.state).getInstance();
     controller.init(previousController, ...args);
     return controller;

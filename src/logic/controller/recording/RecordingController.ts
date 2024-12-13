@@ -4,6 +4,8 @@ import AudioRecorder from "../../recording/Recorder.js";
 import RecordingView from "../../../view/RecordingView.js";
 
 export default class RecordingController extends Controller {
+    recorder?: AudioRecorder;
+
     constructor() {
         super();
         if (this.constructor === RecordingController) {
@@ -11,17 +13,17 @@ export default class RecordingController extends Controller {
         }
     }
 
-    init(prev) {
+    override init(prev: Controller) {
         this.initRecorder(prev);
         this.initSettingsAndView(prev);
     }
 
-    initRecorder(prev) {
+    initRecorder(prev: Controller) {
         super.init(prev);
         this.recorder = prev.recorder ?? new AudioRecorder();
     }
 
-    initSettingsAndView(prev) {
+    initSettingsAndView(prev: Controller) {
         this.settingsController = SettingsController.getInstance();
         this.settingsController.init(this);
         if (prev.view instanceof RecordingView) {
@@ -30,5 +32,10 @@ export default class RecordingController extends Controller {
             this.view.updateView();
         }
         else this.view = new RecordingView(this, this.recorder);
-    }   
+    }
+
+    protected override validate(): void {
+        super.validate();
+        if (!this.recorder) throw new Error("Recorder not initialized.");
+    }
 }

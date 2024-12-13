@@ -1,14 +1,16 @@
+import Preset from "../../const/presets.js";
 import Controller from "./Controller.js";
 
 export default class SettingsController extends Controller {
-    init(parent) {
+    override init(parent: Controller) {
         this.parent = parent;
         super.init(parent);
         this.intensityStats = parent.intensityStats;
     }
 
-    choose(preset) {
-        this.lsm.preset = preset;
+    choose(preset: Preset) {
+        this.validate();
+        this.lsm!.preset = preset;
     }
 
     recalibrate() {
