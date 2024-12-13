@@ -8,6 +8,7 @@ export default class GatheringForeignView extends SpeechView {
     #currentlyPlaying = false;
     #startedRecording = false;
     gatheringVowelsView = new GatheringVowelsView(this);
+    #progressBarGray = false;
 
     /**
      * @param {boolean} value
@@ -17,6 +18,7 @@ export default class GatheringForeignView extends SpeechView {
         if (vowelGathered) {
             this.showNextRecording();
             this.progressBar.color = `#${this.vowelRecording.phoneme.rgb}`;
+            this.#progressBarGray = false;
             this.progressBar.reset();
             this.refreshRecording();
         }
@@ -231,8 +233,9 @@ export default class GatheringForeignView extends SpeechView {
     recordingStarted() {
         super.recordingStarted();
         const vowelGathered = this.gatheringVowelsView.recordingStarted(` <q>${this.vowelIPA}</q>, głośno i wyraźnie... ${this.sayOnlyMessage}`);
-        if (vowelGathered) {
+        if (vowelGathered && !this.#progressBarGray) {
             this.progressBar.swapColors();
+            this.#progressBarGray = true;
             this.progressBar.reset();
             // disable play buttons
             const playButtons = this.divStack.querySelectorAll(".play-button");
