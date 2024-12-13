@@ -35,7 +35,6 @@ export default class LocalStorageMediator extends Singleton {
                 },
                 set(value) {
                     if (value === undefined) {
-                        if (prop.name === "foreignInitial") console.log("Setting foreignInitial to undefined");
                         delete this.#cache[prop.name];
                         localStorage.removeItem(prop.localStorageName);
                     } else {
@@ -51,6 +50,8 @@ export default class LocalStorageMediator extends Singleton {
                                     this[key] = this.#cache[key];
                                 }
                             }
+                        } else if (prop.name === "dataConsentGiven" && !value) {
+                            localStorage.clear();
                         }
                     }
                 }
@@ -129,6 +130,7 @@ const localStorageProperties = [
     {
         name: "dataConsentGiven",
         localStorageName: "accepted",
+        customGet: (string: string) => string === "true",
     },
     {
         name: "version",

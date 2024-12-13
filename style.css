@@ -301,6 +301,11 @@ button.small {
     font-size: 0.9rem;
 }
 
+button.tiny {
+    padding: 0.4rem;
+    font-size: 0.7rem;
+}
+
 button.selected {
     background-color: #f0f0f0;
 }
