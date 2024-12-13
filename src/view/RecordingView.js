@@ -233,4 +233,11 @@ export default class RecordingView extends View {
     initializeRecordings(recordings) {
         this.view?.initializeRecordings?.(recordings);
     }
+
+    close() {
+        this.view?.close?.();
+        this.recorder.stopRecording();
+        document.body.innerHTML = "";
+        document.body.classList.remove("recording-view");
+    }
 }

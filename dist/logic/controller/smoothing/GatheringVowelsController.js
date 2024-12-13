@@ -49,8 +49,7 @@ export default class GatheringVowelsController extends SmoothingController {
                             vowelsBeingGathered.scaleLobanov();
                         }
                         this.lsm[this.vowelsBeingGathered] = vowelsBeingGathered;
-                        this.sm.advance();
-                        nextController(this);
+                        this.#next();
                         return false;
                     }
                 }
@@ -71,5 +70,12 @@ export default class GatheringVowelsController extends SmoothingController {
         }
         requestAnimationFrame(this.renderLoop.bind(this));
         return false;
+    }
+    #next() {
+        this.sm.advance();
+        if (this.sm.state.is("DONE")) {
+            this.view.close();
+        }
+        nextController(this);
     }
 }
