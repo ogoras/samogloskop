@@ -24,8 +24,10 @@ jobs:
       - name: Compile TypeScript
         run: tsc
         
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload pages artifact
+        uses: actions/upload-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          path: public/
+      
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
