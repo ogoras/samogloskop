@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 0,
     VERSION_MINOR = 3,  // will only change when the data format changes
-    PATCH = 2;  // will change only with published commits, the in-beetween development versions are not counted
+    PATCH = 3;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: introduced localStorage
 // v0.1: added Lobanov scaling
