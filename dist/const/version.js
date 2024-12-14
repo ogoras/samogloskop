@@ -8,3 +8,4 @@ PATCH = 2; // will change only with published commits, the in-beetween developme
 //          userVowels renamed to nativeVowels, added foreignInitial and foreignRepeat
 // v0.3.1: moved codebase to TypeScript, fixed some potential bugs
 // v0.3.2: All states finished, GitHub Actions setup
+// v0.3.3: Moved privacy.html to the public folder, making it visible again
