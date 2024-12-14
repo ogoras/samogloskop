@@ -9,10 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    permissions:
-      pages: write
-      id-token: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,6 +37,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+      
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
