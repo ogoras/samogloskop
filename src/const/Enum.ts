@@ -19,6 +19,10 @@ export default class Enum {
         return instance as InstanceType<T>;
     }
 
+    static get_optional<T extends typeof Enum>(this: T, key: string | number): InstanceType<T> | undefined {
+        return Enum.#instancesDict[this.name]?.[key] as InstanceType<T> | undefined;
+    }
+
     toString() {
         return this.name;
     }

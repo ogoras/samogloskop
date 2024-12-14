@@ -1,4 +1,5 @@
 import ChoiceView from "./ChoiceView.js";
+import NewTabButton from "../components/NewTabButton.js";
 
 const noticeText = `Ta strona używa pamięci <b>localStorage</b>, by zapamiętywać dane o twoim głosie.
     Jeżeli nie wyrażasz na to zgody, korzystanie z aplikacji może być utrudnione.
@@ -22,5 +23,21 @@ const choices = [
 export default class ConsentView extends ChoiceView {
     constructor(onStateChange) {
         super(onStateChange, noticeText, choices);
+
+        const parentContainer = document.querySelector(".main-container");
+
+        const div = document.createElement("div");
+        parentContainer.appendChild(div);
+        const moreButton = new NewTabButton(
+                div,
+                "Więcej",
+                "info.html"
+            ).element;
+        // put the button in the center
+        moreButton.style.margin = "auto";
+        moreButton.style.display = "block";
+
+        div.style.text = "center";
+        div.style.margin = "1rem";
     }
 }

@@ -139,13 +139,13 @@ const localStorageProperties = [
     {
         name: "preset",
         localStorageName: "preset",
-        customGet: (key: string) => Preset.get(key),
+        customGet: (key: string) => Preset.get_optional(key),
         customSet: (value: Preset) => value.toString(),
     },
     {
         name: "state",
         localStorageName: "state",
-        customGet: (key: string) => State.get(key),
+        customGet: (key: string) => State.get_optional(key),
         customSet: (value: State) => value.toString(),
     },
     {
