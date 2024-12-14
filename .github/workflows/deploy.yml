@@ -26,13 +26,22 @@ jobs:
         run: npm install -g typescript
 
       - name: Compile TypeScript
+        id: build
         run: tsc
         
       - name: Upload pages artifact
-        uses: actions/upload-artifact@v4
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public/
-          name: github-pages
       
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
