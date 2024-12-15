@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: '22'  # You can specify the Node.js version here.
 
-      - name: Install TypeScript
-        run: npm install -g typescript
+      - name: Install Dependencies # based on package.json
+        run: npm install
 
       - name: Compile TypeScript
         id: build
