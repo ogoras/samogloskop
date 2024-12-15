@@ -1,12 +1,19 @@
 export default class ChoiceComponent {
     choiceElement = document.createElement("div");
     
-    constructor(parent, selectedIndex, extraAction, text, choices) {
+    constructor(
+        parent,
+        selectedIndex,
+        extraAction,
+        text,
+        choices,
+        container = parent.container
+    ) {
         if (this.constructor === ChoiceComponent) {
             throw new Error("Cannot instantiate abstract class ConsentComponent");
         }
         const choiceElement = this.choiceElement;
-        parent.container.appendChild(choiceElement);
+        container.appendChild(choiceElement);
         
         const p = document.createElement("p");
         p.innerHTML = text;

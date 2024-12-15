@@ -18,7 +18,7 @@ const choices = [
 ]
 
 export default class PresetComponent extends ChoiceComponent {
-    constructor(parent, selectedIndex, extraAction) {
-        super(parent, selectedIndex, extraAction, noticeText, choices);
+    constructor(parent, selectedIndex, extraAction, container) {
+        super(parent, selectedIndex, extraAction, noticeText, choices, container);
     }
 }

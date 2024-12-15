@@ -1,10 +1,11 @@
 import View from "./View.js";
-import PresetView from "./choice/PresetView.js";
+import PresetComponent from "./components/choice/PresetComponent.js";
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from '../const/version.js';
 import State from "../const/State.js";
 
 export default class SettingsView extends View {
     #state;
+
     get state() {
         return this.#state;
     }
@@ -119,14 +120,17 @@ export default class SettingsView extends View {
         title.classList.add("no-bottom-margin");
         title.innerHTML = "<b>Kategoria głosu</b>";
         div.appendChild(title);
-
-        new PresetView(this.controller,
-            div, this.controller.lsm.preset.index,
+        
+        new PresetComponent(
+            this,
+            this.controller.lsm.preset.index,
             () => {
-            const nextElement = div.nextElementSibling;
-            div.remove();
-            this.mainContainer.insertBefore(this.createPresetSection(), nextElement);
-        });
+                const nextElement = div.nextElementSibling;
+                div.remove();
+                this.mainContainer.insertBefore(this.createPresetSection(), nextElement);
+            },
+            div
+        );
 
         if (this.nativeVowels?.gatheredAnything) {
             const notice = document.createElement("p");
