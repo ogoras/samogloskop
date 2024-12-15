@@ -37,14 +37,8 @@ export default class DataDownloadView extends View {
 
         const surveyLink = document.createElement("a");
         surveyLink.innerHTML = "<h3>Przejdź do ankiety</h3>";
-        surveyLink.href = "TODO";   // TODO: add the link to the survey
+        surveyLink.href = "https://forms.gle/CrCyfBnwZryoB9QbA";
         surveyLink.target = "_blank";
-        // disable the link for now
-        surveyLink.onclick = (e) => {
-            e.preventDefault();
-            // show a message that the survey is not ready yet
-            alert("Ankieta nie jest jeszcze dostępna. Spróbuj ponownie później.");
-        }
         this.container.appendChild(surveyLink);
 
         // Add a button to revoke localStorage consent if it was given
