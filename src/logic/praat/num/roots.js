@@ -1,4 +1,3 @@
-//import { dhseqr_ } from "./lapack/dhseqr";
 import { Polynomial_evaluateWithDerivative_z, Polynomial_evaluateWithDerivative } from "./polynomial.js";
 
 // Roots.cpp in Praat
@@ -29,8 +28,6 @@ export function Polynomial_to_Roots(polynomial) {
         const wr = new Float64Array(emlapack.HEAPF64.buffer, pwr, n);
         const wi = new Float64Array(emlapack.HEAPF64.buffer, pwi, n);
         const upperHessenberg = new Float64Array(emlapack.HEAPF64.buffer, ph, n * n).fill(0);
-        // MATVU uh_CM (upperHessenberg.get());
-        // uh_CM.rowStride = 1; uh_CM.colStride = n;
 
         upperHessenberg[(n - 1) * n] = - (polynomial.coefficients[0] / polynomial.coefficients[np1 - 1]);
         for (let irow = 1; irow < n; irow++) {
@@ -56,19 +53,6 @@ export function Polynomial_to_Roots(polynomial) {
         */
         dhseqr("E", "N", pn, p1, pn, ph, pn, pwr, pwi, null, pn, pwork, plwork, pinfo);
         // if not all wi values are zero:
-
-        // let eigenvalues;
-        // try {
-        //     eigenvalues = math.eigs(upperHessenberg).values;
-        // }
-        // catch (error) {
-        //     if (!error.values) throw error;
-        //     eigenvalues = error.values;
-        // }
-
-        // let numberOfEigenvaluesFound = eigenvalues.length;
-        //if (numberOfEigenvaluesFound <= 0) throw new Error("No eigenvalues found.");
-        //console.log(numberOfEigenvaluesFound, n)
 
         let numberOfEigenvaluesFound = n, ioffset = 0;
         let info = emlapack.getValue(pinfo, 'i32');
@@ -153,7 +137,6 @@ function Polynomial_polish_complexroot_nr(me, roots, i, maxit) {
         const dz = math.divide(y, dy);   // Newton-Raphson
         roots[i] = math.subtract(roots[i], dz);
     }
-    // Melder_throw (U"Maximum number of iterations exceeded.");
 }
 
 function Polynomial_polish_realroot(me, x, maxit) {
@@ -179,7 +162,6 @@ function Polynomial_polish_realroot(me, x, maxit) {
         x -= dx;
     }
     return x;
-    // Melder_throw (U"Maximum number of iterations exceeded.");
 }
 
 export function Roots_fixIntoUnitCircle(me) {

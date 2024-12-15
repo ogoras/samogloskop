@@ -59,15 +59,6 @@ export default function drftb1 (n, c, ch, ifac, waoffset) // wa[0] = ch[waoffset
         }
 
 	    function L109() {
-            /* The radix five case can be translated later..... */
-            /* if(ip!=5)return L112();
-
-            ix2=iw+ido; ix3=ix2+ido; ix4=ix3+ido; if(na!=0)
-            dradb5(ido,l1,ch,c,wa+iw-1,wa+ix2-1,wa+ix3-1,wa+ix4-1); else
-            dradb5(ido,l1,c,ch,wa+iw-1,wa+ix2-1,wa+ix3-1,wa+ix4-1); na=1-na;
-            return L115();
-        }
-        function L112() { */
             if (na != 0)
                 dradbg (ido, ip, l1, idl1, ch, ch, ch, c, c, ch, waoffset + iw - 1);
             else
