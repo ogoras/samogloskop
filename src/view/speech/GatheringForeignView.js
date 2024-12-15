@@ -270,7 +270,7 @@ export default class GatheringForeignView extends SpeechView {
         this.progressBar.secondaryProgress = value * 100;
     }
 
-    close() {
+    destroy() {
         this.divStack.innerHTML = "";
     }
 }

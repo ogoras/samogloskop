@@ -61,6 +61,10 @@ div.stack {
     margin: 0.5rem;
 }
 
+.side-container > div.stack {
+    width: auto;
+}
+
 body > div.stack {
     width: calc(100% - 1rem);
 }

@@ -86,7 +86,7 @@ export default class GatheringVowelsController extends SmoothingController {
     #next() {
         this.sm.advance();
         if (this.sm.state.is("DONE")) {
-            this.view.close();
+            this.view.destroy();
         }
         nextController(this);
     }

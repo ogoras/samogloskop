@@ -1,4 +1,5 @@
 import View from "./View.js";
+import MoreInfo from "./components/MoreInfo.js";
 
 export default class DataDownloadView extends View {
     constructor(controller) {
@@ -66,5 +67,7 @@ export default class DataDownloadView extends View {
             }
             this.container.appendChild(revokeButton);
         }
+
+        this.moreInfo = new MoreInfo(this.container);
     }
 }

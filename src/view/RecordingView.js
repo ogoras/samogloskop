@@ -2,6 +2,7 @@ import View from './View.js';
 import WaveformVisualizer from './visualization/waveform/WaveformVisualizer.js';
 import SPEECH_VIEWS from './speech/SPEECH_VIEWS.js';
 import SettingsView from './SettingsView.js';
+import MoreInfo from './components/MoreInfo.js';
 
 export default class RecordingView extends View {
     #disabled = false;
@@ -166,6 +167,8 @@ export default class RecordingView extends View {
 
         this.waveformVisualizer = new WaveformVisualizer();
 
+        this.moreInfo = new MoreInfo(sideContainer);
+
         this.updateView();
     }
     
@@ -234,10 +237,12 @@ export default class RecordingView extends View {
         this.view?.initializeRecordings?.(recordings);
     }
 
-    close() {
-        this.view?.close?.();
+    destroy() {
+        this.view?.destroy?.();
         this.recorder.stopRecording();
         document.body.innerHTML = "";
         document.body.classList.remove("recording-view");
+
+        this.moreInfo.destroy();
     }
 }
