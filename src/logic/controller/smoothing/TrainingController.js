@@ -5,6 +5,9 @@ import nextController from "../nextController.js";
 
 export default class TrainingController extends SmoothingController {
     #discarded = false;
+    #timeSpentInFocus = 0;
+    #lastFocused = null;
+    #abortController = new AbortController();
 
     async init(prev) {
         if (this.#discarded) return;
@@ -13,6 +16,36 @@ export default class TrainingController extends SmoothingController {
         this.petersonBarney = await Vowels.create("EN", "peterson_barney");
         this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");
         this.view.addDatasets(this.petersonBarney, this.englishRecordings.combinedVowels);
+
+        // check if window has focus
+        this.#lastFocused = document.hasFocus() ? Date.now() : null;
+        this.#timeSpentInFocus = this.lsm.timeSpentInTraining ?? 0;
+        console.log(`time spent in focus loaded as: ${this.#timeSpentInFocus}`);
+
+        const signal = this.#abortController.signal;
+        addEventListener("focus", this.#onFocus.bind(this), { signal });
+        addEventListener("blur", this.#onBlur.bind(this), { signal });
+        addEventListener("visibilitychange", (event) => {
+                if (document.hidden && this.#lastFocused !== null) {
+                    this.#onBlur();
+                }
+            }, 
+            { signal }
+        );
+    }
+
+    #onFocus() {
+        console.log("focus");
+            if (this.#lastFocused !== null) throw new Error("lastFocused is not null on the focus event");
+            this.#lastFocused = Date.now();
+    }
+
+    #onBlur() {
+        if (this.#lastFocused === null) throw new Error("lastFocused is null on the blur event");
+        this.#timeSpentInFocus += Date.now() - this.#lastFocused;
+        this.lsm.timeSpentInTraining = this.#timeSpentInFocus;
+        console.log(`blur, time spent in focus updated to: ${this.#timeSpentInFocus}`);
+        this.#lastFocused = null;
     }
 
     renderLoop() {
@@ -24,6 +57,11 @@ export default class TrainingController extends SmoothingController {
 
     next() {
         if (this.#discarded) return;
+
+        // stop counting time
+        if (document.hasFocus()) this.#onBlur();
+        this.#abortController.abort();
+
         this.sm.advance();
         this.breakRenderLoop();
         nextController(this);

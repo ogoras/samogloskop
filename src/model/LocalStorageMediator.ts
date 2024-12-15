@@ -87,6 +87,9 @@ export default class LocalStorageMediator extends Singleton {
                         }
                     }
                     break;
+                case "0.3":
+                    // actually, no conversion needed
+                    break;
                 default:
                     if (dataConsentGiven) {
                         console.log(`%cConversion not implemented for version ${localStorageVersion}`, "color: red;");
@@ -171,5 +174,13 @@ const localStorageProperties = [
         localStorageName: "foreignRepeat",
         customGet: (string: string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
         customSet: (value: SpeakerVowels) => value.toString(),
+    },
+    {
+        name: "timeSpentInTraining",
+        localStorageName: "timeSpentInTraining",
+        customGet: (string: string) => {
+            const candidate = parseInt(string);
+            return isNaN(candidate) ? undefined : candidate;
+        }
     }
 ]
