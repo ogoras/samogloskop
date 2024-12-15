@@ -1,6 +1,6 @@
 import TextGrid from './TextGrid.js';
 import soundToFormant from '../../logic/praat/formant.js';
-import Preset from '../../const/presets.js';
+import Preset from '../../const/Preset.js';
 import DataLoadedFromFile from '../DataLoadedFromFile.js';
 
 // represents an audio recording along with its transcription in the form of a TextGrid

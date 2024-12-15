@@ -1,5 +1,5 @@
 import nextController from "../nextController.js";
-import State from "../../../const/states.js";
+import State from "../../../const/State.js";
 import SmoothingController from "./SmoothingController.js";
 
 export default class ConfirmVowelsController extends SmoothingController {

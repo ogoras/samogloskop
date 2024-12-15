@@ -1,4 +1,4 @@
-import Preset from "../../const/presets.js";
+import Preset from "../../const/Preset.js";
 import Controller from "./Controller.js";
 
 export default class SettingsController extends Controller {

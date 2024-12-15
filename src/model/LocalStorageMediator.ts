@@ -1,6 +1,6 @@
 import { VERSION_MAJOR, VERSION_MINOR } from "../const/version.js";
-import State from "../const/states.js";
-import Preset from "../const/presets.js";
+import State from "../const/State.js";
+import Preset from "../const/Preset.js";
 import Singleton from "../Singleton.js";
 import IntensityStats from "./IntensityStats.js";
 import SpeakerVowels from "./vowels/SpeakerVowels.js";

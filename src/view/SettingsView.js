@@ -1,7 +1,7 @@
 import View from "./View.js";
 import PresetView from "./choice/PresetView.js";
 import { VERSION_MAJOR, VERSION_MINOR, PATCH } from '../const/version.js';
-import State from "../const/states.js";
+import State from "../const/State.js";
 
 export default class SettingsView extends View {
     #state;
