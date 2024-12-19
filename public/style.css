@@ -414,4 +414,5 @@ button:active, .emoji-button:active {
 
 .timer {
     text-align: right;
+    display: block;
 }
