@@ -183,8 +183,6 @@ export default class RecordingView extends View {
             },
             show: function(timeMs) {
                 this.visible = true;
-                console.log(sideContainer.childNodes);
-                console.log(moreInfo.element);
                 sideContainer.insertBefore(this.element, moreInfo.div);
                 if (!nullish(timeMs)) this.setTime(Math.floor(timeMs / 1000));
             },

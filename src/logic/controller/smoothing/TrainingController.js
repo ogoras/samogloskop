@@ -37,7 +37,6 @@ export default class TrainingController extends SmoothingController {
     }
 
     #onFocus() {
-        console.log("focus");
         if (this.#lastFocused !== null) throw new Error("lastFocused is not null on the focus event");
         this.#lastFocused = Date.now();
         this.view.timer.resume();
@@ -47,7 +46,6 @@ export default class TrainingController extends SmoothingController {
         if (this.#lastFocused === null) throw new Error("lastFocused is null on the blur event");
         this.#timeSpentInFocus += Date.now() - this.#lastFocused;
         this.lsm.timeSpentInTraining = this.#timeSpentInFocus;
-        console.log(`blur, time spent in focus updated to: ${this.#timeSpentInFocus}`);
         this.#lastFocused = null;
         this.view.timer.pauseAndUpdate(this.#timeSpentInFocus);
     }
