@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 0,
     VERSION_MINOR = 4,  // will only change when the data format changes
-    PATCH = 0;  // will change only with published commits, the in-beetween development versions are not counted
+    PATCH = 1;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: introduced localStorage
 // v0.1: added Lobanov scaling
@@ -15,3 +15,4 @@ export const VERSION_MAJOR = 0,
 // v0.3.5: Fixed an application breaking bug with PresetView
 // v0.3.6: Added the link to the survey
 // v0.4.0: Time is now tracked during state TRAINING
+// v0.4.1: Fixed timer alignment after clicking settings
