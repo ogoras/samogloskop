@@ -37,6 +37,6 @@ export default class SpeakerRecordings extends ArrayLoadedFromFile {
         this.push(...recordings);
         this.vowels.gatherMeasurements(this.flatMap(
             recording => recording.getVowelMeasurements(this.vowels.getVowelSymbols())
-        ));
+        ), 0.8);
     }
 }

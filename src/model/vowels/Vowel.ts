@@ -112,6 +112,16 @@ export default class Vowel {
         scaleFunction(this.avg as xy);
     }
 
+    scaleByFactor(factor: number) {
+        function scaleFunction (formants: xy) {
+            formants.x *= factor;
+            formants.y *= factor;
+        }
+        this.formants.forEach(scaleFunction);
+        if (!this.avg?.x || !this.avg?.y) throw new Error("No average formants to scale!");
+        scaleFunction(this.avg as xy);
+    }
+
     toSimpleObject() {
         return {
             letter: this.letter,

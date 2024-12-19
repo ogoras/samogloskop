@@ -21,6 +21,7 @@ export default class SpeakerVowels extends Vowels {
     #gatheredAnything = false;
     #scaleCurrent = true;
     currentVowel: Vowel | undefined;
+    #scaleFactor = 1;
 
     get gatheredAnything() {
         return this.#gatheredAnything || this.vowelsProcessed.length > 0;
@@ -45,7 +46,7 @@ export default class SpeakerVowels extends Vowels {
         this.initialized = true;
     }
 
-    gatherMeasurements(measurements: vowelMeasurements[]) {
+    gatherMeasurements(measurements: vowelMeasurements[], scaleFactor = 1) {
         measurements.forEach(measurements => {
             const vowel = this.vowels[vowelLetterToIndex(measurements.vowel, this.language)];
             if (!vowel) throw new Error(`Could not find vowel ${measurements.vowel} in SpeakerVowels`);
@@ -58,6 +59,7 @@ export default class SpeakerVowels extends Vowels {
             vowel.calculateAverage(POINT_SIZES.USER_CENTROIDS);
         });
         this.scaleLobanov();
+        this.scaleByFactor(scaleFactor);
     }
 
     calculateMeanFormants() {
@@ -146,6 +148,11 @@ export default class SpeakerVowels extends Vowels {
         this.#meanFormants!.y = oldMeanFormants.y + this.#meanFormants!.y * oldFormantsDeviation.y;
         this.#formantsDeviation!.x *= oldFormantsDeviation.x;
         this.#formantsDeviation!.y *= oldFormantsDeviation.y;
+    }
+
+    scaleByFactor(factor: number) {
+        this.vowelsProcessed.forEach(vowel => vowel.scaleByFactor(factor));
+        this.#scaleFactor *= factor;
     }
 
     scale(point: xy) {
