@@ -54,6 +54,7 @@ const SAVEABLE_STATES: State[] = [
     "CONFIRM_VOWELS",
     "GATHERING_FOREIGN_INITIAL",
     "TRAINING",
+    "GATHERING_FOREIGN_REPEAT",
     "DONE"
 ].map((key) => State.get(key));
 

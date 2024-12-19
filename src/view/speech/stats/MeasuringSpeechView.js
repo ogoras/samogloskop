@@ -107,4 +107,12 @@ export default class MeasuringSpeechView extends StatsView {
             p.remove();
         }
     }
+
+    destroy() {
+        // remove everything from the div stack except h2
+        const divStack = this.divStack;
+        while (divStack.lastChild !== this.h2) {
+            divStack.removeChild(divStack.lastChild);
+        }
+    }
 }

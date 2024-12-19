@@ -7,7 +7,7 @@ export default class TrainingController extends SmoothingController {
     #discarded = false;
     #timeSpentInFocus = 0;
     #lastFocused = null;
-    #abortController = new AbortController();
+    #abortController;
 
     async init(prev) {
         if (this.#discarded) return;
@@ -22,8 +22,8 @@ export default class TrainingController extends SmoothingController {
         this.#timeSpentInFocus = this.lsm.timeSpentInTraining ?? 0;
         this.view.timer.show(this.#timeSpentInFocus);
         if (document.hasFocus()) this.view.timer.resume();
-        console.log(`time spent in focus loaded as: ${this.#timeSpentInFocus}`);
 
+        this.#abortController = new AbortController();
         const signal = this.#abortController.signal;
         addEventListener("focus", this.#onFocus.bind(this), { signal });
         addEventListener("blur", this.#onBlur.bind(this), { signal });
@@ -57,19 +57,30 @@ export default class TrainingController extends SmoothingController {
         return false;
     }
 
-    next() {
-        if (this.#discarded) return;
-
-        // stop counting time
+    #stopCountingTime() {
         if (document.hasFocus()) {
             this.#onBlur();
             this.view.timer.hide();
         }
         this.#abortController.abort();
+    }
+
+    next() {
+        if (this.#discarded) return;
+
+        this.#stopCountingTime();
 
         this.sm.advance();
         this.breakRenderLoop();
         nextController(this);
         this.#discarded = true;
+    }
+
+    recalibrate() {
+        if (this.#discarded) return;
+
+        this.#stopCountingTime();
+
+        super.recalibrate();
     }
 }

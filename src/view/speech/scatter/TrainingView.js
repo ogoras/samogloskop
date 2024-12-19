@@ -2,14 +2,14 @@ import ScatterView from "./ScatterView.js";
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from "../../../const/VOWEL_INVENTORIES.js";
 import Vowel from "../../../model/vowels/Vowel.js";
-
 import { append_checkbox, append_h4 } from "../../dom/dom_utils.js";
+import nullish from "../../../logic/util/nullish.js";
 
 export default class TrainingView extends ScatterView {
     #datasetAdded = false;
     #currentMessage = 0;
 
-    constructor(controller, arg, recycle = false) {
+    constructor(controller, arg, recycle = false, parent) {
         super(controller, arg, recycle);
 
         // iterate through all children of divStack and remove them except h2
@@ -54,6 +54,46 @@ export default class TrainingView extends ScatterView {
         this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle)
 
         this.divStack.style.width = "auto";
+
+        const sideContainer = parent.sideContainer;
+        const moreInfo = parent.moreInfo;
+
+        this.timer = {
+            element: document.createElement("span"),
+            visible: false,
+            setTime: function(time) {
+                this.time = time;
+                function twoDigits(num) { return num.toString().padStart(2, '0'); }
+                const hh = Math.floor(time / 3600);
+                const mm = twoDigits(Math.floor(time / 60) % 60);
+                const ss = twoDigits(time % 60);
+                this.element.innerHTML = `Ćwiczysz już: ${hh}:${mm}:${ss}`;
+            },
+            show: function(timeMs) {
+                this.visible = true;
+                sideContainer.insertBefore(this.element, moreInfo.div);
+                if (!nullish(timeMs)) this.setTime(Math.floor(timeMs / 1000));
+            },
+            resume: function() {
+                if (!this.visible) throw new Error("Tried to resume timer when it's not visible");
+                if (this.interval) throw new Error("Timer already running");
+                this.interval = setInterval(() => this.setTime(this.time + 1), 1000);
+            },
+            pauseAndUpdate: function(timeMs) {
+                if (!this.visible) throw new Error("Tried to pause and update timer when it's not visible");
+                if (!this.interval) throw new Error("Timer not running");
+                clearInterval(this.interval);
+                this.interval = null;
+                this.setTime(Math.floor(timeMs / 1000));
+            },
+            hide: function() {
+                if (!this.visible) throw new Error("Tried to remove timer when it's not visible");
+                if (this.interval) clearInterval(this.interval);
+                this.element.remove();
+                this.visible = false;
+            }
+        };
+        this.timer.element.classList.add("timer");
     }
 
     addDatasets(petersonBarney, politicians) {
@@ -126,10 +166,13 @@ export default class TrainingView extends ScatterView {
             this.button.innerHTML = "Przejdź dalej";
             this.#currentMessage++;
         } else if (this.#currentMessage == 1) {
-            this.button.remove();
-            this.visibleVowelsChoice?.remove();
-            this.divStack.style = "";
             this.controller.next();
         }
+    }
+
+    destroy() {
+        this.button.remove();
+        this.visibleVowelsChoice?.remove();
+        this.divStack.style = "";
     }
 }

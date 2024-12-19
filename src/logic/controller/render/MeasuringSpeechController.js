@@ -18,7 +18,7 @@ export default class MeasuringSpeechController extends RenderController {
                 if (stats.detectSpeech()) {
                     this.sm.advance();
                     view.startTime = this.time;
-                    view.updateView();
+                    view.speechDetected = true;
                 }
                 break;
             case "MEASURING_SPEECH":
@@ -34,7 +34,7 @@ export default class MeasuringSpeechController extends RenderController {
                         nextController(this);
                         return false;
                     }
-                    view.updateView();
+                    view.finish();
                 }
                 break;
             case "SPEECH_MEASURED":

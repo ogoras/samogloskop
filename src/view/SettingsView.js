@@ -44,7 +44,7 @@ export default class SettingsView extends View {
         if (this.intensityStats?.isCalibrated) {
             this.mainContainer.appendChild(this.createIntensityStatsSection());
         }
-        if (this.state.afterOrEqual("CONFIRM_VOWELS")) {
+        if (this.state.is("CONFIRM_VOWELS")) {
             this.mainContainer.appendChild(this.createDeleteVowelsSection());
         }
 
