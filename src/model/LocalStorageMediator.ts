@@ -4,16 +4,13 @@ import Preset from "../const/Preset.js";
 import Singleton from "../Singleton.js";
 import IntensityStats from "./IntensityStats.js";
 import SpeakerVowels from "./vowels/SpeakerVowels.js";
+import nullish from "../logic/util/nullish.js";
 
 const GATHERING_NATIVE_LEGACY = [
     "WAITING_FOR_VOWELS",
     "GATHERING_VOWELS",
     "CONFIRM_VOWELS",
 ];
-
-function nullish(value: any) {
-    return value === undefined || value === null;
-}
 
 export default class LocalStorageMediator extends Singleton {
     [index: string]: any;

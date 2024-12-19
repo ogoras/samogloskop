@@ -20,6 +20,8 @@ export default class TrainingController extends SmoothingController {
         // check if window has focus
         this.#lastFocused = document.hasFocus() ? Date.now() : null;
         this.#timeSpentInFocus = this.lsm.timeSpentInTraining ?? 0;
+        this.view.timer.show(this.#timeSpentInFocus);
+        if (document.hasFocus()) this.view.timer.resume();
         console.log(`time spent in focus loaded as: ${this.#timeSpentInFocus}`);
 
         const signal = this.#abortController.signal;
@@ -36,8 +38,9 @@ export default class TrainingController extends SmoothingController {
 
     #onFocus() {
         console.log("focus");
-            if (this.#lastFocused !== null) throw new Error("lastFocused is not null on the focus event");
-            this.#lastFocused = Date.now();
+        if (this.#lastFocused !== null) throw new Error("lastFocused is not null on the focus event");
+        this.#lastFocused = Date.now();
+        this.view.timer.resume();
     }
 
     #onBlur() {
@@ -46,6 +49,7 @@ export default class TrainingController extends SmoothingController {
         this.lsm.timeSpentInTraining = this.#timeSpentInFocus;
         console.log(`blur, time spent in focus updated to: ${this.#timeSpentInFocus}`);
         this.#lastFocused = null;
+        this.view.timer.pauseAndUpdate(this.#timeSpentInFocus);
     }
 
     renderLoop() {
@@ -59,7 +63,10 @@ export default class TrainingController extends SmoothingController {
         if (this.#discarded) return;
 
         // stop counting time
-        if (document.hasFocus()) this.#onBlur();
+        if (document.hasFocus()) {
+            this.#onBlur();
+            this.view.timer.hide();
+        }
         this.#abortController.abort();
 
         this.sm.advance();

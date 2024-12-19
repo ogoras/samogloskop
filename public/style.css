@@ -411,3 +411,7 @@ button:active, .emoji-button:active {
     filter: drop-shadow(0 0 0.2rem);
     opacity: 1;
 }
+
+.timer {
+    text-align: right;
+}

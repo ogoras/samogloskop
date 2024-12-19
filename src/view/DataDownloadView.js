@@ -18,7 +18,7 @@ export default class DataDownloadView extends View {
 
         // Add a title
         const title = document.createElement("h1");
-        title.innerHTML = "Jeszcze jeden krok!";
+        title.innerHTML = "I gotowe!";
         this.container.appendChild(title);
 
         // Add a paragraph
