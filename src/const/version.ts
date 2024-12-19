@@ -17,3 +17,4 @@ export const VERSION_MAJOR = 0,
 // v0.4.0: Time is now tracked during state TRAINING
 // v0.4.1: Fixed timer alignment after clicking settings
 // v0.4.2: Recalibrating integrated with training and gathering foreign states
+// v0.4.3: Updated privacy policy
