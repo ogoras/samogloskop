@@ -10,6 +10,7 @@ const SUBSTATES = {
 export default class GatheringVowelsController extends SmoothingController {
     init(prev) {
         this.vowelsBeingGathered = "nativeVowels";
+        prev.lsm[this.vowelsBeingGathered] = undefined;
         this.substate = SUBSTATES.WAITING;
         super.init(prev);
     }
