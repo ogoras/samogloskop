@@ -16,7 +16,7 @@ export default class Vowels {   // represents a set of vowels for a particular s
     vowels: Vowel[];
     language: string;
 
-    private getVowelByLetter(letter: string): Vowel {
+    getVowelByLetter(letter: string): Vowel {
         const id = vowelLetterToIndex(letter, this.language);
         const vowel = this.vowels[id];
         if (!vowel) throw new Error(`Vowels object doesn't have the ${letter} vowel. Language: ${this.language}`);

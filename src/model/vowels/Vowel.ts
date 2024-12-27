@@ -15,7 +15,7 @@ export type formant = {
     [index: string]: string | number | boolean | undefined
 }
 
-type confidenceEllipseType = {
+type ellipse = {
     x: number,
     y: number,
     rx: number,
@@ -40,7 +40,7 @@ export default class Vowel {
     language: string;
     IPA?: Partial<IPA_type>;
     id: number;
-    #confidenceEllipse: confidenceEllipseType | undefined;
+    #confidenceEllipse: ellipse | undefined;
 
     get meanFormants() {
         if (!this.avg) this.calculateAverage();
@@ -82,7 +82,15 @@ export default class Vowel {
         const eigenvectors = math.eigs(covarianceMatrix).eigenvectors;
         if (eigenvectors.length < 2) throw new Error("Could not calculate eigenvectors for confidence matrix");
         const rx = Math.sqrt(Math.abs(eigenvectors[0]!.value as number)) * CONFIDENCE_FACTOR;
+        if (isNaN(rx)) {
+            console.log(this);
+            throw new Error(`rx is NaN`);
+        }
         const ry = Math.sqrt(Math.abs(eigenvectors[1]!.value as number)) * CONFIDENCE_FACTOR;
+        if (isNaN(ry)) {
+            throw new Error(`ry is NaN`);
+        }
+        if (isNaN(ry)) throw new Error(`eigenvectors is ${eigenvectors}`);
         const eigenvectorX = eigenvectors[0]!.vector as number[];
         if (eigenvectorX.length < 2) throw new Error("Eigenvector X is not 2D");
         const angle = Math.atan2(eigenvectorX[1]!, eigenvectorX[0]!) * 180 / Math.PI;

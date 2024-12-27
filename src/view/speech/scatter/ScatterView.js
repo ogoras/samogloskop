@@ -75,8 +75,8 @@ export default class ScatterView extends SpeechView {
         this.scatterPlot.feed(formants, [0, vowelId, 0]);
     }
 
-    vowelEllipse({x, y, rx, ry = rx, angle = 0}, vowelId = 0) {
-        this.scatterPlot.addEllipse(x, y, rx, ry, angle, [0, vowelId, 1]);
+    vowelEllipse(ellipse, vowelId = 0) {
+        this.scatterPlot.addEllipse(ellipse, [0, vowelId, 1]);
     }
 
     vowelCentroid(vowel) {

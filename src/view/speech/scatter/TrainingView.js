@@ -140,7 +140,7 @@ export default class TrainingView extends ScatterView {
             nested: true
         }, index);
         for (let i = 0; i < vowelInv.length; i++) {
-            const vowel = new Vowel(vowelInv[i]);
+            const vowel = vowels.getVowelByLetter(new Vowel(vowelInv[i]).letter);
             const ids = this.scatterPlot.appendGroup({
                 nested: true,
                 formatting: { rgb: vowel.rgb },
@@ -152,6 +152,10 @@ export default class TrainingView extends ScatterView {
                     opacity: "80",
                 }
             }, ids, vowels.getSingleMeasurements(vowel.letter));
+
+            this.scatterPlot.appendGroup({}, ids);
+            this.scatterPlot.addEllipse(vowel.confidenceEllipse, [...ids, 1]);
+
             this.scatterPlot.appendGroup({
                 formatting: {
                     size: POINT_SIZES.VOWEL_CENTROID * 0.7
