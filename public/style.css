@@ -15,7 +15,8 @@ html {
     margin: 0;
     padding: 0;
 }
-* {
+
+body {
     box-sizing: border-box;
     font-family: 'Helvetica', sans-serif;
 }
@@ -375,7 +376,14 @@ button, .emoji-button {
 }
 
 g text {
-    text-shadow: 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff
+    text-shadow: 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff,
+    0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+g#points {
+    font-weight: 500;
 }
 
 @media (hover: hover) {

@@ -42,6 +42,8 @@ export default class TrainingView extends ScatterView {
             }
             this.initializePlot();
         }
+
+        this.scatterPlot.addSeriesFormatting({ fontWeight: 700, serif: true }, 0);
         
         const nativeVowels = controller.nativeVowels;
         nativeVowels.vowelsProcessed.forEach(vowel => {
@@ -102,9 +104,9 @@ export default class TrainingView extends ScatterView {
     addDatasets(petersonBarney, politicians) {
         if (this.#datasetAdded) return;
 
-        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, false, "20");
+        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, false, "20", { italic: true });
 
-        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, true);
+        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, true, "80", { fontWeight: 700 });
 
         this.visibleVowelsChoice = document.createElement("div");
 
@@ -140,12 +142,12 @@ export default class TrainingView extends ScatterView {
         this.checkboxes[2].onchange({ target: { checked: true } });
     }
 
-    #addVowelMeasurements(vowels, index, symbol, ellipses = false, pointOpacity = "80") {
+    #addVowelMeasurements(vowels, index, symbol, ellipses = false, pointOpacity = "80", formatting = {}) {
         if (!symbol) throw new Error("Symbol must be provided.");
         if (!index) throw new Error("Index must be provided.");
         const vowelInv = VOWEL_INVENTORIES[vowels.language];
         this.scatterPlot.insertGroup({
-            formatting: { symbol },
+            formatting: { symbol, ...formatting },
             nested: true
         }, index);
         for (let i = 0; i < vowelInv.length; i++) {
@@ -170,7 +172,7 @@ export default class TrainingView extends ScatterView {
 
             this.scatterPlot.appendGroup({
                 formatting: {
-                    size: POINT_SIZES.VOWEL_CENTROID * 0.7
+                    size: POINT_SIZES.VOWEL_CENTROID * 0.7,
                 }
             }, ids, vowels.getCentroids(vowel.letter));
         }

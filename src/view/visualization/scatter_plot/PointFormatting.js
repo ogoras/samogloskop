@@ -25,5 +25,6 @@ export default class PointFormatting {
         for (let key of Object.keys(params)) {
             this[key] = params[key];
         }
+        return this;
     }
 }

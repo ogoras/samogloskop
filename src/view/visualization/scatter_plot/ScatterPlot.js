@@ -203,7 +203,7 @@ export default class ScatterPlot {
                 .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`);
             point.label?.transition(t)
                 .attr("x", this.x.scale(point.x))
-                .attr("y", this.y.scale(point.y) - 10);
+                .attr("y", this.y.scale(point.y));
         }
         for (let ellipse of this.allPointsGroup.getAllEllipses()) {
             ellipse.element.transition(t)
@@ -239,6 +239,10 @@ export default class ScatterPlot {
 
     setSeriesVisibility(visible, seriesIds) {
         this.allPointsGroup.navigate(seriesIds).g.style("display", visible ? "block" : "none");
+    }
+
+    addSeriesFormatting(formatting, seriesIds) {
+        this.allPointsGroup.navigate(seriesIds).applyFormatting(formatting);
     }
 }
 

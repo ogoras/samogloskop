@@ -20,11 +20,9 @@ export default class SimplePointGroup extends PointGroup {
             y: point.y,
             symbol: point.symbol ?? defaultFormatting.symbol,
             label: point.label ? this.g.append("text")
-                .attr("font-weight", "bold")
-                .attr("font-family", "Helvetica, sans-serif")
                 .text(point.label)
                 .attr("x", this.x.scale(point.x))
-                .attr("y", this.y.scale(point.y) - 10)
+                .attr("y", this.y.scale(point.y))
                 : null,
         });
         if (point.color) {

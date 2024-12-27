@@ -37,6 +37,9 @@ export default class PointGroup extends Array {
     }
 
     applyFormatting(formatting) {
+        console.log(formatting);
+        console.log(this.defaultFormatting);
+        formatting = this.defaultFormatting.update(formatting);
         if (!formatting) return;
         if (formatting.color || formatting.rgb) {
             const color = formatting.color ?? `#${formatting.rgb}`;
@@ -45,6 +48,15 @@ export default class PointGroup extends Array {
         }
         if (formatting.opacity) {
             this.g.attr("fill-opacity", parseInt(formatting.opacity, 16) / 255);
+        }
+        if (formatting.fontWeight) {
+            this.g.attr("font-weight", formatting.fontWeight);
+        }
+        if (formatting.italic) {
+            this.g.attr("font-style", "italic");
+        }
+        if (formatting.serif) {
+            this.g.attr("font-family", "Times New Roman, serif");
         }
     }
 
