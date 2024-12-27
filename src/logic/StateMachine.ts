@@ -45,6 +45,10 @@ export default class StateMachine extends Singleton {
         }
         return undefined;
     }
+
+    get onTempState(): boolean {
+        return this.#tempState !== undefined;
+    }
 }
 
 const SAVEABLE_STATES: State[] = [

@@ -11,7 +11,7 @@ export default class GatheringVowelsController extends SmoothingController {
     vowelsBeingGathered = "nativeVowels";
 
     init(prev) {
-        prev.lsm[this.vowelsBeingGathered] = undefined;
+        if (!prev.sm.onTempState) prev.lsm[this.vowelsBeingGathered] = undefined;
         this.substate = SUBSTATES.WAITING;
         super.init(prev);
     }
