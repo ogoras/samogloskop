@@ -374,6 +374,10 @@ button, .emoji-button {
     opacity: 0;
 }
 
+g.clickable text {
+    text-shadow: 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff
+}
+
 @media (hover: hover) {
     button:hover, .emoji-button:hover, g.clickable:hover, input[type="checkbox"] {
         cursor: pointer;
@@ -391,14 +395,22 @@ button, .emoji-button {
         filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
     }
 
+    g.clickable:hover text {
+        text-shadow: 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff
+    }
+
     .disabled:hover {
         cursor: not-allowed;
         filter: none;
     }
 }
 
-g.clickable:active path {
+g.clickable:active path, g.clickable:active ellipse {
     filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
+}
+
+g.clickable:active text {
+    text-shadow: 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff
 }
 
 g.clickable text {

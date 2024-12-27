@@ -21,7 +21,6 @@ export default class SimplePointGroup extends PointGroup {
             symbol: point.symbol ?? defaultFormatting.symbol,
             label: point.label ? this.g.append("text")
                 .attr("font-weight", "bold")
-                .attr("style", `text-shadow:${" 0 0 0.3em #fff,".repeat(5).slice(0, -1)}`)
                 .attr("font-family", "Helvetica, sans-serif")
                 .text(point.label)
                 .attr("x", this.x.scale(point.x))
