@@ -237,12 +237,8 @@ export default class ScatterPlot {
         this.allPointsGroup[seriesId].points = [];
     }
 
-    setSeriesVisibility(visible, ...seriesIds) {
-        for (let seriesId of seriesIds) {
-            if (seriesId < 0) seriesId = this.allPointsGroup.length + seriesId;
-            if (!this.allPointsGroup[seriesId]) throw new Error(`setSeriesVisibility: series ${seriesId} not found`);
-            this.allPointsGroup[seriesId].g.style("display", visible ? "block" : "none");
-        }
+    setSeriesVisibility(visible, seriesIds) {
+        this.allPointsGroup.navigate(seriesIds).g.style("display", visible ? "block" : "none");
     }
 }
 

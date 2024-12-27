@@ -13,4 +13,5 @@ export function append_checkbox(parent, text, onchange, checked = false) {
     const span = document.createElement("span");
     span.innerHTML = text;
     parent.appendChild(span);
+    return input;
 }

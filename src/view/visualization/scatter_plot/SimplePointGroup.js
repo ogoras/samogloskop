@@ -53,7 +53,7 @@ export default class SimplePointGroup extends PointGroup {
                 .attr("rx", Math.abs(this.x.scale(rx) - this.x.scale(0)))
                 .attr("ry", Math.abs(this.y.scale(ry) - this.y.scale(0)))
                 .attr("transform", `rotate(${-angle} ${this.x.scale(x)} ${this.y.scale(y)})`)
-                .attr("fill-opacity", 0.7),
+                .attr("fill-opacity", 0.4),
             x, y, rx, ry, angle
         };
         return this.ellipse = ellipse;

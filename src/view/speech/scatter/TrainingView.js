@@ -8,6 +8,7 @@ import nullish from "../../../logic/util/nullish.js";
 export default class TrainingView extends ScatterView {
     #datasetAdded = false;
     #currentMessage = 0;
+    checkboxes = [];
 
     constructor(controller, arg, recycle = false, parent) {
         super(controller, arg, recycle);
@@ -101,37 +102,45 @@ export default class TrainingView extends ScatterView {
     addDatasets(petersonBarney, politicians) {
         if (this.#datasetAdded) return;
 
-        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond);
+        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, false, "20");
 
-        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare);
+        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, true);
 
         this.visibleVowelsChoice = document.createElement("div");
 
         append_h4(this.visibleVowelsChoice, "Język polski:");
-        append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
+        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 0);
-        }, true);
+        }, true));
     
         append_h4(this.visibleVowelsChoice, "Język angielski (General American):");
-        append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
+        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 3);
-        });
+        }));
         this.visibleVowelsChoice.appendChild(document.createElement("br"));
-        append_checkbox(this.visibleVowelsChoice, "badanie Peterson & Barney, 1952", (e) => {
+        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "badanie Peterson & Barney, 1952", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 1);
-        });
+        }));
         this.visibleVowelsChoice.appendChild(document.createElement("br"));
-        append_checkbox(this.visibleVowelsChoice, "nagrania polityków", (e) => {
+        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "nagrania polityków", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 2);
-        });
+        }));
 
         this.sideContainer.appendChild(this.visibleVowelsChoice);
         document.querySelector(".recording-container").after(this.visibleVowelsChoice);
 
         this.#datasetAdded = true;
+
+        // uncheck the first checkbox and check second and third, along with running their callbacks
+        this.checkboxes[0].checked = false;
+        this.checkboxes[1].checked = true;
+        this.checkboxes[2].checked = true;
+        this.checkboxes[0].onchange({ target: { checked: false } });
+        this.checkboxes[1].onchange({ target: { checked: true } });
+        this.checkboxes[2].onchange({ target: { checked: true } });
     }
 
-    #addVowelMeasurements(vowels, index, symbol) {
+    #addVowelMeasurements(vowels, index, symbol, ellipses = false, pointOpacity = "80") {
         if (!symbol) throw new Error("Symbol must be provided.");
         if (!index) throw new Error("Index must be provided.");
         const vowelInv = VOWEL_INVENTORIES[vowels.language];
@@ -146,15 +155,18 @@ export default class TrainingView extends ScatterView {
                 formatting: { rgb: vowel.rgb },
                 onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
             }, index);
-            this.scatterPlot.appendGroup({
+            
+            const pointCloudIds = this.scatterPlot.appendGroup({
                 formatting: {
                     size: POINT_SIZES.USER_DATAPOINTS * 0.7,
-                    opacity: "80",
+                    opacity: pointOpacity,
                 }
             }, ids, vowels.getSingleMeasurements(vowel.letter));
 
-            this.scatterPlot.appendGroup({}, ids);
-            this.scatterPlot.addEllipse(vowel.confidenceEllipse, [...ids, 1]);
+            const ellipseIds = this.scatterPlot.appendGroup({}, ids);
+            this.scatterPlot.addEllipse(vowel.confidenceEllipse, ellipseIds);
+
+            this.scatterPlot.setSeriesVisibility(false, ellipses ? pointCloudIds : ellipseIds);
 
             this.scatterPlot.appendGroup({
                 formatting: {
