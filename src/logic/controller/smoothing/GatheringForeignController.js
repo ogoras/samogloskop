@@ -4,10 +4,8 @@ import GatheringVowelsController from "./GatheringVowelsController.js";
 export default class GatheringForeignController extends GatheringVowelsController {
     async init(prev) {
         this.repeat = prev.sm.state.is("GATHERING_FOREIGN_REPEAT");
-        const vowelsBeingGathered = this.repeat ? "foreignRepeat" : "foreignInitial";
-        prev.lsm[vowelsBeingGathered] = undefined;
+        this.vowelsBeingGathered = this.repeat ? "foreignRepeat" : "foreignInitial";
         super.init(prev);
-        this.vowelsBeingGathered = vowelsBeingGathered;
 
         this.disableMic();
         this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");

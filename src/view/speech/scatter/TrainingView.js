@@ -22,6 +22,7 @@ export default class TrainingView extends ScatterView {
 
         this.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
+        this.divStack.appendChild(this.h2);
 
         const buttons = this.divStack.querySelectorAll("button");
         buttons.forEach(button => button.remove());
