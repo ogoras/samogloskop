@@ -20,7 +20,6 @@ export default class ScatterPlot {
     };
     svg = null;
     g = null;
-    #lastSeriesId = 0;
 
     constructor(elementId, flip = false, unit = null) {
         const [flipX, flipY] = [ this.flipX, this.flipY ] = parseFlipParameter(flip);
@@ -45,8 +44,7 @@ export default class ScatterPlot {
         this.svg.attr("display", "none");
         this.drawAxes();
         this.svg.attr("display", "block");
-        this.rescalePoints(0, 0);
-        this.rescalePoints(0, 1);
+        this.rescaleAll(d3.transition().duration(0));
     }
 
     drawAxes() {
@@ -126,10 +124,10 @@ export default class ScatterPlot {
         group.setClickability(clickable);
     }
 
-    removePointsFromGroup(ids = []) {
+    removeAllFromGroup(ids = []) {
         ids = this.convertToIdArray(ids);
         const group = this.allPointsGroup.navigate(ids);
-        group.removeAllPoints();
+        group.removeAll();
     }
 
     addPoint(point, group, animationMs = 200, rescale = true) {
@@ -196,10 +194,10 @@ export default class ScatterPlot {
                 .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
         if (yChanged) this.y.g.transition(t)
                 .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
-        this.rescalePoints(t);
+        this.rescaleAll(t);
     }
 
-    rescalePoints(t) {
+    rescaleAll(t) {
         for (let point of this.allPointsGroup.getAllPoints()) {
             point.element.transition(t)
                 .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`);
@@ -207,12 +205,26 @@ export default class ScatterPlot {
                 .attr("x", this.x.scale(point.x))
                 .attr("y", this.y.scale(point.y) - 10);
         }
+        for (let ellipse of this.allPointsGroup.getAllEllipses()) {
+            ellipse.element.transition(t)
+                .attr("cx", this.x.scale(ellipse.x))
+                .attr("cy", this.y.scale(ellipse.y))
+                .attr("rx", Math.abs(this.x.scale(ellipse.rx) - this.x.scale(0)))
+                .attr("ry", Math.abs(this.y.scale(ellipse.ry) - this.y.scale(0)))
+                .attr("transform", `rotate(${-ellipse.angle} ${this.x.scale(ellipse.x)} ${this.y.scale(ellipse.y)})`);
+        }
     }
 
     feed(point, ids = -1, rescale = true) {
         ids = this.convertToIdArray(ids);
         const group = this.allPointsGroup.navigate(ids);
         this.addPoint(point, group, undefined, rescale);
+    }
+
+    addEllipse(x, y, rx, ry = rx, angle = 0, ids = -1) {
+        ids = this.convertToIdArray(ids);
+        const group = this.allPointsGroup.navigate(ids);
+        group.addEllipse(x, y, rx, ry, angle);
     }
 
     clearSeries(seriesId) {

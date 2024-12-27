@@ -50,13 +50,14 @@ export default class TrainingView extends ScatterView {
                 this.saveFormants(formant, id);
             });
             this.vowelCentroid(vowel);
+            this.vowelEllipse(vowel.confidenceEllipse, id);
         });
 
         this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle)
 
         this.divStack.style.width = "auto";
 
-        const sideContainer = parent.sideContainer;
+        const sideContainer = this.sideContainer = parent.sideContainer;
         const moreInfo = parent.moreInfo;
 
         this.timer = {
@@ -124,8 +125,7 @@ export default class TrainingView extends ScatterView {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 2);
         });
 
-        const sideContainer = document.querySelector(".side-container");
-        sideContainer.appendChild(this.visibleVowelsChoice);
+        this.sideContainer.appendChild(this.visibleVowelsChoice);
         document.querySelector(".recording-container").after(this.visibleVowelsChoice);
 
         this.#datasetAdded = true;

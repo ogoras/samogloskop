@@ -387,7 +387,7 @@ button, .emoji-button {
         filter: drop-shadow(0 0 0.2rem);
     }
 
-    g.clickable:hover path {
+    g.clickable:hover path, g.clickable:hover ellipse {
         filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
     }
 

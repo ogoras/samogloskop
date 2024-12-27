@@ -56,6 +56,7 @@ export default class ScatterView extends SpeechView {
                 size: POINT_SIZES.USER_DATAPOINTS,
                 opacity: "80",
             }}, ids);
+            this.scatterPlot.appendGroup({}, ids);  // ellipse
             this.scatterPlot.appendGroup({ formatting: {
                 size: POINT_SIZES.VOWEL_CENTROID
             }}, ids);
@@ -74,8 +75,12 @@ export default class ScatterView extends SpeechView {
         this.scatterPlot.feed(formants, [0, vowelId, 0]);
     }
 
+    vowelEllipse({x, y, rx, ry = rx, angle = 0}, vowelId = 0) {
+        this.scatterPlot.addEllipse(x, y, rx, ry, angle, [0, vowelId, 1]);
+    }
+
     vowelCentroid(vowel) {
-        this.scatterPlot.feed(vowel.avg, [0, vowel.id, 1]);
+        this.scatterPlot.feed(vowel.avg, [0, vowel.id, 2]);
     }
 
     feed(formants, rescale = true) {

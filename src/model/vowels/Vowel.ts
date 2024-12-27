@@ -3,6 +3,9 @@ import { VOWEL_DICTS, VOWEL_INVENTORIES, vowel, IPA_type } from "../../const/VOW
 import RecursivePartial from "../../types/RecursivePartial.js";
 import xy from "../../types/xy.js"
 
+import type * as math_node from 'mathjs';
+declare const math: typeof math_node;
+
 export type formant = {
     x: number,
     y: number,
@@ -11,6 +14,16 @@ export type formant = {
     identified?: boolean | undefined,
     [index: string]: string | number | boolean | undefined
 }
+
+type confidenceEllipseType = {
+    x: number,
+    y: number,
+    rx: number,
+    ry?: number,
+    angle?: number,
+}
+
+const CONFIDENCE_FACTOR = Math.sqrt(5.911); // 95% confidence interval for 2D normal distribution
 
 export default class Vowel {
     formants: formant[] = [];
@@ -27,6 +40,7 @@ export default class Vowel {
     language: string;
     IPA?: Partial<IPA_type>;
     id: number;
+    #confidenceEllipse: confidenceEllipseType | undefined;
 
     get meanFormants() {
         if (!this.avg) this.calculateAverage();
@@ -51,6 +65,29 @@ export default class Vowel {
             x: sumSqrDiffs.x / this.formants.length,
             y: sumSqrDiffs.y / this.formants.length
         }
+    }
+
+    get confidenceEllipse() {
+        if (this.#confidenceEllipse) return this.#confidenceEllipse;
+        if (!this.avg) this.calculateAverage();
+        const variance = this.variance;
+        const mean = this.meanFormants;
+        const covariance = this.formants.reduce(
+            (acc, formant) => {
+                return acc + (formant.x - mean.x!) * (formant.y - mean.y!);
+            },
+            0
+        ) / this.formants.length;
+        const covarianceMatrix = [[variance.x, covariance], [covariance, variance.y]];
+        const eigenvectors = math.eigs(covarianceMatrix).eigenvectors;
+        if (eigenvectors.length < 2) throw new Error("Could not calculate eigenvectors for confidence matrix");
+        const rx = Math.sqrt(Math.abs(eigenvectors[0]!.value as number)) * CONFIDENCE_FACTOR;
+        const ry = Math.sqrt(Math.abs(eigenvectors[1]!.value as number)) * CONFIDENCE_FACTOR;
+        const eigenvectorX = eigenvectors[0]!.vector as number[];
+        if (eigenvectorX.length < 2) throw new Error("Eigenvector X is not 2D");
+        const angle = Math.atan2(eigenvectorX[1]!, eigenvectorX[0]!) * 180 / Math.PI;
+        this.#confidenceEllipse = {x: mean.x!, y: mean.y!, rx, ry, angle};
+        return this.#confidenceEllipse
     }
 
     constructor(vowel?: RecursivePartial<vowel>) {
@@ -110,6 +147,8 @@ export default class Vowel {
         this.formants.forEach(scaleFunction);
         if (!this.avg?.x || !this.avg?.y) throw new Error("No average formants to scale!");
         scaleFunction(this.avg as xy);
+
+        this.#confidenceEllipse = undefined;
     }
 
     scaleByFactor(factor: number) {

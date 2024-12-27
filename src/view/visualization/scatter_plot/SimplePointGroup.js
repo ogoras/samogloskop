@@ -3,6 +3,8 @@ import PointGroup from "./PointGroup.js";
 import remToPx from "../../../logic/util/remToPx.js";
 
 export default class SimplePointGroup extends PointGroup {
+    ellipse = null;
+
     addPoint(point) {
         const defaultFormatting = this.defaultFormatting;
 
@@ -44,15 +46,35 @@ export default class SimplePointGroup extends PointGroup {
         return p;
     }
 
+    addEllipse(x, y, rx, ry = rx, angle = 0) {
+        const ellipse = {
+            element: this.g.append("ellipse")
+                .attr("cx", this.x.scale(x))
+                .attr("cy", this.y.scale(y))
+                .attr("rx", Math.abs(this.x.scale(rx) - this.x.scale(0)))
+                .attr("ry", Math.abs(this.y.scale(ry) - this.y.scale(0)))
+                .attr("transform", `rotate(${-angle} ${this.x.scale(x)} ${this.y.scale(y)})`)
+                .attr("fill-opacity", 0.7),
+            x, y, rx, ry, angle
+        };
+        return this.ellipse = ellipse;
+    }
+
     getAllPoints() {
         return this;
     }
 
-    removeAllPoints() {
+    getAllEllipses() {
+        return this.ellipse ? [this.ellipse] : [];
+    }
+
+    removeAll() {
         this.forEach(point => {
             point.element.remove();
             point.label?.remove();
         });
         this.length = 0;
+        this.ellipse?.element.remove();
+        this.ellipse = null;
     }
 }

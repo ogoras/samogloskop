@@ -38,6 +38,7 @@ export default class ConfirmVowelsView extends ScatterView {
                 this.saveFormants(formant, id);
             });
             this.vowelCentroid(vowel);
+            this.vowelEllipse(vowel.confidenceEllipse, id);
         });
 
         ConfirmVowelsView.viewedAtLeastOnce = true;
@@ -64,7 +65,7 @@ export default class ConfirmVowelsView extends ScatterView {
         this.controller.editVowel(vowel);
         const vowelInv = VOWEL_INVENTORIES.PL;
         const vowelDict = VOWEL_DICTS.PL;
-        this.scatterPlot.removePointsFromGroup([0, vowelDict[vowel.letter]]);
+        this.scatterPlot.removeAllFromGroup([0, vowelDict[vowel.letter]]);
         for (let i = 0; i < vowelInv.length; i++) {
             this.scatterPlot.setGroupClickability(false, [0, i]);
         }
