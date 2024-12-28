@@ -18,3 +18,4 @@ export const VERSION_MAJOR = 0,
 // v0.4.1: Fixed timer alignment after clicking settings
 // v0.4.2: Recalibrating integrated with training and gathering foreign states
 // v0.4.3: Updated privacy policy
+// v0.4.4: Switched from plotting geometric shapes to letters
