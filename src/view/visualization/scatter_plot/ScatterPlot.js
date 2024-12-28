@@ -95,20 +95,20 @@ export default class ScatterPlot {
         return ids;
     }
 
-    appendGroup(constructorDefaults, ids = [], points = []) {
+    appendGroup(constructorDefaults, ids = [], points = [], areTextPoints) {
         ids = this.convertToIdArray(ids);
         const group = this.allPointsGroup.navigate(ids, CREATE_MODES.IF_NOT_EXISTS, { nested: true });
         const newIds = ids.concat(group.length);
-        this.insertGroup(constructorDefaults, newIds, points);
+        this.insertGroup(constructorDefaults, newIds, points, areTextPoints);
         return newIds;
     }
 
-    insertGroup(constructorDefaults, ids, points = []) {
+    insertGroup(constructorDefaults, ids, points = [], areTextPoints) {
         ids = this.convertToIdArray(ids);
         const group = this.allPointsGroup.navigate(ids, CREATE_MODES.INSERT, constructorDefaults);
 
         for (let point of points ?? []) {
-            this.addPoint(point, group, 0);
+            this.addPoint(point, group, 0, areTextPoints);
         }
     }
 
@@ -130,12 +130,12 @@ export default class ScatterPlot {
         group.removeAll();
     }
 
-    addPoint(point, group, animationMs = 200, rescale = true) {
+    addPoint(point, group, animationMs = 200, rescale = true, isTextPoint = point.isTextPoint) {
         if (typeof group === "number") {
             group = this.allPointsGroup[group];
         }
         if (rescale) this.resizeIfNeeded(point, animationMs);
-        group.addPoint(point);
+        group.addPoint(point, isTextPoint);
     }
 
     setSeriesSingle(point, ids = [], animationMs = 50, rescale = true) {
@@ -199,11 +199,17 @@ export default class ScatterPlot {
 
     rescaleAll(t) {
         for (let point of this.allPointsGroup.getAllPoints()) {
-            point.element.transition(t)
-                .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`);
-            point.label?.transition(t)
-                .attr("x", this.x.scale(point.x))
-                .attr("y", this.y.scale(point.y));
+            if (point.text) {
+                point.element.transition(t)
+                    .attr("x", this.x.scale(point.x))
+                    .attr("y", this.y.scale(point.y));
+            } else {
+                point.element.transition(t)
+                    .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`);
+                point.label?.transition(t)
+                    .attr("x", this.x.scale(point.x))
+                    .attr("y", this.y.scale(point.y));
+            }
         }
         for (let ellipse of this.allPointsGroup.getAllEllipses()) {
             ellipse.element.transition(t)

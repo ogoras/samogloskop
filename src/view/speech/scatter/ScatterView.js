@@ -53,12 +53,15 @@ export default class ScatterView extends SpeechView {
                 onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
             }, 0);
             this.scatterPlot.appendGroup({ formatting: {
+                text: vowel.letter,
                 size: POINT_SIZES.USER_DATAPOINTS,
-                opacity: "80",
+                opacity: "FF",
             }}, ids);
             this.scatterPlot.appendGroup({}, ids);  // ellipse
             this.scatterPlot.appendGroup({ formatting: {
-                size: POINT_SIZES.VOWEL_CENTROID
+                text: vowel.letter,
+                size: POINT_SIZES.USER_CENTROIDS,
+                glow: true
             }}, ids);
         }
         this.scatterPlot.appendGroup({ capacity: this.formantCount, growSize: true, formatting: {

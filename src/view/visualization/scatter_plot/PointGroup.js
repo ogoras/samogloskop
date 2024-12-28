@@ -37,8 +37,6 @@ export default class PointGroup extends Array {
     }
 
     applyFormatting(formatting) {
-        console.log(formatting);
-        console.log(this.defaultFormatting);
         formatting = this.defaultFormatting.update(formatting);
         if (!formatting) return;
         if (formatting.color || formatting.rgb) {

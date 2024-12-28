@@ -5,12 +5,20 @@ import remToPx from "../../../logic/util/remToPx.js";
 export default class SimplePointGroup extends PointGroup {
     ellipse = null;
 
-    addPoint(point) {
+    addPoint(point, isTextPoint = point.isTextPoint ?? (this.defaultFormatting.text !== undefined)) {
+        if (isTextPoint) {
+            return this.addTextPoint(point);
+        } else {
+            return this.addSymbolPoint(point);
+        }
+    }
+
+    addSymbolPoint(point) {
         const defaultFormatting = this.defaultFormatting;
 
         const symbol = point.symbol ?? defaultFormatting.symbol;
         let size = point.size ?? defaultFormatting.size;
-        size = remToPx(size) / 12
+        size = remToPx(size) / 12;
 
         const p = ({
             element: this.g.append("path")
@@ -18,7 +26,7 @@ export default class SimplePointGroup extends PointGroup {
                 .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`),
             x: point.x,
             y: point.y,
-            symbol: point.symbol ?? defaultFormatting.symbol,
+            symbol,
             label: point.label ? this.g.append("text")
                 .text(point.label)
                 .attr("x", this.x.scale(point.x))
@@ -38,6 +46,35 @@ export default class SimplePointGroup extends PointGroup {
             this.forEach((point, i) => {
                 point.element.attr("d", d3.symbol(point.symbol).size((i + 1) / pointCount * POINT_SIZES.TRAIL));
             });
+        }
+        this.push(p);
+        return p;
+    }
+
+    addTextPoint(point) {
+        const defaultFormatting = this.defaultFormatting;
+
+        const text = point.text ?? defaultFormatting.text;
+        let size = point.size ?? defaultFormatting.size;
+        size /= 120;
+
+        const p = ({
+            element: this.g.append("text")
+                .text(text)
+                .attr("x", this.x.scale(point.x))
+                .attr("y", this.y.scale(point.y))
+                .attr("font-size", `${size}rem`),
+            x: point.x,
+            y: point.y,
+            text
+        });
+        if (point.glow ?? defaultFormatting.glow) p.element.attr("class", "glow");
+        if (point.color) {
+            p.element.attr("fill", point.color);
+        }
+        if (this.capacity && this.length > this.capacity) {
+            const removed = this.shift();
+            removed.element.remove();
         }
         this.push(p);
         return p;

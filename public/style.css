@@ -21,6 +21,10 @@ body {
     font-family: 'Helvetica', sans-serif;
 }
 
+.serif {
+    font-family: 'Times New Roman', serif;
+}
+
 h1 {
     font-family: 'Helvetica', sans-serif;
     letter-spacing: 0.05em;
@@ -376,10 +380,13 @@ button, .emoji-button {
 }
 
 g text {
-    text-shadow: 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff,
-    0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff;
     text-anchor: middle;
     dominant-baseline: middle;
+}
+
+g text.glow {
+    text-shadow: 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff,
+    0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff;
 }
 
 g#points {
@@ -403,7 +410,7 @@ g#points {
         filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
     }
 
-    g.clickable:hover text {
+    g.clickable:hover text.glow {
         text-shadow: 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff
     }
 
@@ -417,7 +424,7 @@ g.clickable:active path, g.clickable:active ellipse {
     filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
 }
 
-g.clickable:active text {
+g.clickable:active text.glow {
     text-shadow: 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff
 }
 

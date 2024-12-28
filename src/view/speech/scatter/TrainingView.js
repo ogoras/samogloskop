@@ -56,7 +56,7 @@ export default class TrainingView extends ScatterView {
             this.vowelEllipse(vowel.confidenceEllipse, id);
         });
 
-        this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle)
+        this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle, false, "FF", { italic: true })
 
         this.divStack.style.width = "auto";
 
@@ -104,23 +104,23 @@ export default class TrainingView extends ScatterView {
     addDatasets(petersonBarney, politicians) {
         if (this.#datasetAdded) return;
 
-        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, false, "20", { italic: true });
+        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, false, "80");
 
-        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, true, "80", { fontWeight: 700 });
+        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, true, "60", { fontWeight: 700 });
 
         this.visibleVowelsChoice = document.createElement("div");
 
-        append_h4(this.visibleVowelsChoice, "Język polski:");
-        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
+        append_h4(this.visibleVowelsChoice, "<text class=serif>Język polski:</text>");
+        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "<text class=serif>moje samogłoski</text>", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 0);
         }, true));
     
         append_h4(this.visibleVowelsChoice, "Język angielski (General American):");
-        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "moje samogłoski", (e) => {
+        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "<i>moje samogłoski</i>", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 3);
         }));
         this.visibleVowelsChoice.appendChild(document.createElement("br"));
-        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "badanie Peterson & Barney, 1952", (e) => {
+        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "<b>badanie Peterson & Barney, 1952</b>", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 1);
         }));
         this.visibleVowelsChoice.appendChild(document.createElement("br"));
@@ -161,6 +161,7 @@ export default class TrainingView extends ScatterView {
             const pointCloudIds = this.scatterPlot.appendGroup({
                 formatting: {
                     size: POINT_SIZES.USER_DATAPOINTS * 0.7,
+                    text: vowel.letter,
                     opacity: pointOpacity,
                 }
             }, ids, vowels.getSingleMeasurements(vowel.letter));
@@ -173,6 +174,8 @@ export default class TrainingView extends ScatterView {
             this.scatterPlot.appendGroup({
                 formatting: {
                     size: POINT_SIZES.VOWEL_CENTROID * 0.7,
+                    text: vowel.letter,
+                    glow: true
                 }
             }, ids, vowels.getCentroids(vowel.letter));
         }
