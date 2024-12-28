@@ -10,6 +10,14 @@ export default class TrainingView extends ScatterView {
     #currentMessage = 0;
     checkboxes = [];
 
+    #datasetCount = 1;
+    #representationsSelected = [
+        [true, true],
+        [true, false],
+        [true, false],
+        [false, true]
+    ]
+
     constructor(controller, arg, recycle = false, parent) {
         super(controller, arg, recycle);
 
@@ -56,7 +64,7 @@ export default class TrainingView extends ScatterView {
             this.vowelEllipse(vowel.confidenceEllipse, id);
         });
 
-        this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle, false, "FF", { italic: true })
+        this.#addVowelMeasurements(controller.foreignInitial, 1, d3.symbolTriangle, "FF", { italic: true })
 
         this.divStack.style.width = "auto";
 
@@ -104,9 +112,9 @@ export default class TrainingView extends ScatterView {
     addDatasets(petersonBarney, politicians) {
         if (this.#datasetAdded) return;
 
-        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, false, "80");
+        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, "80");
 
-        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, true, "60", { fontWeight: 700 });
+        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, "60", { fontWeight: 700 });
 
         this.visibleVowelsChoice = document.createElement("div"); // HTML grid with 3 columns
         this.visibleVowelsChoice.style = "display: grid; grid-template-columns: auto 35px 35px; gap: 0px";
@@ -121,10 +129,10 @@ export default class TrainingView extends ScatterView {
         }, true));
         this.visibleVowelsChoice.appendChild(div);
 
-        let svg = createVowelSVG("a", "#ff0000", "o", "#ff00ff", "y", "#964b00", 0, true);
+        let svg = createVowelSVG("a", "#ff0000", "o", "#ff00ff", "y", "#964b00", 0, true, this.#representationsSelected[0][0]);
         this.visibleVowelsChoice.appendChild(svg);
 
-        svg = createEllipseSVG();
+        svg = createEllipseSVG(this.#representationsSelected[0][1]);
         this.visibleVowelsChoice.appendChild(svg);
     
         h = append_h(this.visibleVowelsChoice, "Język angielski (General American):", 3);
@@ -137,10 +145,10 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, "font-style: italic");
+        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[1][0], "font-style: italic");
         this.visibleVowelsChoice.appendChild(svg);
 
-        svg = createEllipseSVG();
+        svg = createEllipseSVG(this.#representationsSelected[1][1]);
         this.visibleVowelsChoice.appendChild(svg);
 
         div = document.createElement("div");
@@ -150,10 +158,10 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, "font-weight: 700");
+        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[3][0], "font-weight: 700");
         this.visibleVowelsChoice.appendChild(svg);
 
-        svg = createEllipseSVG();
+        svg = createEllipseSVG(this.#representationsSelected[3][1]);
         this.visibleVowelsChoice.appendChild(svg);
 
         div = document.createElement("div");
@@ -163,10 +171,10 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2);
+        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[2][0]);
         this.visibleVowelsChoice.appendChild(svg);
 
-        svg = createEllipseSVG();
+        svg = createEllipseSVG(this.#representationsSelected[2][1]);
         this.visibleVowelsChoice.appendChild(svg);
 
         this.sideContainer.appendChild(this.visibleVowelsChoice);
@@ -183,7 +191,7 @@ export default class TrainingView extends ScatterView {
         this.checkboxes[2].onchange({ target: { checked: true } });
     }
 
-    #addVowelMeasurements(vowels, index, symbol, ellipses = false, pointOpacity = "80", formatting = {}) {
+    #addVowelMeasurements(vowels, index, symbol, pointOpacity = "80", formatting = {}) {
         if (!symbol) throw new Error("Symbol must be provided.");
         if (!index) throw new Error("Index must be provided.");
         const vowelInv = VOWEL_INVENTORIES[vowels.language];
@@ -207,10 +215,12 @@ export default class TrainingView extends ScatterView {
                 }
             }, ids, vowels.getSingleMeasurements(vowel.letter));
 
+            this.scatterPlot.setSeriesVisibility(this.#representationsSelected[this.#datasetCount][0], pointCloudIds);
+
             const ellipseIds = this.scatterPlot.appendGroup({}, ids);
             this.scatterPlot.addEllipse(vowel.confidenceEllipse, ellipseIds);
-
-            this.scatterPlot.setSeriesVisibility(false, ellipses ? pointCloudIds : ellipseIds);
+            
+            this.scatterPlot.setSeriesVisibility(this.#representationsSelected[this.#datasetCount][1], ellipseIds);
 
             this.scatterPlot.appendGroup({
                 formatting: {
@@ -221,6 +231,8 @@ export default class TrainingView extends ScatterView {
             }, ids, vowels.getCentroids(vowel.letter));
         }
         this.scatterPlot.setSeriesVisibility(false, 1);
+
+        this.#datasetCount++
     }
 
     nextMessage() {
@@ -240,10 +252,11 @@ export default class TrainingView extends ScatterView {
     }
 }
 
-function createVowelSVG(letter1, color1, letter2, color2, letter3, color3, xoffset = 0, serif = false, style) {
+function createVowelSVG(letter1, color1, letter2, color2, letter3, color3, xoffset = 0, serif = false, selected = false, style) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "30");
     svg.setAttribute("height", "30");
+    svg.classList.add("button")
     if (serif) svg.classList.add("serif");
     if (style) svg.style = style;
 
@@ -251,31 +264,32 @@ function createVowelSVG(letter1, color1, letter2, color2, letter3, color3, xoffs
     let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.setAttribute("x", 12 + xoffset);
     text.setAttribute("y", "20");
-    text.setAttribute("fill", color1);
+    text.setAttribute("fill", selected ? color1 : "gray");
     text.innerHTML = letter1;
     svg.appendChild(text);
 
     text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.setAttribute("x", "18");
     text.setAttribute("y", "13");
-    text.setAttribute("fill", color2);
+    text.setAttribute("fill", selected ? color2 : "gray");
     text.innerHTML = letter2;
     svg.appendChild(text);
 
     text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.setAttribute("x", "5");
     text.setAttribute("y", "13");
-    text.setAttribute("fill", color3);
+    text.setAttribute("fill", selected ? color3 : "gray");
     text.innerHTML = letter3;
     svg.appendChild(text);
 
     return svg;
 }
 
-function createEllipseSVG() {
+function createEllipseSVG(selected = false) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "30");
     svg.setAttribute("height", "30");
+    svg.classList.add("button");
 
     // add an ellipse
     let ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
@@ -285,7 +299,7 @@ function createEllipseSVG() {
     ellipse.setAttribute("ry", "5");
     ellipse.setAttribute("transform", "rotate(-40 15 12)");
     ellipse.setAttribute("fill", "none");
-    ellipse.setAttribute("stroke", "#000000");
+    ellipse.setAttribute("stroke", selected ? "blue" : "gray");
     ellipse.setAttribute("stroke-width", "2");
     svg.appendChild(ellipse);
     return svg;

@@ -357,6 +357,13 @@ button, .emoji-button {
     background-color: #ffffff;
 }
 
+.button {
+    opacity: 0.9;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none;
+}
+
 .disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -395,7 +402,7 @@ g#points {
 }
 
 @media (hover: hover) {
-    button:hover, .emoji-button:hover, g.clickable:hover, input[type="checkbox"] {
+    button:hover, .emoji-button:hover, g.clickable:hover, input[type="checkbox"], .button:hover {
         cursor: pointer;
     }
 
@@ -403,7 +410,7 @@ g#points {
         filter: drop-shadow(0 0 0.02em);
     }
 
-    button:hover, .emoji-button:hover {
+    button:hover, .emoji-button:hover, .button:hover {
         filter: drop-shadow(0 0 0.2rem);
     }
 
@@ -435,7 +442,7 @@ g.clickable text {
     user-select: none;
 }
 
-button:active, .emoji-button:active {
+button:active, .emoji-button:active, .button:active {
     filter: drop-shadow(0 0 0.2rem);
     opacity: 1;
 }
