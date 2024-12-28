@@ -129,11 +129,21 @@ export default class TrainingView extends ScatterView {
         }, true));
         this.visibleVowelsChoice.appendChild(div);
 
-        let svg = createVowelSVG("a", "#ff0000", "o", "#ff00ff", "y", "#964b00", 0, true, this.#representationsSelected[0][0]);
-        this.visibleVowelsChoice.appendChild(svg);
+        const svg1 = createVowelSVG("a", "#ff0000", "o", "#ff00ff", "y", "#964b00", 0, true, this.#representationsSelected[0][0]);
+        svg1.element.addEventListener("click", () => {
+            const choice = this.#representationsSelected[0][0] = !this.#representationsSelected[0][0];
+            svg1.fill(choice);
+            this.scatterPlot.getGroup(0).forEach(group => group[0].g.style("display", choice ? "block" : "none"));
+        });
+        this.visibleVowelsChoice.appendChild(svg1.element);
 
-        svg = createEllipseSVG(this.#representationsSelected[0][1]);
-        this.visibleVowelsChoice.appendChild(svg);
+        let svg11 = createEllipseSVG(this.#representationsSelected[0][1]);
+        svg11.element.addEventListener("click", () => {
+            const choice = this.#representationsSelected[0][1] = !this.#representationsSelected[0][1];
+            svg11.fill(choice);
+            this.scatterPlot.getGroup(0).forEach(group => group[1].g.style("display", choice ? "block" : "none"));
+        });
+        this.visibleVowelsChoice.appendChild(svg11.element);
     
         h = append_h(this.visibleVowelsChoice, "Język angielski (General American):", 3);
         h.style = "grid-column-start: 1; grid-column-end: 4;";
@@ -145,11 +155,21 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[1][0], "font-style: italic");
-        this.visibleVowelsChoice.appendChild(svg);
+        const svg2 = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[1][0], "font-style: italic");
+        svg2.element.addEventListener("click", () => {
+            const choice = this.#representationsSelected[1][0] = !this.#representationsSelected[1][0];
+            svg2.fill(choice);
+            this.scatterPlot.getGroup(3).forEach(group => group[0].g.style("display", choice ? "block" : "none"));
+        });
+        this.visibleVowelsChoice.appendChild(svg2.element);
 
-        svg = createEllipseSVG(this.#representationsSelected[1][1]);
-        this.visibleVowelsChoice.appendChild(svg);
+        const svg22 = createEllipseSVG(this.#representationsSelected[1][1]);
+        svg22.element.addEventListener("click", () => {
+            const choice = this.#representationsSelected[1][1] = !this.#representationsSelected[1][1];
+            svg22.fill(choice);
+            this.scatterPlot.getGroup(3).forEach(group => group[1].g.style("display", choice ? "block" : "none"));
+        });
+        this.visibleVowelsChoice.appendChild(svg22.element);
 
         div = document.createElement("div");
         div.style = "margin-top: auto; margin-bottom: auto;";
@@ -158,11 +178,21 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[3][0], "font-weight: 700");
-        this.visibleVowelsChoice.appendChild(svg);
+        const svg3 = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[3][0], "font-weight: 700");
+        svg3.element.addEventListener("click", () => {
+            const choice = this.#representationsSelected[3][0] = !this.#representationsSelected[3][0];
+            svg3.fill(choice);
+            this.scatterPlot.getGroup(1).forEach(group => group[0].g.style("display", choice ? "block" : "none"));
+        });
+        this.visibleVowelsChoice.appendChild(svg3.element);
 
-        svg = createEllipseSVG(this.#representationsSelected[3][1]);
-        this.visibleVowelsChoice.appendChild(svg);
+        const svg33 = createEllipseSVG(this.#representationsSelected[3][1]);
+        svg33.element.addEventListener("click", () => {
+            const choice = this.#representationsSelected[3][1] = !this.#representationsSelected[3][1];
+            svg33.fill(choice);
+            this.scatterPlot.getGroup(1).forEach(group => group[1].g.style("display", choice ? "block" : "none"));
+        });
+        this.visibleVowelsChoice.appendChild(svg33.element);
 
         div = document.createElement("div");
         div.style = "margin-top: auto; margin-bottom: auto;";
@@ -171,11 +201,21 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[2][0]);
-        this.visibleVowelsChoice.appendChild(svg);
+        const svg4 = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[2][0]);
+        svg4.element.addEventListener("click", () => {
+            const choice = this.#representationsSelected[2][0] = !this.#representationsSelected[2][0];
+            svg4.fill(choice);
+            this.scatterPlot.getGroup(2).forEach(group => group[0].g.style("display", choice ? "block" : "none"));
+        });
+        this.visibleVowelsChoice.appendChild(svg4.element);
 
-        svg = createEllipseSVG(this.#representationsSelected[2][1]);
-        this.visibleVowelsChoice.appendChild(svg);
+        const svg44 = createEllipseSVG(this.#representationsSelected[2][1]);
+        svg44.element.addEventListener("click", () => {
+            const choice = this.#representationsSelected[2][1] = !this.#representationsSelected[2][1];
+            svg44.fill(choice);
+            this.scatterPlot.getGroup(2).forEach(group => group[1].g.style("display", choice ? "block" : "none"));
+        });
+        this.visibleVowelsChoice.appendChild(svg44.element);
 
         this.sideContainer.appendChild(this.visibleVowelsChoice);
         document.querySelector(".recording-container").after(this.visibleVowelsChoice);
@@ -261,28 +301,41 @@ function createVowelSVG(letter1, color1, letter2, color2, letter3, color3, xoffs
     if (style) svg.style = style;
 
     // add text inside the square
-    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute("x", 12 + xoffset);
-    text.setAttribute("y", "20");
-    text.setAttribute("fill", selected ? color1 : "gray");
-    text.innerHTML = letter1;
-    svg.appendChild(text);
+    const text1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text1.setAttribute("x", 12 + xoffset);
+    text1.setAttribute("y", "20");
+    text1.setAttribute("fill", selected ? color1 : "gray");
+    text1.innerHTML = letter1;
+    svg.appendChild(text1);
 
-    text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute("x", "18");
-    text.setAttribute("y", "13");
-    text.setAttribute("fill", selected ? color2 : "gray");
-    text.innerHTML = letter2;
-    svg.appendChild(text);
+    const text2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text2.setAttribute("x", "18");
+    text2.setAttribute("y", "13");
+    text2.setAttribute("fill", selected ? color2 : "gray");
+    text2.innerHTML = letter2;
+    svg.appendChild(text2);
 
-    text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute("x", "5");
-    text.setAttribute("y", "13");
-    text.setAttribute("fill", selected ? color3 : "gray");
-    text.innerHTML = letter3;
-    svg.appendChild(text);
+    const text3 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text3.setAttribute("x", "5");
+    text3.setAttribute("y", "13");
+    text3.setAttribute("fill", selected ? color3 : "gray");
+    text3.innerHTML = letter3;
+    svg.appendChild(text3);
 
-    return svg;
+    return {
+        element: svg,
+        fill: function(set) {
+            if (set) {
+                text1.setAttribute("fill", color1);
+                text2.setAttribute("fill", color2);
+                text3.setAttribute("fill", color3);
+            } else {
+                text1.setAttribute("fill", "gray");
+                text2.setAttribute("fill", "gray");
+                text3.setAttribute("fill", "gray");
+            }
+        }
+    }
 }
 
 function createEllipseSVG(selected = false) {
@@ -302,5 +355,10 @@ function createEllipseSVG(selected = false) {
     ellipse.setAttribute("stroke", selected ? "blue" : "gray");
     ellipse.setAttribute("stroke-width", "2");
     svg.appendChild(ellipse);
-    return svg;
+    return {
+        element: svg,
+        fill: function(set) {
+            ellipse.setAttribute("stroke", set ? "blue" : "gray");
+        }
+    }
 }

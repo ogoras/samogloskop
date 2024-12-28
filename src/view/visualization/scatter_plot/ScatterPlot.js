@@ -112,6 +112,11 @@ export default class ScatterPlot {
         }
     }
 
+    getGroup(ids = []) {
+        ids = this.convertToIdArray(ids);
+        return this.allPointsGroup.navigate(ids);
+    }
+
     addGroupCallback(callback, ids = []) {
         ids = this.convertToIdArray(ids);
         const group = this.allPointsGroup.navigate(ids);
