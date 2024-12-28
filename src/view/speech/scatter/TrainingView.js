@@ -2,7 +2,7 @@ import ScatterView from "./ScatterView.js";
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from "../../../const/VOWEL_INVENTORIES.js";
 import Vowel from "../../../model/vowels/Vowel.js";
-import { append_checkbox, append_h4 } from "../../dom/dom_utils.js";
+import { append_checkbox, append_h } from "../../dom/dom_utils.js";
 import nullish from "../../../logic/util/nullish.js";
 
 export default class TrainingView extends ScatterView {
@@ -108,25 +108,66 @@ export default class TrainingView extends ScatterView {
 
         this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, true, "60", { fontWeight: 700 });
 
-        this.visibleVowelsChoice = document.createElement("div");
+        this.visibleVowelsChoice = document.createElement("div"); // HTML grid with 3 columns
+        this.visibleVowelsChoice.style = "display: grid; grid-template-columns: auto 35px 35px; gap: 0px";
 
-        append_h4(this.visibleVowelsChoice, "<text class=serif>Język polski:</text>");
-        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "<text class=serif>moje samogłoski</text>", (e) => {
+        let h = append_h(this.visibleVowelsChoice, "<text class=serif>Język polski:</text>", 3);
+        h.style = "grid-column-start: 1; grid-column-end: 4;";
+
+        let div = document.createElement("div");
+        div.style = "margin-top: auto; margin-bottom: auto;";
+        this.checkboxes.push(append_checkbox(div, "<text class=serif>moje samogłoski</text>", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 0);
         }, true));
+        this.visibleVowelsChoice.appendChild(div);
+
+        let svg = createVowelSVG("a", "#ff0000", "o", "#ff00ff", "y", "#964b00", 0, true);
+        this.visibleVowelsChoice.appendChild(svg);
+
+        svg = createEllipseSVG();
+        this.visibleVowelsChoice.appendChild(svg);
     
-        append_h4(this.visibleVowelsChoice, "Język angielski (General American):");
-        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "<i>moje samogłoski</i>", (e) => {
+        h = append_h(this.visibleVowelsChoice, "Język angielski (General American):", 3);
+        h.style = "grid-column-start: 1; grid-column-end: 4;";
+        
+        div = document.createElement("div");
+        div.style = "margin-top: auto; margin-bottom: auto;";
+        this.checkboxes.push(append_checkbox(div, "<i>moje samogłoski</i>", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 3);
         }));
-        this.visibleVowelsChoice.appendChild(document.createElement("br"));
-        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "<b>badanie Peterson & Barney, 1952</b>", (e) => {
+        this.visibleVowelsChoice.appendChild(div);
+
+        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, "font-style: italic");
+        this.visibleVowelsChoice.appendChild(svg);
+
+        svg = createEllipseSVG();
+        this.visibleVowelsChoice.appendChild(svg);
+
+        div = document.createElement("div");
+        div.style = "margin-top: auto; margin-bottom: auto;";
+        this.checkboxes.push(append_checkbox(div, "<b>badanie Peterson & Barney, 1952</b>", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 1);
         }));
-        this.visibleVowelsChoice.appendChild(document.createElement("br"));
-        this.checkboxes.push(append_checkbox(this.visibleVowelsChoice, "nagrania polityków", (e) => {
+        this.visibleVowelsChoice.appendChild(div);
+
+        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, "font-weight: 700");
+        this.visibleVowelsChoice.appendChild(svg);
+
+        svg = createEllipseSVG();
+        this.visibleVowelsChoice.appendChild(svg);
+
+        div = document.createElement("div");
+        div.style = "margin-top: auto; margin-bottom: auto;";
+        this.checkboxes.push(append_checkbox(div, "nagrania polityków", (e) => {
             this.scatterPlot.setSeriesVisibility(e.target.checked, 2);
         }));
+        this.visibleVowelsChoice.appendChild(div);
+
+        svg = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2);
+        this.visibleVowelsChoice.appendChild(svg);
+
+        svg = createEllipseSVG();
+        this.visibleVowelsChoice.appendChild(svg);
 
         this.sideContainer.appendChild(this.visibleVowelsChoice);
         document.querySelector(".recording-container").after(this.visibleVowelsChoice);
@@ -197,4 +238,55 @@ export default class TrainingView extends ScatterView {
         this.visibleVowelsChoice?.remove();
         this.divStack.style = "";
     }
+}
+
+function createVowelSVG(letter1, color1, letter2, color2, letter3, color3, xoffset = 0, serif = false, style) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", "30");
+    svg.setAttribute("height", "30");
+    if (serif) svg.classList.add("serif");
+    if (style) svg.style = style;
+
+    // add text inside the square
+    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", 12 + xoffset);
+    text.setAttribute("y", "20");
+    text.setAttribute("fill", color1);
+    text.innerHTML = letter1;
+    svg.appendChild(text);
+
+    text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", "18");
+    text.setAttribute("y", "13");
+    text.setAttribute("fill", color2);
+    text.innerHTML = letter2;
+    svg.appendChild(text);
+
+    text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", "5");
+    text.setAttribute("y", "13");
+    text.setAttribute("fill", color3);
+    text.innerHTML = letter3;
+    svg.appendChild(text);
+
+    return svg;
+}
+
+function createEllipseSVG() {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", "30");
+    svg.setAttribute("height", "30");
+
+    // add an ellipse
+    let ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+    ellipse.setAttribute("cx", "15");
+    ellipse.setAttribute("cy", "12");
+    ellipse.setAttribute("rx", "10");
+    ellipse.setAttribute("ry", "5");
+    ellipse.setAttribute("transform", "rotate(-40 15 12)");
+    ellipse.setAttribute("fill", "none");
+    ellipse.setAttribute("stroke", "#000000");
+    ellipse.setAttribute("stroke-width", "2");
+    svg.appendChild(ellipse);
+    return svg;
 }

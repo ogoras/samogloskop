@@ -1,7 +1,8 @@
-export function append_h4(parent, text) {
-    const h4 = document.createElement("h4");
-    h4.innerHTML = text;
-    parent.appendChild(h4);
+export function append_h(parent, text, level = 1) {
+    const h = document.createElement(`h${level}`);
+    h.innerHTML = text;
+    parent.appendChild(h);
+    return h;
 }
 
 export function append_checkbox(parent, text, onchange, checked = false) {
