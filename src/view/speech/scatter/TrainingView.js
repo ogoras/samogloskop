@@ -129,7 +129,7 @@ export default class TrainingView extends ScatterView {
         }, true));
         this.visibleVowelsChoice.appendChild(div);
 
-        const svg1 = createVowelSVG("a", "#ff0000", "o", "#ff00ff", "y", "#964b00", 0, true, this.#representationsSelected[0][0]);
+        const svg1 = createCloudSVG("a", "#ff0000", "o", "#ff00ff", "y", "#964b00", 0, true, this.#representationsSelected[0][0]);
         svg1.element.addEventListener("click", () => {
             const choice = this.#representationsSelected[0][0] = !this.#representationsSelected[0][0];
             svg1.fill(choice);
@@ -155,7 +155,7 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        const svg2 = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[1][0], "font-style: italic");
+        const svg2 = createCloudSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[1][0], "font-style: italic");
         svg2.element.addEventListener("click", () => {
             const choice = this.#representationsSelected[1][0] = !this.#representationsSelected[1][0];
             svg2.fill(choice);
@@ -178,7 +178,7 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        const svg3 = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[3][0], "font-weight: 700");
+        const svg3 = createCloudSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[3][0], "font-weight: 700");
         svg3.element.addEventListener("click", () => {
             const choice = this.#representationsSelected[3][0] = !this.#representationsSelected[3][0];
             svg3.fill(choice);
@@ -201,7 +201,7 @@ export default class TrainingView extends ScatterView {
         }));
         this.visibleVowelsChoice.appendChild(div);
 
-        const svg4 = createVowelSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[2][0]);
+        const svg4 = createCloudSVG("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[2][0]);
         svg4.element.addEventListener("click", () => {
             const choice = this.#representationsSelected[2][0] = !this.#representationsSelected[2][0];
             svg4.fill(choice);
@@ -292,7 +292,7 @@ export default class TrainingView extends ScatterView {
     }
 }
 
-function createVowelSVG(letter1, color1, letter2, color2, letter3, color3, xoffset = 0, serif = false, selected = false, style) {
+function createCloudSVG(letter1, color1, letter2, color2, letter3, color3, xoffset = 0, serif = false, selected = false, style) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "30");
     svg.setAttribute("height", "30");
