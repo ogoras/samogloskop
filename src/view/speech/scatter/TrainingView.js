@@ -12,8 +12,8 @@ export default class TrainingView extends ScatterView {
 
     #datasetCount = 1;
     #representationsSelected = [
-        [true, true],
-        [true, false],
+        [false, true],
+        [false, false],
         [true, false],
         [false, true]
     ]
@@ -114,7 +114,7 @@ export default class TrainingView extends ScatterView {
 
         this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, "80");
 
-        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, "60", { fontWeight: 700 });
+        this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, "A0", { fontWeight: 700 });
 
         this.visibleVowelsChoice = document.createElement("div"); // HTML grid with 3 columns
         this.visibleVowelsChoice.style = "display: grid; grid-template-columns: auto 35px 35px; gap: 0px";
