@@ -74,8 +74,11 @@ export function createCentroidSelector(letter, color, serif = false, selected = 
     const text = document.createElement("text");
     text.classList.add("button");
     text.innerHTML = letter;
-    if (serif) text.classList.add("serif");
     if (style) text.style = style;
+    if (serif) {
+        text.classList.add("serif");
+        text.style.fontWeight = "700";
+    }
     text.style.color = selected ? color : "gray";
     text.style.fontSize = "1.66em";
     text.style.textAlign = "center";

@@ -42,6 +42,20 @@ export default class ConfirmVowelsView extends ScatterView {
         });
 
         ConfirmVowelsView.viewedAtLeastOnce = true;
+
+        this.visibleVowelsChoice = document.createElement("div");
+        this.visibleVowelsChoice.style = "display: grid; grid-template-columns: 30px 30px 30px auto; gap: 0px";
+
+        const sideContainer = document.querySelector(".side-container");
+        sideContainer.appendChild(this.visibleVowelsChoice);
+        document.querySelector(".recording-container").after(this.visibleVowelsChoice);
+
+        this.createSelectorRow(
+            ` <b>←</b> <text class="serif gray">wybór reprezentacji</text>`,
+            ["e", "a", "o", "y"],
+            ["#faa500", "#ff0000", "#ff00ff", "#964b00"],
+            true
+        )
     }
 
     nextMessage() {

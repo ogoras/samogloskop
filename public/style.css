@@ -418,10 +418,14 @@ g#points {
         filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
     }
 
+    g.clickable:hover text {
+        text-shadow: 0 0 0.5em currentColor;
+    }
+
     g.clickable:hover text.glow {
         text-shadow: 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff
     }
-
+    
     .disabled:hover {
         cursor: not-allowed;
         filter: none;
