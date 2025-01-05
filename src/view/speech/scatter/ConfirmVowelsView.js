@@ -43,6 +43,7 @@ export default class ConfirmVowelsView extends ScatterView {
 
         ConfirmVowelsView.viewedAtLeastOnce = true;
 
+
         this.visibleVowelsChoice = document.createElement("div");
         this.visibleVowelsChoice.style = "display: grid; grid-template-columns: 30px 30px 30px auto; gap: 0px";
 
@@ -85,5 +86,10 @@ export default class ConfirmVowelsView extends ScatterView {
         for (let i = 0; i < vowelInv.length; i++) {
             this.scatterPlot.setGroupClickability(false, [0, i]);
         }
+    }
+
+    destroy() {
+        super.destroy?.();
+        this.visibleVowelsChoice.remove();
     }
 }
