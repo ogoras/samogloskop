@@ -71,6 +71,8 @@ export default class ScatterView extends SpeechView {
         this.scatterPlot.appendGroup({ formatting: {
             size: POINT_SIZES.CURRENT
         }}, 1);
+
+        this.scatterPlot.addSeriesFormatting({ fontWeight: 700, serif: true }, 0);
         this.refreshRecording();
     }
 

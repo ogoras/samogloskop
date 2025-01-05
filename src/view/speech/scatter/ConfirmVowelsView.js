@@ -45,16 +45,18 @@ export default class ConfirmVowelsView extends ScatterView {
     }
 
     nextMessage() {
-        switch(++this.currentMessage) {
-            case 1:
+        switch(this.currentMessage) {
+            case 0:
                 this.h2.innerHTML = `Naciśnij na reprezentację samogłoski na wykresie, żeby poprawić jej pozycję. 
                     Jeśli uważasz, że wszystko się zgadza, możesz od razu przejść do kolejnego kroku.`;
                 this.divStack.querySelector("button").innerHTML = "Zatwierdź zebrane samogłoski";
+                this.currentMessage++;
                 break;
-            case 2:
-                this.button.remove();
-                // this.onStateChange({ newState: getState("INITIAL_FOREIGN"), disableMic: true }, false);
-                this.controller.confirm();
+            case 1:
+                if (confirm("Czy na pewno chcesz zatwierdzić zebrane samogłoski? Nie będzie można ich później edytować.")) {
+                    this.button.remove();
+                    this.controller.confirm();
+                }
                 break;
         }
     }

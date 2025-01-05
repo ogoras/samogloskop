@@ -50,7 +50,7 @@ export default class TrainingView extends ScatterView {
             this.initializePlot();
         }
 
-        this.scatterPlot.addSeriesFormatting({ fontWeight: 700, serif: true }, 0);
+        
         
         const nativeVowels = controller.nativeVowels;
         nativeVowels.vowelsProcessed.forEach(vowel => {
