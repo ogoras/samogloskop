@@ -2,7 +2,7 @@ import ScatterView from "./ScatterView.js";
 import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from "../../../const/VOWEL_INVENTORIES.js";
 import Vowel from "../../../model/vowels/Vowel.js";
-import { append_checkbox, append_h } from "../../dom/dom_utils.js";
+import { append_h } from "../../dom/dom_utils.js";
 import nullish from "../../../logic/util/nullish.js";
 
 export default class TrainingView extends ScatterView {
@@ -10,7 +10,7 @@ export default class TrainingView extends ScatterView {
     #currentMessage = 0;
 
     #datasetCount = 1;
-    #representationsSelected = [
+    representationsSelected = [
         [false, false, false],
         [false, false, true],
         [false, false, false],
@@ -49,8 +49,6 @@ export default class TrainingView extends ScatterView {
             }
             this.initializePlot();
         }
-
-        
         
         const nativeVowels = controller.nativeVowels;
         nativeVowels.vowelsProcessed.forEach(vowel => {
@@ -115,7 +113,7 @@ export default class TrainingView extends ScatterView {
     addDatasets(petersonBarney, politicians) {
         if (this.#datasetAdded) return;
 
-        this.scatterPlot.getGroup(0).forEach(group => group.forEach((subgroup, index) => subgroup.g.style("display", this.#representationsSelected[0][index] ? "block" : "none")));
+        this.scatterPlot.getGroup(0).forEach(group => group.forEach((subgroup, index) => subgroup.g.style("display", this.representationsSelected[0][index] ? "block" : "none")));
 
         this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, {
             pointOpacity: "80",
@@ -135,124 +133,36 @@ export default class TrainingView extends ScatterView {
         let h = append_h(this.visibleVowelsChoice, "<text class=serif>Język polski:</text>", 3);
         h.style = "grid-column-start: 1; grid-column-end: 5;";
 
-        const text1 = createCentroidSelector("e", "#faa500", true, this.#representationsSelected[0][2], "font-weight: 700");
-        text1.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[0][2] = !this.#representationsSelected[0][2];
-            text1.fill(choice);
-            this.scatterPlot.getGroup(0).forEach(group => group[2].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(text1.element);
-
-        const svg1 = createCloudSelector("a", "#ff0000", "o", "#ff00ff", "y", "#964b00", 0, true, this.#representationsSelected[0][0]);
-        svg1.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[0][0] = !this.#representationsSelected[0][0];
-            svg1.fill(choice);
-            this.scatterPlot.getGroup(0).forEach(group => group[0].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(svg1.element);
-
-        const svg11 = createEllipseSelector(this.#representationsSelected[0][1]);
-        svg11.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[0][1] = !this.#representationsSelected[0][1];
-            svg11.fill(choice);
-            this.scatterPlot.getGroup(0).forEach(group => group[1].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(svg11.element);
-
-        let div = document.createElement("div");
-        div.style = "margin-top: auto; margin-bottom: auto;";
-        div.innerHTML = "<text class=serif>moje samogłoski</text>";
-        this.visibleVowelsChoice.appendChild(div);
+        this.createSelectorRow(
+            "<text class=serif>moje samogłoski</text>",
+            ["e", "a", "o", "y"],
+            ["#faa500", "#ff0000", "#ff00ff", "#964b00"],
+            true, "font-weight: 700", 0, 0, 0
+        )
     
         h = append_h(this.visibleVowelsChoice, "Język angielski (General American):", 3);
         h.style = "grid-column-start: 1; grid-column-end: 5;";
 
-        const text2 = createCentroidSelector("ɛ", "#d09800", false, this.#representationsSelected[1][2], "font-style: italic");
-        text2.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[1][2] = !this.#representationsSelected[1][2];
-            text2.fill(choice);
-            this.scatterPlot.getGroup(3).forEach(group => group[2].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(text2.element);
+        const englishLetters = ["ɛ", "ɑ", "ɔ", "ɪ"];
+        const englishColors = ["#d09800", "#ff0060", "#ff00ff", "#006000"];
 
-        const svg2 = createCloudSelector("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[1][0], "font-style: italic");
-        svg2.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[1][0] = !this.#representationsSelected[1][0];
-            svg2.fill(choice);
-            this.scatterPlot.getGroup(3).forEach(group => group[0].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(svg2.element);
+        this.createSelectorRow(
+            "<i>moje samogłoski</i>",
+            englishLetters, englishColors,
+            false, "font-style: italic", 1, 3, -2
+        );
 
-        const svg22 = createEllipseSelector(this.#representationsSelected[1][1]);
-        svg22.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[1][1] = !this.#representationsSelected[1][1];
-            svg22.fill(choice);
-            this.scatterPlot.getGroup(3).forEach(group => group[1].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(svg22.element);
+        this.createSelectorRow(
+            "<b>badanie Peterson & Barney, 1952</b>",
+            englishLetters, englishColors,
+            false, "font-weight: 700", 3, 1, -2
+        );
 
-        div = document.createElement("div");
-        div.style = "margin-top: auto; margin-bottom: auto;";
-        div.innerHTML = "<i>moje samogłoski</i>";
-        this.visibleVowelsChoice.appendChild(div);
-
-        const text3 = createCentroidSelector("ɛ", "#d09800", false, this.#representationsSelected[3][2], "font-weight: 700");
-        text3.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[3][2] = !this.#representationsSelected[3][2];
-            text3.fill(choice);
-            this.scatterPlot.getGroup(1).forEach(group => group[2].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(text3.element);
-
-        const svg3 = createCloudSelector("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[3][0], "font-weight: 700");
-        svg3.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[3][0] = !this.#representationsSelected[3][0];
-            svg3.fill(choice);
-            this.scatterPlot.getGroup(1).forEach(group => group[0].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(svg3.element);
-
-        const svg33 = createEllipseSelector(this.#representationsSelected[3][1]);
-        svg33.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[3][1] = !this.#representationsSelected[3][1];
-            svg33.fill(choice);
-            this.scatterPlot.getGroup(1).forEach(group => group[1].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(svg33.element);
-
-        div = document.createElement("div");
-        div.style = "margin-top: auto; margin-bottom: auto;";
-        div.innerHTML = "<b>badanie Peterson & Barney, 1952</b>";
-        this.visibleVowelsChoice.appendChild(div);
-
-        const text4 = createCentroidSelector("ɛ", "#d09800", false, this.#representationsSelected[2][2]);
-        text4.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[2][2] = !this.#representationsSelected[2][2];
-            text4.fill(choice);
-            this.scatterPlot.getGroup(2).forEach(group => group[2].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(text4.element);
-
-        const svg4 = createCloudSelector("ɑ", "#ff0060", "ɔ", "#ff00ff", "ɪ", "#006000", -2, false, this.#representationsSelected[2][0]);
-        svg4.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[2][0] = !this.#representationsSelected[2][0];
-            svg4.fill(choice);
-            this.scatterPlot.getGroup(2).forEach(group => group[0].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(svg4.element);
-
-        const svg44 = createEllipseSelector(this.#representationsSelected[2][1]);
-        svg44.element.addEventListener("click", () => {
-            const choice = this.#representationsSelected[2][1] = !this.#representationsSelected[2][1];
-            svg44.fill(choice);
-            this.scatterPlot.getGroup(2).forEach(group => group[1].g.style("display", choice ? "block" : "none"));
-        });
-        this.visibleVowelsChoice.appendChild(svg44.element);
-
-        div = document.createElement("div");
-        div.style = "margin-top: auto; margin-bottom: auto;";
-        div.innerHTML = "nagrania polityków";
-        this.visibleVowelsChoice.appendChild(div);
+        this.createSelectorRow(
+            "nagrania polityków",
+            englishLetters, englishColors,
+            false, null, 2, 2, -2
+        );
 
         this.sideContainer.appendChild(this.visibleVowelsChoice);
         document.querySelector(".recording-container").after(this.visibleVowelsChoice);
@@ -284,7 +194,7 @@ export default class TrainingView extends ScatterView {
                 }
             }, ids, vowels.getSingleMeasurements(vowel.letter));
 
-            this.scatterPlot.setSeriesVisibility(this.#representationsSelected[this.#datasetCount][0], pointCloudIds);
+            this.scatterPlot.setSeriesVisibility(this.representationsSelected[this.#datasetCount][0], pointCloudIds);
 
             const ellipseIds = this.scatterPlot.appendGroup({}, ids);
             this.scatterPlot.addEllipse({
@@ -293,7 +203,7 @@ export default class TrainingView extends ScatterView {
                 ellipseOpacity1
             }, ellipseIds);
             
-            this.scatterPlot.setSeriesVisibility(this.#representationsSelected[this.#datasetCount][1], ellipseIds);
+            this.scatterPlot.setSeriesVisibility(this.representationsSelected[this.#datasetCount][1], ellipseIds);
 
             const centroidIds = this.scatterPlot.appendGroup({
                 formatting: {
@@ -303,7 +213,7 @@ export default class TrainingView extends ScatterView {
                 }
             }, ids, vowels.getCentroids(vowel.letter));
 
-            this.scatterPlot.setSeriesVisibility(this.#representationsSelected[this.#datasetCount][2], centroidIds);
+            this.scatterPlot.setSeriesVisibility(this.representationsSelected[this.#datasetCount][2], centroidIds);
         }
         this.#datasetCount++
     }
@@ -324,95 +234,5 @@ export default class TrainingView extends ScatterView {
         this.button.remove();
         this.visibleVowelsChoice?.remove();
         this.divStack.style = "";
-    }
-}
-
-function createCloudSelector(letter1, color1, letter2, color2, letter3, color3, xoffset = 0, serif = false, selected = false, style) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", "30");
-    svg.setAttribute("height", "30");
-    svg.classList.add("button")
-    if (serif) svg.classList.add("serif");
-    if (style) svg.style = style;
-
-    // add text inside the square
-    const text1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text1.setAttribute("x", 12 + xoffset);
-    text1.setAttribute("y", "25");
-    text1.setAttribute("fill", selected ? color1 : "gray");
-    text1.innerHTML = letter1;
-    svg.appendChild(text1);
-
-    const text2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text2.setAttribute("x", "18");
-    text2.setAttribute("y", "18");
-    text2.setAttribute("fill", selected ? color2 : "gray");
-    text2.innerHTML = letter2;
-    svg.appendChild(text2);
-
-    const text3 = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text3.setAttribute("x", "5");
-    text3.setAttribute("y", "18");
-    text3.setAttribute("fill", selected ? color3 : "gray");
-    text3.innerHTML = letter3;
-    svg.appendChild(text3);
-
-    return {
-        element: svg,
-        fill: function(set) {
-            if (set) {
-                text1.setAttribute("fill", color1);
-                text2.setAttribute("fill", color2);
-                text3.setAttribute("fill", color3);
-            } else {
-                text1.setAttribute("fill", "gray");
-                text2.setAttribute("fill", "gray");
-                text3.setAttribute("fill", "gray");
-            }
-        }
-    }
-}
-
-function createEllipseSelector(selected = false) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", "30");
-    svg.setAttribute("height", "30");
-    svg.classList.add("button");
-
-    // add an ellipse
-    let ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-    ellipse.setAttribute("cx", "15");
-    ellipse.setAttribute("cy", "15");
-    ellipse.setAttribute("rx", "10");
-    ellipse.setAttribute("ry", "5");
-    ellipse.setAttribute("transform", "rotate(-40 15 15)");
-    ellipse.setAttribute("fill", "none");
-    ellipse.setAttribute("stroke", selected ? "blue" : "gray");
-    ellipse.setAttribute("stroke-width", "2");
-    svg.appendChild(ellipse);
-    return {
-        element: svg,
-        fill: function(set) {
-            ellipse.setAttribute("stroke", set ? "blue" : "gray");
-        }
-    }
-}
-
-function createCentroidSelector(letter, color, serif = false, selected = false, style) {
-    // this time, just use a simple text element
-    const text = document.createElement("text");
-    text.classList.add("button");
-    text.innerHTML = letter;
-    if (serif) text.classList.add("serif");
-    if (style) text.style = style;
-    text.style.color = selected ? color : "gray";
-    text.style.fontSize = "1.66em";
-    text.style.textAlign = "center";
-
-    return {
-        element: text,
-        fill: function(set) {
-            text.style.color = set ? color : "gray";
-        }
     }
 }
