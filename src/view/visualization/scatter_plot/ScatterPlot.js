@@ -232,10 +232,10 @@ export default class ScatterPlot {
         this.addPoint(point, group, undefined, rescale);
     }
 
-    addEllipse({x, y, rx, ry = rx, angle = 0}, ids = -1) {
+    addEllipse({x, y, rx, ry = rx, angle = 0, ellipseOpacity0, ellipseOpacity1}, ids = -1) {
         ids = this.convertToIdArray(ids);
         const group = this.allPointsGroup.navigate(ids);
-        group.addEllipse(x, y, rx, ry, angle);
+        group.addEllipse(x, y, rx, ry, angle, ellipseOpacity0, ellipseOpacity1);
     }
 
     clearSeries(seriesId) {

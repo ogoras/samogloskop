@@ -3,6 +3,13 @@ import PointGroup from "./PointGroup.js";
 import remToPx from "../../../logic/util/remToPx.js";
 
 export default class SimplePointGroup extends PointGroup {
+    static count = 0;
+
+    constructor(...args) {
+        super(...args);
+        this.id = SimplePointGroup.count++;
+    }
+
     ellipse = null;
 
     addPoint(point, isTextPoint = point.isTextPoint ?? (this.defaultFormatting.text !== undefined)) {
@@ -80,7 +87,17 @@ export default class SimplePointGroup extends PointGroup {
         return p;
     }
 
-    addEllipse(x, y, rx, ry = rx, angle = 0) {
+    addEllipse(x, y, rx, ry = rx, angle = 0, opacity0, opacity1) {
+        const fillGradientID = `ellipseGradient${this.id}`;
+        const fillGradient = this.g.append("defs")
+            .append("radialGradient")
+            .attr("id", fillGradientID)
+        fillGradient.append("stop")
+            .attr("offset", "0%")
+            .attr("style", `stop-color:#${this.defaultFormatting.rgb}; stop-opacity:${opacity0 ?? 0.8}`);
+        fillGradient.append("stop")
+            .attr("offset", "100%")
+            .attr("style", `stop-color:#${this.defaultFormatting.rgb}; stop-opacity:${opacity1 ?? 0}`);
         const ellipse = {
             element: this.g.append("ellipse")
                 .attr("cx", this.x.scale(x))
@@ -88,7 +105,7 @@ export default class SimplePointGroup extends PointGroup {
                 .attr("rx", Math.abs(this.x.scale(rx) - this.x.scale(0)))
                 .attr("ry", Math.abs(this.y.scale(ry) - this.y.scale(0)))
                 .attr("transform", `rotate(${-angle} ${this.x.scale(x)} ${this.y.scale(y)})`)
-                .attr("fill-opacity", 0.4),
+                .attr("fill", `url(#${fillGradientID})`),
             x, y, rx, ry, angle
         };
         return this.ellipse = ellipse;
