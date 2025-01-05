@@ -298,7 +298,9 @@ export default class TrainingView extends ScatterView {
             this.button.innerHTML = "Przejdź dalej";
             this.#currentMessage++;
         } else if (this.#currentMessage == 1) {
-            this.controller.next();
+            if (confirm("Czy na pewno chcesz przejść do testu końcowego? Nie będzie można już wrócić do ćwiczenia.")) {
+                this.controller.next();
+            }
         }
     }
 
