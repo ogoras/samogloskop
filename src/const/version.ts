@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 0,
     VERSION_MINOR = 4,  // will only change when the data format changes
-    PATCH = 4;  // will change only with published commits, the in-beetween development versions are not counted
+    PATCH = 5;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: Introduced localStorage
 // v0.1: Added Lobanov scaling
@@ -19,3 +19,4 @@ export const VERSION_MAJOR = 0,
 // v0.4.2: Recalibrating integrated with training and gathering foreign states
 // v0.4.3: Updated privacy policy
 // v0.4.4: Switched from plotting geometric shapes to letters
+// v0.4.5: Added MDN credits
