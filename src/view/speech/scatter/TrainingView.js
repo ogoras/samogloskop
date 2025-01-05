@@ -118,7 +118,7 @@ export default class TrainingView extends ScatterView {
         this.#addVowelMeasurements(petersonBarney, 1, d3.symbolSquare, "A0", { fontWeight: 700 });
 
         this.visibleVowelsChoice = document.createElement("div"); // HTML grid with 3 columns
-        this.visibleVowelsChoice.style = "display: grid; grid-template-columns: 35px 35px 35px auto; gap: 0px";
+        this.visibleVowelsChoice.style = "display: grid; grid-template-columns: 30px 30px 30px auto; gap: 0px";
 
         let h = append_h(this.visibleVowelsChoice, "<text class=serif>Język polski:</text>", 3);
         h.style = "grid-column-start: 1; grid-column-end: 5;";
