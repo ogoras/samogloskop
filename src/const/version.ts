@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 0,
     VERSION_MINOR = 4,  // will only change when the data format changes
-    PATCH = 6;  // will change only with published commits, the in-beetween development versions are not counted
+    PATCH = 7;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: Introduced localStorage
 // v0.1: Added Lobanov scaling
@@ -21,3 +21,4 @@ export const VERSION_MAJOR = 0,
 // v0.4.4: Switched from plotting geometric shapes to letters
 // v0.4.5: Added MDN credits
 // v0.4.6: Added representation selectors for centroids, point clouds and ellipses
+// v0.4.7: English vowels can be clicked and that highlights the vowel on top of Polish vowels

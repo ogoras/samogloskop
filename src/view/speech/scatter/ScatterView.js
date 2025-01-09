@@ -9,6 +9,10 @@ export default class ScatterView extends SpeechView {
         [true, true, true]
     ];
 
+    selectorSetters = [];
+    polishCentroidsLocked = false;
+    hidePBEllipsesOnUnselect = false;
+
     constructor(controller, arg, recycle = false) {
         if (recycle) {
             super(controller, arg);
@@ -82,33 +86,43 @@ export default class ScatterView extends SpeechView {
     }
 
     createSelectorRow(divHTML, letters, colors, serif, style, localGroupId = 0, plotGroupId = 0, cloudOffset = 0) {
-            this.#addSelector(
-                createCentroidSelector(letters[0], colors[0], serif, this.representationsSelected[localGroupId][2], style),
-                localGroupId, plotGroupId, 2
-            );
-    
-            this.#addSelector(
-                createCloudSelector(letters.slice(1), colors.slice(1), cloudOffset, serif, this.representationsSelected[localGroupId][0]),
-                localGroupId, plotGroupId, 0
-            );
-    
-            this.#addSelector(
-                createEllipseSelector(this.representationsSelected[localGroupId][1]),
-                localGroupId, plotGroupId, 1
-            );
-    
-            const div = document.createElement("div");
-            div.style = "margin-top: auto; margin-bottom: auto;";
-            div.innerHTML = divHTML;
-            this.visibleVowelsChoice.appendChild(div);
-        }
+        this.selectorSetters.push([]);
+
+        this.#addSelector(
+            createCentroidSelector(letters[0], colors[0], serif, this.representationsSelected[localGroupId][2], style),
+            localGroupId, plotGroupId, 2
+        );
+
+        this.#addSelector(
+            createCloudSelector(letters.slice(1), colors.slice(1), cloudOffset, serif, this.representationsSelected[localGroupId][0]),
+            localGroupId, plotGroupId, 0
+        );
+
+        this.#addSelector(
+            createEllipseSelector(this.representationsSelected[localGroupId][1]),
+            localGroupId, plotGroupId, 1
+        );
+
+        const div = document.createElement("div");
+        div.style = "margin-top: auto; margin-bottom: auto;";
+        div.innerHTML = divHTML;
+        this.visibleVowelsChoice.appendChild(div);
+    }
     
     #addSelector(selector, localGroupId, plotGroupId, subgroupId) {
-        const element = selector.element;
-        element.addEventListener("click", () => {
-            const choice = this.representationsSelected[localGroupId][subgroupId] = !this.representationsSelected[localGroupId][subgroupId];
+        const setter = (choice => { 
             selector.fill(choice);
             this.scatterPlot.getGroup(plotGroupId).forEach(group => group[subgroupId].g.style("display", choice ? "block" : "none"));
+            this.representationsSelected[localGroupId][subgroupId] = choice;
+        }).bind(this);
+        this.selectorSetters[this.selectorSetters.length - 1].push(setter);
+
+        const element = selector.element;
+        element.addEventListener("click", () => {
+            if (localGroupId === 0 && subgroupId === 2 && this.polishCentroidsLocked) return;
+            if (localGroupId === 3 && subgroupId === 1) this.hidePBEllipsesOnUnselect = false;
+            const choice = !this.representationsSelected[localGroupId][subgroupId];
+            setter(choice);
         });
         this.visibleVowelsChoice.appendChild(element);
     }

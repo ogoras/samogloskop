@@ -8,6 +8,21 @@ import nullish from "../../../logic/util/nullish.js";
 export default class TrainingView extends ScatterView {
     #datasetAdded = false;
     #currentMessage = 0;
+    #selectedVowelId = null;
+    #werePolishCentroidsVisible = false;
+    hidePBEllipsesOnUnselect = false;
+
+    selectedVowelDisplay = {
+        element: document.createElement("div"),
+        selected: {
+            element: document.createElement("div"),
+            h2: document.createElement("h2"),
+            span: undefined
+        },
+        unselected: {
+            element: document.createElement("div"),
+        }
+    } 
 
     #datasetCount = 1;
     representationsSelected = [
@@ -113,6 +128,24 @@ export default class TrainingView extends ScatterView {
         for (let i = 0; i < vowelInv.length; i++) {
             this.scatterPlot.setGroupClickability(false, [0, i]);
         }
+
+        const vowelDisplay = this.selectedVowelDisplay;
+        // add an h2 element that says which vowel is selected
+
+        vowelDisplay.element.appendChild(vowelDisplay.selected.element);
+        const h2 = vowelDisplay.selected.h2;
+        h2.innerHTML = "Samogłoska <span></span> wybrana";
+        vowelDisplay.selected.span = h2.querySelector("span");
+        h2.style.fontWeight = "bolder";
+        vowelDisplay.selected.element.appendChild(h2);
+        vowelDisplay.selected.element.style.display = "none";
+
+        vowelDisplay.element.appendChild(vowelDisplay.unselected.element);
+        vowelDisplay.unselected.element.innerHTML = "Naciśnij na samogłoskę na wykresie, żeby się na niej skupić.";
+        vowelDisplay.unselected.element.classList.add("gray");
+
+        sideContainer.appendChild(vowelDisplay.element);
+        document.querySelector(".recording-container").after(vowelDisplay.element);
     }
 
     addDatasets(petersonBarney, politicians) {
@@ -170,7 +203,7 @@ export default class TrainingView extends ScatterView {
         );
 
         this.sideContainer.appendChild(this.visibleVowelsChoice);
-        document.querySelector(".recording-container").after(this.visibleVowelsChoice);
+        this.selectedVowelDisplay.element.after(this.visibleVowelsChoice);
 
         this.#datasetAdded = true;
     }
@@ -245,5 +278,54 @@ export default class TrainingView extends ScatterView {
         if (vowel.language === "PL") return;
         
         console.log("Vowel clicked: ", vowel.letter, vowel);
+
+        const newSelectedId = vowel.id;
+        if (newSelectedId === this.#selectedVowelId) {
+            this.#selectedVowelId = null;
+            this.selectedVowelDisplay.selected.element.style.display = "none";
+            this.selectedVowelDisplay.unselected.element.style.display = "none";
+            this.divStack.style.display = null; // reset to default
+
+            for (let i = 1; i <= 3; i++) {
+                this.scatterPlot.getGroup(i).forEach((group, index) => {
+                    if (index === newSelectedId) return;
+                    group.g.style("display", "block")
+                });
+            }
+            this.selectorSetters[0][0](this.#werePolishCentroidsVisible);
+            this.polishCentroidsLocked = false;
+
+            if (this.hidePBEllipsesOnUnselect) {
+                this.selectorSetters[2][2](false);
+                this.hidePBEllipsesOnUnselect = null;
+            }
+            return;
+        }
+        if (this.#selectedVowelId === null) {
+            this.selectedVowelDisplay.selected.element.style.display = null;
+            this.selectedVowelDisplay.unselected.element.innerHTML = "Naciśnij na nią ponownie, żeby odznaczyć.";
+            this.divStack.style.display = "none";
+        }
+        const span = this.selectedVowelDisplay.selected.span;
+        span.innerHTML = vowel.letter;
+        span.style.color = `#${vowel.rgb}`;
+
+        for (let i = 1; i <= 3; i++) {
+            this.scatterPlot.getGroup(i).forEach((group, index) => {
+                if (index === newSelectedId) return;
+                group.g.style("display", "none")
+            });
+        }
+        this.#werePolishCentroidsVisible = this.representationsSelected[0][2];
+        this.selectorSetters[0][0](true);
+        this.polishCentroidsLocked = true;
+        
+        this.hidePBEllipsesOnUnselect = false;
+        if (this.representationsSelected[3].every(value => !value)) {
+            this.hidePBEllipsesOnUnselect = true;
+            this.selectorSetters[2][2](true);
+        }
+        
+        this.#selectedVowelId = newSelectedId;
     }
 }
