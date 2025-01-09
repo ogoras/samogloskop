@@ -2,7 +2,7 @@ import CalibrationStartView from "./CalibrationStartView.js";
 import SilenceView from "./stats/SilenceView.js";
 import MeasuringSpeechView from "./stats/MeasuringSpeechView.js";
 import GatheringNativeView from "./scatter/GatheringNativeView.js";
-import TrainingView from "./scatter/TrainingView.js";
+import TrainingView from "./scatter/training/TrainingView.js";
 import ConfirmVowelsView from "./scatter/ConfirmVowelsView.js";
 import GatheringForeignView from "./GatheringForeignView.js";
 

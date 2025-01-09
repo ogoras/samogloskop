@@ -1,28 +1,18 @@
-import ScatterView from "./ScatterView.js";
-import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
-import { VOWEL_INVENTORIES } from "../../../const/VOWEL_INVENTORIES.js";
-import Vowel from "../../../model/vowels/Vowel.js";
-import { append_h } from "../../dom/dom_utils.js";
-import nullish from "../../../logic/util/nullish.js";
+import ScatterView from "../ScatterView.js";
+import { POINT_SIZES } from '../../../../const/POINT_SIZES.js';
+import { VOWEL_INVENTORIES } from "../../../../const/VOWEL_INVENTORIES.js";
+import Vowel from "../../../../model/vowels/Vowel.js";
+import { append_h } from "../../../dom/dom_utils.js";
+import Timer from "./Timer.js";
+import SelectedVowelDisplay from "./SelectedVowelDisplay.js";
 
 export default class TrainingView extends ScatterView {
+    #initialized = false;
     #datasetAdded = false;
     #currentMessage = 0;
     #selectedVowelId = null;
     #werePolishCentroidsVisible = false;
     hidePBEllipsesOnUnselect = false;
-
-    selectedVowelDisplay = {
-        element: document.createElement("div"),
-        selected: {
-            element: document.createElement("div"),
-            h2: document.createElement("h2"),
-            span: undefined
-        },
-        unselected: {
-            element: document.createElement("div"),
-        }
-    } 
 
     #datasetCount = 1;
     representationsSelected = [
@@ -87,73 +77,26 @@ export default class TrainingView extends ScatterView {
         const sideContainer = this.sideContainer = parent.sideContainer;
         const moreInfo = parent.moreInfo;
 
-        this.timer = {
-            element: document.createElement("span"),
-            visible: false,
-            setTime: function(time) {
-                this.time = time;
-                function twoDigits(num) { return num.toString().padStart(2, '0'); }
-                const hh = Math.floor(time / 3600);
-                const mm = twoDigits(Math.floor(time / 60) % 60);
-                const ss = twoDigits(time % 60);
-                this.element.innerHTML = `Ćwiczysz już: ${hh}:${mm}:${ss}`;
-            },
-            show: function(timeMs) {
-                this.visible = true;
-                sideContainer.insertBefore(this.element, moreInfo.div);
-                if (!nullish(timeMs)) this.setTime(Math.floor(timeMs / 1000));
-            },
-            resume: function() {
-                if (!this.visible) throw new Error("Tried to resume timer when it's not visible");
-                if (this.interval) throw new Error("Timer already running");
-                this.interval = setInterval(() => this.setTime(this.time + 1), 1000);
-            },
-            pauseAndUpdate: function(timeMs) {
-                if (!this.visible) throw new Error("Tried to pause and update timer when it's not visible");
-                if (!this.interval) throw new Error("Timer not running");
-                clearInterval(this.interval);
-                this.interval = null;
-                this.setTime(Math.floor(timeMs / 1000));
-            },
-            hide: function() {
-                if (!this.visible) throw new Error("Tried to remove timer when it's not visible");
-                if (this.interval) clearInterval(this.interval);
-                this.element.remove();
-                this.visible = false;
-            }
-        };
-        this.timer.element.classList.add("timer");
+        this.timer = new Timer(sideContainer, moreInfo);
 
         const vowelInv = VOWEL_INVENTORIES.PL;
         for (let i = 0; i < vowelInv.length; i++) {
             this.scatterPlot.setGroupClickability(false, [0, i]);
         }
 
-        const vowelDisplay = this.selectedVowelDisplay;
-        // add an h2 element that says which vowel is selected
+        this.selectedVowelDisplay = new SelectedVowelDisplay(sideContainer, document.querySelector(".recording-container"));
 
-        vowelDisplay.element.appendChild(vowelDisplay.selected.element);
-        const h2 = vowelDisplay.selected.h2;
-        h2.innerHTML = "Samogłoska <span></span> wybrana";
-        vowelDisplay.selected.span = h2.querySelector("span");
-        h2.style.fontWeight = "bolder";
-        vowelDisplay.selected.element.appendChild(h2);
-        vowelDisplay.selected.element.style.display = "none";
-
-        vowelDisplay.element.appendChild(vowelDisplay.unselected.element);
-        vowelDisplay.unselected.element.innerHTML = "Naciśnij na samogłoskę na wykresie, żeby się na niej skupić.";
-        vowelDisplay.unselected.element.classList.add("gray");
-
-        sideContainer.appendChild(vowelDisplay.element);
-        document.querySelector(".recording-container").after(vowelDisplay.element);
+        this.#initialized = true;
     }
 
-    addDatasets(petersonBarney, politicians) {
+    addDatasets(petersonBarney, politicianRecordings) {
         if (this.#datasetAdded) return;
+
+        this.selectedVowelDisplay.addRecordings(politicianRecordings);
 
         this.scatterPlot.getGroup(0).forEach(group => group.forEach((subgroup, index) => subgroup.g.style("display", this.representationsSelected[0][index] ? "block" : "none")));
 
-        this.#addVowelMeasurements(politicians, 1, d3.symbolDiamond, {
+        this.#addVowelMeasurements(politicianRecordings.combinedVowels, 1, d3.symbolDiamond, {
             pointOpacity: "80",
             ellipseOpacity0: 0.2,
             ellipseOpacity1: 0.2
@@ -275,15 +218,16 @@ export default class TrainingView extends ScatterView {
     }
 
     vowelClicked(vowel) {
+        if (!this.#datasetAdded || !this.#initialized) return;
         if (vowel.language === "PL") return;
         
         console.log("Vowel clicked: ", vowel.letter, vowel);
 
         const newSelectedId = vowel.id;
+
         if (newSelectedId === this.#selectedVowelId) {
             this.#selectedVowelId = null;
-            this.selectedVowelDisplay.selected.element.style.display = "none";
-            this.selectedVowelDisplay.unselected.element.style.display = "none";
+            this.selectedVowelDisplay.deselectVowel();
             this.divStack.style.display = null; // reset to default
 
             for (let i = 1; i <= 3; i++) {
@@ -301,14 +245,9 @@ export default class TrainingView extends ScatterView {
             }
             return;
         }
-        if (this.#selectedVowelId === null) {
-            this.selectedVowelDisplay.selected.element.style.display = null;
-            this.selectedVowelDisplay.unselected.element.innerHTML = "Naciśnij na nią ponownie, żeby odznaczyć.";
-            this.divStack.style.display = "none";
-        }
-        const span = this.selectedVowelDisplay.selected.span;
-        span.innerHTML = vowel.letter;
-        span.style.color = `#${vowel.rgb}`;
+
+        this.divStack.style.display = "none";
+        this.selectedVowelDisplay.selectVowel(vowel);
 
         for (let i = 1; i <= 3; i++) {
             this.scatterPlot.getGroup(i).forEach((group, index) => {
