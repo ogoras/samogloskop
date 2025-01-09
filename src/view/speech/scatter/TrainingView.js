@@ -108,6 +108,11 @@ export default class TrainingView extends ScatterView {
             }
         };
         this.timer.element.classList.add("timer");
+
+        const vowelInv = VOWEL_INVENTORIES.PL;
+        for (let i = 0; i < vowelInv.length; i++) {
+            this.scatterPlot.setGroupClickability(false, [0, i]);
+        }
     }
 
     addDatasets(petersonBarney, politicians) {
@@ -234,5 +239,11 @@ export default class TrainingView extends ScatterView {
         this.button.remove();
         this.visibleVowelsChoice?.remove();
         this.divStack.style = "";
+    }
+
+    vowelClicked(vowel) {
+        if (vowel.language === "PL") return;
+        
+        console.log("Vowel clicked: ", vowel.letter, vowel);
     }
 }

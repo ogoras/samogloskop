@@ -1,5 +1,4 @@
 import ScatterView from './ScatterView.js';
-import getState from '../../../const/State.js';
 import { VOWEL_INVENTORIES, VOWEL_DICTS } from '../../../const/VOWEL_INVENTORIES.js';
 
 export default class ConfirmVowelsView extends ScatterView {
