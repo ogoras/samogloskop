@@ -1,6 +1,5 @@
 import CREATE_MODES from "./CREATE_MODES.js";
 import NestedPointGroup from "./NestedPointGroup.js";
-import SimplePointGroup from "./SimplePointGroup.js";
 
 export default class ScatterPlot {
     margin = { top: 10, right: 30, bottom: 30, left: 60 };
@@ -37,7 +36,9 @@ export default class ScatterPlot {
         this.parent = document.getElementById(elementId);
         this.drawAxes();
 
-        window.addEventListener("resize", this.restore.bind(this));
+        this.boundRestore = this.restore.bind(this);
+
+        window.addEventListener("resize", this.boundRestore);
     }
 
     restore() {
@@ -254,6 +255,10 @@ export default class ScatterPlot {
 
     addSeriesFormatting(formatting, seriesIds) {
         this.allPointsGroup.navigate(seriesIds).applyFormatting(formatting);
+    }
+
+    destroy() {
+        window.removeEventListener("resize", this.boundRestore);
     }
 }
 

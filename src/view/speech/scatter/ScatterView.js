@@ -152,4 +152,9 @@ export default class ScatterView extends SpeechView {
     restore() {
         this.scatterPlot.restore();
     }
+
+    destroy() {
+        super.destroy?.();
+        this.scatterPlot.destroy();
+    }
 }

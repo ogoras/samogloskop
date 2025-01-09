@@ -212,6 +212,8 @@ export default class TrainingView extends ScatterView {
     }
 
     destroy() {
+        super.destroy();
+        
         this.button.remove();
         this.visibleVowelsChoice?.remove();
         this.divStack.style = "";
