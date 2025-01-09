@@ -33,7 +33,7 @@ export default class SelectedVowelDisplay {
     selectVowel(vowel) {
         this.h2.style.display = null;
         this.wordList.style.display = null;
-        this.hint.innerHTML = "Naciśnij na nią ponownie, żeby odznaczyć.";
+        this.hint.innerHTML = "Żeby odznaczyć samogłoskę, naciśnij na nią ponownie.";
         const span = this.span;
         span.innerHTML = vowel.letter;
         span.style.color = `#${vowel.rgb}`;
