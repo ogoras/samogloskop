@@ -94,7 +94,7 @@ export default class ScatterView extends SpeechView {
         );
 
         this.#addSelector(
-            createCloudSelector(letters.slice(1), colors.slice(1), cloudOffset, serif, this.representationsSelected[localGroupId][0]),
+            createCloudSelector(letters.slice(1), colors.slice(1), cloudOffset, serif, this.representationsSelected[localGroupId][0], style),
             localGroupId, plotGroupId, 0
         );
 
