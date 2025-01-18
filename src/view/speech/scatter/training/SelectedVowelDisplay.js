@@ -32,16 +32,45 @@ export default class SelectedVowelDisplay {
 
     selectVowel(vowel) {
         this.h2.style.display = null;
-        this.wordList.style.display = null;
         this.hint.innerHTML = "Żeby odznaczyć samogłoskę, naciśnij na nią ponownie.";
+
         const span = this.span;
         span.innerHTML = vowel.letter;
         span.style.color = `#${vowel.rgb}`;
+
+        const wordList = this.wordList;
+        wordList.style.display = null;
+        wordList.style.marginBottom = "1em";
+        if (this.recordings) {
+            wordList.style.display = "grid";
+            wordList.style.gridTemplateColumns = "max-content max-content max-content auto";
+            wordList.style.columnGap = "1em"; 
+            wordList.innerHTML = "";
+            const recordings = this.recordings.entriesByVowel[vowel.letter];
+            for (const recording of recordings) {
+                const word = document.createElement("span");
+                word.innerHTML = recording.word;
+                wordList.appendChild(word);
+
+                const transcription = document.createElement("span");
+                transcription.innerHTML = `/${recording.getWordTranscription("all")}/`;
+                wordList.appendChild(transcription);
+
+                const translation = document.createElement("span");
+                translation.innerHTML = `<i>${recording.wordTranslation}</i>`;
+                wordList.appendChild(translation);
+
+                const playButtonsDiv = document.createElement("div");
+                wordList.appendChild(playButtonsDiv);
+                playButtonsDiv.innerHTML = "▶";
+            }
+        }
     }
 
     deselectVowel() {
         this.h2.style.display = "none";
         this.hint.style.display = "none";
         this.wordList.style.display = "none";
+        this.wordList.style.marginBottom = null;
     }
 } 

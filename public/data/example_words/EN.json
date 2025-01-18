@@ -1,0 +1,72 @@
+{
+    "ɑ":[
+        ["not", "nɑt", "nie", "I am not going", "Nie idę"],
+        ["sock", "sɑk", "skarpetka", "I need a new sock", "Potrzebuję nowej skarpetki"],
+        ["father", "fɑðɚ", "ojciec"],
+        ["bomb", "bɑm", "bomba", "The bomb exploded", "Bomba wybuchła"],
+        ["bot", "bɑt", "bot", "Am I talking to a bot?", "Czy rozmawiam z botem?"],
+        ["palm", "pɑm", "dłoń, palma", "The coconut grows on palm trees", "Kokos rośnie na palmach"]
+    ],
+    "æ": [
+        ["bat", "bæt", "nietoperz, kij", "a baseball bat", "kij do baseballa"],
+        ["bad", "bæd", "zły, zła", "a bad person", "zły człowiek"],
+        ["that", "ðæt", "ten, tamten", "that is a good idea", "to jest dobry pomysł"],
+        ["at", "æt", "przy, w", "I am at home", "Jestem w domu"],
+        ["have", "hæv", "mieć", "I have a car", "Mam samochód"],
+        ["can", "kæn", "móc, puszka", "I can do it", "Mogę to zrobić"]
+    ],
+    "ɛ": [
+        ["bed", "bɛd", "łóżko, ", "a double bed", "podwójne łóżko"],
+        ["head", "hɛd", "głowa"],
+        ["many", "mɛni", "wiele", "I have many friends", "Mam wielu przyjaciół"],
+        ["said", "sɛd", "powiedział", "He said he will go", "On powiedział, że pójdzie"],
+        ["red", "rɛd", "czerwony", "I like red", "Lubię czerwony"],
+        ["pen", "pɛn", "długopis", "I need a pen", "Potrzebuję długopisu"]
+    ],
+    "i": [
+        ["sheep", "ʃip", "owca, owce", "The sheep graze in the distance", "Owce wypasają się w oddali"],
+        ["sheet", "ʃit", "prześcieradło, arkusz", "a sheet of paper", "kartka papieru"],
+        ["beach", "bitʃ", "plaża", "a sandy beach", "piaszczysta plaża"],
+        ["be", "bi", "być", "I will be there", "Będę tam"]
+    ],
+    "ɪ": [
+        ["ship", "ʃɪp", "statek", "a ship captain", "kapitan statku"],
+        ["in", "ɪn", "w, we", "I am in the room", "Jestem w pokoju"],
+        ["is", "ɪz", "jest", "He is a good man", "On jest dobrym człowiekiem"],
+        ["with", "wɪð", "z, ze", "I am with my friends", "Jestem z moimi przyjaciółmi"],
+        ["his", "hɪz", "jego", "His name is John", "Jego imię to John"]
+    ],
+    "u": [
+        ["pool", "pul", "basen, bilard", "a swimming pool", "basen do pływania"],
+        ["use", "juz", "używać", "I will use it", "Użyję tego"],
+        ["goose", "gus", "gęś", "A goose is a bird", "Gęś to ptak"],
+        ["food", "fud", "jedzenie", "I am hungry, I need food", "Jestem głodny, potrzebuję jedzenia"],
+        ["blue", "blu", "niebieski", "The sky is blue", "Niebo jest niebieskie"],
+        ["shoe", "ʃu", "but", "I need a new shoe", "Potrzebuję nowego buta"],
+        ["who", "hu", "kto", "Who is there?", "Kto tam jest?"]
+    ],
+    "ʊ": [
+        ["pull", "pʊl", "ciągnąć", "I will pull the rope", "Pociągnę za linę"],
+        ["would", "wʊd", "by", "I would like to go", "Chciałbym iść"],
+        ["could", "kʊd", "mógł", "I could do it", "Mógłbym to zrobić"],
+        ["should", "ʃʊd", "powinien", "I should go", "Powinienem iść"],
+        ["wood", "wʊd", "drewno", "a piece of wood", "kawałek drewna"],
+        ["foot", "fʊt", "stopa", "I hurt my foot", "Zraniłem swoją stopę"],
+        ["book", "bʊk", "książka", "I read a book", "Przeczytałem książkę"]
+    ],
+    "ʌ": [
+        ["but", "bʌt", "ale", "I am tired but I will go", "Jestem zmęczony, ale pójdę"],
+        ["one", "wʌn", "jeden", "one, two, three", "jeden, dwa, trzy"],
+        ["other", "ʌðɚ", "inny, drugi", "the other side", "druga strona"],
+        ["some", "sʌm", "trochę, niektóre", "I have some money", "Mam trochę pieniędzy"],
+        ["son", "sʌn", "syn"]
+    ],
+    "ɔ": [
+        ["also", "ɔlsoʊ", "również", "I am also going", "Ja również idę"],
+        ["all", "ɔl", "wszystko, całe", "all the time", "cały czas"],
+        ["law", "prawo", "lɔ", "the law of the land", "prawo ziemi"],
+        ["saw", "sɔ", "piła, widział", "I saw a tree", "Widziałem drzewo"],
+        ["thought", "θɔt", "myśl, myślał", "I had a thought", "Miałem myśl"],
+        ["boss", "bɔs", "szef"]
+    ]
+}

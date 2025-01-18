@@ -11,9 +11,21 @@ export default class VowelRecording {
     }
 
     get wordTranscription() {
+        return this.getWordTranscription();
+    }
+
+    getWordTranscription(bold = "single") {
         const phonemes = this.wordPhonemes;
-        const index = this.phonemeIndexInWord;
-        phonemes[index] = `<b>${phonemes[index]}</b>`;
+        if (bold === "single") {
+            const index = this.phonemeIndexInWord;
+            phonemes[index] = `<b>${phonemes[index]}</b>`;
+        } else if (bold === "all") {
+            for (let i = 0; i < phonemes.length; i++) {
+                if (phonemes[i] === (this.phoneme.letter ?? this.phoneme.IPA.broad)) {
+                    phonemes[i] = `<b>${phonemes[i]}</b>`;
+                }
+            }
+        }
         return phonemes.join("");
     }
 
