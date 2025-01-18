@@ -1,4 +1,4 @@
-import { VERSION_MAJOR, VERSION_MINOR } from "../const/version.js";
+import { VERSION_PATCH, VERSION_MAJOR, VERSION_MINOR } from "../const/version.js";
 import State from "../const/State.js";
 import Preset from "../const/Preset.js";
 import Singleton from "../Singleton.js";
@@ -60,12 +60,17 @@ export default class LocalStorageMediator extends Singleton {
 
     load() {
         let dataConsentGiven = this.dataConsentGiven;
-        if (dataConsentGiven && !this.version) {
+        if (!this.version) {
             this.version = "0.0";
         }
         const localStorageVersion = this.version;
-        if (localStorageVersion !== `${VERSION_MAJOR}.${VERSION_MINOR}`) {
-            switch(localStorageVersion) {
+        // check if the local storage version has one or two dots
+        const LSVersionNumbers = localStorageVersion.split(".");
+        const LSVersionMajor = parseInt(LSVersionNumbers[0]);
+        const LSVersionMinor = parseInt(LSVersionNumbers[1]);
+
+        if (LSVersionMajor !== VERSION_MAJOR || LSVersionMinor !== VERSION_MINOR) {
+            switch(`${LSVersionMajor}.${LSVersionMinor}`) {
                 case "0.1":
                     // 0.1 -> 0.2 conversion
                     if (this.state.is?.("DONE")) this.state = State.get("CONFIRM_VOWELS");
@@ -83,9 +88,9 @@ export default class LocalStorageMediator extends Singleton {
                             localStorage.removeItem("userVowels");
                         }
                     }
-                    break;
-                case "0.3":
-                    // actually, no conversion needed
+                // FALL THROUGH
+                case "0.3": // 0.3 -> 0.4 conversion is not necessary
+                case "0.4": // 0.4 -> 0.5 conversion not necessary either
                     break;
                 default:
                     if (dataConsentGiven) {
@@ -95,7 +100,7 @@ export default class LocalStorageMediator extends Singleton {
                     }
             }
         }
-        this.version = `${VERSION_MAJOR}.${VERSION_MINOR}`;
+        this.version = `${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}`;
 
         if (!dataConsentGiven) {
             this.clear();

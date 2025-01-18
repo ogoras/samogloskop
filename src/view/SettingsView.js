@@ -1,6 +1,6 @@
 import View from "./View.js";
 import PresetComponent from "./components/choice/PresetComponent.js";
-import { VERSION_MAJOR, VERSION_MINOR, PATCH } from '../const/version.js';
+import { VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH } from '../const/version.js';
 import State from "../const/State.js";
 
 export default class SettingsView extends View {
@@ -52,7 +52,7 @@ export default class SettingsView extends View {
         this.footer.classList.add("footer");
         this.footer.classList.add("gray");
         document.body.appendChild(this.footer);
-        this.footer.innerHTML = `Samogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}`;
+        this.footer.innerHTML = `Samogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}`;
     }
 
     createConsentSection() {

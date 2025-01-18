@@ -267,6 +267,7 @@ export default class GatheringForeignView extends SpeechView {
     }
 
     updateSecondaryProgress(value) {
+        if (!this.progressBar) return;
         this.progressBar.secondaryProgress = value * 100;
     }
 
