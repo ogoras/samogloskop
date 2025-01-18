@@ -28,8 +28,6 @@ export default class SpeakerRecordings extends ArrayLoadedFromFile {
                 listing.includes(filename.replace(".wav", ".TextGrid"))
             )
             .map(filename => filename.replace(".wav", ""));
-// // for debugging
-// recording_names = recording_names.slice(5, 6);
         const info = this.info = await(await fetch(`${dir}/info.json`)).json();
         const recordings = await Promise.all(recording_names.map(
             async recording_name => await Recording.create(`${dir}/${recording_name}`, info)

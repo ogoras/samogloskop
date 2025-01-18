@@ -13,21 +13,25 @@
         ["that", "ðæt", "ten, tamten", "that is a good idea", "to jest dobry pomysł"],
         ["at", "æt", "przy, w", "I am at home", "Jestem w domu"],
         ["have", "hæv", "mieć", "I have a car", "Mam samochód"],
-        ["can", "kæn", "móc, puszka", "I can do it", "Mogę to zrobić"]
+        ["can", "kæn", "móc, puszka", "I can do it", "Mogę to zrobić"],
+        ["and", "ænd", "i"]
     ],
     "ɛ": [
         ["bed", "bɛd", "łóżko, ", "a double bed", "podwójne łóżko"],
         ["head", "hɛd", "głowa"],
         ["many", "mɛni", "wiele", "I have many friends", "Mam wielu przyjaciół"],
         ["said", "sɛd", "powiedział", "He said he will go", "On powiedział, że pójdzie"],
-        ["red", "rɛd", "czerwony", "I like red", "Lubię czerwony"],
-        ["pen", "pɛn", "długopis", "I need a pen", "Potrzebuję długopisu"]
+        ["red", "ɹɛd", "czerwony", "I like red", "Lubię czerwony"],
+        ["pen", "pɛn", "długopis", "I need a pen", "Potrzebuję długopisu"],
+        ["already", "ɔlɹɛdi", "już"]
     ],
     "i": [
         ["sheep", "ʃip", "owca, owce", "The sheep graze in the distance", "Owce wypasają się w oddali"],
         ["sheet", "ʃit", "prześcieradło, arkusz", "a sheet of paper", "kartka papieru"],
         ["beach", "bitʃ", "plaża", "a sandy beach", "piaszczysta plaża"],
-        ["be", "bi", "być", "I will be there", "Będę tam"]
+        ["be", "bi", "być", "I will be there", "Będę tam"],
+        ["the", "ði", "[przedimek określony]"],
+        ["already", "ɔlɹɛdi", "już"]
     ],
     "ɪ": [
         ["ship", "ʃɪp", "statek", "a ship captain", "kapitan statku"],
@@ -52,7 +56,8 @@
         ["should", "ʃʊd", "powinien", "I should go", "Powinienem iść"],
         ["wood", "wʊd", "drewno", "a piece of wood", "kawałek drewna"],
         ["foot", "fʊt", "stopa", "I hurt my foot", "Zraniłem swoją stopę"],
-        ["book", "bʊk", "książka", "I read a book", "Przeczytałem książkę"]
+        ["book", "bʊk", "książka", "I read a book", "Przeczytałem książkę"],
+        ["put", "pʊt", "umieścić"]
     ],
     "ʌ": [
         ["but", "bʌt", "ale", "I am tired but I will go", "Jestem zmęczony, ale pójdę"],
@@ -64,9 +69,11 @@
     "ɔ": [
         ["also", "ɔlsoʊ", "również", "I am also going", "Ja również idę"],
         ["all", "ɔl", "wszystko, całe", "all the time", "cały czas"],
-        ["law", "prawo", "lɔ", "the law of the land", "prawo ziemi"],
+        ["law", "lɔ", "prawo", "the law of the land", "prawo ziemi"],
         ["saw", "sɔ", "piła, widział", "I saw a tree", "Widziałem drzewo"],
         ["thought", "θɔt", "myśl, myślał", "I had a thought", "Miałem myśl"],
-        ["boss", "bɔs", "szef"]
+        ["boss", "bɔs", "szef"],
+        ["already", "ɔlɹɛdi", "już"],
+        ["brought", "bɹɔt", "doprowadziło"]
     ]
 }
