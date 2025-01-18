@@ -222,8 +222,6 @@ export default class TrainingView extends ScatterView {
     vowelClicked(vowel) {
         if (!this.#datasetAdded || !this.#initialized) return;
         if (vowel.language === "PL") return;
-        
-        console.log("Vowel clicked: ", vowel.letter, vowel);
 
         const newSelectedId = vowel.id;
 

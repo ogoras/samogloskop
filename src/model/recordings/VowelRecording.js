@@ -1,4 +1,5 @@
 import { VOWEL_INVENTORIES, VOWEL_DICTS } from "../../const/VOWEL_INVENTORIES.js";
+import { playSamples } from "../../logic/util/audio.js";
 
 export default class VowelRecording {
     get word() {
@@ -24,18 +25,6 @@ export default class VowelRecording {
         return this.phraseInterval.translation;
     }
 
-    get vowelSamples() {
-        return this.recording.getSamples(this.vowelInterval, 0.05);
-    }
-
-    get wordSamples() {
-        return this.recording.getSamples(this.wordInterval, 0.05);
-    }
-
-    get phraseSamples() {
-        return this.recording.getSamples(this.phraseInterval);
-    }
-
     get speakerInfo() {
         return this.recording.speakerInfo;
     }
@@ -52,5 +41,21 @@ export default class VowelRecording {
         const wordIntervals = this.recording.textGrid.getPhonemesIn(this.wordInterval)
         this.phonemeIndexInWord = wordIntervals.indexOf(this.vowelInterval);
         this.wordPhonemes = wordIntervals.map(interval => interval.text);
+    }
+
+    async play(type = "phrase") {
+        switch(type) {
+            case "vowels":
+                await playSamples(this.recording.getSamples(this.vowelInterval, 0.05), this.sampleRate)
+                break;
+            case "word":
+                await playSamples(this.recording.getSamples(this.wordInterval, 0.05), this.sampleRate);
+                break;
+            case "phrase":
+                await playSamples(this.recording.getSamples(this.phraseInterval), this.sampleRate);
+                break;
+            default:
+                throw new Error(`Unknown recording type: ${type}`);
+        }
     }
 }

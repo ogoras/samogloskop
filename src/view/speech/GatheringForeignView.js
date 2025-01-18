@@ -189,45 +189,16 @@ export default class GatheringForeignView extends SpeechView {
         return { fragmentDescription, playButton };
     }
 
-    #playRecording(type) {
-        const vowelRecording = this.vowelRecording;
-        switch(type) {
-            case "vowels":
-                this.#playSamples(vowelRecording.vowelSamples, vowelRecording.recording.sampleRate)
-                break;
-            case "word":
-                this.#playSamples(vowelRecording.wordSamples, vowelRecording.recording.sampleRate);
-                break;
-            case "phrase":
-                this.#playSamples(vowelRecording.phraseSamples, vowelRecording.recording.sampleRate);
-                break;
-            default:
-                throw new Error(`Unknown recording type: ${type}`);
-        }
-    }
-
-    #playSamples(samples, sampleRate = 48000) {
+    async #playRecording(type) {
         if (this.#currentlyPlaying) return;
         this.#currentlyPlaying = true;
         // disable mic while playing
         this.controller.disableMic();
 
-        const audioCtx = new AudioContext({ sampleRate });
-        const audioBuffer = audioCtx.createBuffer(1, samples.length, sampleRate);
-        const channelData = audioBuffer.getChannelData(0);
-        for (let i = 0; i < samples.length; i++) {
-            channelData[i] = samples[i];
-        }
-        const source = audioCtx.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(audioCtx.destination);
-        source.start();
-        source.onended = async () => {
-            source.disconnect();
-            await audioCtx.close();
-            this.controller.enableMic();
-            this.#currentlyPlaying = false;
-        };
+        await this.vowelRecording.play(type);
+        
+        this.controller.enableMic();
+        this.#currentlyPlaying = false;
     }
 
     recordingStarted() {
