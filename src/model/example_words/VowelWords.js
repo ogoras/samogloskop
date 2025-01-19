@@ -21,7 +21,7 @@ export default class VowelWords extends Array {
             }
             plainWord[1] = newTranscription.join("");
             if (!exampleWords.has(word)) {
-                exampleWords.set(word, new ExampleWord(...plainWord));
+                exampleWords.set(word, new ExampleWord(...plainWord.slice(0, 3)));
             }
             if (plainWord[4] && plainWord[5]) {
                 exampleWords.get(word).addExample(plainWord[4], plainWord[5]);
@@ -31,12 +31,13 @@ export default class VowelWords extends Array {
             const word = recording.word;
             if (!exampleWords.has(word)) {
                 exampleWords.set(word, 
-                    new ExampleWord(word, recording.getWordTranscription("all"), recording.wordTranslation)
+                    new ExampleWord(word, recording.getWordTranscription("all"), recording.wordTranslation, 1)
                 );
             }
             exampleWords.get(word).addExample(recording);
         }
         
         this.push(...exampleWords.values());
+        this.sort((a, b) => b.priority - a.priority);
     }
 }
