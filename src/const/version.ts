@@ -1,5 +1,5 @@
-export const VERSION_MAJOR = 0,
-    VERSION_MINOR = 5,  // will only change when the data format changes
+export const VERSION_MAJOR = 1,
+    VERSION_MINOR = 0,  // will only change when the data format changes
     VERSION_PATCH = 0;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: Introduced localStorage
@@ -24,3 +24,5 @@ export const VERSION_MAJOR = 0,
 // v0.4.7: English vowels can be clicked and that highlights the vowel on top of Polish vowels
 // v0.4.8: Some bug fixes
 // v0.5.0: Local storage stores PATCH as well
+
+// v1.0.0: Added the list of words, the first version to be tested with users

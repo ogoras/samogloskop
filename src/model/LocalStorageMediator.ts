@@ -91,6 +91,7 @@ export default class LocalStorageMediator extends Singleton {
                 // FALL THROUGH
                 case "0.3": // 0.3 -> 0.4 conversion is not necessary
                 case "0.4": // 0.4 -> 0.5 conversion not necessary either
+                case "0.5": // 0.5 -> 1.0 conversion, same thing
                     break;
                 default:
                     if (dataConsentGiven) {
