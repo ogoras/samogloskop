@@ -463,9 +463,9 @@ button:active, .emoji-button:active, .button:active {
     display: block;
 }
 
-.down-arrow {
+.arrow {
     font-family: monospace;
-    margin-top: 0.15em;
     font-weight: 900;
     font-size: 1.5em;
+    margin-top: 0.15em;
 }

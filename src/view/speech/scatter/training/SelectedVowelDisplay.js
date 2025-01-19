@@ -54,10 +54,13 @@ export default class SelectedVowelDisplay {
             for (const wordEntry of words) {
                 const word = document.createElement("span");
                 word.innerHTML = wordEntry.word;
+                word.style.fontSize = "1.4em";
+                word.style.marginBottom = "0.2em";
                 wordList.appendChild(word);
 
                 const transcription = document.createElement("span");
                 transcription.innerHTML = `/${wordEntry.transcription}/`;
+                transcription.style.fontSize = "1.2em";
                 wordList.appendChild(transcription);
 
                 const bElements = transcription.querySelectorAll("b");
@@ -71,13 +74,65 @@ export default class SelectedVowelDisplay {
 
                 const showMoreButton = document.createElement("span");
                 wordList.appendChild(showMoreButton);
+
+                const examplesDiv = document.createElement("div");
                 if (wordEntry.examples.length > 0) {
+                    examplesDiv.style.display = "none";
+                    examplesDiv.style.gridColumn = "1 / 6";
+                    examplesDiv.style.marginTop = "-0.3em";
+                    examplesDiv.style.marginBottom = "0.5em";
+                    examplesDiv.style.paddingLeft = "1em";
+
+                    for (const example of wordEntry.examples) {
+                        const english = document.createElement("div");
+                        examplesDiv.appendChild(english);
+
+                        const phraseText = document.createElement("span");
+                        let text = example.text;
+                        // bold the word in the phrase, maintaining case
+                        text = text.replace(new RegExp(`\\b${wordEntry.word}\\b`, "g"), `<b>${wordEntry.word}</b>`);
+                        text = text.replace(new RegExp(`\\b${wordEntry.word[0].toUpperCase() + wordEntry.word.slice(1)}\\b`, "g"), `<b>${wordEntry.word[0].toUpperCase() + wordEntry.word.slice(1)}</b>`);
+                        phraseText.innerHTML = text;
+                        phraseText.style.fontSize = "1.2em";
+                        english.appendChild(phraseText);
+
+                        if (example.playback) {
+                            const playButton = document.createElement("span");
+                            playButton.innerHTML = "▶";
+                            playButton.classList.add("button");
+                            playButton.classList.add("compact");
+                            playButton.style.marginLeft = "0.3em";
+                            playButton.onclick = async () => {
+                                if (this.#currentlyPlaying) return;
+                                this.#currentlyPlaying = true;
+                                // disable mic while playing
+                                this.controller.disableMic();
+                        
+                                await example.playback();
+                                
+                                this.controller.enableMic();
+                                this.#currentlyPlaying = false;
+                            }
+                            english.appendChild(playButton);
+                        }
+
+                        const translation = document.createElement("span");
+                        translation.innerHTML = `<i>${example.translation}</i>`;
+                        examplesDiv.appendChild(translation);
+                    }
+
                     showMoreButton.innerHTML = "˅";
-                    showMoreButton.classList.add("down-arrow");
+                    showMoreButton.classList.add("arrow");
                     showMoreButton.classList.add("button");
                     showMoreButton.classList.add("compact");
                     showMoreButton.onclick = () => {
-                        console.log("show more");
+                        if (examplesDiv.style.display === "none") {
+                            examplesDiv.style.display = null;
+                            showMoreButton.innerHTML = "˄";
+                        } else {
+                            examplesDiv.style.display = "none";
+                            showMoreButton.innerHTML = "˅";
+                        }
                     }
                 }
 
@@ -103,6 +158,10 @@ export default class SelectedVowelDisplay {
                         this.#currentlyPlaying = false;
                     }
                     playButtonsDiv.appendChild(playButton);
+                }
+
+                if (wordEntry.examples.length > 0) {
+                    wordList.appendChild(examplesDiv);
                 }
             }
         }
