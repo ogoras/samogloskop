@@ -2,6 +2,7 @@ import Vowels from "../../../model/vowels/Vowels.js";
 import SmoothingController from "./SmoothingController.js";
 import ForeignRecordings from "../../../model/recordings/ForeignRecordings.js";
 import nextController from "../nextController.js";
+import LanguageWords from "../../../model/example_words/LanguageWords.js";
 
 export default class TrainingController extends SmoothingController {
     #discarded = false;
@@ -16,6 +17,10 @@ export default class TrainingController extends SmoothingController {
         this.petersonBarney = await Vowels.create("EN", "peterson_barney");
         this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");
         this.view.addDatasets(this.petersonBarney, this.englishRecordings);
+
+        LanguageWords.create(exampleWords => {
+            this.view.addWords(exampleWords);
+        }, this.englishRecordings);
 
         // check if window has focus
         this.#lastFocused = document.hasFocus() ? Date.now() : null;

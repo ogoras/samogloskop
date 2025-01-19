@@ -26,8 +26,8 @@ export default class SelectedVowelDisplay {
         prevSibling.after(this.element);
     }
 
-    addRecordings(recordings) {
-        this.recordings = recordings;
+    addWords(words) {
+        this.words = words;
     }
 
     selectVowel(vowel) {
@@ -41,23 +41,23 @@ export default class SelectedVowelDisplay {
         const wordList = this.wordList;
         wordList.style.display = null;
         wordList.style.marginBottom = "1em";
-        if (this.recordings) {
+        if (this.words) {
             wordList.style.display = "grid";
             wordList.style.gridTemplateColumns = "max-content max-content max-content auto";
             wordList.style.columnGap = "1em"; 
             wordList.innerHTML = "";
-            const recordings = this.recordings.entriesByVowel[vowel.letter];
-            for (const recording of recordings) {
+            const words = this.words[vowel.letter];
+            for (const wordEntry of words) {
                 const word = document.createElement("span");
-                word.innerHTML = recording.word;
+                word.innerHTML = wordEntry.word;
                 wordList.appendChild(word);
 
                 const transcription = document.createElement("span");
-                transcription.innerHTML = `/${recording.getWordTranscription("all")}/`;
+                transcription.innerHTML = `/${wordEntry.transcription}/`;
                 wordList.appendChild(transcription);
 
                 const translation = document.createElement("span");
-                translation.innerHTML = `<i>${recording.wordTranslation}</i>`;
+                translation.innerHTML = `<i>${wordEntry.translation}</i>`;
                 wordList.appendChild(translation);
 
                 const playButtonsDiv = document.createElement("div");

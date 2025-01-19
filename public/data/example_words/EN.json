@@ -57,14 +57,16 @@
         ["wood", "wʊd", "drewno", "a piece of wood", "kawałek drewna"],
         ["foot", "fʊt", "stopa", "I hurt my foot", "Zraniłem swoją stopę"],
         ["book", "bʊk", "książka", "I read a book", "Przeczytałem książkę"],
-        ["put", "pʊt", "umieścić"]
+        ["put", "pʊt", "umieścić"],
+        ["good", "gʊd", "dobry"]
     ],
     "ʌ": [
         ["but", "bʌt", "ale", "I am tired but I will go", "Jestem zmęczony, ale pójdę"],
         ["one", "wʌn", "jeden", "one, two, three", "jeden, dwa, trzy"],
         ["other", "ʌðɚ", "inny, drugi", "the other side", "druga strona"],
         ["some", "sʌm", "trochę, niektóre", "I have some money", "Mam trochę pieniędzy"],
-        ["son", "sʌn", "syn"]
+        ["son", "sʌn", "syn"],
+        ["won", "wʌn", "wygrał"]
     ],
     "ɔ": [
         ["also", "ɔlsoʊ", "również", "I am also going", "Ja również idę"],

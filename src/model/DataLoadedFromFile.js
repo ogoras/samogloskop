@@ -30,7 +30,7 @@ export function SubclassLoadedFromFile(Parent) {
         static async create(callback, ...args) {
             const instance = new this(...args);
             await instance.load();
-            callback?.();
+            callback?.(instance);
             return instance;
         }
 

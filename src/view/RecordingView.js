@@ -202,6 +202,10 @@ export default class RecordingView extends View {
         this.view?.addDatasets?.(...args);
     }
 
+    addWords(...args) {
+        this.view?.addWords?.(...args);
+    }
+
     recordingStarted() {
         this.hint.style.display = "none";
         this.recordButton.classList.add('hide-strikethrough');

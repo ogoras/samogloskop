@@ -92,8 +92,6 @@ export default class TrainingView extends ScatterView {
     addDatasets(petersonBarney, politicianRecordings) {
         if (this.#datasetAdded) return;
 
-        this.selectedVowelDisplay.addRecordings(politicianRecordings);
-
         this.scatterPlot.getGroup(0).forEach(group => group.forEach((subgroup, index) => subgroup.g.style("display", this.representationsSelected[0][index] ? "block" : "none")));
 
         this.#addVowelMeasurements(politicianRecordings.combinedVowels, 1, d3.symbolDiamond, {
@@ -149,6 +147,10 @@ export default class TrainingView extends ScatterView {
         this.selectedVowelDisplay.element.after(this.visibleVowelsChoice);
 
         this.#datasetAdded = true;
+    }
+
+    addWords(words) {
+        this.selectedVowelDisplay.addWords(words);
     }
 
     #addVowelMeasurements(vowels, index, symbol, {pointOpacity = "80", ellipseOpacity0, ellipseOpacity1}, formatting = {}) {

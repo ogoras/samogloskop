@@ -1,5 +1,5 @@
 import DataLoadedFromFile from "../DataLoadedFromFile.js";
-import VOWEL_DATA from "../../const/VOWEL_INVENTORIES.js";
+import { VOWEL_DATA } from "../../const/VOWEL_INVENTORIES.js";
 import VowelWords from "./VowelWords.js";
 
 export default class LanguageWords extends DataLoadedFromFile {
@@ -15,8 +15,9 @@ export default class LanguageWords extends DataLoadedFromFile {
         await this.recordings.load();
 
         const vowelData = VOWEL_DATA[this.language];
-        for (vowelSymbol of vowelData.letter ?? vowelData.IPA.broad) {
+        for (const vowelSymbol of vowelData.letter ?? vowelData.IPA.broad) {
             this[vowelSymbol] = new VowelWords(
+                vowelSymbol,
                 this.recordings.entriesByVowel[vowelSymbol],
                 example_words[vowelSymbol]
             );

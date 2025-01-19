@@ -1,4 +1,4 @@
-import VowelRecording from "../recordings/VowelRecording";
+import VowelRecording from "../recordings/VowelRecording.js";
 
 export default class ExamplePhrase {
     get hasRecording() {
