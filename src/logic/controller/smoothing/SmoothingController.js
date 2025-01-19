@@ -81,4 +81,15 @@ export default class SmoothingController extends RenderController {
 
         return true;
     }
+
+    disableMic() {
+        this.recorder.stopRecording();
+        this.recorder.dump();
+        this.view.disabled = true;
+    }
+
+    enableMic() {
+        this.view.disabled = false;
+    }
+
 }

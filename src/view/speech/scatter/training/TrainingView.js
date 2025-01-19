@@ -84,7 +84,7 @@ export default class TrainingView extends ScatterView {
             this.scatterPlot.setGroupClickability(false, [0, i]);
         }
 
-        this.selectedVowelDisplay = new SelectedVowelDisplay(sideContainer, document.querySelector(".recording-container"));
+        this.selectedVowelDisplay = new SelectedVowelDisplay(controller, sideContainer, document.querySelector(".recording-container"));
 
         this.#initialized = true;
     }

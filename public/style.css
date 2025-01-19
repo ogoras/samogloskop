@@ -316,6 +316,13 @@ button.tiny {
     font-size: 0.7rem;
 }
 
+.compact {
+    padding: 0;
+    margin: 0;
+    border-style: none;
+    font-size: 1em;
+}
+
 button.selected {
     background-color: #f0f0f0;
 }

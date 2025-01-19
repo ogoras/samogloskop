@@ -4,7 +4,11 @@ export default class SelectedVowelDisplay {
     hint = document.createElement("p");
     wordList = document.createElement("div");
     
-    constructor(container, prevSibling) {
+    #currentlyPlaying = false;
+    
+    constructor(controller, container, prevSibling) {
+        this.controller = controller;
+
         const h2 = this.h2;
         h2.innerHTML = "<span></span> występuje w słowach:";
         this.span = h2.querySelector("span");
@@ -62,7 +66,25 @@ export default class SelectedVowelDisplay {
 
                 const playButtonsDiv = document.createElement("div");
                 wordList.appendChild(playButtonsDiv);
-                playButtonsDiv.innerHTML = "▶";
+
+                for (const playbackFunction of wordEntry.recordingPlaybacks) {
+                    const playButton = document.createElement("span");
+                    playButton.innerHTML = "▶";
+                    playButton.classList.add("button");
+                    playButton.classList.add("compact");
+                    playButton.onclick = async () => {
+                        if (this.#currentlyPlaying) return;
+                        this.#currentlyPlaying = true;
+                        // disable mic while playing
+                        this.controller.disableMic();
+                
+                        await playbackFunction();
+                        
+                        this.controller.enableMic();
+                        this.#currentlyPlaying = false;
+                    }
+                    playButtonsDiv.appendChild(playButton);
+                }
             }
         }
     }

@@ -11,17 +11,7 @@ export default class GatheringForeignController extends GatheringVowelsControlle
         this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");
         this.view.initializeRecordings(this.englishRecordings);
     }
-
-    disableMic() {
-        this.recorder.stopRecording();
-        this.recorder.dump();
-        this.view.disabled = true;
-    }
-
-    enableMic() {
-        this.view.disabled = false;
-    }
-
+    
     newVowelRecording() {
         const vowel = this[this.vowelsBeingGathered].nextVowel();
         this.currentEntry = this.englishRecordings.getRandomEntryForVowel(vowel.letter);
