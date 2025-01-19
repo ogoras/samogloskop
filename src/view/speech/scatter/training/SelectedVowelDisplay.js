@@ -47,7 +47,7 @@ export default class SelectedVowelDisplay {
         wordList.style.marginBottom = "1em";
         if (this.words) {
             wordList.style.display = "grid";
-            wordList.style.gridTemplateColumns = "max-content max-content max-content auto";
+            wordList.style.gridTemplateColumns = "max-content max-content max-content max-content auto";
             wordList.style.columnGap = "1em"; 
             wordList.innerHTML = "";
             const words = this.words[vowel.letter];
@@ -69,14 +69,28 @@ export default class SelectedVowelDisplay {
                 translation.innerHTML = `<i>${wordEntry.translation}</i>`;
                 wordList.appendChild(translation);
 
+                const showMoreButton = document.createElement("span");
+                wordList.appendChild(showMoreButton);
+                if (wordEntry.examples.length > 0) {
+                    showMoreButton.innerHTML = "˅";
+                    showMoreButton.classList.add("down-arrow");
+                    showMoreButton.classList.add("button");
+                    showMoreButton.classList.add("compact");
+                    showMoreButton.onclick = () => {
+                        console.log("show more");
+                    }
+                }
+
                 const playButtonsDiv = document.createElement("div");
                 wordList.appendChild(playButtonsDiv);
+                playButtonsDiv.style.marginTop = "-0.2em";
 
                 for (const playbackFunction of wordEntry.recordingPlaybacks) {
                     const playButton = document.createElement("span");
                     playButton.innerHTML = "▶";
                     playButton.classList.add("button");
                     playButton.classList.add("compact");
+                    playButton.style.marginRight = "0.3em";
                     playButton.onclick = async () => {
                         if (this.#currentlyPlaying) return;
                         this.#currentlyPlaying = true;

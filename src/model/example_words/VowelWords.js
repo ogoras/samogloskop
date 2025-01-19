@@ -23,8 +23,9 @@ export default class VowelWords extends Array {
             if (!exampleWords.has(word)) {
                 exampleWords.set(word, new ExampleWord(...plainWord.slice(0, 3)));
             }
-            if (plainWord[4] && plainWord[5]) {
-                exampleWords.get(word).addExample(plainWord[4], plainWord[5]);
+            if (plainWord[3] && plainWord[4]) {
+                console.log("Adding example", plainWord[3], plainWord[4]);
+                exampleWords.get(word).addExample(plainWord[3], plainWord[4]);
             }
         }
         for (const recording of recordings) {

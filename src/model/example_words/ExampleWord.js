@@ -21,8 +21,8 @@ export default class ExampleWord {
                 this.priority += 1;
             }
             this.recordingPlaybacks.push(() => args[0].play("word"));
-            return;
-        }
+        } else if (this.priority === 0) this.priority = 0.5;
+
         this.examples.push(new ExamplePhrase(...args));
     }
 }
