@@ -60,6 +60,11 @@ export default class SelectedVowelDisplay {
                 transcription.innerHTML = `/${wordEntry.transcription}/`;
                 wordList.appendChild(transcription);
 
+                const bElements = transcription.querySelectorAll("b");
+                for (const bElement of bElements) {
+                    bElement.style.color = `#${vowel.rgb}`;
+                }
+
                 const translation = document.createElement("span");
                 translation.innerHTML = `<i>${wordEntry.translation}</i>`;
                 wordList.appendChild(translation);
