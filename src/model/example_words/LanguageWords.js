@@ -18,7 +18,7 @@ export default class LanguageWords extends DataLoadedFromFile {
         for (const vowelSymbol of vowelData.letter ?? vowelData.IPA.broad) {
             this[vowelSymbol] = new VowelWords(
                 vowelSymbol,
-                this.recordings.entriesByVowel[vowelSymbol],
+                this.recordings.uniqueWordEntriesByVowel[vowelSymbol],
                 example_words[vowelSymbol]
             );
         }

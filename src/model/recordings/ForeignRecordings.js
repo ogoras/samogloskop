@@ -8,6 +8,7 @@ export default class ForeignRecordings extends DataLoadedFromFile {
     speakers = [];
     entriesBySpeaker = {};
     entriesByVowel = {};
+    uniqueWordEntriesByVowel = {};
     #combinedVowels;
 
     constructor(language = "EN") {
@@ -39,10 +40,20 @@ export default class ForeignRecordings extends DataLoadedFromFile {
             recordings.forEach(recording => {
                 const textGrid = recording.textGrid;
                 const vowelIntervals = textGrid.getVowelIntervals(vowelSymbols);
+                const wordIntervalsByVowel = {};
                 vowelIntervals.forEach(interval => {
                     const vowelSymbol = interval.text;
                     this.entriesByVowel[vowelSymbol] ??= [];
-                    this.entriesByVowel[vowelSymbol].push(new VowelRecording({speaker, recording, interval}, this.language));
+                    const vowelRecording = new VowelRecording({speaker, recording, interval}, this.language);
+                    this.entriesByVowel[vowelSymbol].push(vowelRecording);
+
+                    const wordInterval = vowelRecording.wordInterval;
+                    const wordIntervals = wordIntervalsByVowel[vowelSymbol] ??= new Set();
+                    if (!wordIntervals.has(wordInterval)) {
+                        wordIntervals.add(wordInterval);
+                        this.uniqueWordEntriesByVowel[vowelSymbol] ??= [];
+                        this.uniqueWordEntriesByVowel[vowelSymbol].push(vowelRecording);
+                    }
                 });
             })
         }));
