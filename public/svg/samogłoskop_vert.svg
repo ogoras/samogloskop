@@ -2,7 +2,7 @@
 <?xml-stylesheet href="stylesheets/main.css" type="text/css"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="990" height="700" display="block">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="700" height="990" display="block">
 
 <g id="background">
 <defs>
@@ -11,7 +11,7 @@
         <stop offset="100%" style="stop-color:rgb(235,235,235);stop-opacity:1" />
     </linearGradient>
 </defs>
-<rect x="0" y="0" width="990" height="700" fill="url(#gradient1)"></rect>
+<rect x="0" y="0" width="100%" height="100%" fill="url(#gradient1)"></rect>
 </g>
 
 <g transform="translate(30, 30)" id="plot">
@@ -83,7 +83,7 @@
 <text x="255" y="370">czy</text>
 <text x="334" y="420" font-size="3rem">?</text>
 
-<text x="450" y="600" font-size="3rem">Zobacz to w <tspan font-weight="700">S<tspan fill="#ff0060ff" fill-opacity="1" paint-order="stroke" stroke="black" stroke-width="0.07em">ɑ</tspan>m<tspan fill="#ff00ffff" fill-opacity="1" paint-order="stroke" stroke="black" stroke-width="0.07em">ɔ</tspan>głoskopie</tspan>!</text>
+<text x="320" y="800" font-size="3rem">Zobacz to w <tspan font-weight="700">S<tspan fill="#ff0060ff" fill-opacity="1" paint-order="stroke" stroke="black" stroke-width="0.07em">ɑ</tspan>m<tspan fill="#ff00ffff" fill-opacity="1" paint-order="stroke" stroke="black" stroke-width="0.07em">ɔ</tspan>głoskopie</tspan>!</text>
 
 </g>
 
