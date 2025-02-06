@@ -116,7 +116,7 @@ export default class TrainingView extends ScatterView {
             "<text class=serif>moje samogłoski</text>",
             ["e", "a", "o", "y"],
             ["#faa500", "#ff0000", "#ff00ff", "#964b00"],
-            true, "font-weight: 700", 0, 0, 0
+            true, null, 0, 0, 0
         )
     
         h = append_h(this.visibleVowelsChoice, "Język angielski (General American):", 3);

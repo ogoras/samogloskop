@@ -80,7 +80,7 @@ export default class ScatterPlot {
         if (!this.unit) return;
 
         this.unit.element ??= this.g.append("text")
-            .attr("font-family", "Helvetica, sans-serif")
+            .attr("font-family", "Inter, sans-serif")
             .text(this.unit.text);
         this.unit.element.attr("transform",
              `translate(${flipX ? this.width + 5 : -5}, ${flipY ? -5 : this.height + 5})`)

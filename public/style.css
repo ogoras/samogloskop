@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 body {
     max-height: 100vh;
     max-width: 100vw;
@@ -18,7 +20,7 @@ html {
 
 body {
     box-sizing: border-box;
-    font-family: 'Helvetica', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .serif {
@@ -26,7 +28,7 @@ body {
 }
 
 h1 {
-    font-family: 'Helvetica', sans-serif;
+    font-family: 'Inter', sans-serif;
     letter-spacing: 0.05em;
     font-weight: lighter;
     max-width: fit-content;
@@ -35,7 +37,7 @@ h1 {
 }
 
 p {
-    font-family: 'Helvetica', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.9em;
     margin: 0.2rem;
 }
@@ -76,9 +78,9 @@ body > div.stack {
 }
 
 h2 {
-    font-family: 'Helvetica', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 1.5em;
-    font-weight: lighter;
+    font-weight: normal;
     margin: 0.5rem;
 }
 
@@ -351,7 +353,7 @@ button.selected::after {
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none;
     font-size: 2.5rem;
-    font-family: 'Helvetica', sans-serif;
+    font-family: 'Inter', sans-serif;
     position: relative; /* Required for the ::before pseudo-element to be positioned relative to the button */
 }
 
