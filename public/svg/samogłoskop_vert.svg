@@ -2,7 +2,7 @@
 <?xml-stylesheet href="stylesheets/main.css" type="text/css"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="700" height="990" display="block">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="707" display="block">
 
 <g id="background">
 <defs>
@@ -14,7 +14,7 @@
 <rect x="0" y="0" width="100%" height="100%" fill="url(#gradient1)"></rect>
 </g>
 
-<g transform="translate(30, 30)" id="plot">
+<g transform="translate(-30, -100)" id="plot">
 <g transform="translate(0, 0)" fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" opacity="0.3">
 <path class="domain" stroke="currentColor" d="M609,-6V0H0V-6"></path><g class="tick" opacity="1" transform="translate(591.106787566847,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">−2.0</text></g><g class="tick" opacity="1" transform="translate(529.576883086954,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">−1.5</text></g><g class="tick" opacity="1" transform="translate(468.04697860706096,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">−1.0</text></g><g class="tick" opacity="1" transform="translate(406.51707412716803,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">−0.5</text></g><g class="tick" opacity="1" transform="translate(344.98716964727504,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">0.0</text></g><g class="tick" opacity="1" transform="translate(283.4572651673821,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">0.5</text></g><g class="tick" opacity="1" transform="translate(221.9273606874891,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">1.0</text></g><g class="tick" opacity="1" transform="translate(160.39745620759612,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">1.5</text></g><g class="tick" opacity="1" transform="translate(98.86755172770317,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">2.0</text></g><g class="tick" opacity="1" transform="translate(37.337647247810175,0)"><line stroke="currentColor" y2="-6"></line><text fill="currentColor" y="-9" dy="0em">2.5</text></g></g><g transform="translate(609, 0)" fill="none" font-size="10" font-family="sans-serif" text-anchor="start" opacity="0.3"><path class="domain" stroke="currentColor" d="M6,0H0V659H6"></path><g class="tick" opacity="1" transform="translate(0,29.46908219128569)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">−2.5</text></g><g class="tick" opacity="1" transform="translate(0,85.08740431636392)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">−2.0</text></g><g class="tick" opacity="1" transform="translate(0,140.70572644144218)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">−1.5</text></g><g class="tick" opacity="1" transform="translate(0,196.32404856652042)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">−1.0</text></g><g class="tick" opacity="1" transform="translate(0,251.94237069159865)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">−0.5</text></g><g class="tick" opacity="1" transform="translate(0,307.56069281667686)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">0.0</text></g><g class="tick" opacity="1" transform="translate(0,363.17901494175516)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">0.5</text></g><g class="tick" opacity="1" transform="translate(0,418.79733706683334)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">1.0</text></g><g class="tick" opacity="1" transform="translate(0,474.41565919191163)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">1.5</text></g><g class="tick" opacity="1" transform="translate(0,530.0339813169899)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">2.0</text></g><g class="tick" opacity="1" transform="translate(0,585.6523034420682)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">2.5</text></g><g class="tick" opacity="1" transform="translate(0,641.2706255671463)"><line stroke="currentColor" x2="6"></line><text fill="currentColor" x="9" dy="0.32em">3.0</text></g></g>
 
@@ -74,19 +74,19 @@
 
 <g id="points-4-8-2" fill="#ff00ffff" color="#ff00ffff" opacity="0.7" font-weight="700"><text x="490.1369307998596" y="328.28057475043283" font-size="1.67rem" class="glow">ɔ</text></g>
 
-</g></g>
-
-<g id="overlay-text">
+</g></g></g>
 
 <text x="175" y="215">czy</text>
 <text x="269" y="247" font-size="3rem">?</text>
 <text x="255" y="370">czy</text>
 <text x="334" y="420" font-size="3rem">?</text>
 
-<text x="320" y="800" font-size="3rem">Zobacz to w <tspan font-weight="700">S<tspan fill="#ff0060ff" fill-opacity="1" paint-order="stroke" stroke="black" stroke-width="0.07em">ɑ</tspan>m<tspan fill="#ff00ffff" fill-opacity="1" paint-order="stroke" stroke="black" stroke-width="0.07em">ɔ</tspan>głoskopie</tspan>!</text>
-
 </g>
 
-</g>
+<g id="overlay-text">
+
+<text x="52%" y="550" font-size="3rem">Zobacz to</text>
+<text x="52%" y="600" font-size="3rem"> w <tspan font-weight="700">S<tspan fill="#ff0060ff" fill-opacity="1" paint-order="stroke" stroke="black" stroke-width="0.07em">ɑ</tspan>m<tspan fill="#ff00ffff" fill-opacity="1" paint-order="stroke" stroke="black" stroke-width="0.07em">ɔ</tspan>głoskopie</tspan>!</text>
+
 </g>
 </svg>
