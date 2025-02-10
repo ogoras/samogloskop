@@ -6,7 +6,7 @@ export default class SpeechView extends View {
     constructor(controller, view) {
         super(controller);
         if (this.constructor === SpeechView) {
-            throw new Error("Cannot instantiate abstract class FormantView");
+            throw new Error(`Cannot instantiate abstract class ${this.constructor.name}`);
         }
 
         if (view instanceof View) {

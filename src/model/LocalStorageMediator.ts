@@ -92,6 +92,7 @@ export default class LocalStorageMediator extends Singleton {
                 case "0.3": // 0.3 -> 0.4 conversion is not necessary
                 case "0.4": // 0.4 -> 0.5 conversion not necessary either
                 case "0.5": // 0.5 -> 1.0 conversion, same thing
+                case "1.0": // 1.0 -> 1.1 ditto
                     break;
                 default:
                     if (dataConsentGiven) {
@@ -184,6 +185,20 @@ const localStorageProperties = [
         customGet: (string: string) => {
             const candidate = parseInt(string);
             return isNaN(candidate) ? undefined : candidate;
+        }
+    },
+    {
+        name: "isControlGroup",
+        localStorageName: "isControlGroup",
+        customGet: (string?: string) => {
+            string ??= Math.random() < 0.2 ? "true" : "false";  // roughly 20% of users are in the control group
+            return string === "true";
+        },
+        customSet: (value: boolean) => {
+            // This should only be called when loading a profile for instance
+            // But profile loading won't be implemented for now
+            throw new Error(`isControlGroup customSet(${value}) called, are you trying to implement profile loading?`);
+            return value ? "true" : "false";
         }
     }
 ]

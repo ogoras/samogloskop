@@ -1,4 +1,4 @@
-export default class MoreInfo{
+export default class MoreInfo {
     constructor(parent) {
         const div = this.div = document.createElement("div");
         parent.appendChild(div);
