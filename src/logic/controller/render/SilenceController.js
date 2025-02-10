@@ -1,7 +1,12 @@
 import nextController from "../nextController.js";
 import RenderController from "./RenderController.js";
+import SilenceView from "../../../view/recording/stats/SilenceView.js";
 
 export default class SilenceController extends RenderController {
+    initView(prev) {
+        this.view = new SilenceView(this, this.recorder, prev?.view);
+    }
+
     renderLoop() {
         if (super.renderLoop()) return true;
 

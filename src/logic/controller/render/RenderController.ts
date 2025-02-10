@@ -60,7 +60,9 @@ export default class RenderController extends RecordingController {
     }
 
     initFinalAndRun(prev: Controller) {
-        this.initSettingsAndView(prev);
+        this.initSettings(prev);
+        this.validate();
+        this.initView(prev);
         this.renderLoop();
     }
 
@@ -143,5 +145,6 @@ export default class RenderController extends RecordingController {
     override validate() {
         super.validate();
         if (!this.intensityStats) throw new Error("IntensityStats not initialized");
+        if (!this.initView) throw new Error(`initView function not defined in ${this.constructor.name}`);
     }
 }

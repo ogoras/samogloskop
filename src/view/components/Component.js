@@ -15,11 +15,13 @@ export default class Component {
     get hidden() { return this.#hidden; }
 
     constructor(className, id, parent = document.body) {
-        this.parent = parent;
         if (this.constructor === Component) {
             throw new Error(`Cannot instantiate abstract class ${this.constructor.name}`);
         }
 
+        if (parent === null) return;
+        
+        this.parent = parent;
         if (className) this.element.classList.add(className);
         if (id) this.element.id = id;
         parent.appendChild(this.element);

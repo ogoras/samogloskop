@@ -1,7 +1,6 @@
 import Controller from "../Controller.js";
 import SettingsController from "../SettingsController.js";
 import AudioRecorder from "../../recording/Recorder.js";
-import RecordingView from "../../../view/RecordingView.js";
 
 export default class RecordingController extends Controller {
     recorder?: AudioRecorder;
@@ -15,7 +14,7 @@ export default class RecordingController extends Controller {
 
     override init(prev: Controller) {
         this.initRecorder(prev);
-        this.initSettingsAndView(prev);
+        this.initSettings(prev);
     }
 
     initRecorder(prev: Controller) {
@@ -23,15 +22,9 @@ export default class RecordingController extends Controller {
         this.recorder = prev.recorder ?? new AudioRecorder();
     }
 
-    initSettingsAndView(prev: Controller) {
+    initSettings(prev: Controller) {
         this.settingsController = SettingsController.getInstance();
         this.settingsController.init(this);
-        if (prev.view instanceof RecordingView) {
-            this.view = prev.view;
-            this.view.controller = this;
-            this.view.updateView();
-        }
-        else this.view = new RecordingView(this, this.recorder);
     }
 
     protected override validate(): void {

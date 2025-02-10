@@ -96,13 +96,13 @@ export default class RecordingComponent extends Component {
         this.hint.style.display = "none";
         this.recordButton.classList.add('hide-strikethrough');
         this.recordingIndicator.style.backgroundColor = 'red';
-        this.view?.recordingStarted();
+        this.view?.recordingStarted?.();
         this.waveformVisualizer.reset();
     }
 
     recordingStopped() {
         this.recordButton.classList.remove('hide-strikethrough');
         this.recordingIndicator.style.backgroundColor = '#ff000000';
-        this.view?.recordingStopped();
+        this.view?.recordingStopped?.();
     }
 }
