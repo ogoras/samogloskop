@@ -1,6 +1,6 @@
-export default class ChoiceComponent {
-    choiceElement = document.createElement("div");
-    
+import Component from "../Component.js";
+
+export default class ChoiceComponent extends Component {
     constructor(
         parent,
         selectedIndex,
@@ -9,15 +9,14 @@ export default class ChoiceComponent {
         choices,
         container = parent.container
     ) {
-        if (this.constructor === ChoiceComponent) {
-            throw new Error("Cannot instantiate abstract class ConsentComponent");
-        }
-        const choiceElement = this.choiceElement;
-        container.appendChild(choiceElement);
+        super(null, null, container);
         
+        if (this.constructor === ChoiceComponent) {
+            throw new Error(`Cannot instantiate abstract class ${this.constructor.name}`);
+        }
         const p = document.createElement("p");
         p.innerHTML = text;
-        choiceElement.appendChild(p);
+        this.element.appendChild(p);
 
         for (let i = 0; i < choices.length; i++) {
             const choice = choices[i];
@@ -26,11 +25,11 @@ export default class ChoiceComponent {
             button.innerHTML = choice.text;
             if (choice.id) button.id = choice.id;
             button.onclick = () => {
-                this.choiceElement.remove();
+                this.element.remove();
                 parent.controller.choose(choice.returnValue);
                 extraAction?.();
             }
-            choiceElement.appendChild(button);
+            this.element.appendChild(button);
         }
     }
 }

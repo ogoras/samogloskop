@@ -23,7 +23,7 @@ export default class ScatterView extends SpeechView {
         this.formantCount = controller.formantCount;
 
         if (this.constructor === ScatterView) {
-            throw new Error("Cannot instantiate abstract class ScatterView");
+            throw new Error(`Cannot instantiate abstract class ${this.constructor.name}`);
         }
         if (recycle) {
             const view = arg;

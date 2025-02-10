@@ -1,21 +1,17 @@
-export default class MoreInfo {
+import Component from "./Component.js";
+
+export default class MoreInfo extends Component {
     constructor(parent) {
-        const div = this.div = document.createElement("div");
-        parent.appendChild(div);
+        super(null, null, parent);
 
-        this.element = document.createElement("a");
-        this.element.innerHTML = "Więcej informacji";
-        this.element.href = "info.html";
-        this.element.target = "_blank";
-        div.appendChild(this.element);
+        this.a = document.createElement("a");
+        this.a.innerHTML = "Więcej informacji";
+        this.a.href = "info.html";
+        this.a.target = "_blank";
+        this.a.style.fontSize = "0.8rem"
+        this.element.appendChild(this.a);
 
-        this.element.style.fontSize = "0.8rem"
-
-        div.style.textAlign = "right";
-        div.style.margin = "0.5rem";
-    }
-
-    destroy() {
-        this.div.remove();
+        this.element.style.textAlign = "right";
+        this.element.style.margin = "0.5rem";
     }
 }

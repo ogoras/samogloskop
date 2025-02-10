@@ -36,7 +36,7 @@ export default class StatsView extends SpeechView {
     constructor(controller) {
         super(controller);
         if (this.constructor === StatsView)
-            throw new Error("Cannot instantiate abstract class StatsView");
+            throw new Error(`Cannot instantiate abstract class ${this.constructor.name}`);
     }
 
     updateProgress(value, isTime = true) {

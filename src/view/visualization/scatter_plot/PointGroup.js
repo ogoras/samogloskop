@@ -10,7 +10,7 @@ export default class PointGroup extends Array {
         }
         super();
         if (this.constructor === PointGroup) {
-            throw new Error("Cannot instantiate abstract class Group");
+            throw new Error(`Cannot instantiate abstract class ${this.constructor.name}`);
         } 
         const [parent, index, defaults] = args;
         this.parent = parent;
