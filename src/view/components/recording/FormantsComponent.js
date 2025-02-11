@@ -1,23 +1,19 @@
 import Component from "../Component.js";
-import StackComponent from "../stack/StackComponent.js";
 
 export default class FormantsComponent extends Component {
     #empty = true;
 
-    constructor() {
+    constructor(parent) {
         super("formants-container", "formants");
+        this.parent = parent;
     }
 
-    createStackComponent() {
-        if (!this.#empty) throw new Error("Trying to add div.stack to non-empty FormantsComponent");
+    createCenterDiv() {
+        if (!this.#empty) throw new Error("Trying to add div.center to non-empty FormantsComponent");
 
-        const centerDiv = document.createElement("div");
-        centerDiv.classList.add("center");
-        this.element.appendChild(centerDiv);
-        this.stackComponent = new StackComponent(centerDiv);
-
+        this.centerComponent = new Component("center", null, this);
         this.#empty = false;
 
-        return this.stackComponent;
+        return this.centerComponent;
     }
 }

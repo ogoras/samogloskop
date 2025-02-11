@@ -28,4 +28,9 @@ export default class StackComponent extends Component {
             }
         }
     }
+
+    addH2() {
+        this.h2 = document.createElement("h2");
+        this.element.appendChild(this.h2);
+    }
 }

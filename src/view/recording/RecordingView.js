@@ -2,9 +2,10 @@ import View from '../View.js';
 import SettingsView from '../SettingsView.js';
 import FormantsComponent from '../components/recording/FormantsComponent.js';
 import SideComponent from '../components/recording/SideComponent.js';
+import StackComponent from "../components/stack/StackComponent.js";
 
 export default class RecordingView extends View {
-    constructor(controller, recorder, prev) {        
+    constructor(controller, recorder, prev, addStackToSide = false) {        
         super(controller);
 
         this.recorder = recorder;
@@ -17,9 +18,13 @@ export default class RecordingView extends View {
             document.body.innerHTML = "";
             document.body.classList.add("recording-view");
 
-            this.formantsComponent = new FormantsComponent();
-            this.stackComponent = this.formantsComponent.createStackComponent();
+            this.formantsComponent = new FormantsComponent(this);
             this.sideComponent = new SideComponent(this, recorder);
+            if (addStackToSide) {
+                this.stackComponent = new StackComponent(this.sideComponent);
+            } else {
+                this.stackComponent = new StackComponent(this.formantsComponent.createCenterDiv())
+            }
         }
         else {
             this.formantsComponent = prev.formantsComponent;

@@ -15,10 +15,6 @@ export default class Component {
     get hidden() { return this.#hidden; }
 
     constructor(className, id, parent = document.body) {
-        if (this.constructor === Component) {
-            throw new Error(`Cannot instantiate abstract class ${this.constructor.name}`);
-        }
-
         if (parent === null) return;
         
         this.parent = parent;
