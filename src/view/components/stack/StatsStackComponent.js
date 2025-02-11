@@ -65,7 +65,7 @@ export default class StatsStackComponent extends StackComponent {
         prev.p?.remove?.();
         
         this.timeRequired = timeRequired;
-        this.progressBar = new ProgressBar(this)
+        this.progressBar = prev.progressBar ?? new ProgressBar(this)
     }
 
     updateProgress(value, isTime = true) {

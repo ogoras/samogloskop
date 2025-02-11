@@ -1,7 +1,12 @@
 import nextController from "../nextController.js";
 import RenderController from "./RenderController.js";
+import MeasuringSpeechView from "../../../view/recording/stats/MeasuringSpeechView.js";
 
 export default class MeasuringSpeechController extends RenderController {
+    initView(prev) {
+        this.view = new MeasuringSpeechView(this, this.recorder, prev?.view);
+    }
+
     renderLoop() {
         if (super.renderLoop()) return true;
 

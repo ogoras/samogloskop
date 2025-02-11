@@ -59,4 +59,12 @@ export default class RecordingView extends View {
         document.body.innerHTML = "";
         document.body.classList.remove("recording-view");
     }
+
+    recordingStarted() {
+        this.stackComponent.recordingStarted?.();
+    }
+
+    recordingStopped() {
+        this.stackComponent.recordingStopped?.();
+    }
 }

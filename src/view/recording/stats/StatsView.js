@@ -9,6 +9,16 @@ export default class StatsView extends RecordingView {
         }
     }
 
+    set startTime(time) {
+        this.validate();
+        this.stackComponent.startTime = time;
+    }
+
+    set progress(percentage) {
+        this.validate();
+        this.stackComponent.updateProgress(percentage, false);
+    }
+
     set progressTime(time) {
         this.validate();
         this.stackComponent.updateProgress(time);

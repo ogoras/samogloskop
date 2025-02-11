@@ -10,7 +10,17 @@ export default class SilenceStackComponent extends StatsStackComponent {
             roundFunction: (x) => x.toFixed(2),
             color: "rgb(0, 0, 180)"
         }
-        
+
         this.addStatsElements();
+
+        this.recordingStarted();
+    }
+
+    recordingStarted() {
+        this.h2.innerHTML = "Nagrywanie ciszy, nie odzywaj się...";
+    }
+
+    recordingStopped() {
+        this.h2.innerHTML = "Nagrywanie ciszy wstrzymane.";
     }
 }

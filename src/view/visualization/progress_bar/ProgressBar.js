@@ -1,4 +1,6 @@
-export default class ProgressBar {
+import Component from "../../components/Component.js";
+
+export default class ProgressBar extends Component {
     /**
      * @param {string} value
      */
@@ -14,14 +16,9 @@ export default class ProgressBar {
         this.bar.style.width = percentage + "%";
     }
 
-    get element () {
-        return this.background;
-    }
-
     constructor(div, color) {
-        const background = this.background = document.createElement("div");
-        background.classList.add("progress-bar");
-        div.appendChild(background);
+        super("progress-bar", null, div);
+        const background = this.background = this.element;
         const bar = this.bar = document.createElement("div");
         bar.classList.add("progress");
         background.appendChild(bar);

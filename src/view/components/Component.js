@@ -44,6 +44,12 @@ export default class Component {
         this.element.appendChild(element);
     }
 
+    insertBefore(element, reference) {
+        if (element instanceof Component) element = element.element;
+        if (reference instanceof Component) reference = reference.element
+        this.element.insertBefore(element, reference);
+    }
+
     destroy() {
         this.element.remove();
     }
