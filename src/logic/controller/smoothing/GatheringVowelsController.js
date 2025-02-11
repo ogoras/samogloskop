@@ -1,5 +1,6 @@
 import nextController from "../nextController.js";
 import SmoothingController from "./SmoothingController.js";
+import GatheringNativeView from "../../../view/recording/gathering/GatheringNativeView.js";
 
 const SUBSTATES = {
     "WAITING": 0,
@@ -14,6 +15,10 @@ export default class GatheringVowelsController extends SmoothingController {
         if (!prev.sm.onTempState) prev.lsm[this.vowelsBeingGathered] = undefined;
         this.substate = SUBSTATES.WAITING;
         super.init(prev);
+    }
+
+    initView(prev) {
+        this.view = new GatheringNativeView(this, this.recorder, prev?.view);
     }
 
     renderLoop() {

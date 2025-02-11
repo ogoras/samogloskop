@@ -2,7 +2,6 @@ import StackComponent from "./StackComponent.js";
 import ProgressBar from "../../visualization/progress_bar/ProgressBar.js";
 
 export default class StatsStackComponent extends StackComponent {
-    element = undefined;
     startTime = 0;
 
     stats = {
@@ -53,15 +52,11 @@ export default class StatsStackComponent extends StackComponent {
     }
 
     constructor(prev, timeRequired) {
-        super(null);
+        super(null, prev);
         if (this.constructor === StatsStackComponent) {
             throw new Error(`Cannot instantiate abstract class ${this.constructor.name}`);
         }
 
-        this.element = prev.element;
-        this.h2 = prev.h2;
-        this.parent = prev.parent;
-        this.hidden = prev.hidden;
         prev.p?.remove?.();
         
         this.timeRequired = timeRequired;

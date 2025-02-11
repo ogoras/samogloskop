@@ -28,4 +28,8 @@ export default class MeasuringSpeechView extends StatsView {
     finish() {
         this.stackComponent.finish();
     }
+
+    destroy() {
+        this.stackComponent.removeAllExceptH2();
+    }
 }

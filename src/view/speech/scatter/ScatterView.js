@@ -43,14 +43,6 @@ export default class ScatterView extends SpeechView {
     }
 
     initializePlot(unit) {
-        // move the divStack element to .main-container below the recording container
-        const sideContainer = document.querySelector(".side-container");
-        sideContainer.appendChild(this.divStack);
-        document.querySelector(".recording-container").after(this.divStack);
-        // remove everything from div
-        while (this.div.firstChild) {
-            this.div.removeChild(this.div.firstChild);
-        }
         this.scatterPlot = new ScatterPlot("formants", true, unit);
         
         const vowelInv = VOWEL_INVENTORIES.PL;

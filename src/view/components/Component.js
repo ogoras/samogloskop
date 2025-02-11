@@ -53,4 +53,10 @@ export default class Component {
     destroy() {
         this.element.remove();
     }
+
+    clear() {
+        while (this.element.firstChild) {
+            this.element.removeChild(this.element.firstChild);
+        }
+    }
 }

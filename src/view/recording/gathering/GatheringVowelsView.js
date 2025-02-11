@@ -1,11 +1,7 @@
-import View from "./View.js";
+import StackComponent from "../../components/stack/StackComponent.js";
+import RecordingView from "../RecordingView.js"
 
-export default class GatheringVowelsView extends View {
-    constructor(parent) {
-        super(parent.controller)
-        this.parent = parent;
-    }
-
+export default class GatheringVowelsView extends RecordingView {
     #hintKeepGoing = false;
     #vowelGathered = false;
 
@@ -20,7 +16,17 @@ export default class GatheringVowelsView extends View {
         if (!value) throw new Error("Cannot unset vowelGathered");
         this.#vowelGathered = true;
         this.#hintKeepGoing = false;
-        this.parent.refreshRecording();
+        this.refreshRecording();
+    }
+
+    constructor(controller, recorder, prev) {
+        super(controller, recorder, prev);
+        this.stackComponent.destroy();
+        this.stackComponent = new StackComponent(null, this.stackComponent)
+    }
+
+    set secondaryProgress(percentage) {
+        this.stackComponent.updateSecondaryProgress?.(percentage);
     }
 
     vowelGatheredOnSpeechDetected(value) {
@@ -38,11 +44,13 @@ export default class GatheringVowelsView extends View {
     }
 
     recordingStarted(sayWhat) {
+        super.recordingStarted?.();
+
         if (this.#vowelGathered) {
-            this.parent.h2.innerHTML = "Świetnie! Sekunda przerwy...";
+            this.stackComponent.h2.innerHTML = "Świetnie! Sekunda przerwy...";
         }
         else {
-            this.parent.h2.innerHTML = 
+            this.stackComponent.h2.innerHTML = 
                 (this.#hintKeepGoing ? "Jeszcze trochę, mów" : "Powiedz")
                 + sayWhat;
         }

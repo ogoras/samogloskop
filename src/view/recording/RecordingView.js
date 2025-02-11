@@ -7,6 +7,8 @@ export default class RecordingView extends View {
     constructor(controller, recorder, prev) {        
         super(controller);
 
+        this.recorder = recorder;
+
         if (this.constructor === RecordingView) {
             throw new TypeError(`Cannot instantiate abstract class ${this.constructor.name}`);
         }
@@ -66,5 +68,13 @@ export default class RecordingView extends View {
 
     recordingStopped() {
         this.stackComponent.recordingStopped?.();
+    }
+    
+    refreshRecording() {
+        if (this.recorder.recording) {
+            this.recordingStarted();
+        } else {
+            this.recordingStopped();
+        }
     }
 }
