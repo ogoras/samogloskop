@@ -21,8 +21,13 @@ export default class RecordingView extends View {
         }
         else {
             this.formantsComponent = prev.formantsComponent;
+            this.formantsComponent.parent = this;
+            
             this.stackComponent = prev.stackComponent;
+            this.stackComponent.parent = this;
+
             this.sideComponent = prev.sideComponent;
+            this.sideComponent.parent = this;
         }
     }
 

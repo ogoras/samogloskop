@@ -7,7 +7,21 @@ export default class StatsView extends RecordingView {
         if (this.constructor === StatsView) {
             throw new TypeError(`Cannot instantiate abstract class ${this.constructor.name}`);
         }
+    }
 
-        this.stackComponent = new StatsStackComponent(this.stackComponent);
+    set progressTime(time) {
+        this.validate();
+        this.stackComponent.updateProgress(time);
+    }
+
+    set intensityStats(stats) {
+        this.validate();
+        this.stackComponent.intensityStats = stats;
+    }
+
+    validate() {
+        if (!(this.stackComponent instanceof StatsStackComponent)) {
+            throw new Error("stackComponent is not an instance of StatsStackComponent");
+        }
     }
 }
