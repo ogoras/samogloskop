@@ -1,6 +1,7 @@
 import RecordingComponent from "./RecordingComponent.js";
 import MoreInfo from "../MoreInfo.js";
 import Component from "../Component.js";
+import SelectorsComponent from "../selectors/SelectorsComponent.js";
 
 export default class SideComponent extends Component {
     constructor(parent, recorder) {
@@ -21,5 +22,11 @@ export default class SideComponent extends Component {
         this.recordingComponent.destroy();
         this.moreInfo.destroy();
         super.destroy();
+    }
+
+    createVowelSelectors(plotComponent, nativeOnly) {
+        this.selectorsComponent = new SelectorsComponent(this, plotComponent, nativeOnly);
+        this.recordingComponent.after(this.selectorsComponent);
+        return this.selectorsComponent;
     }
 }

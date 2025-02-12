@@ -45,7 +45,7 @@ export default class ConfirmVowelsView extends RecordingView {
 
         ConfirmVowelsView.viewedAtLeastOnce = true;
 
-        //this.sideComponent.createVowelSelectors(this.plotComponent);
+        this.sideComponent.createVowelSelectors(this.plotComponent, true);
     }
 
     nextMessage() {

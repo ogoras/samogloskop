@@ -2,7 +2,6 @@ import View from "../View.js";
 
 export default class Component {
     #hidden = false;
-    element = document.createElement("div");
 
     /**
      * @param {boolean} value
@@ -14,7 +13,12 @@ export default class Component {
 
     get hidden() { return this.#hidden; }
 
-    constructor(className, id, parent = document.body) {
+    constructor(className, id, parent = document.body, tagName = "div") {
+        if (tagName === "svg") {
+            this.element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        } else {
+            this.element = document.createElement(tagName);
+        }
         if (parent === null) return;
         
         this.parent = parent;
@@ -44,6 +48,11 @@ export default class Component {
         if (element instanceof Component) element = element.element;
         if (reference instanceof Component) reference = reference.element
         this.element.insertBefore(element, reference);
+    }
+
+    after(element) {
+        if (element instanceof Component) element = element.element;
+        this.element.after(element);
     }
 
     destroy() {

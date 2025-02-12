@@ -21,6 +21,7 @@ export default class GatheringVowelsView extends RecordingView {
 
     constructor(controller, recorder, prev) {
         super(controller, recorder, prev);
+        prev?.sideComponent?.selectorsComponent?.destroy();
         this.stackComponent.removeAllExceptH2();
         this.stackComponent = new StackComponent(null, this.stackComponent);
     }

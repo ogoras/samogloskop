@@ -37,7 +37,6 @@ export default class GatheringNativeView extends GatheringVowelsView {
             this.#plotInitialized = true;
         }
         this.refreshRecording();
-        console.log(this.stackComponent);
         this.stackComponent.h2.innerHTML = "Kalibracja samogłosek:<br>" + this.stackComponent.h2.innerHTML;
     }
 
@@ -67,7 +66,6 @@ export default class GatheringNativeView extends GatheringVowelsView {
     initializePlot() {
         // move the divStack element to .main-container below the recording container
         delete this.formantsComponent.stackComponent;
-        console.log(this.stackComponent);
         this.sideComponent.recordingComponent.element.after(this.stackComponent.element);
         // clear sideComponent
         this.formantsComponent.clear();
