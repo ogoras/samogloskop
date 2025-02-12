@@ -1,7 +1,7 @@
 import nextController from "../nextController.js";
 import State from "../../../const/State.js";
 import SmoothingController from "./SmoothingController.js";
-import ConfirmVowelsView from "../../../view/recording/confirm/ConfirmVowelsView.js";
+import ConfirmVowelsView from "../../../frontend/view/recording/confirm/ConfirmVowelsView.js";
 
 export default class ConfirmVowelsController extends SmoothingController {
     initView(prev) {

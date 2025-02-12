@@ -1,8 +1,8 @@
-import View from '../View.js';
-import SettingsView from '../SettingsView.js';
-import FormantsComponent from '../components/recording/FormantsComponent.js';
-import SideComponent from '../components/recording/SideComponent.js';
-import StackComponent from "../components/stack/StackComponent.js";
+import View from '../../../view/View.js';
+import SettingsView from '../../../view/SettingsView.js';
+import FormantsComponent from '../../components/recording/FormantsComponent.js';
+import SideComponent from '../../components/recording/SideComponent.js';
+import StackComponent from "../../components/stack/StackComponent.js";
 
 export default class RecordingView extends View {
     set disabled(value) {

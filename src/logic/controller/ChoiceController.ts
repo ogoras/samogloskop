@@ -1,10 +1,10 @@
 import Controller from "./Controller.js";
-import ChoiceView from "../../view/ChoiceView.js";
-import ConsentCompoment from "../../view/components/choice/ConsentComponent.js";
-import PresetComponent from "../../view/components/choice/PresetComponent.js";
-import View from "../../view/View.js";
+import ChoiceView from "../../frontend/view/ChoiceView.js";
+import ConsentCompoment from "../../frontend/components/choice/ConsentComponent.js";
+import PresetComponent from "../../frontend/components/choice/PresetComponent.js";
+import View from "../../frontend/view/View.js";
 import nextController from "./nextController.js";
-import type ChoiceComponent from "../../view/components/choice/ChoiceComponent.js";
+import type ChoiceComponent from "../../frontend/components/choice/ChoiceComponent.js";
 
 const CHOICE_COMPONENTS: {
     [key: string]: typeof ChoiceComponent

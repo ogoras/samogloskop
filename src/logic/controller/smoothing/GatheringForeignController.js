@@ -1,6 +1,6 @@
 import ForeignRecordings from '../../../model/recordings/ForeignRecordings.js';
 import GatheringVowelsController from "./GatheringVowelsController.js";
-import GatheringForeignView from "../../../view/recording/gathering/GatheringForeignView.js";
+import GatheringForeignView from "../../../frontend/view/recording/gathering/GatheringForeignView.js";
 
 export default class GatheringForeignController extends GatheringVowelsController {
     async init(prev) {

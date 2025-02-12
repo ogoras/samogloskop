@@ -1,6 +1,6 @@
 import nextController from "../nextController.js";
 import SmoothingController from "./SmoothingController.js";
-import GatheringNativeView from "../../../view/recording/gathering/GatheringNativeView.js";
+import GatheringNativeView from "../../../frontend/view/recording/gathering/GatheringNativeView.js";
 
 const SUBSTATES = {
     "WAITING": 0,

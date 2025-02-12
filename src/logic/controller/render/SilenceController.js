@@ -1,6 +1,6 @@
 import nextController from "../nextController.js";
 import RenderController from "./RenderController.js";
-import SilenceView from "../../../view/recording/stats/SilenceView.js";
+import SilenceView from "../../../frontend/view/recording/stats/SilenceView.js";
 
 export default class SilenceController extends RenderController {
     initView(prev) {

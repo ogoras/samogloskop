@@ -1,7 +1,7 @@
 import RecordingController from "./RecordingController.js";
 import nextController from "../nextController.js";
 import Controller from "../Controller.js";
-import CalibrationStartView from "../../../view/recording/CalibrationStartView.js";
+import CalibrationStartView from "../../../frontend/view/recording/CalibrationStartView.js";
 
 export default class CalibrationStartController extends RecordingController {
     #newIntensityStats = false;

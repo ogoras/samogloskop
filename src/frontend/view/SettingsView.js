@@ -1,5 +1,5 @@
 import View from "./View.js";
-import PresetComponent from "./components/choice/PresetComponent.js";
+import PresetComponent from "../frontend/components/choice/PresetComponent.js";
 import { VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH } from '../const/version.js';
 import State from "../const/State.js";
 

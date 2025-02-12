@@ -1,5 +1,5 @@
 import GatheringVowelsView from "./GatheringVowelsView.js";
-import DoubleProgressBar from "../../visualization/progress_bar/DoubleProgressBar.js";
+import DoubleProgressBar from "../../../visualization/progress_bar/DoubleProgressBar.js";
 
 export default class GatheringForeignView extends GatheringVowelsView {
     initialized = false;

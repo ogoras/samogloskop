@@ -1,5 +1,5 @@
 import GatheringVowelsView from "./GatheringVowelsView.js";
-import PlotComponent from "../../components/PlotComponent.js";
+import PlotComponent from "../../../components/PlotComponent.js";
 import ConfirmVowelsView from "../confirm/ConfirmVowelsView.js";
 
 export default class GatheringNativeView extends GatheringVowelsView {

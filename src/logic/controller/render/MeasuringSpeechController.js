@@ -1,6 +1,6 @@
 import nextController from "../nextController.js";
 import RenderController from "./RenderController.js";
-import MeasuringSpeechView from "../../../view/recording/stats/MeasuringSpeechView.js";
+import MeasuringSpeechView from "../../../frontend/view/recording/stats/MeasuringSpeechView.js";
 
 export default class MeasuringSpeechController extends RenderController {
     initView(prev) {

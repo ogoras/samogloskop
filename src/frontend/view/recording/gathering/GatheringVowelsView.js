@@ -1,4 +1,4 @@
-import StackComponent from "../../components/stack/StackComponent.js";
+import StackComponent from "../../../components/stack/StackComponent.js";
 import RecordingView from "../RecordingView.js"
 
 export default class GatheringVowelsView extends RecordingView {

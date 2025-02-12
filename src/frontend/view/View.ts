@@ -1,4 +1,4 @@
-import Controller from "../logic/controller/Controller.js";
+import Controller from "../../logic/controller/Controller.js";
 
 export default class View {
     controller: Controller;

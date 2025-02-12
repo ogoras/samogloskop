@@ -1,5 +1,5 @@
 import RecordingView from "../RecordingView.js";
-import StatsStackComponent from "../../components/stack/StatsStackComponent.js";
+import StatsStackComponent from "../../../components/stack/StatsStackComponent.js";
 
 export default class StatsView extends RecordingView {
     constructor(controller, recorder, prev) {

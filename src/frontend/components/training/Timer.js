@@ -1,4 +1,4 @@
-import nullish from "../../../../logic/util/nullish.js";
+import nullish from "../../../logic/util/nullish.js";
 
 export default class Timer {
     element = document.createElement("span");

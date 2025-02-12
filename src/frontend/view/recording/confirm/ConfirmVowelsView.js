@@ -1,5 +1,5 @@
 import RecordingView from '../RecordingView.js';
-import PlotComponent from '../../components/PlotComponent.js';
+import PlotComponent from '../../../components/PlotComponent.js';
 
 export default class ConfirmVowelsView extends RecordingView {
     static viewedAtLeastOnce = false;

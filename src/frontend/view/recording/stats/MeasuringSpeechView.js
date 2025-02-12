@@ -1,6 +1,6 @@
 import StatsView from './StatsView.js';
-import MeasuringStackComponent from '../../components/stack/MeasuringStackComponent.js';
-import { assertTrue } from '../../../logic/util/asserts.js';
+import MeasuringStackComponent from '../../../components/stack/MeasuringStackComponent.js';
+import { assertTrue } from '../../../../logic/util/asserts.js';
 
 export default class MeasuringSpeechView extends StatsView {
      /**

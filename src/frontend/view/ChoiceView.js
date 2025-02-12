@@ -1,5 +1,5 @@
 import View from './View.js';
-import MoreInfo from './components/MoreInfo.js';
+import MoreInfo from '../components/MoreInfo.js';
 
 export default class ChoiceView extends View {
     constructor(controller, ChoiceComponent, parentContainer, selectedIndex, extraAction) {

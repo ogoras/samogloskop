@@ -1,4 +1,4 @@
-import ScatterView from "../ScatterView.js";
+import RecordingView from '../recording/RecordingView.js';
 import { POINT_SIZES } from '../../../../const/POINT_SIZES.js';
 import { VOWEL_INVENTORIES } from "../../../../const/VOWEL_INVENTORIES.js";
 import Vowel from "../../../../model/vowels/Vowel.js";
@@ -6,7 +6,7 @@ import { append_h } from "../../../dom/dom_utils.js";
 import Timer from "./Timer.js";
 import SelectedVowelDisplay from "./SelectedVowelDisplay.js";
 
-export default class TrainingView extends ScatterView {
+export default class TestGroupView extends RecordingView {
     #initialized = false;
     #datasetAdded = false;
     #currentMessage = 0;
