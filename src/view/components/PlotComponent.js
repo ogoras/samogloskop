@@ -1,6 +1,6 @@
 import Component from "./Component.js";
 import ScatterPlot from "../visualization/scatter_plot/ScatterPlot.js"
-import { VOWEL_INVENTORIES } from '../../const/VOWEL_INVENTORIES.js';
+import { VOWEL_INVENTORIES, VOWEL_DICTS } from '../../const/VOWEL_INVENTORIES.js';
 import { POINT_SIZES } from '../../const/POINT_SIZES.js';
 
 export default class PlotComponent extends Component {
@@ -16,7 +16,7 @@ export default class PlotComponent extends Component {
             const ids = this.scatterPlot.appendGroup({ 
                 nested: true, 
                 formatting: { rgb: vowel.rgb },
-                onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
+                onClick: this.parent.vowelClicked ? () => this.parent.vowelClicked(vowel) : undefined
             }, 0);
             this.scatterPlot.appendGroup({ formatting: {
                 text: vowel.letter,
@@ -61,6 +61,18 @@ export default class PlotComponent extends Component {
 
     feedSmoothed(formants, rescale = true) {
         this.scatterPlot.setSeriesSingle(formants, [-1, 1], 50, rescale);
+    }
+
+    removeNativeVowel(vowel) {
+        const vowelDict = VOWEL_DICTS.PL;
+        this.scatterPlot.removeAllFromGroup([0, vowelDict[vowel.letter]]);
+    }
+
+    disableNativeClickability() {
+        const vowelInv = VOWEL_INVENTORIES.PL;
+        for (let i = 0; i < vowelInv.length; i++) {
+            this.scatterPlot.setGroupClickability(false, [0, i]);
+        }
     }
 
     restore() {

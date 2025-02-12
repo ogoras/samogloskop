@@ -21,8 +21,8 @@ export default class GatheringVowelsView extends RecordingView {
 
     constructor(controller, recorder, prev) {
         super(controller, recorder, prev);
-        this.stackComponent.destroy();
-        this.stackComponent = new StackComponent(null, this.stackComponent)
+        this.stackComponent.removeAllExceptH2();
+        this.stackComponent = new StackComponent(null, this.stackComponent);
     }
 
     set secondaryProgress(percentage) {

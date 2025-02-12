@@ -16,4 +16,5 @@ export default [
     "Krtań krztusiła krztyną rtęci",
     "Wlazł kotek na płotek i mruga, ładna to piosenka niedługa",
     "Niedługa, niekrótka, lecz w sam raz, zaśpiewaj koteczku, jeszcze raz",
+    "Żółta żaba żarła żur"
 ];

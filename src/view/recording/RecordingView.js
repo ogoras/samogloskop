@@ -22,8 +22,9 @@ export default class RecordingView extends View {
             this.sideComponent = new SideComponent(this, recorder);
             if (addStackToSide) {
                 this.stackComponent = new StackComponent(this.sideComponent);
+                this.sideComponent.recordingComponent.element.after(this.stackComponent.element);
             } else {
-                this.stackComponent = new StackComponent(this.formantsComponent.createCenterDiv())
+                this.stackComponent = new StackComponent(this.formantsComponent.createCenterDiv());
             }
         }
         else {
@@ -81,5 +82,16 @@ export default class RecordingView extends View {
         } else {
             this.recordingStopped();
         }
+    }
+
+    feedFormants(formants) {
+        this.assertSpeechFormants?.();
+        this.plotComponent?.feed(formants);
+    }
+
+    feedSmoothed(formants) {
+        if (!formants) return;
+        this.assertSpeechFormants?.();
+        this.plotComponent?.feedSmoothed(formants);
     }
 }

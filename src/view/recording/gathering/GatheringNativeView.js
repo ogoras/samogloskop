@@ -1,5 +1,6 @@
 import GatheringVowelsView from "./GatheringVowelsView.js";
 import PlotComponent from "../../components/PlotComponent.js";
+import ConfirmVowelsView from "../confirm/ConfirmVowelsView.js";
 
 export default class GatheringNativeView extends GatheringVowelsView {
     #speechDetected = false;
@@ -30,24 +31,14 @@ export default class GatheringNativeView extends GatheringVowelsView {
         this.nativeVowels = controller.nativeVowels;
         this.currentVowel = this.nativeVowels.nextVowel();
 
-        // if (view.constructor === ConfirmVowelsView) {
-        //     // this.#speechDetected = true;
-        //     this.scatterPlot = view.scatterPlot;
-        //     this.#plotInitialized = true;
-        // }
+        if (prev.constructor === ConfirmVowelsView) {
+            // this.#speechDetected = true;
+            this.plotComponent = prev.plotComponent;
+            this.#plotInitialized = true;
+        }
         this.refreshRecording();
+        console.log(this.stackComponent);
         this.stackComponent.h2.innerHTML = "Kalibracja samogłosek:<br>" + this.stackComponent.h2.innerHTML;
-    }
-
-    feedFormants(formants) {
-        this.assertSpeechFormants();
-        this.plotComponent.feed(formants);
-    }
-
-    feedSmoothed(formants) {
-        if (!formants) return;
-        this.assertSpeechFormants();
-        this.plotComponent.feedSmoothed(formants);
     }
 
     feedSaved(formants) {
