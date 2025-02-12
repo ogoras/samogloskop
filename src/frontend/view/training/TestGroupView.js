@@ -1,7 +1,4 @@
 import RecordingView from '../recording/RecordingView.js';
-import { POINT_SIZES } from '../../../const/POINT_SIZES.js';
-import { VOWEL_INVENTORIES } from "../../../const/VOWEL_INVENTORIES.js";
-import Vowel from "../../../model/vowels/Vowel.js";
 import { append_h } from "../../dom_utils.js";
 import Timer from "../../components/training/Timer.js";
 import SelectedVowelDisplay from "../../components/training/SelectedVowelDisplay.js";
