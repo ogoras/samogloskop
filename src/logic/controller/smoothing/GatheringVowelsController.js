@@ -52,14 +52,14 @@ export default class GatheringVowelsController extends SmoothingController {
                 const formantsSaved = this.formantsToSave;
                 const progress = vowelsBeingGathered.addFormants(this.formantsToSave);
                 delete this.formantsToSave;
-                view.feedSaved(formantsSaved);
+                view.feedSaved?.(formantsSaved);
 
                 if (vowelsBeingGathered.isVowelGathered()) {
                     view.progress = 1;
                     this.substate = SUBSTATES.GATHERED;
 
                     const vowel = vowelsBeingGathered.saveVowel();
-                    view.feedVowel(vowel);
+                    view.feedVowel?.(vowel);
                     view.vowelGathered = true;
                     if (vowelsBeingGathered.isDone()) {
                         if (this.sm.state.is("GATHERING_NATIVE")) {

@@ -25,6 +25,7 @@ export default class StackComponent extends Component {
             } catch (e) {
                 console.log("Error removing last child, is it possible that h2 wasn't present?");
                 console.log(e);
+                return;
             }
         }
     }

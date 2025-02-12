@@ -1,20 +1,17 @@
-import SpeechView from "./SpeechView.js";
-import View from "../View.js";
-import DoubleProgressBar from "../visualization/progress_bar/DoubleProgressBar.js";
-import GatheringVowelsView from "../GatheringVowelsView.js";
+import GatheringVowelsView from "./GatheringVowelsView.js";
+import DoubleProgressBar from "../../visualization/progress_bar/DoubleProgressBar.js";
 
-export default class GatheringForeignView extends SpeechView {
+export default class GatheringForeignView extends GatheringVowelsView {
     initialized = false;
     #currentlyPlaying = false;
     #startedRecording = false;
-    gatheringVowelsView = new GatheringVowelsView(this);
     #progressBarGray = false;
 
     /**
      * @param {boolean} value
      */
     set speechDetected(value) {
-        const vowelGathered = this.gatheringVowelsView.vowelGatheredOnSpeechDetected(value);
+        const vowelGathered = this.vowelGatheredOnSpeechDetected(value);
         if (vowelGathered) {
             this.showNextRecording();
             this.progressBar.color = `#${this.vowelRecording.phoneme.rgb}`;
@@ -24,37 +21,15 @@ export default class GatheringForeignView extends SpeechView {
         }
     }
 
-    /**
-     * @param {boolean} value
-     */
-    set vowelGathered(value) {
-        this.gatheringVowelsView.vowelGathered = value;
-    }
+    constructor(controller, recorder, prev) {
+        super(controller, recorder, prev);
 
-    constructor(controller, view) {
-        super(controller, view);
+        this.stackComponent.h2.innerHTML = `Teraz${controller.repeat ? ` ponownie` : ``} sprawdzimy Twoją umiejętność mówienia po angielsku z wymową amerykańską. Poproszę Cię o odsłuchanie nagrania, a następnie nagranie swojej próby wypowiedzenia usłyszanej samogłoski. Zrobimy tak dla wszystkich samogłosek występujących w dialekcie General American.`;
 
-        if (view instanceof View) {
-            this.div = view.div;
-            this.divStack = view.divStack;
-            this.h2 = view.h2;
-        } else {
-            this.div = view;
-            this.divStack = this.div.querySelector(".stack");
-
-            this.h2 = document.createElement("h2");
-            this.divStack.appendChild(this.h2);
+        if (prev) {
+            this.formantsComponent.clear();
+            this.formantsComponent.createCenterDiv().appendChild(this.stackComponent);
         }
-
-        this.h2.innerHTML = `Teraz${controller.repeat ? ` ponownie` : ``} sprawdzimy Twoją umiejętność mówienia po angielsku z wymową amerykańską. Poproszę Cię o odsłuchanie nagrania, a następnie nagranie swojej próby wypowiedzenia usłyszanej samogłoski. Zrobimy tak dla wszystkich samogłosek występujących w dialekcie General American.`;
-
-        this.div.innerHTML = "";
-        const centerDiv = document.createElement("div");
-        centerDiv.classList.add("center");
-        this.div.appendChild(centerDiv);
-        centerDiv.appendChild(this.divStack);
-
-        this.userVowels = controller.foreignInitial;
     }
 
     initializeRecordings(foreignRecordings) {
@@ -64,7 +39,7 @@ export default class GatheringForeignView extends SpeechView {
         const button = this.button = document.createElement("button");
         button.innerHTML = "Przejdź do pierwszego nagrania";
         button.onclick = () => this.showFirstRecording();
-        this.divStack.appendChild(button);
+        this.stackComponent.appendChild(button);
     }
 
     showFirstRecording() {
@@ -80,7 +55,7 @@ export default class GatheringForeignView extends SpeechView {
 
     #generateRecordingTable() {
         const recordingTable = document.createElement("div");
-        this.divStack.appendChild(recordingTable);
+        this.stackComponent.appendChild(recordingTable);
         // recordingTable is a vertical flexbox
         recordingTable.classList.add("recording-table");
 
@@ -128,19 +103,19 @@ export default class GatheringForeignView extends SpeechView {
         const speakerElement = this.speakerElement = document.createElement("div");
         // force the speaker element to be right-aligned
         speakerElement.classList.add("speaker-element");
-        this.divStack.appendChild(speakerElement);
+        this.stackComponent.appendChild(speakerElement);
     }
 
     showNextRecording() {
         // enable all play buttons
-        const playButtons = this.divStack.querySelectorAll(".play-button");
+        const playButtons = this.stackComponent.element.querySelectorAll(".play-button");
         playButtons.forEach(button => button.classList.remove("disabled"));
 
         const vowelRecording = this.vowelRecording = this.controller.newVowelRecording();
         const color = `#${vowelRecording.phoneme.rgb}`;
         const vowelIPA = this.vowelIPA = vowelRecording.phoneme.IPA.broad;
         const sayOnlyMessage = this.sayOnlyMessage = `<b>Powiedz tylko <q>${vowelIPA}</q>, a nie całe słowo!</b>`
-        this.h2.innerHTML = `Wysłuchaj nagrania${this.recording ? "" : ", w momencie gotowości włącz mikrofon"} i powtórz samogłoskę. ${sayOnlyMessage}`;
+        this.stackComponent.h2.innerHTML = `Wysłuchaj nagrania${this.recording ? "" : ", w momencie gotowości włącz mikrofon"} i powtórz samogłoskę. ${sayOnlyMessage}`;
 
         this.vowelIPA_element.innerHTML = vowelIPA;
         this.vowelIPA_element.style.color = color;
@@ -202,14 +177,13 @@ export default class GatheringForeignView extends SpeechView {
     }
 
     recordingStarted() {
-        super.recordingStarted();
-        const vowelGathered = this.gatheringVowelsView.recordingStarted(` <q>${this.vowelIPA}</q>, głośno i wyraźnie... ${this.sayOnlyMessage}`);
+        const vowelGathered = super.recordingStarted(` <q>${this.vowelIPA}</q>, głośno i wyraźnie... ${this.sayOnlyMessage}`);
         if (vowelGathered && !this.#progressBarGray) {
             this.progressBar.swapColors();
             this.#progressBarGray = true;
             this.progressBar.reset();
             // disable play buttons
-            const playButtons = this.divStack.querySelectorAll(".play-button");
+            const playButtons = this.stackComponent.element.querySelectorAll(".play-button");
             playButtons.forEach(button => button.classList.add("disabled"));
         }
 
@@ -222,27 +196,22 @@ export default class GatheringForeignView extends SpeechView {
         super.recordingStopped();
 
         if (this.#startedRecording) {
-            this.h2.innerHTML = this.gatheringVowelsView.startedSpeakingVowel ? "Włącz mikrofon, aby kontynuować..." :
+            this.stackComponent.h2.innerHTML = this.startedSpeakingVowel ? "Włącz mikrofon, aby kontynuować..." :
             "Wysłuchaj nagrania, w momencie gotowości włącz mikrofon i powtórz samogłoskę... " + this.sayOnlyMessage;
         }
     }
 
     #addProgressBar() {
         const color = `#${this.controller.currentEntry.phoneme.rgb}`
-        this.progressBar = new DoubleProgressBar(this.divStack, color);
+        this.progressBar = new DoubleProgressBar(this.stackComponent, color);
     }
 
-    updateProgress(value, isTime = true) {
-        if (isTime) throw new Error("Time-based progress is not supported in GatheringForeignView");
-        else this.progressBar.progress = value * 100;
+    set progress(value) {
+        this.progressBar.progress = value * 100;
     }
 
-    updateSecondaryProgress(value) {
+    set secondaryProgress(value) {
         if (!this.progressBar) return;
         this.progressBar.secondaryProgress = value * 100;
-    }
-
-    destroy() {
-        this.divStack.innerHTML = "";
     }
 }

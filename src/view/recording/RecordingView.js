@@ -5,6 +5,14 @@ import SideComponent from '../components/recording/SideComponent.js';
 import StackComponent from "../components/stack/StackComponent.js";
 
 export default class RecordingView extends View {
+    set disabled(value) {
+        this.sideComponent.recordingComponent.disabled = value;
+    }
+
+    get disabled() {
+        return this.sideComponent.recordingComponent.disabled;
+    }
+
     constructor(controller, recorder, prev, addStackToSide = false) {        
         super(controller);
 

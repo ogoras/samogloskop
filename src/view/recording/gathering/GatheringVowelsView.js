@@ -22,7 +22,12 @@ export default class GatheringVowelsView extends RecordingView {
     constructor(controller, recorder, prev) {
         super(controller, recorder, prev);
         prev?.sideComponent?.selectorsComponent?.destroy();
-        this.stackComponent.removeAllExceptH2();
+        if (this.stackComponent.h2) {
+            this.stackComponent.removeAllExceptH2();
+        } else {
+            this.stackComponent.clear();
+            this.stackComponent.addH2();
+        }
         this.stackComponent = new StackComponent(null, this.stackComponent);
     }
 
