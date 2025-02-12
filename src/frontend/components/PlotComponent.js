@@ -2,8 +2,11 @@ import Component from "./Component.js";
 import ScatterPlot from "../visualization/scatter_plot/ScatterPlot.js"
 import { VOWEL_INVENTORIES, VOWEL_DICTS } from '../../const/VOWEL_INVENTORIES.js';
 import { POINT_SIZES } from '../../const/POINT_SIZES.js';
+import Vowel from "../../model/vowels/Vowel.js";
 
 export default class PlotComponent extends Component {
+    #datasetCount = 1;
+
     constructor(parent, formantCount, unit) {
         super();
         this.parent = parent;
@@ -41,6 +44,54 @@ export default class PlotComponent extends Component {
         this.scatterPlot.addSeriesFormatting({ fontWeight: 700, serif: true }, 0);
     }
 
+    addVowelMeasurements(vowels, index, symbol, {pointOpacity = "80", ellipseOpacity0, ellipseOpacity1}, initiallyVisible = [true, true, true], formatting = {}) {
+        if (!symbol) throw new Error("Symbol must be provided.");
+        if (!index) throw new Error("Index must be provided.");
+        const vowelInv = VOWEL_INVENTORIES[vowels.language];
+        this.scatterPlot.insertGroup({
+            formatting: { symbol, ...formatting },
+            nested: true
+        }, index);
+        for (let i = 0; i < vowelInv.length; i++) {
+            const vowel = vowels.getVowelByLetter(new Vowel(vowelInv[i]).letter);
+            const ids = this.scatterPlot.appendGroup({
+                nested: true,
+                formatting: { rgb: vowel.rgb },
+                onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
+            }, index);
+            
+            const pointCloudIds = this.scatterPlot.appendGroup({
+                formatting: {
+                    size: POINT_SIZES.USER_DATAPOINTS * 0.7,
+                    text: vowel.letter,
+                    opacity: pointOpacity,
+                }
+            }, ids, vowels.getSingleMeasurements(vowel.letter));
+
+            this.scatterPlot.setSeriesVisibility(initiallyVisible[0], pointCloudIds);
+
+            const ellipseIds = this.scatterPlot.appendGroup({}, ids);
+            this.scatterPlot.addEllipse({
+                ...vowel.confidenceEllipse,
+                ellipseOpacity0,
+                ellipseOpacity1
+            }, ellipseIds);
+            
+            this.scatterPlot.setSeriesVisibility(initiallyVisible[1], ellipseIds);
+
+            const centroidIds = this.scatterPlot.appendGroup({
+                formatting: {
+                    size: POINT_SIZES.VOWEL_CENTROID * 0.7,
+                    text: vowel.letter,
+                    glow: true
+                }
+            }, ids, vowels.getCentroids(vowel.letter));
+
+            this.scatterPlot.setSeriesVisibility(initiallyVisible[2], centroidIds);
+        }
+        this.#datasetCount++
+    }
+
     saveFormants(formants, vowelId = 0) {
         this.scatterPlot.feed(formants, [0, vowelId, 0]);
     }
@@ -73,6 +124,10 @@ export default class PlotComponent extends Component {
         for (let i = 0; i < vowelInv.length; i++) {
             this.scatterPlot.setGroupClickability(false, [0, i]);
         }
+    }
+
+    setNativeVowelsVisiblity(visiblity) {
+        this.scatterPlot.getGroup(0).forEach(group => group.forEach((subgroup, index) => subgroup.g.style("display", visiblity[index] ? "block" : "none")));
     }
 
     restore() {

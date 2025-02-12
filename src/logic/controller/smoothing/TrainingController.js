@@ -3,6 +3,7 @@ import SmoothingController from "./SmoothingController.js";
 import ForeignRecordings from "../../../model/recordings/ForeignRecordings.js";
 import nextController from "../nextController.js";
 import LanguageWords from "../../../model/example_words/LanguageWords.js";
+import TestGroupView from "../../../frontend/view/training/TestGroupView.js";
 
 export default class TrainingController extends SmoothingController {
     #discarded = false;
@@ -39,6 +40,11 @@ export default class TrainingController extends SmoothingController {
             }, 
             { signal }
         );
+    }
+
+    initView(prev) {
+        if (this.#discarded) return;
+        this.view = new TestGroupView(this, this.recorder, prev?.view);
     }
 
     #onFocus() {
