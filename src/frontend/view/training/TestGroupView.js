@@ -87,45 +87,7 @@ export default class TestGroupView extends RecordingView {
             ellipseOpacity1: 0.4
         }, this.representationsSelected[3], { fontWeight: 700 });
 
-        this.visibleVowelsChoice = document.createElement("div"); // HTML grid with 3 columns
-        this.visibleVowelsChoice.style = "display: grid; grid-template-columns: 30px 30px 30px auto; gap: 0px";
-
-        let h = append_h(this.visibleVowelsChoice, "<text class=serif>Język polski:</text>", 3);
-        h.style = "grid-column-start: 1; grid-column-end: 5;";
-
-        this.createSelectorRow(
-            "<text class=serif>moje samogłoski</text>",
-            ["e", "a", "o", "y"],
-            ["#faa500", "#ff0000", "#ff00ff", "#964b00"],
-            true, null, 0, 0, 0
-        )
-    
-        h = append_h(this.visibleVowelsChoice, "Język angielski (General American):", 3);
-        h.style = "grid-column-start: 1; grid-column-end: 5;";
-
-        const englishLetters = ["ɛ", "ɑ", "ɔ", "ɪ"];
-        const englishColors = ["#d09800", "#ff0060", "#ff00ff", "#006000"];
-
-        this.createSelectorRow(
-            "<i>moje samogłoski</i>",
-            englishLetters, englishColors,
-            false, "font-style: italic", 1, 3, -2
-        );
-
-        this.createSelectorRow(
-            "<b>badanie Peterson & Barney, 1952</b>",
-            englishLetters, englishColors,
-            false, "font-weight: 700", 3, 1, -2
-        );
-
-        this.createSelectorRow(
-            "nagrania polityków",
-            englishLetters, englishColors,
-            false, null, 2, 2, -2
-        );
-
-        this.sideContainer.appendChild(this.visibleVowelsChoice);
-        this.selectedVowelDisplay.element.after(this.visibleVowelsChoice);
+        this.sideComponent.createVowelSelectors(this.plotComponent, false);
 
         this.#datasetAdded = true;
     }

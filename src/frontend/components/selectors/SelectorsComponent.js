@@ -2,6 +2,7 @@ import Component from "../Component.js";
 import CentroidSelectorComponent from "./CentroidSelectorComponent.js";
 import CloudSelectorComponent from "./CloudSelectorComponent.js";
 import EllipseSelectorComponent from "./EllipseSelectorComponent.js";
+import { append_h } from "../../dom_utils.js";
 
 export default class SelectorsComponent extends Component {
     polishCentroidsLocked = false;
@@ -23,7 +24,39 @@ export default class SelectorsComponent extends Component {
                 true
             )
         } else {
-            // TODO: implement
+            let h = append_h(this, "<text class=serif>Język polski:</text>", 3);
+            h.style = "grid-column-start: 1; grid-column-end: 5;";
+
+            this.#createSelectorRow(
+                "<text class=serif>moje samogłoski</text>",
+                ["e", "a", "o", "y"],
+                ["#faa500", "#ff0000", "#ff00ff", "#964b00"],
+                true, null, 0, 0, 0, this.view?.representationsSelected[0]
+            )
+        
+            h = append_h(this, "Język angielski (General American):", 3);
+            h.style = "grid-column-start: 1; grid-column-end: 5;";
+
+            const englishLetters = ["ɛ", "ɑ", "ɔ", "ɪ"];
+            const englishColors = ["#d09800", "#ff0060", "#ff00ff", "#006000"];
+
+            this.#createSelectorRow(
+                "<i>moje samogłoski</i>",
+                englishLetters, englishColors,
+                false, "font-style: italic", 1, 3, -2, this.view?.representationsSelected[1]
+            );
+
+            this.#createSelectorRow(
+                "<b>badanie Peterson & Barney, 1952</b>",
+                englishLetters, englishColors,
+                false, "font-weight: 700", 3, 1, -2, this.view?.representationsSelected[3]
+            );
+
+            this.#createSelectorRow(
+                "nagrania polityków",
+                englishLetters, englishColors,
+                false, null, 2, 2, -2, this.view?.representationsSelected[2]
+            );
         }
     }
 
