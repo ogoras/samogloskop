@@ -47,6 +47,7 @@ export default class TrainingController extends SmoothingController {
         if (this.#discarded) return;
         const TrainingView = this.lsm.isControlGroup ? ControlGroupView : TestGroupView;
         this.view = new TrainingView(this, this.recorder, prev?.view);
+        if (this.lsm.isControlGroup) this.recorder.stopRecording();
     }
 
     #onFocus() {

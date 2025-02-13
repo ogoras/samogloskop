@@ -197,12 +197,6 @@ const localStorageProperties = [
         customGet: (string?: string) => {
             string ??= Math.random() < 0.2 ? "true" : "false";  // roughly 20% of users are in the control group
             return string === "true";
-        },
-        customSet: (value: boolean) => {
-            // This should only be called when loading a profile for instance
-            // But profile loading won't be implemented for now
-            throw new Error(`isControlGroup customSet(${value}) called, are you trying to implement profile loading?`);
-            return value ? "true" : "false";
         }
     }
 ]

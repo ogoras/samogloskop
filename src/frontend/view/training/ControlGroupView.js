@@ -10,6 +10,7 @@ export default class ControlGroupView extends View {
     constructor(controller) {
         document.body.innerHTML = "";
         document.body.style.padding = "1em";
+        document.body.className = "";
         super(controller);
 
         this.moreInfo = new MoreInfo()
