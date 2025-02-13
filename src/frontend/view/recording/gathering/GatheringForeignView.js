@@ -1,5 +1,6 @@
 import GatheringVowelsView from "./GatheringVowelsView.js";
 import DoubleProgressBar from "../../../visualization/progress_bar/DoubleProgressBar.js";
+import TestGroupView from "../../training/TestGroupView.js";
 
 export default class GatheringForeignView extends GatheringVowelsView {
     initialized = false;
@@ -22,6 +23,9 @@ export default class GatheringForeignView extends GatheringVowelsView {
     }
 
     constructor(controller, recorder, prev) {
+        if (prev instanceof TestGroupView) {
+            prev.reset();
+        }
         super(controller, recorder, prev);
 
         this.stackComponent.h2.innerHTML = `Teraz${controller.repeat ? ` ponownie` : ``} sprawdzimy Twoją umiejętność mówienia po angielsku z wymową amerykańską. Poproszę Cię o odsłuchanie nagrania, a następnie nagranie swojej próby wypowiedzenia usłyszanej samogłoski. Zrobimy tak dla wszystkich samogłosek występujących w dialekcie General American.`;

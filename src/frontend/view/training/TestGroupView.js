@@ -108,11 +108,10 @@ export default class TestGroupView extends RecordingView {
         }
     }
 
-    destroy() {
-        super.destroy();
-        
+    reset() {
+        console.log(this);
         this.button.remove();
-        this.visibleVowelsChoice?.remove();
+        this.selectedVowelDisplay.element.remove();
         this.stackComponent.element.style = null;
     }
 
@@ -154,5 +153,16 @@ export default class TestGroupView extends RecordingView {
         }
         
         this.#selectedVowelId = newSelectedId;
+    }
+
+    feedFormants(formants) {
+        this.assertSpeechFormants?.();
+        this.plotComponent?.feed(formants, false);
+    }
+
+    feedSmoothed(formants) {
+        if (!formants) return;
+        this.assertSpeechFormants?.();
+        this.plotComponent?.feedSmoothed(formants, false);
     }
 }
