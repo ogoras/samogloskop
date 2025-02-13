@@ -3,6 +3,7 @@ import Component from "../Component.js";
 export default class SelectorComponent extends Component {
     #selected;
     hideOnUnselect = false;
+    polishCentroidsLocked = false;
 
     set selected(choice) {
         this.#selected = choice;
@@ -14,15 +15,15 @@ export default class SelectorComponent extends Component {
         return this.#selected;
     }
 
-    constructor(parent, plotGroupId, subgroupId, locked = false, showOnSelect = false, tagName = "svg") {
+    constructor(parent, plotGroupId, subgroupId, locked = () => false, showOnSelect = false, tagName = "svg") {
         super(null, null, parent, tagName);
         
         this.plotGroupId = plotGroupId;
         this.subgroupId = subgroupId;
 
         this.element.addEventListener("click", () => {
-            if (locked) return;
-            if (showOnSelect) this.hideOnUnselect = false;
+            if (locked()) return;
+            if (showOnSelect) this.parent.hidePBEllipsesOnUnselect = false;
             this.selected = !this.selected;
         });
     }

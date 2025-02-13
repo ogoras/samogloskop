@@ -57,7 +57,7 @@ export default class PlotComponent extends Component {
             const ids = this.scatterPlot.appendGroup({
                 nested: true,
                 formatting: { rgb: vowel.rgb },
-                onClick: this.vowelClicked ? () => this.vowelClicked(vowel) : undefined
+                onClick: this.parent.vowelClicked ? () => this.parent.vowelClicked(vowel) : undefined
             }, index);
             
             const pointCloudIds = this.scatterPlot.appendGroup({
@@ -128,6 +128,23 @@ export default class PlotComponent extends Component {
 
     setNativeVowelsVisiblity(visiblity) {
         this.scatterPlot.getGroup(0).forEach(group => group.forEach((subgroup, index) => subgroup.g.style("display", visiblity[index] ? "block" : "none")));
+    }
+
+    selectForeignVowel(vowelId) {
+        for (let i = 1; i <= 3; i++) {
+            this.scatterPlot.getGroup(i).forEach((group, index) => {
+                if (index === vowelId) return;
+                group.g.style("display", "none")
+            });
+        }
+    }
+
+    showAllForeign() {
+        for (let i = 1; i <= 3; i++) {
+            this.scatterPlot.getGroup(i).forEach((group, index) => {
+                group.g.style("display", "block")
+            });
+        }
     }
 
     restore() {

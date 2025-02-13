@@ -63,11 +63,11 @@ export default class SelectorsComponent extends Component {
     #createSelectorRow(divHTML, letters, colors, serif, style, localGroupId = 0, plotGroupId = 0, cloudOffset = 0, initiallySelected) {
         const selectorsInRow = [];
         
-        selectorsInRow.push(new CentroidSelectorComponent(this, plotGroupId, 2, initiallySelected?.[2] ?? true, false, false, letters[0], colors[0], serif, style));
+        selectorsInRow.push(new CentroidSelectorComponent(this, plotGroupId, 2, initiallySelected?.[2] ?? true, localGroupId == 0 ? () => { return this.polishCentroidsLocked } : undefined, undefined, letters[0], colors[0], serif, style));
 
-        selectorsInRow.push(new CloudSelectorComponent(this, plotGroupId, 0, initiallySelected?.[0] ?? true, false, false, letters.slice(1), colors.slice(1), cloudOffset, serif, style));
+        selectorsInRow.push(new CloudSelectorComponent(this, plotGroupId, 0, initiallySelected?.[0] ?? true, undefined, undefined, letters.slice(1), colors.slice(1), cloudOffset, serif, style));
 
-        selectorsInRow.push(new EllipseSelectorComponent(this, plotGroupId, 1, initiallySelected?.[1] ?? true));
+        selectorsInRow.push(new EllipseSelectorComponent(this, plotGroupId, 1, initiallySelected?.[1] ?? true, undefined, localGroupId == 3));
 
         this.selectors.push(selectorsInRow);
 

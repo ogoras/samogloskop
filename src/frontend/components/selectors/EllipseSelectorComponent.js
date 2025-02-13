@@ -1,7 +1,7 @@
 import SelectorComponent from './SelectorComponent.js';
 
 export default class EllipseSelectorComponent extends SelectorComponent {
-    constructor(parent, plotGroupId, subgroupId, initiallySelected, locked = false, showOnSelect = false) {
+    constructor(parent, plotGroupId, subgroupId, initiallySelected, locked = () => false, showOnSelect = false) {
         super(parent, plotGroupId, subgroupId, locked, showOnSelect);
 
         this.element.setAttribute("width", "30");

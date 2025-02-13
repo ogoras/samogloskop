@@ -1,7 +1,7 @@
 import SelectorComponent from './SelectorComponent.js';
 
 export default class CloudSelectorComponent extends SelectorComponent {
-    constructor(parent, plotGroupId, subgroupId, initiallySelected, locked = false, showOnSelect = false, letters, colors, xoffset, serif, style) {
+    constructor(parent, plotGroupId, subgroupId, initiallySelected, locked = () => false, showOnSelect = false, letters, colors, xoffset, serif, style) {
         super(parent, plotGroupId, subgroupId, locked, showOnSelect);
         this.colors = colors;
 

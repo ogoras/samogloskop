@@ -1,7 +1,7 @@
 import SelectorComponent from './SelectorComponent.js';
 
 export default class CentroidSelectorComponent extends SelectorComponent {
-    constructor(parent, plotGroupId, subgroupId, initiallySelected, locked = false, showOnSelect = false, letter, color, serif, style) {
+    constructor(parent, plotGroupId, subgroupId, initiallySelected, locked = () => false, showOnSelect = false, letter, color, serif, style) {
         super(parent, plotGroupId, subgroupId, locked, showOnSelect, "text");
         this.color = color;
 

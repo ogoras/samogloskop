@@ -10,7 +10,6 @@ export default class TestGroupView extends RecordingView {
     #currentMessage = 0;
     #selectedVowelId = null;
     #werePolishCentroidsVisible = false;
-    hidePBEllipsesOnUnselect = false;
 
     representationsSelected = [
         [false, false, false],
@@ -88,6 +87,7 @@ export default class TestGroupView extends RecordingView {
         }, this.representationsSelected[3], { fontWeight: 700 });
 
         this.sideComponent.createVowelSelectors(this.plotComponent, false);
+        this.sideComponent.recordingComponent.after(this.selectedVowelDisplay.element);
 
         this.#datasetAdded = true;
     }
@@ -98,7 +98,7 @@ export default class TestGroupView extends RecordingView {
 
     nextMessage() {
         if (this.#currentMessage == 0) {
-            this.h2.innerHTML = `W dowolnym momencie, jeśli czujesz, że lepiej już wymawiasz te samogłoski, możesz przejść dalej do testu końcowego.`;
+            this.stackComponent.h2.innerHTML = `W dowolnym momencie, jeśli czujesz, że lepiej już wymawiasz te samogłoski, możesz przejść dalej do testu końcowego.`;
             this.button.innerHTML = "Przejdź dalej";
             this.#currentMessage++;
         } else if (this.#currentMessage == 1) {
@@ -113,7 +113,7 @@ export default class TestGroupView extends RecordingView {
         
         this.button.remove();
         this.visibleVowelsChoice?.remove();
-        this.stackComponent.style = "";
+        this.stackComponent.element.style = null;
     }
 
     vowelClicked(vowel) {
@@ -125,41 +125,32 @@ export default class TestGroupView extends RecordingView {
         if (newSelectedId === this.#selectedVowelId) {
             this.#selectedVowelId = null;
             this.selectedVowelDisplay.deselectVowel();
-            this.stackComponent.style.display = null; // reset to default
+            this.stackComponent.element.style.display = null; // reset to default
 
-            for (let i = 1; i <= 3; i++) {
-                this.scatterPlot.getGroup(i).forEach((group, index) => {
-                    if (index === newSelectedId) return;
-                    group.g.style("display", "block")
-                });
-            }
-            this.selectorSetters[0][0](this.#werePolishCentroidsVisible);
-            this.polishCentroidsLocked = false;
+            this.plotComponent.showAllForeign();
+            
+            this.sideComponent.selectorsComponent.selectors[0][0].selected = this.#werePolishCentroidsVisible;
+            this.sideComponent.selectorsComponent.polishCentroidsLocked = false;
 
-            if (this.hidePBEllipsesOnUnselect) {
-                this.selectorSetters[2][2](false);
-                this.hidePBEllipsesOnUnselect = null;
+            if (this.sideComponent.selectorsComponent.hidePBEllipsesOnUnselect) {
+                this.sideComponent.selectorsComponent.selectors[2][2].selected = false;
+                this.sideComponent.selectorsComponent.hidePBEllipsesOnUnselect = null;
             }
             return;
         }
 
-        this.stackComponent.style.display = "none";
+        this.stackComponent.element.style.display = "none";
         this.selectedVowelDisplay.selectVowel(vowel);
+        this.plotComponent.selectForeignVowel(newSelectedId);
 
-        for (let i = 1; i <= 3; i++) {
-            this.scatterPlot.getGroup(i).forEach((group, index) => {
-                if (index === newSelectedId) return;
-                group.g.style("display", "none")
-            });
-        }
-        this.#werePolishCentroidsVisible = this.representationsSelected[0][2];
-        this.selectorSetters[0][0](true);
-        this.polishCentroidsLocked = true;
+        this.#werePolishCentroidsVisible = this.sideComponent.selectorsComponent.selectors[0][2].selected;
+        this.sideComponent.selectorsComponent.selectors[0][0].selected = true;
+        this.sideComponent.selectorsComponent.polishCentroidsLocked = true;
         
-        this.hidePBEllipsesOnUnselect = false;
-        if (this.representationsSelected[3].every(value => !value)) {
-            this.hidePBEllipsesOnUnselect = true;
-            this.selectorSetters[2][2](true);
+        this.sideComponent.selectorsComponent.hidePBEllipsesOnUnselect = false;
+        if (this.sideComponent.selectorsComponent.selectors[2].every(selector => !selector.selected)) {
+            this.sideComponent.selectorsComponent.hidePBEllipsesOnUnselect = true;
+            this.sideComponent.selectorsComponent.selectors[2][2].selected = true;
         }
         
         this.#selectedVowelId = newSelectedId;
