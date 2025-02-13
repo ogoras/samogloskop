@@ -1,33 +1,63 @@
-export default class SelectedVowelDisplay {
-    element = document.createElement("div");
-    h2 = document.createElement("h2");
+import Component from "../Component.js";
+import VowelButtonsComponent from "./VowelButtonsComponent.js";
+
+export default class SelectedVowelDisplay extends Component {
+    vowelHeader = document.createElement("h2");
+    selectionHeader = document.createElement("h2");
     hint = document.createElement("p");
     wordList = document.createElement("div");
+    button = document.createElement("button");
     
     #currentlyPlaying = false;
+    #standalone;
     
-    constructor(controller, container, prevSibling) {
+    constructor(parent, controller, container, sibling, isAfterSibling = true, standalone = false) {
+        super(null, null, container);
+
+        this.#standalone = standalone;
         this.controller = controller;
+        this.parent = parent;
 
-        const h2 = this.h2;
-        h2.innerHTML = "<span></span> występuje w słowach:";
-        this.span = h2.querySelector("span");
-        h2.style.fontWeight = "bolder";
-        this.element.appendChild(h2);
-        h2.style.display = "none";
+        const vowelHeader = this.vowelHeader;
+        vowelHeader.innerHTML = "<span></span> występuje w słowach:";
+        this.span = vowelHeader.querySelector("span");
+        vowelHeader.style.fontWeight = "bolder";
+        this.element.appendChild(vowelHeader);
+        vowelHeader.style.display = "none";
 
-        const hint = this.hint;
-        hint.innerHTML = "Naciśnij na samogłoskę na wykresie, żeby się na niej skupić.";
-        hint.classList.add("gray");
-        this.element.appendChild(hint);
+        if (!standalone) {
+            const hint = this.hint;
+            hint.innerHTML = "Naciśnij na samogłoskę na wykresie, żeby się na niej skupić.";
+            hint.classList.add("gray");
+            this.element.appendChild(hint);
+        } else {
+            const selectionHeader = this.selectionHeader;
+            selectionHeader.innerHTML = "Losowy wybór przydzielił Cię do grupy kontrolnej. Oznacza to, że wciąż możesz ćwiczyć samogłoski, ale bez pomocy wykresu. Po badaniu otrzymasz link do pełnej wersji aplikacji. Wybierz samogłoskę, żeby zobaczyć słowa, w których występuje:";
+            this.element.appendChild(selectionHeader);
+
+            this.vowelButtonsComponent = new VowelButtonsComponent(this);
+
+            this.buttonContainer = document.createElement("div");
+            this.buttonContainer.style.display = "flex";
+            this.buttonContainer.style.justifyContent = "center";
+            this.buttonContainer.style.paddingTop = "1em";
+            this.element.appendChild(this.buttonContainer);
+
+            this.button.innerHTML = "OK";
+            this.button.onclick = () => this.nextMessage();
+            this.buttonContainer.appendChild(this.button);
+        }
 
         const wordList = this.wordList;
         wordList.innerHTML = "Niestety, nie udało się wczytać listy słów :(";
         this.element.appendChild(wordList);
         this.wordList.style.display = "none";
 
-        container.appendChild(this.element);
-        prevSibling.after(this.element);
+        if (isAfterSibling) {
+            sibling.after(this.element);
+        } else {
+            container.insertBefore(this.element, sibling);
+        }
     }
 
     addWords(words) {
@@ -35,7 +65,7 @@ export default class SelectedVowelDisplay {
     }
 
     selectVowel(vowel) {
-        this.h2.style.display = null;
+        this.vowelHeader.style.display = null;
         this.hint.innerHTML = "Żeby odznaczyć samogłoskę, naciśnij na nią ponownie.";
 
         const span = this.span;
@@ -165,12 +195,37 @@ export default class SelectedVowelDisplay {
                 }
             }
         }
+
+        if (this.#standalone) {
+            this.vowelButtonsComponent.hidden = true;
+            this.selectionHeader.style.display = "none";
+            this.parent.changeCornerButton();
+            this.buttonContainer.style.display = "none";
+        }
     }
 
     deselectVowel() {
-        this.h2.style.display = "none";
+        this.vowelHeader.style.display = "none";
         this.hint.style.display = "none";
         this.wordList.style.display = "none";
         this.wordList.style.marginBottom = null;
+
+        if (this.#standalone) {
+            this.vowelButtonsComponent.hidden = false;
+            this.selectionHeader.style.display = null;
+            this.buttonContainer.style.display = "flex";
+        }
+    }
+
+    nextMessage() {
+        this.selectionHeader.innerHTML = "Jeśli czujesz się w gotowości do testu końcowego, naciśnij przycisk na dole."
+
+        this.button.innerHTML = "Przejdź do testu końcowego";
+        this.button.onclick = () => {
+            if (confirm("Czy na pewno chcesz przejść do testu końcowego? Nie będzie można już wrócić do ćwiczenia.")) {
+                document.body.style.padding = null;
+                this.controller.next();
+            }
+        }
     }
 } 

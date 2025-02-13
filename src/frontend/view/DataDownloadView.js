@@ -1,5 +1,5 @@
 import View from "./View.js";
-import MoreInfo from "../frontend/components/MoreInfo.js";
+import MoreInfo from "../components/MoreInfo.js";
 
 export default class DataDownloadView extends View {
     constructor(controller) {

@@ -1,5 +1,4 @@
 import RecordingView from '../recording/RecordingView.js';
-import { append_h } from "../../dom_utils.js";
 import Timer from "../../components/training/Timer.js";
 import SelectedVowelDisplay from "../../components/training/SelectedVowelDisplay.js";
 import PlotComponent from '../../components/PlotComponent.js';
@@ -66,7 +65,7 @@ export default class TestGroupView extends RecordingView {
 
         this.plotComponent.disableNativeClickability();
 
-        this.selectedVowelDisplay = new SelectedVowelDisplay(controller, this.sideComponent, this.sideComponent.recordingComponent);
+        this.selectedVowelDisplay = new SelectedVowelDisplay(this, controller, this.sideComponent, this.sideComponent.recordingComponent);
 
         this.#initialized = true;
     }
@@ -101,7 +100,7 @@ export default class TestGroupView extends RecordingView {
     nextMessage() {
         if (this.#currentMessage == 0) {
             this.stackComponent.h2.innerHTML = `W dowolnym momencie, jeśli czujesz, że lepiej już wymawiasz te samogłoski, możesz przejść dalej do testu końcowego.`;
-            this.button.innerHTML = "Przejdź dalej";
+            this.button.innerHTML = "Przejdź do testu końcowego";
             this.#currentMessage++;
         } else if (this.#currentMessage == 1) {
             if (confirm("Czy na pewno chcesz przejść do testu końcowego? Nie będzie można już wrócić do ćwiczenia.")) {

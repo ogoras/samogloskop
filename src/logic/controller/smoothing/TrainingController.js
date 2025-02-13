@@ -4,6 +4,7 @@ import ForeignRecordings from "../../../model/recordings/ForeignRecordings.js";
 import nextController from "../nextController.js";
 import LanguageWords from "../../../model/example_words/LanguageWords.js";
 import TestGroupView from "../../../frontend/view/training/TestGroupView.js";
+import ControlGroupView from "../../../frontend/view/training/ControlGroupView.js";
 
 export default class TrainingController extends SmoothingController {
     #discarded = false;
@@ -44,7 +45,8 @@ export default class TrainingController extends SmoothingController {
 
     initView(prev) {
         if (this.#discarded) return;
-        this.view = new TestGroupView(this, this.recorder, prev?.view);
+        const TrainingView = this.lsm.isControlGroup ? ControlGroupView : TestGroupView;
+        this.view = new TrainingView(this, this.recorder, prev?.view);
     }
 
     #onFocus() {

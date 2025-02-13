@@ -27,11 +27,15 @@ export default class LocalStorageMediator extends Singleton {
                             item = prop.customGet(item);
                         }
                         this.#cache[prop.name] = item;
+                        if (!localStorage.getItem(prop.localStorageName) && this.dataConsentGiven) {
+                            if (nullish(item)) return;
+                            localStorage.setItem(prop.localStorageName, item);
+                        }
                     }
                     return this.#cache[prop.name];
                 },
                 set(value) {
-                    if (value === undefined) {
+                    if (nullish(value)) {
                         delete this.#cache[prop.name];
                         localStorage.removeItem(prop.localStorageName);
                     } else {
