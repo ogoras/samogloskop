@@ -51,7 +51,16 @@ export default class TrainingController extends SmoothingController {
     }
 
     #onFocus() {
-        if (this.#lastFocused !== null) throw new Error("lastFocused is not null on the focus event");
+        if (this.#lastFocused !== null) {
+            // Got this error once, don't know how to reproduce it
+            // TrainingController.js:49 Uncaught Error: lastFocused is not null on the focus event
+            //      at #onFocus (TrainingController.js:49:19)
+            console.log("lastFocused:");
+            console.log(this.#lastFocused);
+            console.log("Now:");
+            console.log(Date.now());
+            throw new Error("lastFocused is not null on the focus event");
+        }
         this.#lastFocused = Date.now();
         this.view.timer.resume();
     }
