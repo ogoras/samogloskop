@@ -28,6 +28,8 @@ export default class TestGroupView extends RecordingView {
             this.stackComponent.addH2();
         }
 
+        this.sideComponent.recordingComponent.after(this.stackComponent);
+
         this.stackComponent.h2.innerHTML = `Jesteś teraz w trybie ćwiczenia. 
                 Powiedz samogłoskę i zobacz jej formanty na tle samogłosek podstawowych.`;
         
@@ -109,7 +111,6 @@ export default class TestGroupView extends RecordingView {
     }
 
     reset() {
-        console.log(this);
         this.button.remove();
         this.selectedVowelDisplay.element.remove();
         this.stackComponent.element.style = null;

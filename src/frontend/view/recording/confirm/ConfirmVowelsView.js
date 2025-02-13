@@ -1,5 +1,6 @@
 import RecordingView from '../RecordingView.js';
 import PlotComponent from '../../../components/PlotComponent.js';
+import StackComponent from '../../../components/stack/StackComponent.js';
 
 export default class ConfirmVowelsView extends RecordingView {
     static viewedAtLeastOnce = false;
@@ -9,8 +10,13 @@ export default class ConfirmVowelsView extends RecordingView {
     constructor(controller, recorder, prev) {
         super(controller, recorder, prev, true);
 
+        this.sideComponent.recordingComponent.after(this.stackComponent);
+
         if (!this.stackComponent.h2) {
+            this.stackComponent.clear();
             this.stackComponent.addH2();
+        } else {
+            this.stackComponent.removeAllExceptH2();
         }
 
         this.stackComponent.h2.innerHTML = (prev

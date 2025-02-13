@@ -16,4 +16,9 @@ export default class FormantsComponent extends Component {
 
         return this.centerComponent;
     }
+
+    clear() {
+        super.clear();
+        this.#empty = true;
+    }
 }
