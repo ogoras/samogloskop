@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 1,
     VERSION_MINOR = 1,  // will only change when the data format changes
-    VERSION_PATCH = 0;  // will change only with published commits, the in-beetween development versions are not counted
+    VERSION_PATCH = 1;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: Introduced localStorage
 // v0.1: Added Lobanov scaling
@@ -29,3 +29,4 @@ export const VERSION_MAJOR = 1,
 // v1.0.1: Font adjustments
 // v1.0.2: Added SVG graphics in /public/svg/
 // v1.1.0: Control group marker added
+// v1.1.1: GatheringForeign confirmation for each vowel

@@ -14,11 +14,7 @@ export default class GatheringForeignView extends GatheringVowelsView {
     set speechDetected(value) {
         const vowelGathered = this.vowelGatheredOnSpeechDetected(value);
         if (vowelGathered) {
-            this.showNextRecording();
-            this.progressBar.color = `#${this.vowelRecording.phoneme.rgb}`;
-            this.#progressBarGray = false;
-            this.progressBar.reset();
-            this.refreshRecording();
+            this.showConfirmation();
         }
     }
 
@@ -53,12 +49,12 @@ export default class GatheringForeignView extends GatheringVowelsView {
         }
         this.button.remove();
         this.#generateRecordingTable();
-        this.showNextRecording();
+        this.#showNextRecording();
         this.controller.enableMic();
     }
 
     #generateRecordingTable() {
-        const recordingTable = document.createElement("div");
+        const recordingTable = this.recordingTable = document.createElement("div");
         this.stackComponent.appendChild(recordingTable);
         // recordingTable is a vertical flexbox
         recordingTable.classList.add("recording-table");
@@ -110,7 +106,64 @@ export default class GatheringForeignView extends GatheringVowelsView {
         this.stackComponent.appendChild(speakerElement);
     }
 
-    showNextRecording() {
+    showConfirmation() {
+        this.controller.disableMic();
+        
+        this.stackComponent.h2.innerHTML = `Odsłuchaj nagrania samogłoski. Jeśli nie nagrało się to, co powinno, możesz je poprawić.`;
+        this.speakerElement.style.display = "none";
+        this.recordingTable.style.display = "none";
+        this.progressBar.hidden = true;
+
+        const playButton = document.createElement("button");
+        playButton.style.marginTop = "1rem";
+        playButton.innerHTML = "▶";
+        playButton.classList.add("play-button", "big");
+        this.stackComponent.appendChild(playButton);
+
+        const horizontalBox = document.createElement("div");
+        horizontalBox.style.display = "flex";
+        horizontalBox.style.flexDirection = "row";
+        horizontalBox.style.alignItems = "center";
+        horizontalBox.style.marginTop = "1rem";
+        this.stackComponent.appendChild(horizontalBox);
+
+        const retryButton = document.createElement("button");
+        retryButton.innerHTML = "↺ Ponów";
+        horizontalBox.appendChild(retryButton);
+
+        const confirmButton = document.createElement("button");
+        confirmButton.innerHTML = "Zatwierdź";
+        confirmButton.id = "accept";
+        horizontalBox.appendChild(confirmButton);
+
+        confirmButton.onclick = () => {
+            this.controller.enableMic();
+            this.goToNextRecording();
+            horizontalBox.remove();
+            playButton.remove();
+        }
+        retryButton.onclick = () => {
+            // TODO;
+            horizontalBox.remove();
+            playButton.remove();
+        }
+        playButton.onclick = () => {
+            // TODO;
+        }
+    }
+
+    goToNextRecording() {
+        this.speakerElement.style.display = null;
+        this.recordingTable.style.display = null;
+        this.progressBar.hidden = false;
+        this.#showNextRecording();
+        this.progressBar.color = `#${this.vowelRecording.phoneme.rgb}`;
+        this.#progressBarGray = false;
+        this.progressBar.reset();
+        this.refreshRecording();
+    }
+
+    #showNextRecording() {
         // enable all play buttons
         const playButtons = this.stackComponent.element.querySelectorAll(".play-button");
         playButtons.forEach(button => button.classList.remove("disabled"));
