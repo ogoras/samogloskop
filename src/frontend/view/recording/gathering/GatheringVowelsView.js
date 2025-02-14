@@ -38,10 +38,9 @@ export default class GatheringVowelsView extends RecordingView {
     vowelGatheredOnSpeechDetected(value) {
         if (value) return false;
 
-        let ret = false;
+        let ret = this.#vowelGathered;
         if (this.#vowelGathered) {
             this.#vowelGathered = false;
-            ret = true;
         }
         else {
             this.#hintKeepGoing = true;

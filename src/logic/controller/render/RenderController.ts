@@ -90,8 +90,8 @@ export default class RenderController extends RecordingController {
             return true;
         }
 
-        if (this.speechDetected && this.samplesThisFrame) throw new Error("Unexpected samplesThisFrame");
-        const samples = this.samplesThisFrame = recorder!.dump();
+        const samples = recorder!.dump();
+        this.samplesThisFrame = [...samples];
         samplesBuffer.pushMultiple(samples);
         const formants = this.formants = soundToFormant(samples, sampleRate, this.lsm!.preset.frequency);
         formantsBuffer.pushMultiple(

@@ -47,7 +47,9 @@ export default class AudioRecorder {
         this.audioBufferData = [];
 
         try {
-            this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            this.stream = await navigator.mediaDevices.getUserMedia({ audio: {
+                autoGainControl: false,
+            } });
         }
         catch (error) {
             console.log("An error occured: " + error);

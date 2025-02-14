@@ -42,6 +42,7 @@ export default class GatheringVowelsController extends SmoothingController {
                 if (!this.processFormants()) {
                     this.substate = SUBSTATES.WAITING;
                     view.speechDetected = false;
+                    this.speechDetected = false;
                     break;
                 }
                 
@@ -50,10 +51,7 @@ export default class GatheringVowelsController extends SmoothingController {
             case SUBSTATES.GATHERED:
                 // wait for 1 second of silence
                 if (this.waitFor(1)) {
-                    this.substate = SUBSTATES.WAITING;
-                    this.smoothedFormantsBuffer.clear();
-                    this.view.secondaryProgress = 0;
-                    view.speechDetected = false;
+                    this.afterGathered();
                 }
                 break;
             default:
@@ -81,6 +79,7 @@ export default class GatheringVowelsController extends SmoothingController {
         this.view.secondaryProgress = 0;
         
         this.view.speechDetected = true;
+        this.speechDetected = true;
     }
 
     confirmAllVowels() {
@@ -94,6 +93,7 @@ export default class GatheringVowelsController extends SmoothingController {
 
     onAllVowelsGathered() {
         this.confirmAllVowels();
+        return false;
     }
 
     speechStillDetectedInGathering() {
@@ -114,8 +114,7 @@ export default class GatheringVowelsController extends SmoothingController {
             view.feedVowel?.(vowel);
             view.vowelGathered = true;
             if (vowelsBeingGathered.isDone()) {
-                this.onAllVowelsGathered();
-                return false;
+                return this.onAllVowelsGathered();
             }
         }
         else {
@@ -123,5 +122,13 @@ export default class GatheringVowelsController extends SmoothingController {
         }
 
         return true;
+    }
+
+    afterGathered() {
+        this.substate = SUBSTATES.WAITING;
+        this.smoothedFormantsBuffer.clear();
+        this.view.secondaryProgress = 0;
+        this.view.speechDetected = false;
+        this.speechDetected = false;
     }
 }

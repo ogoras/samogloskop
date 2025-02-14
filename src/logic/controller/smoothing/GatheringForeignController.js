@@ -22,15 +22,15 @@ export default class GatheringForeignController extends GatheringVowelsControlle
     speechDetectedInWaiting() {
         super.speechDetectedInWaiting();
 
-        this.userRecordingSamples = this.samplesThisFrame;
-        this.samplesThisFrame = null;
+        this.userRecordingSamples = [...this.samplesThisFrame];
+        this.samplesThisFrame = [];
     }
 
     speechStillDetectedInGathering() {
         const ret = super.speechStillDetectedInGathering();
 
         this.userRecordingSamples.push(...this.samplesThisFrame);
-        this.samplesThisFrame = null;
+        this.samplesThisFrame = [];
         if (this.formantsWereSavedThisFrame) {
             this.userSavedSamples.push(...this.userRecordingSamples);
             this.userRecordingSamples = [];
@@ -41,7 +41,11 @@ export default class GatheringForeignController extends GatheringVowelsControlle
 
     onAllVowelsGathered() {
         this.allGathered = true;
-        this.view.showConfirmation();
+        return true;
+    }
+
+    afterGathered() {
+        super.afterGathered();
     }
     
     newVowelRecording() {
@@ -53,7 +57,12 @@ export default class GatheringForeignController extends GatheringVowelsControlle
 
     resetVowel() {
         this.userSavedSamples = [];
-        this[this.vowelsBeingGathered].resetVowel(undefined, true);
+        if (this.allGathered) {
+            this[this.vowelsBeingGathered].resetVowel(undefined, true);
+        } else {
+            this[this.vowelsBeingGathered].resetVowel(undefined, false);
+            this[this.vowelsBeingGathered].nextVowel();
+        }
 
         this.allGathered = false;
     }

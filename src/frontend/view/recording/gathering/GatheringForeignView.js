@@ -110,7 +110,7 @@ export default class GatheringForeignView extends GatheringVowelsView {
     showConfirmation() {
         this.controller.disableMic();
         
-        this.stackComponent.h2.innerHTML = `Odsłuchaj nagrania samogłoski. Jeśli nie nagrało się to, co powinno, możesz je poprawić. Może być nieco pocięte i zawierać rytmiczny szum, ale to żaden problem.`;
+        this.stackComponent.h2.innerHTML = `Odsłuchaj nagrania samogłoski. Jeśli nie nagrało się to, co powinno, możesz je poprawić. Może być nieco pocięte, ale to żaden problem.`;
         this.speakerElement.style.display = "none";
         this.recordingTable.style.display = "none";
         this.progressBar.hidden = true;
@@ -163,7 +163,8 @@ export default class GatheringForeignView extends GatheringVowelsView {
 
             const paddingNumber = Math.floor(4800);
             const padding = new Float32Array(paddingNumber);
-            await playSamples(new Float32Array([...padding, ...this.controller.userSavedSamples, ...padding]));
+            const samples = this.controller.userSavedSamples;
+            await playSamples(new Float32Array([...padding, ...samples, ...padding]));
 
             this.#currentlyPlaying = false;
         }
