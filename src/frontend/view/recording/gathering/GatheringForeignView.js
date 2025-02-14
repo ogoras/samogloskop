@@ -138,13 +138,19 @@ export default class GatheringForeignView extends GatheringVowelsView {
         horizontalBox.appendChild(confirmButton);
 
         confirmButton.onclick = () => {
+            if (this.#currentlyPlaying) return;
             horizontalBox.remove();
             playButton.remove();
 
             this.controller.enableMic();
-            this.goToNextRecording();
+            if (this.controller.allGathered) {
+                this.controller.confirmAllVowels();
+            } else {
+                this.goToNextRecording();
+            }
         }
         retryButton.onclick = () => {
+            if (this.#currentlyPlaying) return;
             horizontalBox.remove();
             playButton.remove();
 
@@ -174,6 +180,10 @@ export default class GatheringForeignView extends GatheringVowelsView {
     }
 
     #restoreRecordingTableView() {
+        // enable all play buttons
+        const playButtons = this.stackComponent.element.querySelectorAll(".play-button");
+        playButtons.forEach(button => button.classList.remove("disabled"));
+
         this.speakerElement.style.display = null;
         this.recordingTable.style.display = null;
         this.progressBar.hidden = false;
@@ -184,10 +194,6 @@ export default class GatheringForeignView extends GatheringVowelsView {
     }
 
     #showNextRecording() {
-        // enable all play buttons
-        const playButtons = this.stackComponent.element.querySelectorAll(".play-button");
-        playButtons.forEach(button => button.classList.remove("disabled"));
-
         const vowelRecording = this.vowelRecording = this.controller.newVowelRecording();
         const color = `#${vowelRecording.phoneme.rgb}`;
         const vowelIPA = this.vowelIPA = vowelRecording.phoneme.IPA.broad;
@@ -234,7 +240,10 @@ export default class GatheringForeignView extends GatheringVowelsView {
 
         const playButton = document.createElement("button");
         playButton.innerHTML = "▶";
-        playButton.onclick = playCallback;
+        playButton.onclick = () => {
+            if (playButton.classList.contains("disabled")) return;
+            playCallback();
+        }
         recordingDescription.appendChild(playButton);
         playButton.classList.add("play-button", double ? "big" : "small");
 

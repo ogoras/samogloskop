@@ -190,10 +190,11 @@ export default class SpeakerVowels extends Vowels {
             throw new Error("Vowel not found");
         }
         this.vowelsProcessed.splice(index, 1);
-        this.vowelsRemaining.push(vowelObject);
         this.#scaleCurrent = false;
         if (autoStart) {
             this.currentVowel = vowelObject;
+        } else {
+            this.vowelsRemaining.push(vowelObject);
         }
     }
 

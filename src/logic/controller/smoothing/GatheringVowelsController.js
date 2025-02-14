@@ -83,6 +83,19 @@ export default class GatheringVowelsController extends SmoothingController {
         this.view.speechDetected = true;
     }
 
+    confirmAllVowels() {
+        const vowelsBeingGathered = this[this.vowelsBeingGathered];
+        if (this.sm.state.is("GATHERING_NATIVE")) {
+            vowelsBeingGathered.scaleLobanov();
+        }
+        this.lsm[this.vowelsBeingGathered] = vowelsBeingGathered;
+        this.#next();
+    }
+
+    onAllVowelsGathered() {
+        this.confirmAllVowels();
+    }
+
     speechStillDetectedInGathering() {
         const view = this.view;
         const vowelsBeingGathered = this[this.vowelsBeingGathered];
@@ -101,11 +114,7 @@ export default class GatheringVowelsController extends SmoothingController {
             view.feedVowel?.(vowel);
             view.vowelGathered = true;
             if (vowelsBeingGathered.isDone()) {
-                if (this.sm.state.is("GATHERING_NATIVE")) {
-                    vowelsBeingGathered.scaleLobanov();
-                }
-                this.lsm[this.vowelsBeingGathered] = vowelsBeingGathered;
-                this.#next();
+                this.onAllVowelsGathered();
                 return false;
             }
         }

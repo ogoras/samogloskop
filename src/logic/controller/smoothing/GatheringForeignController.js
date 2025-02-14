@@ -3,6 +3,8 @@ import GatheringVowelsController from "./GatheringVowelsController.js";
 import GatheringForeignView from "../../../frontend/view/recording/gathering/GatheringForeignView.js";
 
 export default class GatheringForeignController extends GatheringVowelsController {
+    allGathered = false;
+
     async init(prev) {
         this.repeat = prev.sm.state.is("GATHERING_FOREIGN_REPEAT");
         this.vowelsBeingGathered = this.repeat ? "foreignRepeat" : "foreignInitial";
@@ -36,6 +38,11 @@ export default class GatheringForeignController extends GatheringVowelsControlle
 
         return ret;
     }
+
+    onAllVowelsGathered() {
+        this.allGathered = true;
+        this.view.showConfirmation();
+    }
     
     newVowelRecording() {
         this.userSavedSamples = [];
@@ -47,5 +54,7 @@ export default class GatheringForeignController extends GatheringVowelsControlle
     resetVowel() {
         this.userSavedSamples = [];
         this[this.vowelsBeingGathered].resetVowel(undefined, true);
+
+        this.allGathered = false;
     }
 }
