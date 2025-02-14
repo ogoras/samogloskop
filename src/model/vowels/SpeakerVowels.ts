@@ -180,7 +180,8 @@ export default class SpeakerVowels extends Vowels {
         return JSON.stringify(this.compact());
     }
 
-    resetVowel(vowel?: RecursivePartial<vowel> | Vowel) {
+    resetVowel(vowel?: RecursivePartial<vowel> | Vowel, autoStart: boolean = false) {
+        if (!vowel) vowel  = this.vowelsProcessed[this.vowelsProcessed.length - 1];
         const vowelObject = new Vowel(vowel);
         const index = this.vowelsProcessed.findIndex(v => v.id === vowelObject.id);
         if (index === -1) {
@@ -191,6 +192,9 @@ export default class SpeakerVowels extends Vowels {
         this.vowelsProcessed.splice(index, 1);
         this.vowelsRemaining.push(vowelObject);
         this.#scaleCurrent = false;
+        if (autoStart) {
+            this.currentVowel = vowelObject;
+        }
     }
 
     static fromString(string: string, language = "PL", scaleLobanov = true) {

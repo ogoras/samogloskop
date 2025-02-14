@@ -137,15 +137,18 @@ export default class GatheringForeignView extends GatheringVowelsView {
         horizontalBox.appendChild(confirmButton);
 
         confirmButton.onclick = () => {
+            horizontalBox.remove();
+            playButton.remove();
+
             this.controller.enableMic();
             this.goToNextRecording();
-            horizontalBox.remove();
-            playButton.remove();
         }
         retryButton.onclick = () => {
-            // TODO;
             horizontalBox.remove();
             playButton.remove();
+
+            this.controller.enableMic();
+            this.resetVowel();
         }
         playButton.onclick = () => {
             // TODO;
@@ -153,10 +156,19 @@ export default class GatheringForeignView extends GatheringVowelsView {
     }
 
     goToNextRecording() {
+        this.#showNextRecording();
+        this.#restoreRecordingTableView()
+    }
+
+    resetVowel() {
+        this.#restoreRecordingTableView();
+        this.controller.resetVowel();
+    }
+
+    #restoreRecordingTableView() {
         this.speakerElement.style.display = null;
         this.recordingTable.style.display = null;
         this.progressBar.hidden = false;
-        this.#showNextRecording();
         this.progressBar.color = `#${this.vowelRecording.phoneme.rgb}`;
         this.#progressBarGray = false;
         this.progressBar.reset();

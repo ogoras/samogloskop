@@ -22,4 +22,8 @@ export default class GatheringForeignController extends GatheringVowelsControlle
         this.currentEntry = this.englishRecordings.getRandomEntryForVowel(vowel.letter);
         return this.currentEntry;
     }
+
+    resetVowel() {
+        this[this.vowelsBeingGathered].resetVowel(undefined, true);
+    }
 }
