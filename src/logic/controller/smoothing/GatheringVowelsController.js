@@ -28,16 +28,12 @@ export default class GatheringVowelsController extends SmoothingController {
         const statsUpdated = this.statsUpdated;
         const view = this.view;
 
+        this.formantsWereSavedThisFrame = false;
+
         switch(this.substate) {
             case SUBSTATES.WAITING:
                 if (statsUpdated && stats.detectSpeech()) {
-                    this.substate = SUBSTATES.GATHERING;
-
-                    this.formantsBuffer.clear();
-                    this.smoothedFormantsBuffer.clear();
-                    this.view.secondaryProgress = 0;
-                    
-                    view.speechDetected = true;
+                    this.speechDetectedInWaiting();
                 }
                 break;
             case SUBSTATES.GATHERING:
@@ -49,28 +45,7 @@ export default class GatheringVowelsController extends SmoothingController {
                     break;
                 }
                 
-                const formantsSaved = this.formantsToSave;
-                const progress = vowelsBeingGathered.addFormants(this.formantsToSave);
-                delete this.formantsToSave;
-                view.feedSaved?.(formantsSaved);
-
-                if (vowelsBeingGathered.isVowelGathered()) {
-                    view.progress = 1;
-                    this.substate = SUBSTATES.GATHERED;
-
-                    const vowel = vowelsBeingGathered.saveVowel();
-                    view.feedVowel?.(vowel);
-                    view.vowelGathered = true;
-                    if (vowelsBeingGathered.isDone()) {
-                        if (this.sm.state.is("GATHERING_NATIVE")) {
-                            vowelsBeingGathered.scaleLobanov();
-                        }
-                        this.lsm[this.vowelsBeingGathered] = vowelsBeingGathered;
-                        this.#next();
-                        return false;
-                    }
-                }
-                else view.progress = progress;
+                if (!this.speechStillDetectedInGathering()) return false;
                 break;
             case SUBSTATES.GATHERED:
                 // wait for 1 second of silence
@@ -96,5 +71,48 @@ export default class GatheringVowelsController extends SmoothingController {
             this.view.destroy();
         }
         nextController(this);
+    }
+
+    speechDetectedInWaiting() {
+        this.substate = SUBSTATES.GATHERING;
+
+        this.formantsBuffer.clear();
+        this.smoothedFormantsBuffer.clear();
+        this.view.secondaryProgress = 0;
+        
+        this.view.speechDetected = true;
+    }
+
+    speechStillDetectedInGathering() {
+        const view = this.view;
+        const vowelsBeingGathered = this[this.vowelsBeingGathered];
+
+        const formantsSaved = this.formantsToSave;
+        this.formantsWereSavedThisFrame = formantsSaved !== null;
+        const progress = vowelsBeingGathered.addFormants(this.formantsToSave);
+        delete this.formantsToSave;
+        view.feedSaved?.(formantsSaved);
+
+        if (vowelsBeingGathered.isVowelGathered()) {
+            view.progress = 1;
+            this.substate = SUBSTATES.GATHERED;
+
+            const vowel = vowelsBeingGathered.saveVowel();
+            view.feedVowel?.(vowel);
+            view.vowelGathered = true;
+            if (vowelsBeingGathered.isDone()) {
+                if (this.sm.state.is("GATHERING_NATIVE")) {
+                    vowelsBeingGathered.scaleLobanov();
+                }
+                this.lsm[this.vowelsBeingGathered] = vowelsBeingGathered;
+                this.#next();
+                return false;
+            }
+        }
+        else {
+            view.progress = progress;
+        }
+
+        return true;
     }
 }

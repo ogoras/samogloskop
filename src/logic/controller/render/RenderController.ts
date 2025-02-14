@@ -18,6 +18,8 @@ const formantCount = 20;
 const calibrationTime = 10;
 const statsStep = 0.1;    // 100 ms
 export default class RenderController extends RecordingController {
+    speechDetected = false;
+
     intensityStats?: IntensityStats;
 
     get calibrationTime() {
@@ -87,8 +89,9 @@ export default class RenderController extends RecordingController {
             requestAnimationFrame(this.renderLoop.bind(this));
             return true;
         }
-    
-        const samples = recorder!.dump();
+
+        if (this.speechDetected && this.samplesThisFrame) throw new Error("Unexpected samplesThisFrame");
+        const samples = this.samplesThisFrame = recorder!.dump();
         samplesBuffer.pushMultiple(samples);
         const formants = this.formants = soundToFormant(samples, sampleRate, this.lsm!.preset.frequency);
         formantsBuffer.pushMultiple(
