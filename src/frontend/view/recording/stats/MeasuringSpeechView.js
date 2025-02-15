@@ -15,14 +15,14 @@ export default class MeasuringSpeechView extends StatsView {
         super(controller, recorder, prev);
 
         const recycle = prev instanceof StatsView;
+        let stateToRecycle = null;
         if (recycle) {
-            const state = "WAITING_FOR_SPEECH";
-            assertTrue(controller.sm.state.is(state), `Recycling ${StatsView.name} into ${this.constructor.name} assumes the state is ${state}`);
+            stateToRecycle = controller.sm.state;
         } else {
             assertTrue(controller.sm.state.is("SPEECH_MEASURED"), `Restoring ${this.constructor.name} with state ${controller.sm.state} is not supported`);
         }
 
-        this.stackComponent = new MeasuringStackComponent(this.stackComponent, controller.calibrationTime, recycle);
+        this.stackComponent = new MeasuringStackComponent(this.stackComponent, controller.calibrationTime, stateToRecycle);
     }
 
     finish() {

@@ -16,32 +16,38 @@ export default class MeasuringStackComponent extends StatsStackComponent {
         this.resetStatsElements();
     }
 
-    constructor(prev, timeRequired, recycle) {
+    constructor(prev, timeRequired, stateToRecycle) {
         super(prev, timeRequired);
 
-        if (recycle) {
-            const stats = this.stats;
-            stats.min.diff = 0;
-            stats.max.diff = 0;
-            stats.mean.diff = 0;
-            stats.time.text = "Nagrano głosu: ";
+        if (stateToRecycle) {
+            if (stateToRecycle.is("WAITING_FOR_SPEECH")) {
+                const stats = this.stats;
+                stats.min.diff = 0;
+                stats.max.diff = 0;
+                stats.mean.diff = 0;
+                stats.time.text = "Nagrano głosu: ";
 
-            const progressBar = this.progressBar;
-            progressBar.color = "lightblue";
-            progressBar.reset();
+                const progressBar = this.progressBar;
+                progressBar.color = "lightblue";
+                progressBar.reset();
 
-            this.h2.innerHTML = "Nagranie ciszy zakończone. Teraz mów cokolwiek, głośno i wyraźnie, do mikrofonu przez 10 sekund..."
+                this.h2.innerHTML = "Nagranie ciszy zakończone. Teraz mów cokolwiek, głośno i wyraźnie, do mikrofonu przez 10 sekund..."
 
-            // add a p element to the divStack between h2 and progressBar
-            const p = document.createElement("p");
-            p.innerHTML = "<b>Jeśli nie wiesz, co powiedzieć, spróbuj tych łamańców językowych:</b>";
-            this.insertBefore(p, progressBar);
-            // add two random tongue twisters after the p element
-            const choices = choose(tonguetwisters, 2);
-            for (let choice of choices) {
+                // add a p element to the divStack between h2 and progressBar
                 const p = document.createElement("p");
-                p.innerHTML = choice;
+                p.innerHTML = "<b>Jeśli nie wiesz, co powiedzieć, spróbuj tych łamańców językowych:</b>";
                 this.insertBefore(p, progressBar);
+                // add two random tongue twisters after the p element
+                const choices = choose(tonguetwisters, 2);
+                for (let choice of choices) {
+                    const p = document.createElement("p");
+                    p.innerHTML = choice;
+                    this.insertBefore(p, progressBar);
+                }
+            } else if (stateToRecycle.is("SPEECH_MEASURED")) {
+                this.finish();
+            } else {
+                throw new Error(`Can't recycle to state ${stateToRecycle}`);
             }
         } else {
             this.h2 = document.createElement("h2");
