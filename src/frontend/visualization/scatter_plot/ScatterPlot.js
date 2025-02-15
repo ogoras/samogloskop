@@ -45,7 +45,7 @@ export default class ScatterPlot {
         this.svg.attr("display", "none");
         this.drawAxes();
         this.svg.attr("display", "block");
-        this.rescaleAll(d3.transition().duration(0));
+        this.rescaleAll();
     }
 
     drawAxes() {
@@ -195,7 +195,7 @@ export default class ScatterPlot {
 
     transition(xChanged, yChanged, animationMs) {
         const [flipX, flipY] = [ this.flipX, this.flipY ];
-        const t = d3.transition().duration(animationMs);
+        const t = animationMs ? d3.transition().duration(animationMs) : null;
         if (xChanged) this.x.g.transition(t)
                 .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
         if (yChanged) this.y.g.transition(t)
@@ -204,21 +204,25 @@ export default class ScatterPlot {
     }
 
     rescaleAll(t) {
+        function transitionFunction(selection) {
+            if (!selection) return null;
+            return t ? selection.transition(t) : selection.transition().duration(0);
+        } 
         for (let point of this.allPointsGroup.getAllPoints()) {
             if (point.text) {
-                point.element.transition(t)
+                transitionFunction(point.element)
                     .attr("x", this.x.scale(point.x))
                     .attr("y", this.y.scale(point.y));
             } else {
-                point.element.transition(t)
+                transitionFunction(point.element)
                     .attr("transform", `translate(${this.x.scale(point.x)}, ${this.y.scale(point.y)})`);
-                point.label?.transition(t)
-                    .attr("x", this.x.scale(point.x))
+                transitionFunction(point.label)
+                    ?.attr("x", this.x.scale(point.x))
                     .attr("y", this.y.scale(point.y));
             }
         }
         for (let ellipse of this.allPointsGroup.getAllEllipses()) {
-            ellipse.element.transition(t)
+            transitionFunction(ellipse.element)
                 .attr("cx", this.x.scale(ellipse.x))
                 .attr("cy", this.y.scale(ellipse.y))
                 .attr("rx", Math.abs(this.x.scale(ellipse.rx) - this.x.scale(0)))

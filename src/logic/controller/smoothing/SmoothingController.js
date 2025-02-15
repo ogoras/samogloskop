@@ -76,8 +76,8 @@ export default class SmoothingController extends RenderController {
                 return point;
             });
         const formantsSmoothed = nativeVowels.scale(this.getSmoothedFormants());
-        this.view.feedSmoothed(formantsSmoothed, false);
-        this.view.feedFormants(formantPoints, false);
+        this.view.feedSmoothed?.(formantsSmoothed, false);
+        this.view.feedFormants?.(formantPoints, false);
 
         return true;
     }

@@ -45,6 +45,8 @@ export default class RenderController extends RecordingController {
     }
 
     initStart(prev: Controller, newIntensityStats = false) {
+        this.#breakRenderLoop = false;
+
         this.initRecorder(prev);
 
         super.validate();
@@ -107,7 +109,7 @@ export default class RenderController extends RecordingController {
 
         this.statsUpdated = stats.update(this.time, formantsBuffer.buffer.map((formants: formantsEntry) => formants.intensity), samplesBuffer.buffer);
 
-        this.view.feed(samples);
+        this.view.feed?.(samples);
 
         return false;
     }
