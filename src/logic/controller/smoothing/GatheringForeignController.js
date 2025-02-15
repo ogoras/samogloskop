@@ -44,8 +44,9 @@ export default class GatheringForeignController extends GatheringVowelsControlle
         return true;
     }
 
-    afterGathered() {
-        super.afterGathered();
+    onAllVowelsGathered() {
+        this.breakRenderLoop();
+        return super.onAllVowelsGathered();
     }
     
     newVowelRecording() {
