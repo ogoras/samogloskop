@@ -3,9 +3,8 @@ import GatheringVowelsController from "./GatheringVowelsController.js";
 import GatheringForeignView from "../../../frontend/view/recording/gathering/GatheringForeignView.js";
 
 export default class GatheringForeignController extends GatheringVowelsController {
-    allGathered = false;
-
     async init(prev) {
+        this.allGathered = false;
         this.repeat = prev.sm.state.is("GATHERING_FOREIGN_REPEAT");
         this.vowelsBeingGathered = this.repeat ? "foreignRepeat" : "foreignInitial";
         super.init(prev);

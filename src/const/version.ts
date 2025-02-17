@@ -30,4 +30,4 @@ export const VERSION_MAJOR = 1,
 // v1.0.2: Added SVG graphics in /public/svg/
 // v1.1.0: Control group marker added
 // v1.1.1: GatheringForeign confirmation for each vowel
-// v1.1.2: Fixed a bug with retrying foreign vowels
+// v1.1.2: Fixed bugs relating to the above, disabled noise supression and echo cancellation

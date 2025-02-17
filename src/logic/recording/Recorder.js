@@ -49,6 +49,8 @@ export default class AudioRecorder {
         try {
             this.stream = await navigator.mediaDevices.getUserMedia({ audio: {
                 autoGainControl: false,
+                noiseSuppression: false,
+                echoCancellation: false
             } });
         }
         catch (error) {
