@@ -189,12 +189,13 @@ export default class SpeakerVowels extends Vowels {
             console.log(this.vowelsProcessed);
             throw new Error("Vowel not found");
         }
-        this.vowelsProcessed.splice(index, 1);
+        const vowelToReset = this.vowelsProcessed.splice(index, 1)[0];
         this.#scaleCurrent = false;
+        vowelToReset!.reset();
         if (autoStart) {
-            this.currentVowel = vowelObject;
+            this.currentVowel = vowelToReset;
         } else {
-            this.vowelsRemaining.push(vowelObject);
+            this.vowelsRemaining.push(vowelToReset!);
         }
     }
 

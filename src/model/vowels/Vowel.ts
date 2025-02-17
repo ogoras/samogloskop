@@ -184,6 +184,12 @@ export default class Vowel {
         return this.IPA?.broad ?? this.letter
     }
 
+    reset() {
+        this.formants = [];
+        delete this.avg;
+        this.#confidenceEllipse = undefined;
+    }
+
     static fromSimpleObject(obj : {letter: string, formants: xy[], [index: string]: any}) {
         const vowel = new Vowel(obj);
         vowel.formants = obj.formants.map(formants => { 

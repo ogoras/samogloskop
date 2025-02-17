@@ -44,9 +44,9 @@ export default class GatheringForeignController extends GatheringVowelsControlle
         return true;
     }
 
-    onAllVowelsGathered() {
+    confirmAllVowels() {
         this.breakRenderLoop();
-        return super.onAllVowelsGathered();
+        return super.confirmAllVowels();
     }
     
     newVowelRecording() {
@@ -58,12 +58,7 @@ export default class GatheringForeignController extends GatheringVowelsControlle
 
     resetVowel() {
         this.userSavedSamples = [];
-        if (this.allGathered) {
-            this[this.vowelsBeingGathered].resetVowel(undefined, true);
-        } else {
-            this[this.vowelsBeingGathered].resetVowel(undefined, false);
-            this[this.vowelsBeingGathered].nextVowel();
-        }
+        this[this.vowelsBeingGathered].resetVowel(undefined, true);
 
         this.allGathered = false;
     }
