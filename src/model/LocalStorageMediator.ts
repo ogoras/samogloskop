@@ -97,6 +97,7 @@ export default class LocalStorageMediator extends Singleton {
                 case "0.4": // 0.4 -> 0.5 conversion not necessary either
                 case "0.5": // 0.5 -> 1.0 conversion, same thing
                 case "1.0": // 1.0 -> 1.1 ditto
+                case "1.1": // 1.1 -> 1.2 
                     break;
                 default:
                     if (dataConsentGiven) {
@@ -200,5 +201,9 @@ const localStorageProperties = [
             string ??= Math.random() < 0.2 ? "true" : "false";  // roughly 20% of users are in the control group
             return string === "true";
         }
+    },
+    {
+        name: "microphoneLabel",
+        localStorageName: "microphoneLabel"
     }
 ]

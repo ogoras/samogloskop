@@ -1,3 +1,5 @@
+import LocalStorageMediator from "../../model/LocalStorageMediator.js";
+
 export default class AudioRecorder {
     stream = null;
     audioCtx = null; source = null; audioBufferData = []; recorderNode = null;
@@ -43,7 +45,7 @@ export default class AudioRecorder {
     }
 
     async startRecording() {
-        if (this.recording) return;
+        if (this.recording) return false;
         this.audioBufferData = [];
 
         try {
@@ -55,6 +57,17 @@ export default class AudioRecorder {
         }
         catch (error) {
             console.log("An error occured: " + error);
+        }
+
+        const lsm = LocalStorageMediator.getInstance();
+        const deviceLabel = this.stream.getAudioTracks()[0].label;
+        if (!lsm.microphoneLabel) {
+            lsm.microphoneLabel = deviceLabel;
+        } else if (lsm.microphoneLabel !== deviceLabel) {
+            // show a popup about incorrect microphone
+            window.alert(`Używasz innego mikrofonu niż zapisany. Przełącz się na ${lsm.microphoneLabel} aby kontynuować.`);
+            this.stream.getTracks().forEach(track => track.stop());
+            return false;
         }
 
         if (!this.initialized) {
@@ -74,7 +87,7 @@ export default class AudioRecorder {
     }
 
     stopRecording() {
-        if (!this.recording) return;
+        if (!this.recording) return false;
         this.source.disconnect();
         this.recorderNode.disconnect();
         this.stream.getTracks().forEach(track => track.stop());
