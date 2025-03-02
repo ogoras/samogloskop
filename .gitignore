@@ -1,2 +1,4 @@
-*.wav
-*.txt
+/my_files/
+/data_processing/
+/node_modules/
+/public/dist/

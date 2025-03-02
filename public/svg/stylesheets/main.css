@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+svg {
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+.serif {
+    font-family: 'Times New Roman', serif;
+}
+
+g text {
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+g text.glow {
+    text-shadow: 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff,
+    0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff, 0 0 0.3em #fff;
+}
+
+g#points {
+    font-weight: 500;
+}
+
+@media (hover: hover) {
+    button:hover, .emoji-button:hover, g.clickable:hover, input[type="checkbox"], .button:hover {
+        cursor: pointer;
+    }
+
+    g.clickable:hover path, g.clickable:hover ellipse {
+        filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
+    }
+
+    g.clickable:hover text.glow {
+        text-shadow: 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff
+    }
+}
+
+g.clickable:active path, g.clickable:active ellipse {
+    filter: drop-shadow(0 0 6px /* var(--blur-radius) */);
+}
+
+g.clickable:active text.glow {
+    text-shadow: 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff, 0 0 0.5em #fff
+}
+
+g.clickable text {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none;
+}

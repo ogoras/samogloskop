@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "./public/dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "allowJs": true,
+
+    "exactOptionalPropertyTypes": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+
+    "typeRoots": ["node_modules/@types"]
+  },
+  "files": [
+    "src/main.ts",
+    "src/logic/recording/recorder-worklet-processor.js"
+  ]
+}

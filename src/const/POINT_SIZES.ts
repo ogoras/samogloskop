@@ -1,0 +1,8 @@
+export const POINT_SIZES = {
+    USER_DATAPOINTS: 100,
+    USER_CENTROIDS: 200,
+    TRAIL: 64,
+    CURRENT: 256,
+    DATAPOINTS: 100,
+    CENTROIDS: 200,
+}
