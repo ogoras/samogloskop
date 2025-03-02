@@ -3,7 +3,7 @@ import pandas as pd, json
 phonemes = [ 'i', 'ɪ', 'ɛ', 'æ', 'ʌ', 'ɑ', 'ɔ', 'ʊ', 'u', 'ɚ' ]
 columns = ['sex', 'speaker', 'phoneme_id', 'phoneme_ascii', 'F1', 'F2']
 
-pb_data = pd.read_csv('verified_pb.data', sep='\t', header=None, names=columns,
+pb_data = pd.read_csv('../data/verified_pb.data', sep='\t', header=None, names=columns,
                       usecols=[0, 1, 2, 3, 5, 6])
 pb_data['identified'] = pb_data['phoneme_ascii'].apply(lambda x: x[0] != '*')
 pb_data.drop('phoneme_ascii', axis=1, inplace=True)
@@ -40,5 +40,5 @@ for phoneme_id in range(1, 11):
     print(phoneme_data)
     lobanov_data[phoneme] = phoneme_data.to_dict(orient='records')
 
-with open('../js/const/vowels/peterson_barney.json', 'w', encoding="utf-8") as f:
+with open('../data/peterson_barney.json', 'w', encoding="utf-8") as f:
     json.dump(lobanov_data, f, ensure_ascii=False)
