@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 1,
     VERSION_MINOR = 2,  // will only change when the data format changes
-    VERSION_PATCH = 0;  // will change only with published commits, the in-beetween development versions are not counted
+    VERSION_PATCH = 1;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: Introduced localStorage
 // v0.1: Added Lobanov scaling
@@ -32,3 +32,4 @@ export const VERSION_MAJOR = 1,
 // v1.1.1: GatheringForeign confirmation for each vowel
 // v1.1.2: Fixed bugs relating to the above, disabled noise supression and echo cancellation
 // v1.2.0: Microphone device name is now stored in the local storage
+// v1.2.1: Updated information about Donald Trump
