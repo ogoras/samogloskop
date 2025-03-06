@@ -32,14 +32,13 @@ for phoneme in peterson_barney.keys():
 
 def calculate_distances(name='self'):
     print(f'Calculating distances for {name}:')
-    n = 0; vowels = []
+    vowels = []
     if name == 'self':
         vowels = peterson_barney.keys()
-        n = len(vowels)
     else:
         vowels = json.load(open(f'../data/{name}_vowels.json', 'r', encoding='utf-8'))
-        n = len(vowels)
     
+    n = len(vowels)
     phonemes = []
     dist_of_avg_matrix = np.zeros((n, n))
     avg_dist_matrix = np.zeros((n, n))
