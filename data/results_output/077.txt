@@ -1,0 +1,39 @@
+Distances for 077-pre (control):
+Warning: ʊ and æ confusion, distance = 0.88
+ʊ	51.22	17.79	æ	26
+Penalty incurred for merging ɪ and ɛ: 0.36
+ɪ	5.36	3.46	ɛ	39
+Warning: ʌ and ɑ confusion, distance = 0.64
+ʌ	20.31	2.6	ɑ	11
+Warning: æ and ɛ confusion, distance = 0.39
+æ	12.59	1.16	ɛ	8
+Penalty incurred for merging ɛ and ɪ: 0.36
+ɛ	4.04	1.33	ɪ	25
+Warning: u and ɪ confusion, distance = 0.67
+u	50.58	20.12	ɪ	28
+Warning: i and ɪ confusion, distance = 0.54
+i	18.56	0.69	ɪ	4
+Warning: ɑ and ʌ confusion, distance = 0.64
+ɑ	10.12	6.62	ʌ	40
+Warning: ɔ and ɑ confusion, distance = 0.52
+ɔ	14.96	5.83	ɑ	28
+Score: 23.2, Harmonic mean: 13.1, Penalty: -0.7
+
+Distances for 077-post (control):
+Warning: ʌ and ɑ confusion, distance = 1.15
+ʌ	15.69	2.37	ɑ	13
+ɛ	3.73	8.29	ɪ	69
+Warning: ʊ and ɛ confusion, distance = 0.51
+ʊ	67.15	22.24	ɛ	25
+u	15.12	31.53	ʊ	68
+i	3.12	18.6	ɪ	86
+Warning: ɑ and ʌ confusion, distance = 1.15
+ɑ	20.08	6.03	ʌ	23
+Penalty incurred for merging ɪ and ɛ: 9.20
+ɪ	28.96	24.35	ɛ	46
+Warning: ɔ and ʌ confusion, distance = 1.08
+ɔ	17.5	19.2	ʌ	52
+Warning: æ and ɪ confusion, distance = 0.39
+æ	17.96	3.13	ɪ	15
+Score: 44.0, Harmonic mean: 29.1, Penalty: -9.2
+

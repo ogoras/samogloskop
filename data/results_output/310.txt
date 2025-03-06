@@ -1,0 +1,31 @@
+Distances for 310-pre (control):
+ɑ	9.67	12.08	ʌ	56
+Penalty incurred for merging i and ɪ: 0.04
+i	10.3	2.85	ɪ	22
+Penalty incurred for merging ɔ and ʌ: 0.01
+ɔ	20.95	2.7	ʌ	11
+ʌ	3.54	7.25	ɑ	67
+Warning: u and ɪ confusion, distance = 0.57
+u	64.0	15.2	ɪ	19
+Warning: ʊ and u confusion, distance = 0.63
+ʊ	49.23	25.02	u	34
+æ	0.6	13.22	ɛ	96
+ɪ	1.08	10.42	ɛ	91
+ɛ	1.11	9.76	æ	90
+Score: 53.9, Harmonic mean: 32.0, Penalty: -0.0
+
+Distances for 310-post (control):
+æ	1.82	11.88	ɛ	87
+ɪ	4.93	7.72	ɛ	61
+ɛ	11.69	17.24	æ	60
+Warning: ɑ and ʌ confusion, distance = 1.04
+ɑ	8.11	3.28	ʌ	29
+ʊ	1.92	3.93	u	67
+Warning: ʌ and ɑ confusion, distance = 1.04
+ʌ	26.85	16.41	ɑ	38
+i	5.42	40.8	ɪ	88
+Warning: ɔ and ʊ confusion, distance = 0.46
+ɔ	8.98	2.81	ʊ	24
+u	22.11	42.64	ʊ	66
+Score: 57.7, Harmonic mean: 47.6, Penalty: 0.0
+

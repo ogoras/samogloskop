@@ -1,0 +1,29 @@
+Distances for 815-pre (experimental):
+ɑ	5.62	13.03	ʌ	70
+u	22.15	42.57	ʊ	66
+ʌ	3.49	5.8	ɑ	62
+ʊ	1.21	7.86	u	87
+æ	10.98	28.87	ʌ	72
+Warning: ɔ and ʌ confusion, distance = 1.08
+ɔ	23.49	4.19	ʌ	15
+Warning: ɛ and æ confusion, distance = 0.33
+ɛ	29.3	2.18	æ	7
+Warning: ɪ and ɛ confusion, distance = 2.17
+ɪ	26.44	20.94	ɛ	44
+Warning: i and ɪ confusion, distance = 1.12
+i	18.03	6.81	ɪ	27
+Score: 50.1, Harmonic mean: 26.4, Penalty: 0.0
+
+Distances for 815-post (experimental):
+ɔ	6.33	8.47	ʊ	57
+ɑ	2.7	6.33	ʌ	70
+ɛ	0.73	6.55	æ	90
+æ	5.66	26.13	ɑ	82
+ʌ	1.75	7.53	ɑ	81
+i	4.3	17.2	ɪ	80
+ʊ	4.84	8.85	ɔ	65
+Warning: u and ɔ confusion, distance = 0.50
+u	7.69	8.65	ɔ	53
+ɪ	6.17	12.35	ɛ	67
+Score: 71.6, Harmonic mean: 69.7, Penalty: 0.0
+

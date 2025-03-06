@@ -1,0 +1,36 @@
+Distances for 762-pre (experimental):
+Warning: ʊ and u confusion, distance = 0.76
+ʊ	51.69	28.23	u	35
+Penalty incurred for merging æ and ɛ: 3.30
+æ	13.84	10.52	ɛ	43
+Warning: ɔ and ʊ confusion, distance = 0.71
+ɔ	22.55	5.73	ʊ	20
+ɛ	6.53	9.86	æ	60
+Warning: ɪ and ɛ confusion, distance = 0.49
+ɪ	24.04	13.75	ɛ	36
+ʌ	3.22	6.82	ɑ	68
+Warning: u and ʊ confusion, distance = 0.76
+u	6.9	3.99	ʊ	37
+Warning: ɑ and ʌ confusion, distance = 0.37
+ɑ	18.54	3.9	ʌ	17
+i	5.46	22.2	ɪ	80
+Score: 44.2, Harmonic mean: 35.0, Penalty: -3.3
+
+Distances for 762-post (experimental):
+Warning: ɔ and ʊ confusion, distance = 1.05
+ɔ	25.04	8.12	ʊ	24
+Warning: ɑ and ʌ confusion, distance = 1.11
+ɑ	24.02	12.58	ʌ	34
+u	27.68	37.2	ɛ	57
+Penalty incurred for merging ʊ and u: 3.61
+ʊ	43.69	23.53	u	35
+Warning: ʌ and æ confusion, distance = 1.54
+ʌ	32.34	11.73	æ	27
+i	3.44	32.17	ɪ	90
+Warning: ɪ and ɛ confusion, distance = 0.84
+ɪ	33.12	25.23	ɛ	43
+Warning: æ and ɛ confusion, distance = 0.92
+æ	63.45	63.87	ɛ	50
+ɛ	7.52	9.94	æ	57
+Score: 46.5, Harmonic mean: 40.0, Penalty: -3.6
+

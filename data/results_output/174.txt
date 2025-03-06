@@ -1,0 +1,37 @@
+Distances for 174-pre (experimental):
+Warning: u and ɔ confusion, distance = 1.44
+u	19.32	20.05	ɔ	51
+Warning: ʊ and ɛ confusion, distance = 1.29
+ʊ	75.63	12.12	ɛ	14
+Warning: ɑ and ʌ confusion, distance = 0.66
+ɑ	10.63	4.85	ʌ	31
+Warning: ɪ and ɛ confusion, distance = 1.52
+ɪ	34.33	22.75	ɛ	40
+æ	2.67	25.53	ɛ	91
+Warning: ɛ and æ confusion, distance = 0.61
+ɛ	20.26	5.77	æ	22
+i	12.33	15.97	ɪ	56
+Warning: ɔ and æ confusion, distance = 0.81
+ɔ	36.34	22.1	æ	38
+Warning: ʌ and ɑ confusion, distance = 0.66
+ʌ	20.8	23.97	ɑ	54
+Score: 44.0, Harmonic mean: 33.6, Penalty: 0.0
+
+Distances for 174-post (experimental):
+Warning: ɑ and ʌ confusion, distance = 1.39
+ɑ	16.2	5.13	ʌ	24
+æ	5.31	36.71	ɛ	87
+Warning: ɛ and æ confusion, distance = 1.01
+ɛ	13.91	7.92	æ	36
+Warning: ɔ and æ confusion, distance = 1.09
+ɔ	58.47	14.54	æ	20
+Warning: ɪ and ɛ confusion, distance = 1.25
+ɪ	22.41	16.0	ɛ	42
+u	3.96	11.6	ʊ	75
+i	2.31	18.85	ɪ	89
+Warning: ʊ and æ confusion, distance = 1.23
+ʊ	74.65	18.16	æ	20
+Warning: ʌ and æ confusion, distance = 0.54
+ʌ	16.03	16.04	æ	50
+Score: 49.2, Harmonic mean: 35.9, Penalty: 0.0
+

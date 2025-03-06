@@ -1,0 +1,32 @@
+Distances for 834-pre (experimental):
+ʊ	6.46	16.04	ʌ	71
+u	29.39	36.67	ɛ	56
+ɛ	1.51	5.62	æ	79
+Penalty incurred for merging i and ɪ: 0.01
+i	23.03	0.55	ɪ	2
+Warning: ɔ and ɑ confusion, distance = 0.75
+ɔ	10.86	7.67	ɑ	41
+ʌ	1.26	8.4	ɑ	87
+Warning: ɪ and ɛ confusion, distance = 0.76
+ɪ	3.34	3.69	ɛ	53
+Warning: ɑ and ʌ confusion, distance = 0.43
+ɑ	22.79	7.86	ʌ	26
+æ	3.12	9.91	ɛ	76
+Score: 54.5, Harmonic mean: 15.5, Penalty: -0.0
+
+Distances for 834-post (experimental):
+Warning: ʊ and ɛ confusion, distance = 0.71
+ʊ	75.23	17.59	ɛ	19
+ʌ	0.79	9.92	ɑ	93
+ɛ	2.24	7.3	æ	77
+ɔ	3.48	9.86	ʊ	74
+æ	5.17	19.91	ʌ	79
+Warning: ɑ and ʌ confusion, distance = 0.64
+ɑ	4.55	4.96	ʌ	52
+Warning: u and ɛ confusion, distance = 0.93
+u	37.1	24.04	ɛ	39
+ɪ	2.93	7.83	i	73
+Penalty incurred for merging i and ɪ: 0.55
+i	11.9	1.88	ɪ	14
+Score: 57.7, Harmonic mean: 38.4, Penalty: -0.5
+

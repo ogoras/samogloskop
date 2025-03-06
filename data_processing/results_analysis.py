@@ -1,4 +1,4 @@
-import json, numpy as np, sys
+import json, numpy as np, sys, os
 np.set_printoptions(suppress=True)
 np.seterr(all='raise')
 
@@ -21,6 +21,16 @@ def get_speaker_avg(vowel, speaker_id):
     for measurement in [measurement for measurement in peterson_barney[vowel] if measurement['speaker'] == speaker_id]:
         avg[0] += measurement['F1']
         avg[1] += measurement['F2']
+        count += 1
+    avg /= count
+    return avg
+
+def get_vowel_avg(vowel):
+    avg = np.zeros(2)
+    count = 0
+    for measurement in vowel['formants']:
+        avg[0] += measurement['y']
+        avg[1] += measurement['x']
         count += 1
     avg /= count
     return avg
@@ -54,18 +64,36 @@ for phoneme in peterson_barney.keys():
     cov_matrix = np.array([[variance[0], covariance], [covariance, variance[1]]])
     pb_distributions[phoneme] = { 'avg': avg, 'cov_matrix': cov_matrix }
 
-def calculate_distances(f, name='self'):
+def calculate_distances(f, name='self', test=None):
     use_pb = name == 'self' or is_int(name)
-    display_name = name
-    if is_int(name):
-        display_name = f"Speaker {name:02d} ({get_sex(name)})"
-    print(f'Distances for {display_name}:', file=f)
+    if test:
+        use_pb = False
+
     vowels = []
     
     if use_pb:
         vowels = peterson_barney.keys()
+    elif test:
+        vowels = json.load(open(f'../data/results_input/{name}.json', 'r', encoding='utf-8'))
+        isControlGroup = vowels.get("isControlGroup") == True
+        time = vowels.get("timeSpentInTraining")
+        version = vowels.get("version")
+        if test == 'pre':
+            vowels = vowels['foreignInitial']
+        elif test == 'post':
+            vowels = vowels['foreignRepeat']
+        else:
+            raise ValueError(f"Unknown test type: {test}")
+        vowels = vowels["vowelsProcessed"]
     else:
         vowels = json.load(open(f'../data/{name}_vowels.json', 'r', encoding='utf-8'))
+
+    display_name = name
+    if test:
+        display_name = f"{name}-{test} ({'control' if isControlGroup else 'experimental'})"
+    elif is_int(name):
+        display_name = f"Speaker {name:02d} ({get_sex(name)})"
+    print(f'Distances for {display_name}:', file=f)
     
     n = len(vowels)
     phonemes = []
@@ -87,7 +115,9 @@ def calculate_distances(f, name='self'):
         if name == 'self':
             speaker_avg = pb_distributions[vowel]['avg']
         elif is_int(name):
-            speaker_avg = get_speaker_avg(vowel, name)
+            speaker_avg = get_speaker_avg(speaker_phoneme, name)
+        elif test:
+            speaker_avg = get_vowel_avg(vowel)
         else:
             speaker_avg[0] = vowel['avg']['y']
             speaker_avg[1] = vowel['avg']['x']
@@ -175,7 +205,7 @@ def calculate_distances(f, name='self'):
     print(f"Score: {100 * avg_score:.01f}, Harmonic mean: {100 * harmonic_score:.01f}, Penalty: {-total_penalty:.01f}", file=f)
     print(file=f)
 
-    return 100 * harmonic_score - total_penalty
+    return 100 * harmonic_score - total_penalty, isControlGroup, time, version
 
 def write_results(f):
     calculate_distances(f)
@@ -190,10 +220,32 @@ def write_results(f):
             min_speaker = speaker_id
     print(f"Speaker {min_speaker} has the lowest score")
 
-filename = sys.argv[1] if len(sys.argv) > 1 else None
+# filename = sys.argv[1] if len(sys.argv) > 1 else None
 
-if filename:
-    with open(filename, 'w', encoding='utf-8') as f:
-        write_results(f)
-else:
-    write_results(sys.stdout)
+# if filename:
+#     with open(filename, 'w', encoding='utf-8') as f:
+#         write_results(f)
+# else:
+#     write_results(sys.stdout)
+
+avgs = np.zeros([2, 3])
+count = np.zeros(3)
+
+for file in os.listdir('../data/results_input'):
+    if file.endswith('.json'):
+        number = file[:-5]
+        with open(f'../data/results_output/{number}.txt', 'w', encoding='utf-8') as f:
+            pre_score, isControl, timeSpent, version = calculate_distances(f, number, "pre")
+            post_score, _, _, _ = calculate_distances(f, number, "post")
+            i = 0 if isControl else 2
+            if not isControl and timeSpent < 300000:
+                print(f"Warning: {number} spent less than 5 minutes in training")
+                i = 1
+            avgs[0][i] += pre_score
+            avgs[1][i] += post_score
+            count[i] += 1
+            
+print(avgs)
+print(count)
+avgs /= count
+print(avgs)

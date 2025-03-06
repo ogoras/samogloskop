@@ -1,0 +1,38 @@
+Distances for 764-pre (experimental):
+Warning: ʌ and æ confusion, distance = 1.15
+ʌ	51.13	23.55	æ	32
+Warning: ɔ and ɑ confusion, distance = 0.38
+ɔ	4.6	3.26	ɑ	41
+Warning: ɪ and ɛ confusion, distance = 1.07
+ɪ	11.98	0.47	ɛ	4
+Warning: ɛ and ʊ confusion, distance = 0.78
+ɛ	32.87	17.78	ʊ	35
+Warning: i and ɛ confusion, distance = 0.50
+i	96.58	13.71	ɛ	12
+ʊ	0.37	9.35	u	96
+Warning: ɑ and ɔ confusion, distance = 0.38
+ɑ	5.27	4.39	ɔ	45
+Penalty incurred for merging æ and ɑ: 0.09
+æ	70.99	2.68	ɑ	4
+Warning: u and ʊ confusion, distance = 0.48
+u	7.58	6.39	ʊ	46
+Score: 35.0, Harmonic mean: 11.9, Penalty: -0.1
+
+Distances for 764-post (experimental):
+Warning: i and ɪ confusion, distance = 0.48
+i	7.75	2.9	ɪ	27
+ɑ	5.03	8.12	ɔ	62
+Penalty incurred for merging u and ɪ: 0.03
+u	129.37	14.62	ɪ	10
+Warning: ɛ and ʌ confusion, distance = 0.60
+ɛ	57.29	6.92	ʌ	11
+Warning: ɔ and u confusion, distance = 2.54
+ɔ	4.71	3.27	u	41
+Warning: ʌ and ɔ confusion, distance = 0.99
+ʌ	16.47	1.39	ɔ	8
+ʊ	1.03	3.49	u	77
+ɪ	3.93	10.15	ɛ	72
+Warning: æ and ʌ confusion, distance = 0.55
+æ	56.63	2.37	ʌ	4
+Score: 34.7, Harmonic mean: 13.4, Penalty: -0.0
+
