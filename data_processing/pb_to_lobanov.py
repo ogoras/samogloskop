@@ -30,15 +30,17 @@ for speaker in pb_data['speaker'].unique():
 #         ...
 # }
 
-lobanov_data = {}
+lobanov_data_short = {}
+lobanov_data_full = {}
 for phoneme_id in range(1, 11):
     phoneme = phonemes[phoneme_id - 1]
     rows = pb_data['phoneme_id'] == phoneme_id
     phoneme_data = pb_data[rows]
-    phoneme_data = phoneme_data[['F1_lobanov', 'F2_lobanov', 'identified']]
+    phoneme_data = phoneme_data[['F1_lobanov', 'F2_lobanov', 'identified', 'sex', 'speaker']]
     phoneme_data = phoneme_data.rename(columns={'F1_lobanov': 'F1', 'F2_lobanov': 'F2'})
-    print(phoneme_data)
-    lobanov_data[phoneme] = phoneme_data.to_dict(orient='records')
+    lobanov_data_full[phoneme] = phoneme_data.to_dict(orient='records')
+    phoneme_data.drop(['sex', 'speaker'], axis=1, inplace=True)
+    lobanov_data_short[phoneme] = phoneme_data.to_dict(orient='records')
 
 with open('../data/peterson_barney.json', 'w', encoding="utf-8") as f:
-    json.dump(lobanov_data, f, ensure_ascii=False)
+    json.dump(lobanov_data_full, f, ensure_ascii=False)

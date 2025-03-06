@@ -120,8 +120,8 @@ def calculate_distances(name='self'):
 
         scores[1] = np.log(scores[1])
 
-        print(phoneme, round(distance_to_target, 2), round(distance_to_closest, 2), closest_phoneme, 
-            scores.round(2),
+        print(phoneme, round(distance_to_target, 2), round(distance_to_closest, 2), closest_phoneme, round(100 * scores[2]),
+            #scores.round(2),
             sep='\t')
     
     avg_scores /= n
@@ -132,9 +132,11 @@ def calculate_distances(name='self'):
     geom_avg_scores[1] = np.log(geom_avg_scores[1])
     harmonic_avg_scores[1] = np.log(harmonic_avg_scores[1])
 
-    print('Average scores:', avg_scores.round(2))
-    print('Geometric average scores:', geom_avg_scores.round(2))
-    print('Harmonic average scores:', harmonic_avg_scores.round(2))
+    # print('Average scores:', avg_scores.round(2))
+    # print('Geometric average scores:', geom_avg_scores.round(2))
+    # print('Harmonic average scores:', harmonic_avg_scores.round(2))
+    print("Score:", round(100 * avg_scores[2], 1))
+    print()
 
 calculate_distances()
 calculate_distances('Trump')
