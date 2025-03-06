@@ -6,6 +6,7 @@ def sym_inverse(matrix):
     return np.array([[matrix[1][1], -matrix[0][1]], [-matrix[1][0], matrix[0][0]]]) / np.linalg.det(matrix)
 
 peterson_barney = json.load(open('../data/peterson_barney.json', 'r', encoding='utf-8'))
+del peterson_barney['ɚ']
 pb_distributions = {}
 
 for phoneme in peterson_barney.keys():
@@ -33,9 +34,13 @@ for phoneme in peterson_barney.keys():
 def calculate_distances(name='self'):
     print(f'Calculating distances for {name}:')
     vowels = []
-    if name == 'self':
-        vowels = peterson_barney.keys()
-    else:
+    
+    try:
+        if name == 'self' or int(name) == name:
+            vowels = peterson_barney.keys()
+        else:
+            vowels = json.load(open(f'../data/{name}_vowels.json', 'r', encoding='utf-8'))
+    except ValueError:
         vowels = json.load(open(f'../data/{name}_vowels.json', 'r', encoding='utf-8'))
     
     n = len(vowels)
