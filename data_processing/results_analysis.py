@@ -42,6 +42,8 @@ def get_sex(speaker_id):
         return "female"
     return "child"
 
+MD = [{}, {}, {}]
+
 for phoneme in peterson_barney.keys():
     # empty 2d vector
     avg = np.zeros(2)
@@ -63,6 +65,8 @@ for phoneme in peterson_barney.keys():
     covariance /= count
     cov_matrix = np.array([[variance[0], covariance], [covariance, variance[1]]])
     pb_distributions[phoneme] = { 'avg': avg, 'cov_matrix': cov_matrix }
+    for i in range(3):
+        MD[i][phoneme] = np.zeros(2)
 
 def calculate_distances(f, name='self', test=None):
     use_pb = name == 'self' or is_int(name)
@@ -176,6 +180,7 @@ def calculate_distances(f, name='self', test=None):
 
     for index, phoneme in enumerate(phonemes):
         distance_to_target = avg_dist_matrix[index][index]
+        MD[0 if isControlGroup else 1 if time < 300_000 else 2][phoneme][0 if test == "pre" else 1] = np.sqrt(distance_to_target)
         distance_to_closest = float('inf')
         closest_phoneme = ''
         for i, dist in enumerate(avg_dist_matrix[index]):
@@ -238,14 +243,34 @@ for file in os.listdir('../data/results_input'):
             pre_score, isControl, timeSpent, version = calculate_distances(f, number, "pre")
             post_score, _, _, _ = calculate_distances(f, number, "post")
             i = 0 if isControl else 2
-            if not isControl and timeSpent < 300000:
-                print(f"Warning: {number} spent less than 5 minutes in training")
+            if not isControl and timeSpent < 300_000:
+                # print(f"Warning: {number} spent less than 5 minutes in training")
                 i = 1
             avgs[0][i] += pre_score
             avgs[1][i] += post_score
             count[i] += 1
             
-print(avgs)
-print(count)
-avgs /= count
-print(avgs)
+# print(avgs)
+# print(count)
+# avgs /= count
+# print(avgs)
+
+def print_MD(MD):
+    for phoneme in MD:
+        print(phoneme, sep='\t', end='\t')
+    print()
+    for phoneme in MD:
+        print(round(MD[phoneme][0], 1), sep='\t', end='\t')
+    print()
+    for phoneme in MD:
+        print(round(MD[phoneme][1], 1), sep='\t', end='\t')
+    print()
+
+print("Control group:")
+print_MD(MD[0])
+print()
+print("Experimental group (less than 5 minutes):")
+print_MD(MD[1])
+print()
+print("Experimental group (5 minutes or more):")
+print_MD(MD[2])
