@@ -180,7 +180,7 @@ def calculate_distances(f, name='self', test=None):
 
     for index, phoneme in enumerate(phonemes):
         distance_to_target = avg_dist_matrix[index][index]
-        MD[0 if isControlGroup else 1 if time < 300_000 else 2][phoneme][0 if test == "pre" else 1] = np.sqrt(distance_to_target)
+        MD[0 if isControlGroup else 1 if time < 300_000 else 2][phoneme][0 if test == "pre" else 1] += np.sqrt(distance_to_target)
         distance_to_closest = float('inf')
         closest_phoneme = ''
         for i, dist in enumerate(avg_dist_matrix[index]):
@@ -255,22 +255,22 @@ for file in os.listdir('../data/results_input'):
 # avgs /= count
 # print(avgs)
 
-def print_MD(MD):
-    for phoneme in MD:
+def print_MD(i):
+    for phoneme in MD[i]:
         print(phoneme, sep='\t', end='\t')
     print()
-    for phoneme in MD:
-        print(round(MD[phoneme][0], 1), sep='\t', end='\t')
+    for phoneme in MD[i]:
+        print(round(MD[i][phoneme][0] / count[i], 1), sep='\t', end='\t')
     print()
-    for phoneme in MD:
-        print(round(MD[phoneme][1], 1), sep='\t', end='\t')
+    for phoneme in MD[i]:
+        print(round(MD[i][phoneme][1] / count[i], 1), sep='\t', end='\t')
     print()
 
 print("Control group:")
-print_MD(MD[0])
+print_MD(0)
 print()
 print("Experimental group (less than 5 minutes):")
-print_MD(MD[1])
+print_MD(1)
 print()
 print("Experimental group (5 minutes or more):")
-print_MD(MD[2])
+print_MD(2)
