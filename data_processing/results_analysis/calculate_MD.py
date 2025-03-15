@@ -1,4 +1,16 @@
-import json, numpy as np, sys, os
+import json, numpy as np, sys, os, pandas as pd
+
+responses = pd.read_csv('./data/results_input/responses.txt', encoding='utf_16_le', sep='\t')
+responses = responses.drop(columns=['email_address', 'remarks', 'native'])
+additionalColumns = ['vowel', 'isControlGroup', 'isPre', 'timeSpent', 'microphoneLabel', 'version', 'preset', 'speechMin', 'speechMax', 'speechMean', 'silenceMin', 'silenceMax', 'silenceMean', 'speaker_F1_mean', 'speaker_F2_mean', 'speaker_F1_SD', 'speaker_F2_SD', 'distance_to_target', 'distance_to_closest', 'closest_phoneme']
+
+columns = responses.columns.tolist() + additionalColumns
+print(columns)
+output = pd.DataFrame(columns = columns)
+
+# index responses by id ('no')
+responses = responses.set_index('no')
+
 np.set_printoptions(suppress=True)
 np.seterr(all='raise')
 
@@ -73,12 +85,12 @@ def calculate_distances(f, name='self', test=None):
     if test:
         use_pb = False
 
-    vowels = []
+    vowels = []; speaker_json = None
     
     if use_pb:
         vowels = peterson_barney.keys()
     elif test:
-        vowels = json.load(open(f'./data/results_input/{name}.json', 'r', encoding='utf-8'))
+        speaker_json = vowels = json.load(open(f'./data/results_input/{name}.json', 'r', encoding='utf-8'))
         isControlGroup = vowels.get("isControlGroup") == True
         time = vowels.get("timeSpentInTraining")
         version = vowels.get("version")
@@ -187,6 +199,37 @@ def calculate_distances(f, name='self', test=None):
             if i != index and dist < distance_to_closest:
                 distance_to_closest = dist
                 closest_phoneme = phonemes[i]
+
+        try:
+            response = responses.loc[int(name)]
+            app_result = pd.Series({
+                'vowel': phoneme,
+                'isControlGroup': isControlGroup,
+                'isPre': test == 'pre',
+                'timeSpent': time,
+                'microphoneLabel': speaker_json.get('microphoneLabel'),
+                'version': version,
+                'preset': speaker_json.get('preset').get('name'),
+                'speechMin': speaker_json.get('intensityStats').get('speechStats').get('min'),
+                'speechMax': speaker_json.get('intensityStats').get('speechStats').get('max'),
+                'speechMean': speaker_json.get('intensityStats').get('speechStats').get('mean'),
+                'silenceMin': speaker_json.get('intensityStats').get('silenceStats').get('min'),
+                'silenceMax': speaker_json.get('intensityStats').get('silenceStats').get('max'),
+                'silenceMean': speaker_json.get('intensityStats').get('silenceStats').get('mean'),
+                'speaker_F1_mean': speaker_json.get('nativeVowels').get('meanFormants').get('y'),
+                'speaker_F2_mean': speaker_json.get('nativeVowels').get('meanFormants').get('x'),
+                'speaker_F1_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('y'),
+                'speaker_F2_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('x'),
+                'distance_to_target': distance_to_target,
+                'distance_to_closest': distance_to_closest,
+                'closest_phoneme': closest_phoneme
+            })
+            new_row = pd.concat([response, app_result])
+            new_row['no'] = int(name)
+            output.loc[len(output)] = new_row 
+            #print(output.head())
+        except ValueError:
+            pass
         
         score = (distance_to_closest - distance_to_target) / (distance_to_closest + distance_to_target) / 2 + 0.5
         
@@ -274,3 +317,5 @@ print_MD(1)
 print()
 print("Experimental group (5 minutes or more):")
 print_MD(2)
+
+output.to_csv('./data/results_output/distances_long_format.csv', index=False, encoding='utf-8')
