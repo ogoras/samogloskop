@@ -2,11 +2,13 @@ import json, numpy as np, sys, os, pandas as pd
 
 responses = pd.read_csv('./data/results_input/responses.txt', encoding='utf_16_le', sep='\t')
 responses = responses.drop(columns=['email_address', 'remarks', 'native'])
-additionalColumns = ['vowel', 'isControlGroup', 'isPre', 'timeSpent', 'microphoneLabel', 'version', 'preset', 'speechMin', 'speechMax', 'speechMean', 'silenceMin', 'silenceMax', 'silenceMean', 'speaker_F1_mean', 'speaker_F2_mean', 'speaker_F1_SD', 'speaker_F2_SD', 'distance_to_target', 'distance_to_closest', 'closest_phoneme']
+responses_columns = responses.columns.tolist()
+speaker_columns = ['microphoneLabel', 'preset', 'isControlGroup', 'timeSpent', 'version', 'speechMin', 'speechMax', 'speechMean', 'silenceMin', 'silenceMax', 'silenceMean', 'speaker_F1_mean', 'speaker_F2_mean', 'speaker_F1_SD', 'speaker_F2_SD']
+vowel_columns = ['vowel', 'isPre', 'distance_to_target', 'distance_to_closest', 'closest_phoneme']
 
-columns = responses.columns.tolist() + additionalColumns
-print(columns)
-output = pd.DataFrame(columns = columns)
+speaker_data = pd.DataFrame(columns = responses_columns + speaker_columns)
+distances_data = pd.DataFrame(columns = ['no'] + vowel_columns)
+distances_long_format = pd.DataFrame(columns = responses_columns + speaker_columns + vowel_columns)
 
 # index responses by id ('no')
 responses = responses.set_index('no')
@@ -103,6 +105,33 @@ def calculate_distances(f, name='self', test=None):
         vowels = vowels["vowelsProcessed"]
     else:
         vowels = json.load(open(f'./data/{name}_vowels.json', 'r', encoding='utf-8'))
+
+    # speaker_data
+    try:
+        response = responses.loc[int(name)]
+    except ValueError:
+        print(f"{name} could not be converted to an integer")
+        return 0, False, 0, 0
+    app_speaker_result = pd.Series({
+        'no': int(name),
+        'microphoneLabel': speaker_json.get('microphoneLabel'),
+        'preset': speaker_json.get('preset').get('name'),
+        'isControlGroup': isControlGroup,
+        'timeSpent': time,
+        'version': version,
+        'speechMin': speaker_json.get('intensityStats').get('speechStats').get('min'),
+        'speechMax': speaker_json.get('intensityStats').get('speechStats').get('max'),
+        'speechMean': speaker_json.get('intensityStats').get('speechStats').get('mean'),
+        'silenceMin': speaker_json.get('intensityStats').get('silenceStats').get('min'),
+        'silenceMax': speaker_json.get('intensityStats').get('silenceStats').get('max'),
+        'silenceMean': speaker_json.get('intensityStats').get('silenceStats').get('mean'),
+        'speaker_F1_mean': speaker_json.get('nativeVowels').get('meanFormants').get('y'),
+        'speaker_F2_mean': speaker_json.get('nativeVowels').get('meanFormants').get('x'),
+        'speaker_F1_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('y'),
+        'speaker_F2_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('x')
+    })
+    if (test == 'pre'):
+        speaker_data.loc[len(speaker_data)] = pd.concat([response, app_speaker_result])
 
     display_name = name
     if test:
@@ -201,32 +230,17 @@ def calculate_distances(f, name='self', test=None):
                 closest_phoneme = phonemes[i]
 
         try:
-            response = responses.loc[int(name)]
-            app_result = pd.Series({
+            app__vowel_result = pd.Series({
                 'vowel': phoneme,
-                'isControlGroup': isControlGroup,
                 'isPre': test == 'pre',
-                'timeSpent': time,
-                'microphoneLabel': speaker_json.get('microphoneLabel'),
-                'version': version,
-                'preset': speaker_json.get('preset').get('name'),
-                'speechMin': speaker_json.get('intensityStats').get('speechStats').get('min'),
-                'speechMax': speaker_json.get('intensityStats').get('speechStats').get('max'),
-                'speechMean': speaker_json.get('intensityStats').get('speechStats').get('mean'),
-                'silenceMin': speaker_json.get('intensityStats').get('silenceStats').get('min'),
-                'silenceMax': speaker_json.get('intensityStats').get('silenceStats').get('max'),
-                'silenceMean': speaker_json.get('intensityStats').get('silenceStats').get('mean'),
-                'speaker_F1_mean': speaker_json.get('nativeVowels').get('meanFormants').get('y'),
-                'speaker_F2_mean': speaker_json.get('nativeVowels').get('meanFormants').get('x'),
-                'speaker_F1_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('y'),
-                'speaker_F2_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('x'),
                 'distance_to_target': distance_to_target,
                 'distance_to_closest': distance_to_closest,
                 'closest_phoneme': closest_phoneme
             })
-            new_row = pd.concat([response, app_result])
-            new_row['no'] = int(name)
-            output.loc[len(output)] = new_row 
+            long_row = pd.concat([response, app_speaker_result, app__vowel_result])
+            distances_long_format.loc[len(distances_long_format)] = long_row 
+            short_row = pd.concat([pd.Series({'no': int(name)}), app__vowel_result])
+            distances_data.loc[len(distances_data)] = short_row
             #print(output.head())
         except ValueError:
             pass
@@ -318,4 +332,6 @@ print()
 print("Experimental group (5 minutes or more):")
 print_MD(2)
 
-output.to_csv('./data/results_output/distances_long_format.csv', index=False, encoding='utf-8')
+distances_long_format.to_csv('./data/results_output/distances_long_format.csv', index=False, encoding='utf-8')
+distances_data.to_csv('./data/results_output/distances.csv', index=False, encoding='utf-8')
+speaker_data.to_csv('./data/results_output/speakers.csv', index=False, encoding='utf-8')
