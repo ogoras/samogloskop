@@ -11,7 +11,7 @@ def is_int(value):
     except ValueError:
         return False
 
-peterson_barney = json.load(open('../data/peterson_barney.json', 'r', encoding='utf-8'))
+peterson_barney = json.load(open('./data/peterson_barney.json', 'r', encoding='utf-8'))
 del peterson_barney['ɚ']
 pb_distributions = {}
 
@@ -78,7 +78,7 @@ def calculate_distances(f, name='self', test=None):
     if use_pb:
         vowels = peterson_barney.keys()
     elif test:
-        vowels = json.load(open(f'../data/results_input/{name}.json', 'r', encoding='utf-8'))
+        vowels = json.load(open(f'./data/results_input/{name}.json', 'r', encoding='utf-8'))
         isControlGroup = vowels.get("isControlGroup") == True
         time = vowels.get("timeSpentInTraining")
         version = vowels.get("version")
@@ -90,7 +90,7 @@ def calculate_distances(f, name='self', test=None):
             raise ValueError(f"Unknown test type: {test}")
         vowels = vowels["vowelsProcessed"]
     else:
-        vowels = json.load(open(f'../data/{name}_vowels.json', 'r', encoding='utf-8'))
+        vowels = json.load(open(f'./data/{name}_vowels.json', 'r', encoding='utf-8'))
 
     display_name = name
     if test:
@@ -236,10 +236,10 @@ def write_results(f):
 avgs = np.zeros([2, 3])
 count = np.zeros(3)
 
-for file in os.listdir('../data/results_input'):
+for file in os.listdir('./data/results_input'):
     if file.endswith('.json'):
         number = file[:-5]
-        with open(f'../data/results_output/{number}.txt', 'w', encoding='utf-8') as f:
+        with open(f'./data/results_output/{number}.txt', 'w', encoding='utf-8') as f:
             pre_score, isControl, timeSpent, version = calculate_distances(f, number, "pre")
             post_score, _, _, _ = calculate_distances(f, number, "post")
             i = 0 if isControl else 2
