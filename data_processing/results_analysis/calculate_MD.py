@@ -47,7 +47,13 @@ def get_vowel_avg(vowel):
         avg[1] += measurement['x']
         count += 1
     avg /= count
-    return avg
+    SD = np.zeros(2)
+    for measurement in vowel['formants']:
+        SD[0] += (measurement['y'] - avg[0]) ** 2
+        SD[1] += (measurement['x'] - avg[1]) ** 2
+    SD /= count
+    SD = np.sqrt(SD)
+    return avg, SD
 
 def get_sex(speaker_id):
     if speaker_id <= 33:
@@ -83,6 +89,7 @@ for phoneme in peterson_barney.keys():
         MD[i][phoneme] = np.zeros(2)
 
 def calculate_distances(f, name='self', test=None):
+    warnings_count = 0
     use_pb = name == 'self' or is_int(name)
     if test:
         use_pb = False
@@ -111,7 +118,7 @@ def calculate_distances(f, name='self', test=None):
         response = responses.loc[int(name)]
     except ValueError:
         print(f"{name} could not be converted to an integer")
-        return 0, False, 0, 0
+        return 0, False, 0, 0, 0
     app_speaker_result = pd.Series({
         'no': int(name),
         'microphoneLabel': speaker_json.get('microphoneLabel'),
@@ -148,6 +155,7 @@ def calculate_distances(f, name='self', test=None):
     max_matrix = np.zeros((n, n))
 
     speaker_avgs = {}
+    max_speaker_SD_per_vowel = {}
 
     for vowel_id, vowel in enumerate(vowels):
         if use_pb:
@@ -157,12 +165,13 @@ def calculate_distances(f, name='self', test=None):
         phonemes.append(speaker_phoneme)
 
         speaker_avg = np.zeros(2)
+        speaker_SD = np.zeros(2)
         if name == 'self':
             speaker_avg = pb_distributions[vowel]['avg']
         elif is_int(name):
             speaker_avg = get_speaker_avg(speaker_phoneme, name)
         elif test:
-            speaker_avg = get_vowel_avg(vowel)
+            speaker_avg, speaker_SD = get_vowel_avg(vowel)
         else:
             speaker_avg[0] = vowel['avg']['y']
             speaker_avg[1] = vowel['avg']['x']
@@ -175,6 +184,12 @@ def calculate_distances(f, name='self', test=None):
                 phoneme = target['letter']
             avg = pb_distributions[phoneme]['avg']
             cov_matrix = pb_distributions[phoneme]['cov_matrix']
+            if target_id == vowel_id:
+                max_SD = max(np.sqrt(cov_matrix[0][0]), np.sqrt(cov_matrix[1][1]))
+                max_speaker_SD_per_vowel[phoneme] = max_speaker_SD = max(speaker_SD[0], speaker_SD[1])
+                if max_speaker_SD > 1.0:
+                    print(f"Warning: {phoneme} has SD {max_SD:.02f}, speaker has SD {max_speaker_SD:.02f}", file=f)
+                    warnings_count += 1
             cov_inv = sym_inverse(cov_matrix)
 
             d = speaker_avg - avg
@@ -253,13 +268,13 @@ def calculate_distances(f, name='self', test=None):
                 penalty = np.exp(-100 * distance ** 2) * 15
                 print(f"Penalty incurred for merging {phoneme} and {closest_phoneme}: {penalty:.02f}", file=f)
                 total_penalty += penalty
-            else:
-                print(f"Warning: {phoneme} and {closest_phoneme} confusion, distance = {distance:.02f}", file=f)
+            # else:
+            #     print(f"Warning: {phoneme} and {closest_phoneme} confusion, distance = {distance:.02f}", file=f)
 
         avg_score += score
         harmonic_score += 1 / score
 
-        print(phoneme, round(distance_to_target, 2), round(distance_to_closest, 2), closest_phoneme, round(100 * score), sep='\t', file=f)
+        print(phoneme, round(distance_to_target, 2), round(distance_to_closest, 2), closest_phoneme, round(100 * score), round(max_speaker_SD_per_vowel[phoneme], 3), sep='\t', file=f)
     
     avg_score /= n
     harmonic_score = n / harmonic_score
@@ -267,7 +282,7 @@ def calculate_distances(f, name='self', test=None):
     print(f"Score: {100 * avg_score:.01f}, Harmonic mean: {100 * harmonic_score:.01f}, Penalty: {-total_penalty:.01f}", file=f)
     print(file=f)
 
-    return 100 * harmonic_score - total_penalty, isControlGroup, time, version
+    return 100 * harmonic_score - total_penalty, isControlGroup, time, version, warnings_count
 
 def write_results(f):
     calculate_distances(f)
@@ -293,12 +308,17 @@ def write_results(f):
 avgs = np.zeros([2, 3])
 count = np.zeros(3)
 
+total_warnings = 0
+
 for file in os.listdir('./data/results_input'):
     if file.endswith('.json'):
         number = file[:-5]
-        with open(f'./data/results_output/{number}.txt', 'w', encoding='utf-8') as f:
-            pre_score, isControl, timeSpent, version = calculate_distances(f, number, "pre")
-            post_score, _, _, _ = calculate_distances(f, number, "post")
+        with open(f'./data/results_output2/{number}.txt', 'w', encoding='utf-8') as f:
+            pre_score, isControl, timeSpent, version, warning_count_pre = calculate_distances(f, number, "pre")
+            post_score, _, _, _, warning_count_post = calculate_distances(f, number, "post")
+            total_warnings += warning_count_post + warning_count_pre
+            print("WARNINGS_PRE: ", warning_count_pre, file=f)
+            print("WARNINGS_POST: ", warning_count_post, file=f)
             i = 0 if isControl else 2
             if not isControl and timeSpent < 300_000:
                 # print(f"Warning: {number} spent less than 5 minutes in training")
@@ -332,6 +352,8 @@ print()
 print("Experimental group (5 minutes or more):")
 print_MD(2)
 
-distances_long_format.to_csv('./data/results_output/distances_long_format.csv', index=False, encoding='utf-8')
-distances_data.to_csv('./data/results_output/distances.csv', index=False, encoding='utf-8')
-speaker_data.to_csv('./data/results_output/speakers.csv', index=False, encoding='utf-8')
+distances_long_format.to_csv('./data/results_output2/distances_long_format.csv', index=False, encoding='utf-8')
+distances_data.to_csv('./data/results_output2/distances.csv', index=False, encoding='utf-8')
+speaker_data.to_csv('./data/results_output2/speakers.csv', index=False, encoding='utf-8')
+
+print(f"Total {total_warnings} warnings out of {21 * 2 * 9} samples")
