@@ -63,6 +63,7 @@ def get_sex(speaker_id):
     return "child"
 
 MD = [{}, {}, {}]
+MD_counts = [{}, {}, {}]
 
 for phoneme in peterson_barney.keys():
     # empty 2d vector
@@ -87,6 +88,7 @@ for phoneme in peterson_barney.keys():
     pb_distributions[phoneme] = { 'avg': avg, 'cov_matrix': cov_matrix }
     for i in range(3):
         MD[i][phoneme] = np.zeros(2)
+        MD_counts[i][phoneme] = np.zeros(2)
 
 def calculate_distances(f, name='self', test=None):
     warnings_count = 0
@@ -236,7 +238,7 @@ def calculate_distances(f, name='self', test=None):
 
     for index, phoneme in enumerate(phonemes):
         distance_to_target = avg_dist_matrix[index][index]
-        MD[0 if isControlGroup else 1 if time < 300_000 else 2][phoneme][0 if test == "pre" else 1] += np.sqrt(distance_to_target)
+        
         distance_to_closest = float('inf')
         closest_phoneme = ''
         for i, dist in enumerate(avg_dist_matrix[index]):
@@ -244,21 +246,24 @@ def calculate_distances(f, name='self', test=None):
                 distance_to_closest = dist
                 closest_phoneme = phonemes[i]
 
-        try:
-            app__vowel_result = pd.Series({
-                'vowel': phoneme,
-                'isPre': test == 'pre',
-                'distance_to_target': distance_to_target,
-                'distance_to_closest': distance_to_closest,
-                'closest_phoneme': closest_phoneme
-            })
-            long_row = pd.concat([response, app_speaker_result, app__vowel_result])
-            distances_long_format.loc[len(distances_long_format)] = long_row 
-            short_row = pd.concat([pd.Series({'no': int(name)}), app__vowel_result])
-            distances_data.loc[len(distances_data)] = short_row
-            #print(output.head())
-        except ValueError:
-            pass
+        if max_speaker_SD_per_vowel[phoneme] <= 1.0:
+            MD[0 if isControlGroup else 1 if time < 300_000 else 2][phoneme][0 if test == "pre" else 1] += np.sqrt(distance_to_target)
+            MD_counts[0 if isControlGroup else 1 if time < 300_000 else 2][phoneme][0 if test == "pre" else 1] += 1
+            try:
+                app__vowel_result = pd.Series({
+                    'vowel': phoneme,
+                    'isPre': test == 'pre',
+                    'distance_to_target': distance_to_target,
+                    'distance_to_closest': distance_to_closest,
+                    'closest_phoneme': closest_phoneme
+                })
+                long_row = pd.concat([response, app_speaker_result, app__vowel_result])
+                distances_long_format.loc[len(distances_long_format)] = long_row 
+                short_row = pd.concat([pd.Series({'no': int(name)}), app__vowel_result])
+                distances_data.loc[len(distances_data)] = short_row
+                #print(output.head())
+            except ValueError:
+                pass
         
         score = (distance_to_closest - distance_to_target) / (distance_to_closest + distance_to_target) / 2 + 0.5
         
@@ -282,7 +287,7 @@ def calculate_distances(f, name='self', test=None):
     print(f"Score: {100 * avg_score:.01f}, Harmonic mean: {100 * harmonic_score:.01f}, Penalty: {-total_penalty:.01f}", file=f)
     print(file=f)
 
-    return 100 * harmonic_score - total_penalty, isControlGroup, time, version, warnings_count
+    return 100 * avg_score - total_penalty, isControlGroup, time, version, warnings_count
 
 def write_results(f):
     calculate_distances(f)
@@ -326,22 +331,21 @@ for file in os.listdir('./data/results_input'):
             avgs[0][i] += pre_score
             avgs[1][i] += post_score
             count[i] += 1
-            
-# print(avgs)
-# print(count)
-# avgs /= count
-# print(avgs)
+
+print()            
+print(count)
+avgs /= count
+print(avgs.round(2))
+print()
 
 def print_MD(i):
     for phoneme in MD[i]:
         print(phoneme, sep='\t', end='\t')
     print()
-    for phoneme in MD[i]:
-        print(round(MD[i][phoneme][0] / count[i], 1), sep='\t', end='\t')
-    print()
-    for phoneme in MD[i]:
-        print(round(MD[i][phoneme][1] / count[i], 1), sep='\t', end='\t')
-    print()
+    for j in range(2):
+        for phoneme in MD[i]:
+            print(round(MD[i][phoneme][j] / MD_counts[i][phoneme][j], 1), sep='\t', end='\t')
+        print()
 
 print("Control group:")
 print_MD(0)
@@ -352,8 +356,8 @@ print()
 print("Experimental group (5 minutes or more):")
 print_MD(2)
 
-distances_long_format.to_csv('./data/results_output2/distances_long_format.csv', index=False, encoding='utf-8')
-distances_data.to_csv('./data/results_output2/distances.csv', index=False, encoding='utf-8')
+distances_long_format.to_csv('./data/results_output/distances_filtered_long_format.csv', index=False, encoding='utf-8')
+distances_data.to_csv('./data/results_output/distances_filtered.csv', index=False, encoding='utf-8')
 speaker_data.to_csv('./data/results_output2/speakers.csv', index=False, encoding='utf-8')
 
 print(f"Total {total_warnings} warnings out of {21 * 2 * 9} samples")
