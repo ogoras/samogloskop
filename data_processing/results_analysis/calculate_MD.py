@@ -334,6 +334,8 @@ for file in os.listdir('./data/results_input'):
 
 print()            
 print(count)
+if (count[1] == 0):
+    count[1] = 1
 avgs /= count
 print(avgs.round(2))
 print()
