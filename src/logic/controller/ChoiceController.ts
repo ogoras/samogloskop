@@ -1,16 +1,14 @@
 import Controller from "./Controller.js";
-import ChoiceView from "../../frontend/view/ChoiceView.js";
-import ConsentCompoment from "../../frontend/components/choice/ConsentComponent.js";
-import PresetComponent from "../../frontend/components/choice/PresetComponent.js";
+import ChoiceView from "../../frontend/view/choice/ChoiceView.js";
+import ConsentView from "../../frontend/view/choice/ConsentView.js";
 import View from "../../frontend/view/View.js";
 import nextController from "./nextController.js";
-import type ChoiceComponent from "../../frontend/components/choice/ChoiceComponent.js";
 
-const CHOICE_COMPONENTS: {
-    [key: string]: typeof ChoiceComponent
+const CHOICE_VIEWS: {
+    [key: string]: typeof ChoiceView
 } = {
-    "DATA_CONSENT": ConsentCompoment,
-    "PRESET_SELECTION": PresetComponent
+    "DATA_CONSENT": ConsentView,
+    "PRESET_SELECTION": ChoiceView
 }
 
 const PROPERTY_NAMES: {
@@ -46,8 +44,9 @@ export default class ChoiceController extends Controller {
 
     #constructNewView() {
         this.view?.destroy?.();
-        const Constructor = CHOICE_COMPONENTS[this.stateName!];
+        const Constructor = CHOICE_VIEWS[this.stateName!];
         if (!Constructor) throw new Error(`No view constructor found for state ${this.stateName}`);
-        this.view = new ChoiceView(this, Constructor);
+
+        this.view = new Constructor(this);
     }
 }

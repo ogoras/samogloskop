@@ -1,8 +1,9 @@
-import View from './View.js';
-import MoreInfo from '../components/MoreInfo.js';
+import View from '../View.js';
+import MoreInfo from '../../components/MoreInfo.js';
+import PresetComponent from '../../components/choice/PresetComponent.js';
 
 export default class ChoiceView extends View {
-    constructor(controller, ChoiceComponent, parentContainer, selectedIndex, extraAction) {
+    constructor(controller, ChoiceComponent = PresetComponent, parentContainer, selectedIndex, extraAction) {
         super(controller);
         // check if parent.choose is a function
         if (typeof controller.choose !== "function") throw new Error("Controller must have a choose method");
