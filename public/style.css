@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
+iframe {
+    aspect-ratio: 16 / 9;
+    margin: auto;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
 body {
     max-height: 100vh;
     max-width: 100vw;
@@ -159,6 +166,11 @@ canvas {
 }
 
 @media (orientation: landscape) {
+    iframe {
+        height: 60vh;
+        width: calc(16 / 9 * 60vh);
+    }
+
     .formants-container {
         height: 100%;
         aspect-ratio: 1 / 1;
@@ -180,6 +192,11 @@ canvas {
 }
 
 @media (orientation: portrait) {
+    iframe {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .formants-container {
         width: 100%;
         aspect-ratio: 1 / 1;
