@@ -35,12 +35,6 @@ export default class DataDownloadView extends View {
         }
         this.container.appendChild(downloadButton);
 
-        const surveyLink = document.createElement("a");
-        surveyLink.innerHTML = "<h3>Przejdź do ankiety</h3>";
-        surveyLink.href = "https://forms.gle/CrCyfBnwZryoB9QbA";
-        surveyLink.target = "_blank";
-        this.container.appendChild(surveyLink);
-
         // Add a button to revoke localStorage consent if it was given
         if (controller.lsm.dataConsentGiven) {
             // add spacing

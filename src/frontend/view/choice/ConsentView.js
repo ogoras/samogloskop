@@ -1,5 +1,6 @@
 import ChoiceView from "./ChoiceView.js";
 import ConsentComponent from "../../components/choice/ConsentComponent.js";
+import VIDEO_ID from "../../../const/Help.js"
 
 export default class ConsentView extends ChoiceView {
     constructor(controller) {
@@ -11,7 +12,7 @@ export default class ConsentView extends ChoiceView {
         this.container.insertBefore(this.h2, this.container.firstChild);
 
         this.iframe = document.createElement("iframe");
-        this.iframe.src = "https://www.youtube.com/embed/u7rLlYYY-es";
+        this.iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}`;
         this.iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
         this.iframe.referrerPolicy = "strict-origin-when-cross-origin";
         this.iframe.allowFullscreen = true;

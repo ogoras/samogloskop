@@ -2,6 +2,7 @@ import View from "./View.js";
 import PresetComponent from "../components/choice/PresetComponent.js";
 import { VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH } from '../../const/version.js';
 import State from "../../const/State.js";
+import HELP_VIDEO_ID from "../../const/Help.js";
 
 export default class SettingsView extends View {
     #state;
@@ -39,6 +40,7 @@ export default class SettingsView extends View {
         this.mainContainer.classList.add("main-container");
         document.body.appendChild(this.mainContainer);
 
+        this.mainContainer.appendChild(this.createHelpSection());
         this.mainContainer.appendChild(this.createConsentSection());
         this.mainContainer.appendChild(this.createPresetSection());
         if (this.intensityStats?.isCalibrated) {
@@ -53,6 +55,23 @@ export default class SettingsView extends View {
         this.footer.classList.add("gray");
         document.body.appendChild(this.footer);
         this.footer.innerHTML = `Samogłoskop v${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}`;
+    }
+
+    createHelpSection() {
+        const div = document.createElement("div");
+
+        const title = document.createElement("h2");
+        title.innerHTML = "<b>Pomoc</b>";
+        div.appendChild(title);
+
+        const instructionVideoLink = document.createElement("a");
+        instructionVideoLink.innerHTML = "Obejrzyj filmik instruktażowy";
+        instructionVideoLink.href = `https://www.youtube.com/watch?v=${HELP_VIDEO_ID}`;
+        instructionVideoLink.target = "_blank";
+        instructionVideoLink.style.margin = "0.5em";
+        div.appendChild(instructionVideoLink);
+
+        return div;
     }
 
     createConsentSection() {
