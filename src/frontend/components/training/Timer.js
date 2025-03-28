@@ -16,7 +16,7 @@ export default class Timer {
         const hh = Math.floor(time / 3600);
         const mm = twoDigits(Math.floor(time / 60) % 60);
         const ss = twoDigits(time % 60);
-        this.element.innerHTML = `Ćwiczysz już: ${hh}:${mm}:${ss}`;
+        this.element.innerHTML = `Dzisiaj ćwiczysz już: ${hh}:${mm}:${ss}`;
     }
 
     show(timeMs) {

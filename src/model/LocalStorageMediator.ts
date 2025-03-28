@@ -15,6 +15,10 @@ const GATHERING_NATIVE_LEGACY = [
 export default class LocalStorageMediator extends Singleton {
     [index: string]: any;
 
+    #dateToString(date : Date) {
+        return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    }
+
     constructor() {
         super();
 
@@ -60,6 +64,20 @@ export default class LocalStorageMediator extends Singleton {
         }
     }
 
+    getTimeSpentForToday() {
+        const date = new Date();
+        const todayString = this.#dateToString(date);
+        return this.timeSpentInTraining?.[todayString] ?? 0;
+    }
+
+    setTimeSpentForToday(time: number) {
+        const date = new Date();
+        const todayString = this.#dateToString(date);
+        const timeSpentCopy = this.timeSpentInTraining ?? {};
+        timeSpentCopy[todayString] = time;
+        this.timeSpentInTraining = timeSpentCopy;
+    }
+
     #cache = {};
 
     load() {
@@ -98,6 +116,18 @@ export default class LocalStorageMediator extends Singleton {
                 case "0.5": // 0.5 -> 1.0 conversion, same thing
                 case "1.0": // 1.0 -> 1.1 ditto
                 case "1.1": // 1.1 -> 1.2 
+                case "1.2": // 1.2 -> 1.3
+                    // attribute all time spent so far to the current day
+                    const timeSpentSoFar = localStorage.getItem("timeSpentInTraining");
+                    if (timeSpentSoFar) {
+                        const timeSpentSoFarInt = parseInt(timeSpentSoFar);
+                        if (!isNaN(timeSpentSoFarInt)) {
+                            const date = new Date();
+                            const todayString = this.#dateToString(date);
+                            this.timeSpentInTraining = { [todayString]: timeSpentSoFarInt };
+                            console.log(this.timeSpentInTraining);
+                        }
+                    }
                     break;
                 default:
                     if (dataConsentGiven) {
@@ -187,10 +217,8 @@ const localStorageProperties = [
     {
         name: "timeSpentInTraining",
         localStorageName: "timeSpentInTraining",
-        customGet: (string: string) => {
-            const candidate = parseInt(string);
-            return isNaN(candidate) ? undefined : candidate;
-        }
+        customGet: JSON.parse,
+        customSet: JSON.stringify,
     },
     {
         name: "isControlGroup",
