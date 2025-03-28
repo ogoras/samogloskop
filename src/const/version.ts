@@ -34,3 +34,4 @@ export const VERSION_MAJOR = 1,
 // v1.2.0: Microphone device name is now stored in the local storage
 // v1.2.1: Updated information about Donald Trump
 // v1.2.2: Added the Youtube instruction video, removed outdated link to the survey
+// v1.2.3: Disabled control group functionality
