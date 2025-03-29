@@ -104,10 +104,14 @@ export default class TrainingController extends SmoothingController {
         return false;
     }
 
-    #stopCountingTime() {
+    stopCountingTime() {
         if (document.hasFocus()) {
             this.#onBlur();
-            this.view.timer.hide();
+            try {
+                this.view.timer.hide();
+            } catch (e) {
+                console.log(e);
+            }
         }
         this.#abortController.abort();
     }
@@ -115,7 +119,7 @@ export default class TrainingController extends SmoothingController {
     next() {
         if (this.#discarded) return;
 
-        this.#stopCountingTime();
+        this.stopCountingTime();
 
         this.sm.advance();
         this.breakRenderLoop();
@@ -126,7 +130,7 @@ export default class TrainingController extends SmoothingController {
     recalibrate() {
         if (this.#discarded) return;
 
-        this.#stopCountingTime();
+        this.stopCountingTime();
 
         super.recalibrate();
     }

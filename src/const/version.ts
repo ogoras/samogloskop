@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 1,
     VERSION_MINOR = 3,  // will only change when the data format changes
-    VERSION_PATCH = 0;  // will change only with published commits, the in-beetween development versions are not counted
+    VERSION_PATCH = 1;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: Introduced localStorage
 // v0.1: Added Lobanov scaling
@@ -36,3 +36,4 @@ export const VERSION_MAJOR = 1,
 // v1.2.2: Added the Youtube instruction video, removed outdated link to the survey
 // v1.2.3: Disabled control group functionality
 // v1.3.0: timeSpent is now tracked day-wise
+// v1.3.1: Implemented saving and loading

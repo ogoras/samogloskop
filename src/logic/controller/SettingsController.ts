@@ -18,6 +18,7 @@ export default class SettingsController extends Controller {
     }
 
     load() {
+        this.parent?.stopCountingTime?.();
         this.lsm!.loadFromFile();
     }
 
