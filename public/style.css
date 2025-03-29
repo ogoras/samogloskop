@@ -212,6 +212,20 @@ body {
     flex-direction: column;
 }
 
+@keyframes progress-bar-color {
+    0% { background: linear-gradient(to right, gray, lightgray 10%); }
+    10% { background: linear-gradient(to right, lightgray, gray 10%, lightgray 20%); }
+    20% { background: linear-gradient(to right, lightgray 10%, gray 20%, lightgray 30%); }
+    30% { background: linear-gradient(to right, lightgray 20%, gray 30%, lightgray 40%); }
+    40% { background: linear-gradient(to right, lightgray 30%, gray 40%, lightgray 50%); }
+    50% { background: linear-gradient(to right, lightgray 40%, gray 50%, lightgray 60%); }
+    60% { background: linear-gradient(to right, lightgray 50%, gray 60%, lightgray 70%); }
+    70% { background: linear-gradient(to right, lightgray 60%, gray 70%, lightgray 80%); }
+    80% { background: linear-gradient(to right, lightgray 70%, gray 80%, lightgray 90%); }
+    90% { background: linear-gradient(to right, lightgray 80%, gray 90%, lightgray 100%); }
+    100% { background: linear-gradient(to right, lightgray 90%, gray 100%); }
+}
+
 .progress-bar {
     width: 100%;
     height: 0.5rem;

@@ -37,4 +37,13 @@ export default class ProgressBar extends Component {
         const tmp = window.getComputedStyle(this.background).backgroundColor;
         this.color = tmp;
     }
+
+    startAnimation() {
+        // animate background color
+        this.background.style.animation = "progress-bar-color 1s infinite";
+    }
+
+    stopAnimation() {
+        this.background.style.animation = null;
+    }
 }

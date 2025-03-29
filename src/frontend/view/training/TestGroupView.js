@@ -61,7 +61,7 @@ export default class TestGroupView extends RecordingView {
 
         this.stackComponent.element.style.width = "auto";
 
-        this.timer = new Timer(this.sideComponent, this.sideComponent.moreInfo);
+        this.timer = new Timer(this.sideComponent);
 
         this.plotComponent.disableNativeClickability();
 
