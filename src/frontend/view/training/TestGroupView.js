@@ -101,6 +101,10 @@ export default class TestGroupView extends RecordingView {
         if (this.#currentMessage == 0) {
             this.stackComponent.h2.innerHTML = `W dowolnym momencie, jeśli czujesz, że lepiej już wymawiasz te samogłoski, możesz przejść dalej do testu końcowego.`;
             this.button.innerHTML = "Przejdź do testu końcowego";
+            
+            if (!this.controller.trainedLongEnough) {
+                this.stackComponent.hidden = true;
+            }
             this.#currentMessage++;
         } else if (this.#currentMessage == 1) {
             if (confirm("Czy na pewno chcesz przejść do testu końcowego? Nie będzie można już wrócić do ćwiczenia.")) {
@@ -124,7 +128,7 @@ export default class TestGroupView extends RecordingView {
         if (newSelectedId === this.#selectedVowelId) {
             this.#selectedVowelId = null;
             this.selectedVowelDisplay.deselectVowel();
-            this.stackComponent.element.style.display = null; // reset to default
+            if (this.#currentMessage != 1 || this.controller.trainedLongEnough) this.stackComponent.hidden = false;
 
             this.plotComponent.showAllForeign();
             
@@ -138,7 +142,7 @@ export default class TestGroupView extends RecordingView {
             return;
         }
 
-        this.stackComponent.element.style.display = "none";
+        this.stackComponent.hidden = true;
         this.selectedVowelDisplay.selectVowel(vowel);
         this.plotComponent.selectForeignVowel(newSelectedId);
 
