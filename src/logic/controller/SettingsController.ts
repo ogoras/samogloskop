@@ -16,4 +16,12 @@ export default class SettingsController extends Controller {
     recalibrate() {
         this.parent.recalibrate();
     }
+
+    load() {
+        this.lsm!.loadFromFile();
+    }
+
+    save() {
+        this.lsm!.saveToFile(`samogloskop_zapis_${new Date().toISOString()}.json`);
+    }
 }

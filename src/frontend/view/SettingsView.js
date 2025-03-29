@@ -49,6 +49,7 @@ export default class SettingsView extends View {
         if (this.state.is("CONFIRM_VOWELS")) {
             this.mainContainer.appendChild(this.createDeleteVowelsSection());
         }
+        this.mainContainer.appendChild(this.createSaveLoadSection());
 
         this.footer = document.createElement("div");
         this.footer.classList.add("footer");
@@ -107,7 +108,7 @@ export default class SettingsView extends View {
             secondButton.style = "color: #a00000";
             secondButton.addEventListener("click", () => {
                 if (!confirm("Czy na pewno chcesz wycofać zgodę na korzystanie z pamięci lokalnej? Utracisz wszystkie swoje dane po odświeżeniu lub zamknięciu okna przeglądarki.")) return;
-                this.controller.lsm.clear();
+                this.controller.lsm.dataConsentGiven = false;
 
                 const nextElement = div.nextElementSibling;
                 div.remove();
@@ -229,6 +230,47 @@ export default class SettingsView extends View {
         notice.innerHTML = "<p>Uwaga: Usunięcie zebranych samogłosek automatycznie odświeża stronę i kieruje do ponownego nagrania próbek mowy.</p>";
         notice.style = "color: #a00000";
         container.appendChild(notice);
+
+        return div;
+    }
+
+    createSaveLoadSection() {
+        const div = document.createElement("div");
+
+        const title = document.createElement("h2");
+        title.innerHTML = "<b>Zapisz lub wczytaj</b>";
+        div.appendChild(title);
+
+        const container = document.createElement("div");
+        container.classList.add("flex-oriented");
+        div.appendChild(container);
+
+        const saveButton = document.createElement("button");
+        saveButton.innerHTML = "Zapisz stan aplikacji do pliku...";
+        saveButton.classList.add("small");
+        saveButton.onclick = () => {
+            if (!this.controller.lsm.dataConsentGiven) {
+                alert("Niestety, ta funkcja działa tylko, jeśli najpierw wyrazisz zgodę na przechowywanie danych w pamięci lokalnej.");
+                return;
+            }
+            this.controller.save();
+        }
+        saveButton.style.color = "#008000";
+        container.appendChild(saveButton);
+
+        const loadButton = document.createElement("button");
+        loadButton.innerHTML = "Wczytaj stan aplikacji z pliku...";
+        loadButton.classList.add("small");
+        loadButton.onclick = () => {
+            if (!this.controller.lsm.dataConsentGiven) {
+                alert("Niestety, ta funkcja działa tylko, jeśli najpierw wyrazisz zgodę na przechowywanie danych w pamięci lokalnej.");
+                return;
+            }
+            if (!confirm("Czy na pewno chcesz wczytać stan aplikacji z pliku? Wszystkie niezapisane dane zostaną utracone.")) return;
+            this.controller.load();
+        }
+        loadButton.style.color = "#0000ff";
+        container.appendChild(loadButton);
 
         return div;
     }

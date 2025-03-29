@@ -166,6 +166,45 @@ export default class LocalStorageMediator extends Singleton {
         }
         return JSON.stringify(object);
     }
+
+    saveToFile(filename: string) {
+        const json = this.getJSON();
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    loadFromFile() {
+        // show a dialog to select a file
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.onchange = () => {
+            const file = input.files?.[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const json = reader.result as string;
+                    this.loadFromJSON(json);
+                };
+                reader.readAsText(file);
+            }
+        };
+        input.click();
+    }
+
+    loadFromJSON(json: string) {
+        const object = JSON.parse(json);
+        for (let prop of localStorageProperties) {
+            this[prop.name] = object[prop.name];
+        }
+
+        location.reload();
+    }
 }
 
 const localStorageProperties = [
@@ -182,13 +221,19 @@ const localStorageProperties = [
         name: "preset",
         localStorageName: "preset",
         customGet: (key: string) => Preset.get_optional(key),
-        customSet: (value: Preset) => value.toString(),
+        customSet: (value: Preset | {index: number}) => {
+            if (!(value instanceof Preset)) value = Preset.get(value.index);
+            return value.toString();
+        },
     },
     {
         name: "state",
         localStorageName: "state",
         customGet: (key: string) => State.get_optional(key),
-        customSet: (value: State) => value.toString(),
+        customSet: (value: State | {index: number}) => {
+            if (!(value instanceof State)) value = State.get(value.index);
+            return value.toString();
+        }
     },
     {
         name: "intensityStats",
