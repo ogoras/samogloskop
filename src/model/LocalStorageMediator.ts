@@ -200,7 +200,9 @@ export default class LocalStorageMediator extends Singleton {
     loadFromJSON(json: string) {
         const object = JSON.parse(json);
         for (let prop of localStorageProperties) {
-            this[prop.name] = object[prop.name];
+            if (nullish(object[prop.name])) this[prop.name] = object[prop.name];
+            else if (prop.customLoad) this[prop.name] = prop.customLoad(object[prop.name]);
+            else this[prop.name] = prop.customGet ? prop.customGet(JSON.stringify(object[prop.name])) : object[prop.name];
         }
 
         location.reload();
@@ -225,6 +227,7 @@ const localStorageProperties = [
             if (!(value instanceof Preset)) value = Preset.get(value.index);
             return value.toString();
         },
+        customLoad: (object: any) => Preset.get(object.index),
     },
     {
         name: "state",
@@ -233,7 +236,8 @@ const localStorageProperties = [
         customSet: (value: State | {index: number}) => {
             if (!(value instanceof State)) value = State.get(value.index);
             return value.toString();
-        }
+        },
+        customLoad: (object: any) => State.get(object.index),
     },
     {
         name: "intensityStats",
