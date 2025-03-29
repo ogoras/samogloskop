@@ -1,6 +1,8 @@
 import nullish from "../../../logic/util/nullish.js";
 import Component from "../Component.js";
 import ProgressBar from "../../visualization/progress_bar/ProgressBar.js";
+import TARGET from "../../../const/TIME.js"
+import convertSecondsToTimeString from "../../../logic/util/timeToString.js";
 
 export default class Timer extends Component {
     constructor(container) {
@@ -13,14 +15,16 @@ export default class Timer extends Component {
 
     setTime(time) {
         this.time = time;
-        function twoDigits(num) { return num.toString().padStart(2, '0'); }
-        const hh = Math.floor(time / 3600);
-        const mm = twoDigits(Math.floor(time / 60) % 60);
-        const ss = twoDigits(time % 60);
-        this.span.innerHTML = `Dzisiaj ćwiczysz już: ${hh}:${mm}:${ss}`;
+        this.span.innerHTML = `Dzisiaj ćwiczysz już: ${convertSecondsToTimeString(time)}`;
 
-        const target = 30 * 60;
-        const percentage = Math.min(time / target, 1) * 100;
+        if (this.reachedTarget === undefined) this.reachedTarget = time >= TARGET;
+        else {
+            const reachedTargetNow = time >= TARGET;
+            if (reachedTargetNow && !this.reachedTarget) {
+                this.reachedTarget = this.view.controller.checkIfDailyTargetReached();
+            }
+        }
+        const percentage = Math.min(time / TARGET, 1) * 100;
         this.progressBar.progress = percentage;
     }
 

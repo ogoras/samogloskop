@@ -5,6 +5,9 @@ import nextController from "../nextController.js";
 import LanguageWords from "../../../model/example_words/LanguageWords.js";
 import TestGroupView from "../../../frontend/view/training/TestGroupView.js";
 import ControlGroupView from "../../../frontend/view/training/ControlGroupView.js";
+import ComeBackTomorrowView from "../../../frontend/view/training/ComeBackTomorrowView.js";
+import TIME_TARGET from "../../../const/TIME.js";
+import LocalStorageMediator from "../../../model/LocalStorageMediator.js";
 
 export default class TrainingController extends SmoothingController {
     #discarded = false;
@@ -12,7 +15,16 @@ export default class TrainingController extends SmoothingController {
     #lastFocused = null;
     #abortController;
 
+    get timeSpentInFocus() { return this.#timeSpentInFocus; }
+
     async init(prev) {
+        this.#timeSpentInFocus = LocalStorageMediator.getInstance().getTimeSpentForToday() ?? 0;
+
+        if (this.#timeSpentInFocus >= TIME_TARGET * 1000) {
+            this.view = new ComeBackTomorrowView(this)
+            this.#discarded = true;
+        }
+
         if (this.#discarded) return;
         super.init(prev);
 
@@ -26,7 +38,6 @@ export default class TrainingController extends SmoothingController {
 
         // check if window has focus
         this.#lastFocused = document.hasFocus() ? Date.now() : null;
-        this.#timeSpentInFocus = this.lsm.getTimeSpentForToday() ?? 0;
         this.view.timer.show(this.#timeSpentInFocus);
         if (document.hasFocus()) this.view.timer.resume();
 
@@ -45,9 +56,22 @@ export default class TrainingController extends SmoothingController {
 
     initView(prev) {
         if (this.#discarded) return;
+
         const TrainingView = this.lsm.isControlGroup ? ControlGroupView : TestGroupView;
         this.view = new TrainingView(this, this.recorder, prev?.view);
         if (this.lsm.isControlGroup) this.recorder.stopRecording();
+    }
+
+    checkIfDailyTargetReached() {
+        let timeSpent = this.#timeSpentInFocus;
+        if (this.#lastFocused) timeSpent += Date.now() - this.#lastFocused;
+        const reached = timeSpent >= TIME_TARGET * 1000;
+
+        if (reached) {
+            this.view.notifyDailyTargetReached();
+        }
+
+        return reached;
     }
 
     #onFocus() {

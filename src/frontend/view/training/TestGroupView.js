@@ -169,4 +169,9 @@ export default class TestGroupView extends RecordingView {
         this.assertSpeechFormants?.();
         this.plotComponent?.feedSmoothed(formants, false);
     }
+
+    notifyDailyTargetReached() {
+        // show message
+        window.alert("Wystarczy na dzisiaj! Możesz zamknąć stronę i wrócić jutro.");
+    }
 }
