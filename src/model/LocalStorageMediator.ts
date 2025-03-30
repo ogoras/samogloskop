@@ -15,8 +15,8 @@ const GATHERING_NATIVE_LEGACY = [
 export default class LocalStorageMediator extends Singleton {
     [index: string]: any;
 
-    #dateToString(date : Date) {
-        return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    dateToString(date : Date) {
+        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
     }
 
     constructor() {
@@ -66,13 +66,13 @@ export default class LocalStorageMediator extends Singleton {
 
     getTimeSpentForToday() {
         const date = new Date();
-        const todayString = this.#dateToString(date);
+        const todayString = this.dateToString(date);
         return this.timeSpentInTraining?.[todayString] ?? 0;
     }
 
     setTimeSpentForToday(time: number) {
         const date = new Date();
-        const todayString = this.#dateToString(date);
+        const todayString = this.dateToString(date);
         const timeSpentCopy = this.timeSpentInTraining ?? {};
         timeSpentCopy[todayString] = time;
         this.timeSpentInTraining = timeSpentCopy;
@@ -122,8 +122,8 @@ export default class LocalStorageMediator extends Singleton {
                     if (timeSpentSoFar) {
                         const timeSpentSoFarInt = parseInt(timeSpentSoFar);
                         if (!isNaN(timeSpentSoFarInt)) {
-                            const date = new Date(2025, 2, 29);
-                            const todayString = this.#dateToString(date);
+                            const date = new Date(2025, 3, 29);
+                            const todayString = this.dateToString(date);
                             this.timeSpentInTraining = { [todayString]: timeSpentSoFarInt };
                             console.log(this.timeSpentInTraining);
                         }
@@ -138,6 +138,22 @@ export default class LocalStorageMediator extends Singleton {
                             prop_object.processedAt = new Date();
                             localStorage.setItem(propName, JSON.stringify(prop_object));
                         }
+                    }
+                // FALL THROUGH
+                case "1.4": // 1.4 -> 1.5 conversion
+                    // for all keys in timeSpentSoFar, replace the month with a number one bigger
+                    const timeSpent = localStorage.getItem("timeSpentInTraining");
+                    if (timeSpent) {
+                        const timeSpentCopy = JSON.parse(timeSpent);
+                        const newTimeSpent: {[index: string]: number} = {};
+                        for (let key in timeSpentCopy) {
+                            const ymd = key.split("-");
+                            if (ymd.length !== 3) throw new Error(`Invalid date format: ${key}`);
+                            const date = new Date(parseInt(ymd[0]!), parseInt(ymd[1]!), parseInt(ymd[2]!));
+                            const newKey = this.dateToString(date);
+                            newTimeSpent[newKey] = timeSpentCopy[key];
+                        }
+                        this.timeSpentInTraining = newTimeSpent;
                     }
                     break;
                 default:

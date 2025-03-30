@@ -3,6 +3,7 @@ import PresetComponent from "../components/choice/PresetComponent.js";
 import { VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH } from '../../const/version.js';
 import State from "../../const/enum/State.js";
 import HELP_VIDEO_ID from "../../const/Help.js";
+import DAILY_TARGET from "../../const/TIME.js";
 
 export default class SettingsView extends View {
     #state;
@@ -52,6 +53,7 @@ export default class SettingsView extends View {
             this.mainContainer.appendChild(this.createRetestSection());
         }
         this.mainContainer.appendChild(this.createSaveLoadSection());
+        this.mainContainer.appendChild(this.createTrackedTimeSection())
 
         this.footer = document.createElement("div");
         this.footer.classList.add("footer");
@@ -296,6 +298,64 @@ export default class SettingsView extends View {
         }
         loadButton.style.color = "#0000ff";
         container.appendChild(loadButton);
+
+        return div;
+    }
+
+    createTrackedTimeSection() {
+        const div = document.createElement("div");
+
+        const title = document.createElement("h2");
+        title.innerHTML = "<b>Śledzenie czasu</b>";
+        div.appendChild(title);
+
+        const container = document.createElement("div");
+        container.classList.add("flex-oriented");
+        container.style.gap = "0.5em";
+        div.appendChild(container);
+
+        const center = document.createElement("div");
+        center.classList.add("center-auto");
+        container.appendChild(center);
+
+        const p = document.createElement("p");
+        const lsm = this.controller.lsm;
+        const timeSpent = lsm.timeSpentInTraining;
+        let streak = 0;
+        let date = new Date();
+        date = new Date(date.getTime() - 86400000);
+        while (timeSpent[lsm.dateToString(date)] >= DAILY_TARGET * 1000) {
+            streak++;
+            date = new Date(date.getTime() - 86400000);
+        }
+        p.innerHTML = `Aplikacja śledzi, ile czasu spędzasz z nią każdego dnia.${streak ? ` Twoja dotychczasowa passa 🔥🔥 to ${streak} ${streak == 1 ? "dzień" : "dni"}.` : ""}`;
+        center.appendChild(p);
+
+        const table = document.createElement("table");
+        table.classList.add("time-table");
+        const tableHeader = document.createElement("tr");
+        const dateHeader = document.createElement("th");
+        dateHeader.innerHTML = "Data";
+        const timeHeader = document.createElement("th");
+        timeHeader.innerHTML = "Czas";
+        tableHeader.appendChild(dateHeader);
+        tableHeader.appendChild(timeHeader);
+        table.appendChild(tableHeader);
+
+        const datesTrackedSoFar = Object.keys(timeSpent);
+        datesTrackedSoFar.sort();
+        for (const dateString of datesTrackedSoFar) {
+            const time = timeSpent[dateString];
+            const row = document.createElement("tr");
+            const dateCell = document.createElement("td");
+            dateCell.innerHTML = dateString;
+            const timeCell = document.createElement("td");
+            timeCell.innerHTML = `${Math.floor(time / 1000 / 60)} min`;
+            row.appendChild(dateCell);
+            row.appendChild(timeCell);
+            table.appendChild(row);
+        }
+        container.appendChild(table);
 
         return div;
     }
