@@ -39,3 +39,4 @@ export const VERSION_MAJOR = 1,
 // v1.3.1: Implemented saving and loading
 // v1.4.0: Added an option to re-test at any point during training, re-added control group, timing all app use
 // v1.4.1: Allow different microphoneLabels
+// v1.4.2: Save new microphoneLabel
