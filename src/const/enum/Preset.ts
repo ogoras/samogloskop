@@ -1,4 +1,4 @@
-import arrToObj from "../logic/util/arrToObj.js";
+import arrToObj from "../../logic/util/arrToObj.js";
 import Enum from "./Enum.js";
 
 export default class Preset extends Enum {

@@ -8,7 +8,7 @@ import ControlGroupView from "../../../frontend/view/training/ControlGroupView.j
 import ComeBackTomorrowView from "../../../frontend/view/training/ComeBackTomorrowView.js";
 import TIME_TARGET from "../../../const/TIME.js";
 import LocalStorageMediator from "../../../model/LocalStorageMediator.js";
-import State from "../../../const/State.js";
+import State from "../../../const/enum/State.js";
 
 export default class TrainingController extends SmoothingController {
     #discarded = false;

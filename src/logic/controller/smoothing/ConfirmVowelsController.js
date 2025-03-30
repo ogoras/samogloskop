@@ -1,5 +1,5 @@
 import nextController from "../nextController.js";
-import State from "../../../const/State.js";
+import State from "../../../const/enum/State.js";
 import SmoothingController from "./SmoothingController.js";
 import ConfirmVowelsView from "../../../frontend/view/recording/confirm/ConfirmVowelsView.js";
 

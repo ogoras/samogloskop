@@ -1,6 +1,6 @@
 import { VERSION_PATCH, VERSION_MAJOR, VERSION_MINOR } from "../const/version.js";
-import State from "../const/State.js";
-import Preset from "../const/Preset.js";
+import State from "../const/enum/State.js";
+import Preset from "../const/enum/Preset.js";
 import Singleton from "../Singleton.js";
 import IntensityStats from "./IntensityStats.js";
 import SpeakerVowels from "./vowels/SpeakerVowels.js";
@@ -219,7 +219,35 @@ export default class LocalStorageMediator extends Singleton {
     }
 }
 
-const localStorageProperties = [
+function createObjectProperty(name : string, Constructor : typeof SpeakerVowels | typeof IntensityStats = SpeakerVowels, foreign = false) {
+    return {
+        name,
+        localStorageName: name,
+        customGet: (string: string) => string ? Constructor.fromString(string, foreign ? "EN" : undefined, foreign ? false : undefined) : string,
+        customSet: (value: SpeakerVowels | IntensityStats) => value.toString(),
+    }
+}
+
+function createEnumProperty(name: string, Constructor: typeof State | typeof Preset) {
+    return {
+        name,
+        localStorageName: name,
+        customGet: (key: string) => Constructor.get_optional(key),
+        customSet: (value: State | Preset | {index: number}) => {
+            if (!(value instanceof Constructor)) value = Constructor.get(value.index);
+            return value.toString();
+        },
+        customLoad: (object: any) => Constructor.get(object.index),
+    };
+}
+
+const localStorageProperties : Array<{
+    name: string,
+    localStorageName: string,
+    customGet?: (string: string) => any,
+    customSet?: (value: any) => string,
+    customLoad?: (object: any) => any,
+}> = [
     {
         name: "dataConsentGiven",
         localStorageName: "accepted",
@@ -229,50 +257,13 @@ const localStorageProperties = [
         name: "version",
         localStorageName: "version",
     },
-    {
-        name: "preset",
-        localStorageName: "preset",
-        customGet: (key: string) => Preset.get_optional(key),
-        customSet: (value: Preset | {index: number}) => {
-            if (!(value instanceof Preset)) value = Preset.get(value.index);
-            return value.toString();
-        },
-        customLoad: (object: any) => Preset.get(object.index),
-    },
-    {
-        name: "state",
-        localStorageName: "state",
-        customGet: (key: string) => State.get_optional(key),
-        customSet: (value: State | {index: number}) => {
-            if (!(value instanceof State)) value = State.get(value.index);
-            return value.toString();
-        },
-        customLoad: (object: any) => State.get(object.index),
-    },
-    {
-        name: "intensityStats",
-        localStorageName: "intensityStats",
-        customGet: (string: string) => string ? IntensityStats.fromString(string) : string,
-        customSet: (value: IntensityStats) => value.toString(),
-    },
-    {
-        name: "nativeVowels",
-        localStorageName: "nativeVowels",
-        customGet: (string: string) => string ? SpeakerVowels.fromString(string) : string,
-        customSet: (value: SpeakerVowels) => value.toString(),
-    },
-    {
-        name: "foreignInitial",
-        localStorageName: "foreignInitial",
-        customGet: (string: string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
-        customSet: (value: SpeakerVowels) => value.toString(),
-    },
-    {
-        name: "foreignRepeat",
-        localStorageName: "foreignRepeat",
-        customGet: (string: string) => string ? SpeakerVowels.fromString(string, "EN", false) : string,
-        customSet: (value: SpeakerVowels) => value.toString(),
-    },
+    createEnumProperty("preset", Preset),
+    createEnumProperty("state", State),
+    createObjectProperty("intensityStats", IntensityStats),
+    createObjectProperty("nativeVowels"),
+    createObjectProperty("foreignInitial", SpeakerVowels, true),
+    createObjectProperty("foreignCurrent", SpeakerVowels, true),
+    createObjectProperty("foreignRepeat", SpeakerVowels, true),
     {
         name: "timeSpentInTraining",
         localStorageName: "timeSpentInTraining",

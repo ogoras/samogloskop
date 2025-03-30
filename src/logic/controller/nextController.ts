@@ -7,7 +7,7 @@ import ConfirmVowelsController from "./smoothing/ConfirmVowelsController.js";
 import GatheringForeignController from "./smoothing/GatheringForeignController.js";
 import TrainingController from "./smoothing/TrainingController.js";
 import DataDownloadController from "./DataDownloadController.js";
-import State from "../../const/State.js";
+import State from "../../const/enum/State.js";
 import Controller from "./Controller.js";
 import LocalStorageMediator from "../../model/LocalStorageMediator.js";
 import StateMachine from "../StateMachine.js";
