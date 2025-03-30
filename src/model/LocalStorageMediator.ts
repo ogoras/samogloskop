@@ -86,7 +86,7 @@ export default class LocalStorageMediator extends Singleton {
             this.version = "0.0";
         }
         const localStorageVersion = this.version;
-        // check if the local storage version has one or two dots
+        // will work whether the local storage version has one or two dots
         const LSVersionNumbers = localStorageVersion.split(".");
         const LSVersionMajor = parseInt(LSVersionNumbers[0]);
         const LSVersionMinor = parseInt(LSVersionNumbers[1]);
@@ -111,12 +111,12 @@ export default class LocalStorageMediator extends Singleton {
                         }
                     }
                 // FALL THROUGH
-                case "0.3": // 0.3 -> 0.4 conversion is not necessary
-                case "0.4": // 0.4 -> 0.5 conversion not necessary either
-                case "0.5": // 0.5 -> 1.0 conversion, same thing
-                case "1.0": // 1.0 -> 1.1 ditto
-                case "1.1": // 1.1 -> 1.2 
-                case "1.2": // 1.2 -> 1.3
+                case "0.3":
+                case "0.4":
+                case "0.5":
+                case "1.0":
+                case "1.1":
+                case "1.2": // 0.3 ... 1.2 -> 1.3 conversion
                     // attribute all time spent so far to the current day
                     const timeSpentSoFar = localStorage.getItem("timeSpentInTraining");
                     if (timeSpentSoFar) {
@@ -129,7 +129,16 @@ export default class LocalStorageMediator extends Singleton {
                         }
                     }
                 // FALL THROUGH
-                case "1.3": // 1.3 -> 1.4 conversion, nothing to do here
+                case "1.3": // 1.3 -> 1.4 conversion
+                    for (let propName of ["nativeVowels", "foreignInitial", "foreignRepeat"]) {
+                        const prop = localStorage.getItem(propName);
+                        if (prop) {
+                            const prop_object = JSON.parse(prop);
+                            // set processedAt to current datetime
+                            prop_object.processedAt = new Date();
+                            localStorage.setItem(propName, JSON.stringify(prop_object));
+                        }
+                    }
                     break;
                 default:
                     if (dataConsentGiven) {
@@ -140,7 +149,6 @@ export default class LocalStorageMediator extends Singleton {
             }
         }
         this.version = `${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}`;
-
         if (!dataConsentGiven) {
             this.clear();
             this.state = State.get("DATA_CONSENT");

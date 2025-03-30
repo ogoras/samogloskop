@@ -22,6 +22,7 @@ export default class SpeakerVowels extends Vowels {
     #scaleCurrent = true;
     currentVowel: Vowel | undefined;
     #scaleFactor = 1;
+    processedAt?: Date;
 
     get gatheredAnything() {
         return this.#gatheredAnything || this.vowelsProcessed.length > 0;
@@ -133,6 +134,11 @@ export default class SpeakerVowels extends Vowels {
         const ret = this.currentVowel;
         this.vowelsProcessed.push(ret);
         this.currentVowel = undefined;
+
+        if (this.vowelsRemaining.length === 0) {
+            this.processedAt = new Date();
+        }
+
         return ret;
     }
 
@@ -172,7 +178,8 @@ export default class SpeakerVowels extends Vowels {
             vowelsProcessed: this.vowelsProcessed.map(vowel => { return vowel.toSimpleObject();}),
             lobanovScaled: this.lobanovScaled,
             meanFormants: this.#meanFormants,
-            formantsDeviation: this.#formantsDeviation
+            formantsDeviation: this.#formantsDeviation,
+            processedAt: this.processedAt
         };
     }
 
@@ -215,6 +222,7 @@ export default class SpeakerVowels extends Vowels {
         }
         speakerVowels.#gatheredAnything = true;
         speakerVowels.sortByID();
+        speakerVowels.processedAt = new Date(obj.processedAt);
         return speakerVowels;
     }
 }

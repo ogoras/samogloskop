@@ -8,6 +8,7 @@ import ControlGroupView from "../../../frontend/view/training/ControlGroupView.j
 import ComeBackTomorrowView from "../../../frontend/view/training/ComeBackTomorrowView.js";
 import TIME_TARGET from "../../../const/TIME.js";
 import LocalStorageMediator from "../../../model/LocalStorageMediator.js";
+import State from "../../../const/State.js";
 
 export default class TrainingController extends SmoothingController {
     #discarded = false;
@@ -133,5 +134,14 @@ export default class TrainingController extends SmoothingController {
         this.stopCountingTime();
 
         super.recalibrate();
+    }
+
+    retest() {
+        if (this.#discarded) return;
+        this.validate();
+
+        this.sm.state = State.get("GATHERING_FOREIGN_INITIAL");
+        nextController(this);
+        this.breakRenderLoop();
     }
 }
