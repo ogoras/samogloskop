@@ -6,7 +6,13 @@ export default class GatheringForeignController extends GatheringVowelsControlle
     async init(prev) {
         this.allGathered = false;
         this.repeat = prev.sm.state.is("GATHERING_FOREIGN_REPEAT");
-        this.vowelsBeingGathered = this.repeat ? "foreignRepeat" : "foreignInitial";
+        if (this.repeat) {
+            this.vowelsBeingGathered = "foreignRepeat";
+        } else if (prev.lsm.foreignInitial) {
+            this.vowelsBeingGathered = "foreignCurrent";
+        } else {
+            this.vowelsBeingGathered = "foreignInitial";
+        }
         super.init(prev);
 
         this.disableMic();

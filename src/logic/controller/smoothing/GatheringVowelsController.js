@@ -37,8 +37,6 @@ export default class GatheringVowelsController extends SmoothingController {
                 }
                 break;
             case SUBSTATES.GATHERING:
-                const vowelsBeingGathered = this[this.vowelsBeingGathered];
-
                 if (!this.processFormants()) {
                     this.substate = SUBSTATES.WAITING;
                     view.speechDetected = false;

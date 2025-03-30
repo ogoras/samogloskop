@@ -17,6 +17,7 @@ export default class SmoothingController extends RenderController {
         this.nativeVowels = prev.nativeVowels ?? this.lsm.nativeVowels ?? new SpeakerVowels();
         if (this.sm.state.afterOrEqual("GATHERING_FOREIGN_INITIAL")) {
             this.foreignInitial = prev.foreignInitial ?? this.lsm.foreignInitial ?? new SpeakerVowels("EN");
+            this.foreignCurrent = prev.foreignCurrent ?? this.lsm.foreignCurrent ?? new SpeakerVowels("EN");
         }
         if (this.sm.state.afterOrEqual("GATHERING_FOREIGN_REPEAT")) {
             this.foreignRepeat = prev.foreignRepeat ?? this.lsm.foreignRepeat ?? new SpeakerVowels("EN");
