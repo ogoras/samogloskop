@@ -1,6 +1,7 @@
 import ForeignRecordings from '../../../model/recordings/ForeignRecordings.js';
 import GatheringVowelsController from "./GatheringVowelsController.js";
 import GatheringForeignView from "../../../frontend/view/recording/gathering/GatheringForeignView.js";
+import SpeakerVowels from '../../../model/vowels/SpeakerVowels.js';
 
 export default class GatheringForeignController extends GatheringVowelsController {
     async init(prev) {
@@ -14,6 +15,10 @@ export default class GatheringForeignController extends GatheringVowelsControlle
             this.vowelsBeingGathered = "foreignInitial";
         }
         super.init(prev);
+
+        if (!this.repeat && this.vowelsBeingGathered === "foreignCurrent") {
+            this.foreignCurrent = new SpeakerVowels("EN");
+        }
 
         this.disableMic();
         this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");

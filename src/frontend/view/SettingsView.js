@@ -43,12 +43,12 @@ export default class SettingsView extends View {
         this.mainContainer.appendChild(this.createHelpSection());
         this.mainContainer.appendChild(this.createConsentSection());
         this.mainContainer.appendChild(this.createPresetSection());
-        if (this.intensityStats?.isCalibrated) {
+        if (this.intensityStats?.isCalibrated && !controller.sm.onTempState) {
             this.mainContainer.appendChild(this.createIntensityStatsSection());
         }
         if (this.state.is("CONFIRM_VOWELS")) {
             this.mainContainer.appendChild(this.createDeleteVowelsSection());
-        } else if (this.state.is("TRAINING")) {
+        } else if (controller.sm.state.is("TRAINING")) {
             this.mainContainer.appendChild(this.createRetestSection());
         }
         this.mainContainer.appendChild(this.createSaveLoadSection());

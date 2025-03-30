@@ -117,12 +117,12 @@ export default class LocalStorageMediator extends Singleton {
                 case "1.0":
                 case "1.1":
                 case "1.2": // 0.3 ... 1.2 -> 1.3 conversion
-                    // attribute all time spent so far to the current day
+                    // attribute all time spent so far to March 29th, 2025 (date when 1.3 was released)
                     const timeSpentSoFar = localStorage.getItem("timeSpentInTraining");
                     if (timeSpentSoFar) {
                         const timeSpentSoFarInt = parseInt(timeSpentSoFar);
                         if (!isNaN(timeSpentSoFarInt)) {
-                            const date = new Date();
+                            const date = new Date(2025, 2, 29);
                             const todayString = this.#dateToString(date);
                             this.timeSpentInTraining = { [todayString]: timeSpentSoFarInt };
                             console.log(this.timeSpentInTraining);
