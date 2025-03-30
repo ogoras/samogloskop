@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 1,
     VERSION_MINOR = 5,  // will only change when the data format changes
-    VERSION_PATCH = 0;  // will change only with published commits, the in-beetween development versions are not counted
+    VERSION_PATCH = 1;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: Introduced localStorage
 // v0.1: Added Lobanov scaling
@@ -42,3 +42,4 @@ export const VERSION_MAJOR = 1,
 // v1.4.2: Save new microphoneLabel
 // v1.4.3: Timer now visible in all RecordingViews
 // v1.5.0: Per-day times visible, month number now stored properly
+// v1.5.1: Fixed bug with localStorage conversion and settings

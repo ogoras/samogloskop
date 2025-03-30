@@ -122,8 +122,7 @@ export default class LocalStorageMediator extends Singleton {
                     if (timeSpentSoFar) {
                         const timeSpentSoFarInt = parseInt(timeSpentSoFar);
                         if (!isNaN(timeSpentSoFarInt)) {
-                            const date = new Date(2025, 3, 29);
-                            const todayString = this.dateToString(date);
+                            const todayString = "2025-2-29"; // Account for the month adjustment
                             this.timeSpentInTraining = { [todayString]: timeSpentSoFarInt };
                             console.log(this.timeSpentInTraining);
                         }

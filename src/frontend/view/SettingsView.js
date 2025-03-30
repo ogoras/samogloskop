@@ -53,7 +53,9 @@ export default class SettingsView extends View {
             this.mainContainer.appendChild(this.createRetestSection());
         }
         this.mainContainer.appendChild(this.createSaveLoadSection());
-        this.mainContainer.appendChild(this.createTrackedTimeSection())
+        if (this.controller.lsm.timeSpentInTraining) {
+            this.mainContainer.appendChild(this.createTrackedTimeSection())
+        }
 
         this.footer = document.createElement("div");
         this.footer.classList.add("footer");
