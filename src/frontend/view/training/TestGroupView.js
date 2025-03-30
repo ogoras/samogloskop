@@ -17,6 +17,10 @@ export default class TestGroupView extends RecordingView {
         [false, true, false]
     ]
 
+    set showForeignInitialInsteadOfCurrent(value) {
+
+    }
+
     constructor(controller, recorder, prev) {
         super(controller, recorder, prev, true);
 
@@ -40,7 +44,8 @@ export default class TestGroupView extends RecordingView {
         this.stackComponent.appendChild(button);
 
         this.formantsComponent.clear();
-        this.plotComponent = new PlotComponent(this, this.controller.formantCount);
+        const twoUserForeignDatasets = this.twoUserForeignDatasets = controller.foreignCurrent?.isDone();
+        this.plotComponent = new PlotComponent(this, this.controller.formantCount, null, twoUserForeignDatasets);
         
         const nativeVowels = controller.nativeVowels;
         nativeVowels.vowelsProcessed.forEach(vowel => {
@@ -57,7 +62,15 @@ export default class TestGroupView extends RecordingView {
             pointOpacity: "FF",
             ellipseOpacity0: 0.8,
             ellipseOpacity1: 0
-        }, this.representationsSelected[1], { italic: true })
+        }, twoUserForeignDatasets ? [false, false, false] : this.representationsSelected[1], { italic: true })
+
+        if (twoUserForeignDatasets) {
+            this.plotComponent.addVowelMeasurements(controller.foreignCurrent, 1, d3.symbolTriangle, {
+                pointOpacity: "FF",
+                ellipseOpacity0: 0.8,
+                ellipseOpacity1: 0
+            }, this.representationsSelected[1], { italic: true })
+        }
 
         this.stackComponent.element.style.width = "auto";
 
@@ -87,7 +100,7 @@ export default class TestGroupView extends RecordingView {
             ellipseOpacity1: 0.4
         }, this.representationsSelected[3], { fontWeight: 700 });
 
-        this.sideComponent.createVowelSelectors(this.plotComponent, false);
+        this.sideComponent.createVowelSelectors(this.plotComponent, false, this.twoUserForeignDatasets);
         this.sideComponent.recordingComponent.after(this.selectedVowelDisplay.element);
 
         this.#datasetAdded = true;
@@ -146,7 +159,7 @@ export default class TestGroupView extends RecordingView {
         this.selectedVowelDisplay.selectVowel(vowel);
         this.plotComponent.selectForeignVowel(newSelectedId);
 
-        this.#werePolishCentroidsVisible = this.sideComponent.selectorsComponent.selectors[0][2].selected;
+        this.#werePolishCentroidsVisible = this.sideComponent.selectorsComponent.selectors[0][0].selected;
         this.sideComponent.selectorsComponent.selectors[0][0].selected = true;
         this.sideComponent.selectorsComponent.polishCentroidsLocked = true;
         

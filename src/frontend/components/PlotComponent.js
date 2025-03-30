@@ -7,10 +7,11 @@ import Vowel from "../../model/vowels/Vowel.js";
 export default class PlotComponent extends Component {
     #datasetCount = 1;
 
-    constructor(parent, formantCount, unit) {
+    constructor(parent, formantCount, unit, twoUserForeignDatasets = false) {
         super();
         this.parent = parent;
         this.formantCount = formantCount;
+        this.twoUserForeignDatasets = twoUserForeignDatasets;
         this.scatterPlot = new ScatterPlot("formants", true, unit);
 
         const vowelInv = VOWEL_INVENTORIES.PL;
@@ -131,7 +132,8 @@ export default class PlotComponent extends Component {
     }
 
     selectForeignVowel(vowelId) {
-        for (let i = 1; i <= 3; i++) {
+        const MAX = this.twoUserForeignDatasets ? 4 : 3;
+        for (let i = 1; i <= MAX; i++) {
             this.scatterPlot.getGroup(i).forEach((group, index) => {
                 if (index === vowelId) return;
                 group.g.style("display", "none")
@@ -140,7 +142,8 @@ export default class PlotComponent extends Component {
     }
 
     showAllForeign() {
-        for (let i = 1; i <= 3; i++) {
+        const MAX = this.twoUserForeignDatasets ? 4 : 3;
+        for (let i = 1; i <= MAX; i++) {
             this.scatterPlot.getGroup(i).forEach((group, index) => {
                 group.g.style("display", "block")
             });

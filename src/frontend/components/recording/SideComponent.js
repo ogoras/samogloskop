@@ -24,8 +24,8 @@ export default class SideComponent extends Component {
         super.destroy();
     }
 
-    createVowelSelectors(plotComponent, nativeOnly) {
-        this.selectorsComponent = new SelectorsComponent(this, plotComponent, nativeOnly);
+    createVowelSelectors(plotComponent, nativeOnly, twoUserForeignDatasets) {
+        this.selectorsComponent = new SelectorsComponent(this, plotComponent, nativeOnly, twoUserForeignDatasets);
         this.recordingComponent.after(this.selectorsComponent);
         return this.selectorsComponent;
     }
