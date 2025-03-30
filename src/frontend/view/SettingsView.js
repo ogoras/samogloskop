@@ -48,6 +48,8 @@ export default class SettingsView extends View {
         }
         if (this.state.is("CONFIRM_VOWELS")) {
             this.mainContainer.appendChild(this.createDeleteVowelsSection());
+        } else if (this.state.is("TRAINING")) {
+            this.mainContainer.appendChild(this.createRetestSection());
         }
         this.mainContainer.appendChild(this.createSaveLoadSection());
 
@@ -230,6 +232,29 @@ export default class SettingsView extends View {
         notice.innerHTML = "<p>Uwaga: Usunięcie zebranych samogłosek automatycznie odświeża stronę i kieruje do ponownego nagrania próbek mowy.</p>";
         notice.style = "color: #a00000";
         container.appendChild(notice);
+
+        return div;
+    }
+
+    createRetestSection() {
+        const div = document.createElement("div");
+
+        const title = document.createElement("h2");
+        title.innerHTML = "<b>Sprawdź ponownie swoją wymowę</b>";
+        div.appendChild(title);
+
+        const container = document.createElement("div");
+        container.classList.add("flex-oriented");
+        div.appendChild(container);
+
+        const button = document.createElement("button");
+        button.innerHTML = "Sprawdź ponownie swoje angielskie samogłoski";
+        button.classList.add("small");
+        button.onclick = () => {
+            this.close();
+            this.controller.retest();
+        }
+        container.appendChild(button);
 
         return div;
     }

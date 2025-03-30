@@ -17,6 +17,14 @@ export default class SettingsController extends Controller {
         this.parent.recalibrate();
     }
 
+    retest() {
+        if (!this.lsm!.state.is("TRAINING")) throw new Error("Cannot retest outside of training state");
+        if (!this.parent.retest) throw new Error("Could not find retest function in parent controller");
+
+        this.parent.stopCountingTime();
+        this.parent.retest();
+    }
+
     load() {
         this.parent?.stopCountingTime?.();
         this.lsm!.loadFromFile();

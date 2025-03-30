@@ -128,6 +128,8 @@ export default class LocalStorageMediator extends Singleton {
                             console.log(this.timeSpentInTraining);
                         }
                     }
+                // FALL THROUGH
+                case "1.3": // 1.3 -> 1.4 conversion, nothing to do here
                     break;
                 default:
                     if (dataConsentGiven) {
