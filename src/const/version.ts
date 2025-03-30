@@ -37,4 +37,4 @@ export const VERSION_MAJOR = 1,
 // v1.2.3: Disabled control group functionality
 // v1.3.0: timeSpent is now tracked day-wise
 // v1.3.1: Implemented saving and loading
-// v1.4.0: Added an option to re-test at any point during training
+// v1.4.0: Added an option to re-test at any point during training, re-added control group

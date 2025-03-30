@@ -274,10 +274,10 @@ const localStorageProperties : Array<{
         name: "isControlGroup",
         localStorageName: "isControlGroup",
         customGet: (string?: string) => {
-            // the control group functionality probably deprecated
-            return false;
-            // string ??= Math.random() < 0.2 ? "true" : "false";  // roughly 20% of users are in the control group
-            // return string === "true";
+            // // the control group functionality probably deprecated
+            // return false;
+            string ??= Math.random() < 0.2 ? "true" : "false";  // roughly 20% of users are in the control group
+            return string === "true";
         }
     },
     {
