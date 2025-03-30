@@ -65,9 +65,10 @@ export default class AudioRecorder {
             lsm.microphoneLabel = deviceLabel;
         } else if (lsm.microphoneLabel !== deviceLabel) {
             // show a popup about incorrect microphone
-            window.alert(`Używasz innego mikrofonu niż zapisany. Przełącz się na ${lsm.microphoneLabel} aby kontynuować.`);
-            this.stream.getTracks().forEach(track => track.stop());
-            return false;
+            if (!window.confirm(`Używasz innego mikrofonu niż zapisany. Teraz używasz "${deviceLabel}", a zapisany był "${lsm.microphoneLabel}". Czy jesteś pewien, że jest to to samo urządzenie?`)) {
+                this.stream.getTracks().forEach(track => track.stop());
+                return false;
+            }           
         }
 
         if (!this.initialized) {
