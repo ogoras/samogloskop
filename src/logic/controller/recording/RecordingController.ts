@@ -28,8 +28,6 @@ export default class RecordingController extends Controller {
     initStart(prev: Controller) {
         this.#timeSpentInFocus = prev.lsm!.getTimeSpentForToday() ?? 0;
 
-        console.log("Time spent in focus: " + this.#timeSpentInFocus);
-
         super.init(prev);
 
         if (this.#timeSpentInFocus >= TIME_TARGET * 1000) {
@@ -50,7 +48,6 @@ export default class RecordingController extends Controller {
     initTimer(prev: Controller) {
         // check if window has focus
         this.#lastFocused = document.hasFocus() ? Date.now() : null;
-        console.log(`Has focus: ${document.hasFocus()}`);
         this.view.timer?.show(this.#timeSpentInFocus);
         if (document.hasFocus()) this.view.timer?.resume();
 
@@ -103,7 +100,6 @@ export default class RecordingController extends Controller {
     }
 
     stopCountingTime() {
-        console.log("Stopping time counting");
         if (document.hasFocus()) {
             this.#onBlur();
             try {
