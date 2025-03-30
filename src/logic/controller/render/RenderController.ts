@@ -40,14 +40,14 @@ export default class RenderController extends RecordingController {
     }
     
     override init(prev: Controller, newIntensityStats = false) {
-        this.initStart(prev, newIntensityStats);
+        if (this.initStart(prev, newIntensityStats)) return;
         this.initFinalAndRun(prev);
     }
 
-    initStart(prev: Controller, newIntensityStats = false) {
+    override initStart(prev: Controller, newIntensityStats = false) {
         this.#breakRenderLoop = false;
 
-        this.initRecorder(prev);
+        if (super.initStart(prev)) return true;
 
         super.validate();
         this.recorder!.onStart = () => {
@@ -61,12 +61,15 @@ export default class RenderController extends RecordingController {
 
         this.intensityStats = prev.intensityStats ?? this.lsm!.intensityStats ?? new IntensityStats(calibrationTime, statsStep);
         if (newIntensityStats) this.intensityStats = new IntensityStats(calibrationTime, statsStep);
+
+        return false;
     }
 
     initFinalAndRun(prev: Controller) {
         this.initSettings(prev);
         this.validate();
         this.initView(prev);
+        this.initTimer(prev);
         this.renderLoop();
     }
 

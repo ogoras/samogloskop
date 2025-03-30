@@ -22,6 +22,8 @@ export default class SilenceController extends RenderController {
         view.progressTime = this.time;
 
         if (stats.isCalibrationFinished(this.time)) {
+            this.stopCountingTime();
+
             stats.saveStats("silence");
             this.sm.advance();
             nextController(this);

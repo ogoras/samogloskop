@@ -13,7 +13,7 @@ export default class SmoothingController extends RenderController {
     }
 
     init(prev) {
-        this.initStart(prev);
+        if (this.initStart(prev)) return;
         this.nativeVowels = prev.nativeVowels ?? this.lsm.nativeVowels ?? new SpeakerVowels();
         if (this.sm.state.afterOrEqual("GATHERING_FOREIGN_INITIAL")) {
             this.foreignInitial = prev.foreignInitial ?? this.lsm.foreignInitial ?? new SpeakerVowels("EN");
@@ -27,7 +27,7 @@ export default class SmoothingController extends RenderController {
 
     initStart(prev) {
         this.smoothedFormantsBuffer = prev.smoothedFormantsBuffer ?? new Buffer(minimumSmoothingCount);
-        super.initStart(prev);
+        return super.initStart(prev);
     }
 
     getSmoothedFormants() {

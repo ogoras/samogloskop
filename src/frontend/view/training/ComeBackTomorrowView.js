@@ -5,7 +5,11 @@ export default class ComeBackTomorrowView extends View {
     constructor(controller) {
         super(controller);
 
-        const mainContainer = document.getElementsByClassName("main-container")[0];
+        let mainContainer = document.getElementsByClassName("main-container")[0];
+        if (!mainContainer) {
+            document.body.innerHTML = "<div class='main-container'></div>";
+            mainContainer = document.getElementsByClassName("main-container")[0];
+        }
         
         const div = document.createElement("div");
         div.id = "comeBackTomorrow";

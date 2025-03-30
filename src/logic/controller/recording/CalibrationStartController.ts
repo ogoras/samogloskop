@@ -7,10 +7,13 @@ export default class CalibrationStartController extends RecordingController {
     #newIntensityStats = false;
 
     override init(prev: Controller) {
-        super.init(prev);
+        if (this.initStart(prev)) return;
+        this.initSettings(prev);
         
         this.view?.destroy?.();
         this.view = new CalibrationStartView(this, this.recorder);
+
+        this.initTimer(prev);
 
         super.validate();
         const interval = setInterval(() => {
@@ -22,6 +25,8 @@ export default class CalibrationStartController extends RecordingController {
     }
 
     continue() {
+        this.stopCountingTime();
+
         this.validate();
         this.sm!.advance();
         nextController(this, this.#newIntensityStats);

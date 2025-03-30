@@ -1,9 +1,16 @@
 import Controller from "../Controller.js";
 import SettingsController from "../SettingsController.js";
 import AudioRecorder from "../../recording/Recorder.js";
+import TIME_TARGET from "../../../const/TIME.js";
+import ComeBackTomorrowView from "../../../frontend/view/training/ComeBackTomorrowView.js";
 
 export default class RecordingController extends Controller {
     recorder?: AudioRecorder;
+    #timeSpentInFocus = 0;
+    #lastFocused: number | null = null;
+    #abortController?: AbortController;
+
+    get timeSpentInFocus() { return this.#timeSpentInFocus; }
 
     constructor() {
         super();
@@ -13,18 +20,99 @@ export default class RecordingController extends Controller {
     }
 
     override init(prev: Controller) {
-        this.initRecorder(prev);
+        if (this.initStart(prev)) return;
         this.initSettings(prev);
+        this.initTimer(prev);
     }
 
-    initRecorder(prev: Controller) {
+    initStart(prev: Controller) {
+        this.#timeSpentInFocus = prev.lsm!.getTimeSpentForToday() ?? 0;
+
+        console.log("Time spent in focus: " + this.#timeSpentInFocus);
+
         super.init(prev);
+
+        if (this.#timeSpentInFocus >= TIME_TARGET * 1000) {
+            this.view = new ComeBackTomorrowView(this)
+            return true;
+        }
+
         this.recorder = prev.recorder ?? new AudioRecorder();
+
+        return false;
     }
 
     initSettings(prev: Controller) {
         this.settingsController = SettingsController.getInstance();
         this.settingsController.init(this);
+    }
+
+    initTimer(prev: Controller) {
+        // check if window has focus
+        this.#lastFocused = document.hasFocus() ? Date.now() : null;
+        console.log(`Has focus: ${document.hasFocus()}`);
+        this.view.timer?.show(this.#timeSpentInFocus);
+        if (document.hasFocus()) this.view.timer?.resume();
+
+        this.#abortController = new AbortController();
+        const signal = this.#abortController.signal;
+        addEventListener("focus", this.#onFocus.bind(this), { signal });
+        addEventListener("blur", this.#onBlur.bind(this), { signal });
+        addEventListener("visibilitychange", () => {
+                if (document.hidden && this.#lastFocused !== null) {
+                    this.#onBlur();
+                }
+            }, 
+            { signal }
+        );
+    }
+
+    checkIfDailyTargetReached() {
+        let timeSpent = this.#timeSpentInFocus;
+        if (this.#lastFocused) timeSpent += Date.now() - this.#lastFocused;
+        const reached = timeSpent >= TIME_TARGET * 1000;
+
+        if (reached) {
+            this.view.notifyDailyTargetReached();
+        }
+
+        return reached;
+    }
+
+    #onFocus() {
+        if (this.#lastFocused !== null) {
+            // Got this error once, don't know how to reproduce it
+            // TrainingController.js:49 Uncaught Error: lastFocused is not null on the focus event
+            //      at #onFocus (TrainingController.js:49:19)
+            console.log("lastFocused:");
+            console.log(this.#lastFocused);
+            console.log("Now:");
+            console.log(Date.now());
+            throw new Error("lastFocused is not null on the focus event");
+        }
+        this.#lastFocused = Date.now();
+        this.view.timer?.resume();
+    }
+
+    #onBlur() {
+        if (this.#lastFocused === null) throw new Error("lastFocused is null on the blur event");
+        this.#timeSpentInFocus += Date.now() - this.#lastFocused;
+        this.lsm!.setTimeSpentForToday(this.#timeSpentInFocus);
+        this.#lastFocused = null;
+        this.view.timer?.pauseAndUpdate(this.#timeSpentInFocus);
+    }
+
+    stopCountingTime() {
+        console.log("Stopping time counting");
+        if (document.hasFocus()) {
+            this.#onBlur();
+            try {
+                this.view.timer?.hide();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        this.#abortController!.abort();
     }
 
     protected override validate(): void {

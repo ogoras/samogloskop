@@ -23,6 +23,7 @@ export default class ConfirmVowelsController extends SmoothingController {
     }
 
     confirm() {
+        this.stopCountingTime();
         this.sm.advance();
         nextController(this);
         this.breakRenderLoop();

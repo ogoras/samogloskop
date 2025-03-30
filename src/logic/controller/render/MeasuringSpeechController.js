@@ -36,6 +36,7 @@ export default class MeasuringSpeechController extends RenderController {
                     this.lsm.intensityStats = stats;
                     stats.resetStart();
                     if (poppedState) {
+                        this.stopCountingTime();
                         nextController(this);
                         return false;
                     }
@@ -45,6 +46,7 @@ export default class MeasuringSpeechController extends RenderController {
             case "SPEECH_MEASURED":
                 // wait for 2 seconds of silence
                 if (this.waitFor(2)) {
+                    this.stopCountingTime();
                     this.sm.advance();
                     nextController(this);
                     return false;
