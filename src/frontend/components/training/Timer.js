@@ -5,6 +5,8 @@ import TARGET from "../../../const/TIME.js"
 import convertSecondsToTimeString from "../../../logic/util/timeToString.js";
 
 export default class Timer extends Component {
+    running = false;
+
     constructor(container) {
         super("timer", null, container);
         this.hidden = true;
@@ -37,6 +39,7 @@ export default class Timer extends Component {
         if (this.hidden) throw new Error("Tried to resume timer when it's not visible");
         if (this.interval) throw new Error("Timer already running");
         this.progressBar.startAnimation();
+        this.running = true;
         this.interval = setInterval(() => this.setTime(this.time + 1), 1000);
     }
 
@@ -48,10 +51,11 @@ export default class Timer extends Component {
         this.setTime(Math.floor(timeMs / 1000));
 
         this.progressBar.stopAnimation();
+        this.running = false;
     }
 
     hide() {
-        if (!this.visible) throw new Error("Tried to remove timer when it's not visible");
+        if (this.hidden) throw new Error("Tried to remove timer when it's not visible");
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;

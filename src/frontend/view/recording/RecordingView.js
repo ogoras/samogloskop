@@ -3,6 +3,7 @@ import SettingsView from '../SettingsView.js';
 import FormantsComponent from '../../components/recording/FormantsComponent.js';
 import SideComponent from '../../components/recording/SideComponent.js';
 import StackComponent from "../../components/stack/StackComponent.js";
+import Timer from '../../components/training/Timer.js';
 
 export default class RecordingView extends View {
     set disabled(value) {
@@ -45,6 +46,7 @@ export default class RecordingView extends View {
             this.sideComponent = prev.sideComponent;
             this.sideComponent.parent = this;
         }
+        this.timer = prev?.timer ?? new Timer(this.sideComponent);
     }
 
     feed(samples) {

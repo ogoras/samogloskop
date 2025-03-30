@@ -17,6 +17,7 @@ export default class ConfirmVowelsController extends SmoothingController {
 
     editVowel(vowel) {
         this.nativeVowels.resetVowel(vowel);
+        this.stopCountingTime();
         this.sm.state = State.get("GATHERING_NATIVE");
         nextController(this);
         this.breakRenderLoop();
