@@ -14,6 +14,8 @@ export default class SettingsController extends Controller {
     }
 
     recalibrate() {
+        this.parent.stopCountingTime?.();
+
         this.parent.recalibrate();
     }
 
