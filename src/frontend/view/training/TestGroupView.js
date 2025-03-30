@@ -17,10 +17,6 @@ export default class TestGroupView extends RecordingView {
         [false, true, false]
     ]
 
-    set showForeignInitialInsteadOfCurrent(value) {
-
-    }
-
     constructor(controller, recorder, prev) {
         super(controller, recorder, prev, true);
 
