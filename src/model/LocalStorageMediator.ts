@@ -65,10 +65,11 @@ export default class LocalStorageMediator extends Singleton {
         }
     }
 
-    getTimeSpentForToday() {
+    getTimeSpentForToday(nullIsZero = true) {
         const date = new Date();
         const todayString = this.dateToString(date);
-        return this.timeSpentInTraining?.[todayString] ?? 0;
+        const result = this.timeSpentInTraining?.[todayString]
+        return nullIsZero ? (result ?? 0) : result;
     }
 
     setTimeSpentForToday(time: number) {

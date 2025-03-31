@@ -6,12 +6,23 @@ import LanguageWords from "../../../model/example_words/LanguageWords.js";
 import TestGroupView from "../../../frontend/view/training/TestGroupView.js";
 import ControlGroupView from "../../../frontend/view/training/ControlGroupView.js";
 import State from "../../../const/enum/State.js";
+import WelcomeBackView from "../../../frontend/view/training/WelcomeBackView.js";
+import nullish from "../../util/nullish.js";
 
 export default class TrainingController extends SmoothingController {
     #discarded = false;
+    #cachedPrev;
 
     async init(prev) {
         if (this.#discarded) return;
+
+        if (nullish(prev.lsm.getTimeSpentForToday(false))) {
+            this.#cachedPrev = prev;
+            this.lsm = prev.lsm;
+            this.view = new WelcomeBackView(this);
+            return;
+        }
+
         super.init(prev);
 
         this.petersonBarney = await Vowels.create("EN", "peterson_barney");
@@ -64,5 +75,10 @@ export default class TrainingController extends SmoothingController {
         this.sm.state = State.get("GATHERING_FOREIGN_INITIAL");
         nextController(this);
         this.breakRenderLoop();
+    }
+
+    startNewDay() {
+        this.lsm.setTimeSpentForToday(0);
+        this.init(this.#cachedPrev);
     }
 }
