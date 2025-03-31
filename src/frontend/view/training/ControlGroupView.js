@@ -31,7 +31,7 @@ export default class ControlGroupView extends View {
         };
         this.button.style.display = "block";
         this.button.style.margin = "0 auto";
-        this.button.style.color = "#0000ff"
+        this.button.style.color = "#008000"
         document.body.appendChild(this.button);
 
         this.moreInfo = new MoreInfo();

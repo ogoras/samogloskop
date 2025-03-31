@@ -3,7 +3,7 @@ import PresetComponent from "../components/choice/PresetComponent.js";
 import { VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH } from '../../const/version.js';
 import State from "../../const/enum/State.js";
 import HELP_VIDEO_ID from "../../const/Help.js";
-import DAILY_TARGET from "../../const/TIME.js";
+import TimeTableComponent from "../components/training/TimeTableComponent.js";
 
 export default class SettingsView extends View {
     #state;
@@ -323,41 +323,11 @@ export default class SettingsView extends View {
         const p = document.createElement("p");
         const lsm = this.controller.lsm;
         const timeSpent = lsm.timeSpentInTraining;
-        let streak = 0;
-        let date = new Date();
-        date = new Date(date.getTime() - 86400000);
-        while (timeSpent[lsm.dateToString(date)] >= DAILY_TARGET * 1000) {
-            streak++;
-            date = new Date(date.getTime() - 86400000);
-        }
-        p.innerHTML = `Aplikacja śledzi, ile czasu spędzasz z nią każdego dnia.${streak ? ` Twoja dotychczasowa passa 🔥🔥 to ${streak} ${streak == 1 ? "dzień" : "dni"}.` : ""}`;
+        
+        p.innerHTML = `Aplikacja śledzi, ile czasu spędzasz z nią każdego dnia.${lsm.getStreak() ? ` Twoja dotychczasowa passa 🔥🔥 to <b>${lsm.getStreakString()}</b>.` : ""}`;
         center.appendChild(p);
 
-        const table = document.createElement("table");
-        table.classList.add("time-table");
-        const tableHeader = document.createElement("tr");
-        const dateHeader = document.createElement("th");
-        dateHeader.innerHTML = "Data";
-        const timeHeader = document.createElement("th");
-        timeHeader.innerHTML = "Czas";
-        tableHeader.appendChild(dateHeader);
-        tableHeader.appendChild(timeHeader);
-        table.appendChild(tableHeader);
-
-        const datesTrackedSoFar = Object.keys(timeSpent);
-        datesTrackedSoFar.sort();
-        for (const dateString of datesTrackedSoFar) {
-            const time = timeSpent[dateString];
-            const row = document.createElement("tr");
-            const dateCell = document.createElement("td");
-            dateCell.innerHTML = dateString;
-            const timeCell = document.createElement("td");
-            timeCell.innerHTML = `${Math.floor(time / 1000 / 60)} min`;
-            row.appendChild(dateCell);
-            row.appendChild(timeCell);
-            table.appendChild(row);
-        }
-        container.appendChild(table);
+        new TimeTableComponent(container, lsm);
 
         return div;
     }

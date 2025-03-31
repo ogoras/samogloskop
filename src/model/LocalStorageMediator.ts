@@ -5,6 +5,7 @@ import Singleton from "../Singleton.js";
 import IntensityStats from "./IntensityStats.js";
 import SpeakerVowels from "./vowels/SpeakerVowels.js";
 import nullish from "../logic/util/nullish.js";
+import DAILY_TARGET from "../const/TIME.js";
 
 const GATHERING_NATIVE_LEGACY = [
     "WAITING_FOR_VOWELS",
@@ -231,6 +232,39 @@ export default class LocalStorageMediator extends Singleton {
         }
 
         location.reload();
+    }
+
+    getStreak() {
+        const timeSpent = this.timeSpentInTraining;
+        let streak = 0;
+        let date = new Date();
+
+        // add today to streak if it is over the target
+        if (timeSpent[this.dateToString(date)] >= DAILY_TARGET * 1000) streak++;
+
+        date = new Date(date.getTime() - 86400000);
+        while (timeSpent[this.dateToString(date)] >= DAILY_TARGET * 1000) {
+            streak++;
+            date = new Date(date.getTime() - 86400000);
+        }
+
+        return streak;
+    }
+
+    getStreakString(grammaticalCase : string = "nominative") {
+        const streak = this.getStreak();
+        let singular;
+        switch(grammaticalCase) {
+            case "nominative":
+                singular = "dzień";
+                break;
+            case "genitive":
+                singular = "dnia";
+                break;
+            default:
+                throw new Error(`Unsupported grammatical case: ${grammaticalCase}`);
+        }
+        return `${streak} ${streak == 1 ? singular : "dni"}`;
     }
 }
 
