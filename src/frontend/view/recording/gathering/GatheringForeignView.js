@@ -2,6 +2,7 @@ import GatheringVowelsView from "./GatheringVowelsView.js";
 import DoubleProgressBar from "../../../visualization/progress_bar/DoubleProgressBar.js";
 import TestGroupView from "../../training/TestGroupView.js";
 import { playSamples } from "../../../../logic/util/audio.js";
+import ControlGroupView from "../../training/ControlGroupView.js";
 
 export default class GatheringForeignView extends GatheringVowelsView {
     initialized = false;
@@ -22,7 +23,7 @@ export default class GatheringForeignView extends GatheringVowelsView {
     constructor(controller, recorder, prev) {
         if (prev instanceof TestGroupView) {
             prev.reset();
-        } else {
+        } else if (prev instanceof ControlGroupView) {
             prev?.destroy?.();
         }
         super(controller, recorder, prev);
