@@ -1,6 +1,6 @@
 import View from "../View.js";
-import Timer from "../../components/training/Timer.js";
-import SelectedVowelDisplay from "../../components/training/SelectedVowelDisplay.js";
+//import Timer from "../../components/training/Timer.js";
+//import SelectedVowelDisplay from "../../components/training/SelectedVowelDisplay.js";
 import MoreInfo from "../../components/MoreInfo.js";
 import SettingsView from '../SettingsView.js';
 
@@ -89,5 +89,14 @@ export default class ControlGroupView extends View {
             this.cornerButton.style.paddingLeft = this.cornerButton.style.paddingRight = null;
             this.cornerButton.onclick = () => this.openSettings();
         }
+    }
+
+    destroy() {
+        super.destroy?.();
+        this.h1.remove();
+        this.p.remove();
+        this.button.remove();
+        this.moreInfo.destroy?.();
+        document.body.style.padding = null;
     }
 }

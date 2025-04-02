@@ -17,7 +17,7 @@ export default class TrainingController extends SmoothingController {
     async init(prev) {
         if (this.#discarded) return;
 
-        if (nullish(prev.lsm.getTimeSpentForToday(false))) {
+        if (nullish(prev.lsm.getTimeSpentForToday(false)) && !prev.lsm.isControlGroup) {
             this.#cachedPrev = prev;
             this.lsm = prev.lsm;
             this.view = new WelcomeBackView(this);
@@ -27,6 +27,7 @@ export default class TrainingController extends SmoothingController {
         super.init(prev);
 
         if (this.lsm.canFinish()) {
+            this.view.destroy?.();
             this.next();
             return;
         }
