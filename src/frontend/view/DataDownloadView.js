@@ -23,7 +23,8 @@ export default class DataDownloadView extends View {
 
         // Add a paragraph
         const p = document.createElement("p");
-        p.innerHTML = `Aby zakończyć swój udział w badaniu, pobierz swoje dane i załącz je w ankiecie.`;
+        p.innerHTML = `Aby zakończyć swój udział w badaniu, pobierz swoje dane i załącz je w wiadomości do mnie poprzez Discord lub mailowo na adres <i>szymon.kus2.stud@pw.edu.pl</i>.`;
+        p.style.textAlign = "center";
         this.container.appendChild(p);
 
         // Add a button to download the data

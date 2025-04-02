@@ -9,6 +9,7 @@ export default class RecordingController extends Controller {
     #timeSpentInFocus = 0;
     #lastFocused: number | null = null;
     #abortController?: AbortController;
+    #timerInitiated = false;
 
     get timeSpentInFocus() { return this.#timeSpentInFocus; }
 
@@ -62,6 +63,8 @@ export default class RecordingController extends Controller {
             }, 
             { signal }
         );
+
+        this.#timerInitiated = true;
     }
 
     checkIfDailyTargetReached() {
@@ -100,6 +103,8 @@ export default class RecordingController extends Controller {
     }
 
     stopCountingTime() {
+        if (!this.#timerInitiated) return;
+
         if (document.hasFocus()) {
             this.#onBlur();
             try {
@@ -109,6 +114,8 @@ export default class RecordingController extends Controller {
             }
         }
         this.#abortController!.abort();
+
+        this.#timerInitiated = false;
     }
 
     protected override validate(): void {
