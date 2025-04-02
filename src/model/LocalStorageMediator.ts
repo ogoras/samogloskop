@@ -287,7 +287,7 @@ export default class LocalStorageMediator extends Singleton {
             const earliestDate = new Date(dateOfPreTest.getFullYear(), dateOfPreTest.getMonth(), dateOfPreTest.getDate() + 8);
             const today = new Date();
             
-            return today >= earliestDate && this.getTimeSpentForToday() >= DAILY_TARGET * 1000;
+            return today >= earliestDate;
         }
         else return false;
     }
