@@ -27,7 +27,6 @@ export default class TrainingController extends SmoothingController {
         super.init(prev);
 
         if (this.lsm.canFinish()) {
-            this.view.destroy?.();
             this.next();
             return;
         }

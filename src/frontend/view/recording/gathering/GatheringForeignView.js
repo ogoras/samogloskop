@@ -22,6 +22,8 @@ export default class GatheringForeignView extends GatheringVowelsView {
     constructor(controller, recorder, prev) {
         if (prev instanceof TestGroupView) {
             prev.reset();
+        } else {
+            prev?.destroy?.();
         }
         super(controller, recorder, prev);
 
