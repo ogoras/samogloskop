@@ -264,6 +264,34 @@ export default class LocalStorageMediator extends Singleton {
         }
     }
 
+    canFinish() {
+        const fullDays = this.howManyFullDays();
+        if (fullDays >= 9) return true;
+        else if (fullDays >= 6 || this.isControlGroup) {
+            const dateOfPreTest = this.foreignInitial.processedAt;
+            const earliestDate = new Date(dateOfPreTest.getFullYear(), dateOfPreTest.getMonth(), dateOfPreTest.getDate() + 8);
+            const today = new Date();
+            
+            return today >= earliestDate;
+        }
+        else return false;
+    }
+
+    willBeAbleToFinishToday() {
+        if (this.getTimeSpentForToday() >= DAILY_TARGET * 1000 || this.isControlGroup) return this.canFinish();
+
+        const fullDays = this.howManyFullDays();
+        if (fullDays >= 8) return true;
+        else if (fullDays >= 5) {
+            const dateOfPreTest = this.foreignInitial.processedAt;
+            const earliestDate = new Date(dateOfPreTest.getFullYear(), dateOfPreTest.getMonth(), dateOfPreTest.getDate() + 8);
+            const today = new Date();
+            
+            return today >= earliestDate && this.getTimeSpentForToday() >= DAILY_TARGET * 1000;
+        }
+        else return false;
+    }
+
     getStreak() {
         const timeSpent = this.timeSpentInTraining;
         let streak = 0;

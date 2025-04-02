@@ -49,6 +49,10 @@ export default class RecordingView extends View {
         this.timer = prev?.timer ?? new Timer(this.sideComponent);
     }
 
+    hideTimer() {
+        this.timer.hidden = true;
+    }
+
     feed(samples) {
         this.sideComponent.feed(samples);
     }

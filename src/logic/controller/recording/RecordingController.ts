@@ -30,7 +30,7 @@ export default class RecordingController extends Controller {
 
         super.init(prev);
 
-        if (this.#timeSpentInFocus >= TIME_TARGET * 1000) {
+        if (this.#timeSpentInFocus >= TIME_TARGET * 1000 && !this.lsm!.canFinish()) {
             this.view = new ComeBackTomorrowView(this)
             return true;
         }

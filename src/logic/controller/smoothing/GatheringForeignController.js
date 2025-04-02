@@ -20,6 +20,10 @@ export default class GatheringForeignController extends GatheringVowelsControlle
             this.foreignCurrent = new SpeakerVowels("EN");
         }
 
+        if (this.repeat) {
+            this.view.hideTimer();
+        }
+
         this.disableMic();
         this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");
         this.view.initializeRecordings(this.englishRecordings);
@@ -27,6 +31,12 @@ export default class GatheringForeignController extends GatheringVowelsControlle
 
     initView(prev) {
         this.view = new GatheringForeignView(this, this.recorder, prev?.view);
+    }
+
+    initTimer(prev) {
+        if (!this.repeat) {
+            super.initTimer(prev);
+        }
     }
 
     speechDetectedInWaiting() {

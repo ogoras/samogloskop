@@ -25,6 +25,11 @@ export default class TrainingController extends SmoothingController {
 
         super.init(prev);
 
+        if (this.lsm.canFinish()) {
+            this.next();
+            return;
+        }
+
         this.petersonBarney = await Vowels.create("EN", "peterson_barney");
         this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");
         this.view.addDatasets?.(this.petersonBarney, this.englishRecordings);
