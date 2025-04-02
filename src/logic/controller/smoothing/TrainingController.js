@@ -12,6 +12,7 @@ import nullish from "../../util/nullish.js";
 export default class TrainingController extends SmoothingController {
     #discarded = false;
     #cachedPrev;
+    #onReachCalled = false;
 
     async init(prev) {
         if (this.#discarded) return;
@@ -52,6 +53,17 @@ export default class TrainingController extends SmoothingController {
         this.processFormants(false);
         requestAnimationFrame(this.renderLoop.bind(this));
         return false;
+    }
+
+    onReached() {
+        const canFinish = this.lsm.willBeAbleToFinishToday();
+        if (this.#onReachCalled) return canFinish;
+        this.#onReachCalled = true;
+        if (canFinish) {
+            window.alert("Gratulacje! Minęło 30 minut dzisiaj! To już prawie koniec Twojego badania. Teraz przejdziesz do testu końcowego.");
+            this.next();
+        }
+        return canFinish;
     }
 
     next() {

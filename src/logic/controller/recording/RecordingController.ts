@@ -73,7 +73,9 @@ export default class RecordingController extends Controller {
         const reached = timeSpent >= TIME_TARGET * 1000;
 
         if (reached) {
-            this.view.notifyDailyTargetReached();
+            if (!this.onReached?.()) {
+                this.view.notifyDailyTargetReached();
+            }
         }
 
         return reached;
