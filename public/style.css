@@ -506,6 +506,7 @@ button:active, .emoji-button:active, .button:active {
 table.time-table, .time-table th, .time-table td {
     border: 1px solid;
     border-collapse: collapse;
+    min-width: max-content;
 }
 
 .time-table th, .time-table td {

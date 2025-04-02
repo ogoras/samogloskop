@@ -324,7 +324,13 @@ export default class SettingsView extends View {
         const lsm = this.controller.lsm;
         const timeSpent = lsm.timeSpentInTraining;
         
-        p.innerHTML = `Aplikacja śledzi, ile czasu spędzasz z nią każdego dnia.${lsm.getStreak() ? ` Twoja dotychczasowa passa 🔥🔥 to <b>${lsm.getStreakString()}</b>.` : ""}`;
+        p.innerHTML = "Aplikacja śledzi, ile czasu spędzasz z nią każdego dnia.";
+        if (lsm.getStreak()) {
+            p.innerHTML += ` Twoja dotychczasowa passa 🔥🔥 to <b>${lsm.getStreakString()}</b>.`
+        }
+        if (lsm.howManyFullDays()) {
+            p.innerHTML += ` ${lsm.getFullDaysMessage(true)}`;
+        }
         center.appendChild(p);
 
         new TimeTableComponent(container, lsm);

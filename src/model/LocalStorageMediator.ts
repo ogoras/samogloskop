@@ -235,6 +235,35 @@ export default class LocalStorageMediator extends Singleton {
         location.reload();
     }
 
+    howManyFullDays() {
+        const timeSpent = this.timeSpentInTraining;
+        if (!timeSpent) return 0;
+        let days = 0;
+        for (let key in timeSpent) {
+            if (timeSpent[key] >= DAILY_TARGET * 1000) {
+                days++;
+            }
+        }
+        return days;
+    }
+
+    getFullDaysMessage(bold = false) {
+        const days = this.howManyFullDays();
+        const boldOpen = bold ? "<b>" : "";
+        const boldClose = bold ? "</b>" : "";
+        const message = `Masz za sobą ${boldOpen + days + boldClose} w pełni przećwiczon`;
+        const lastDigit = days % 10;
+        const lastTwoDigits = days % 100;
+        const isTeen = lastTwoDigits >= 10 && lastTwoDigits <= 19;
+        if (days === 1) {
+            return message + "y dzień.";
+        } else if (lastDigit >= 2 && lastDigit <= 4 && !isTeen) {
+            return message + "e dni.";
+        } else {
+            return message + "ych dni.";
+        }
+    }
+
     getStreak() {
         const timeSpent = this.timeSpentInTraining;
         let streak = 0;

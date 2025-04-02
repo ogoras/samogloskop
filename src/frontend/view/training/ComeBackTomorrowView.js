@@ -22,7 +22,7 @@ export default class ComeBackTomorrowView extends View {
         div.appendChild(h1);
 
         const p = document.createElement("p");
-        p.innerHTML = `Twoje ćwiczenie dzisiaj zajęło wystarczająco długo (${convertSecondsToTimeString(Math.floor(controller.timeSpentInFocus / 1000))}). Wróć jutro, aby kontynuować swoją passę 🔥🔥 <b>${this.controller.lsm.getStreakString("genitive")}</b>.`;
+        p.innerHTML = `Twoje ćwiczenie dzisiaj zajęło wystarczająco długo (${convertSecondsToTimeString(Math.floor(controller.timeSpentInFocus / 1000))}). Wróć jutro, aby kontynuować swoją passę 🔥🔥 <b>${this.controller.lsm.getStreakString("genitive")}</b>. ${this.controller.lsm.getFullDaysMessage()}`;
         div.appendChild(p);
         p.style.marginBottom = "0.5em";
 

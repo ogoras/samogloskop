@@ -21,6 +21,9 @@ export default class WelcomeBackView extends View {
 
         const p = document.createElement("p");
         p.innerHTML = this.controller.lsm.getStreak() ? `Kontynuuj ćwiczenie, aby dodać do swojej passy 🔥🔥 <b>${this.controller.lsm.getStreakString("genitive")}</b>.` : `Super, że jesteś z powrotem! Naciśnij na przycisk poniżej, aby zacząć dzisiejsze ćwiczenie.`;
+        if (this.controller.lsm.howManyFullDays()) {
+            p.innerHTML += ` ${this.controller.lsm.getFullDaysMessage()}`;
+        }
         div.appendChild(p);
 
         const button = document.createElement("button");
