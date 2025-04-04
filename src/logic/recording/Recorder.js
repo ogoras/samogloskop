@@ -82,6 +82,7 @@ export default class AudioRecorder {
         this.recorderNode.port.onmessage = (event) => {
             const inputData = event.data;
             this.audioBufferData.push(...inputData);
+            return true;
         };
         this.source.connect(this.recorderNode);
         this.recording = true;
