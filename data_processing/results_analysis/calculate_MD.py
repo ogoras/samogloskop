@@ -245,26 +245,26 @@ def calculate_distances(f, name='self', test=None):
                 distance_to_closest = dist
                 closest_phoneme = phonemes[i]
 
-        if max_speaker_SD_per_vowel[phoneme] <= 1.0:
-            MD[0 if isControlGroup else 1# if time < 300_000 else 2
-               ][phoneme][0 if test == "pre" else 1] += np.sqrt(distance_to_target)
-            MD_counts[0 if isControlGroup else 1 # if time < 300_000 else 2
-                      ][phoneme][0 if test == "pre" else 1] += 1
-            try:
-                app__vowel_result = pd.Series({
-                    'vowel': phoneme,
-                    'isPre': test == 'pre',
-                    'distance_to_target': distance_to_target,
-                    'distance_to_closest': distance_to_closest,
-                    'closest_phoneme': closest_phoneme
-                })
-                long_row = pd.concat([response, app_speaker_result, app__vowel_result])
-                distances_long_format.loc[len(distances_long_format)] = long_row 
-                short_row = pd.concat([pd.Series({'no': int(name)}), app__vowel_result])
-                distances_data.loc[len(distances_data)] = short_row
-                #print(output.head())
-            except ValueError:
-                pass
+        # if max_speaker_SD_per_vowel[phoneme] <= 1.0:
+        MD[0 if isControlGroup else 1# if time < 300_000 else 2
+            ][phoneme][0 if test == "pre" else 1] += np.sqrt(distance_to_target)
+        MD_counts[0 if isControlGroup else 1 # if time < 300_000 else 2
+                    ][phoneme][0 if test == "pre" else 1] += 1
+        try:
+            app__vowel_result = pd.Series({
+                'vowel': phoneme,
+                'isPre': test == 'pre',
+                'distance_to_target': distance_to_target,
+                'distance_to_closest': distance_to_closest,
+                'closest_phoneme': closest_phoneme
+            })
+            long_row = pd.concat([response, app_speaker_result, app__vowel_result])
+            distances_long_format.loc[len(distances_long_format)] = long_row 
+            short_row = pd.concat([pd.Series({'no': int(name)}), app__vowel_result])
+            distances_data.loc[len(distances_data)] = short_row
+            #print(output.head())
+        except ValueError:
+            pass
         
         score = (distance_to_closest - distance_to_target) / (distance_to_closest + distance_to_target) / 2 + 0.5
         
@@ -356,8 +356,8 @@ print()
 print("Experimental group:")
 print_MD(1)
 
-distances_long_format.to_csv('./data/results_output/distances_filtered_long_format.csv', index=False, encoding='utf-8')
-distances_data.to_csv('./data/results_output/distances_filtered.csv', index=False, encoding='utf-8')
+distances_long_format.to_csv('./data/results_output/distances_long_format.csv', index=False, encoding='utf-8')
+distances_data.to_csv('./data/results_output/distances.csv', index=False, encoding='utf-8')
 speaker_data.to_csv('./data/results_output/speakers.csv', index=False, encoding='utf-8')
 
-print(f"Total {total_warnings} warnings out of {21 * 2 * 9} samples")
+print(f"Total {total_warnings} warnings out of {14 * 2 * 9} samples")

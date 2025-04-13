@@ -1,0 +1,4 @@
+# ignore everything except this and model*.txt
+*
+!.gitignore
+!model*.txt

@@ -1,0 +1,20 @@
+distances_data = pd.read_csv('data/results_output/distances_filtered_long_format.csv')
+model = smf.mixedlm("distance_to_target ~ isControlGroup * isPre", distances_data, groups=distances_data["no"])
+
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      224          Method:                  REML
+No. Groups:            14           Scale:                   0.2252
+Min. group size:       5            Log-Likelihood:          -163.8459
+Max. group size:       18           Converged:               Yes
+Mean group size:       16.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             1.666    0.089 18.715 0.000  1.491  1.840
+isControlGroup[T.True]                0.466    0.138  3.365 0.001  0.195  0.737
+isPre[T.True]                         0.319    0.083  3.864 0.000  0.157  0.481
+isControlGroup[T.True]:isPre[T.True] -0.525    0.130 -4.052 0.000 -0.779 -0.271
+Group Var                             0.038    0.045
+===============================================================================
