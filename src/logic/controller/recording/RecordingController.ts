@@ -2,7 +2,6 @@ import Controller from "../Controller.js";
 import SettingsController from "../SettingsController.js";
 import AudioRecorder from "../../recording/Recorder.js";
 import TIME_TARGET from "../../../const/TIME.js";
-import ComeBackTomorrowView from "../../../frontend/view/training/ComeBackTomorrowView.js";
 
 export default class RecordingController extends Controller {
     recorder?: AudioRecorder;
@@ -30,11 +29,6 @@ export default class RecordingController extends Controller {
         this.#timeSpentInFocus = prev.lsm!.getTimeSpentForToday() ?? 0;
 
         super.init(prev);
-
-        if (this.#timeSpentInFocus >= TIME_TARGET * 1000 && !this.lsm!.canFinish()) {
-            this.view = new ComeBackTomorrowView(this)
-            return true;
-        }
 
         this.recorder = prev.recorder ?? new AudioRecorder();
 

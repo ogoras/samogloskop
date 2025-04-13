@@ -26,11 +26,6 @@ export default class TrainingController extends SmoothingController {
 
         super.init(prev);
 
-        if (this.lsm.canFinish()) {
-            this.next();
-            return;
-        }
-
         this.petersonBarney = await Vowels.create("EN", "peterson_barney");
         this.englishRecordings = prev.englishRecordings ?? await ForeignRecordings.create("EN");
         this.view.addDatasets?.(this.petersonBarney, this.englishRecordings);
@@ -56,25 +51,11 @@ export default class TrainingController extends SmoothingController {
     }
 
     onReached() {
-        const canFinish = this.lsm.willBeAbleToFinishToday();
-        if (this.#onReachCalled) return canFinish;
-        this.#onReachCalled = true;
-        if (canFinish) {
-            window.alert("Gratulacje! Minęło 30 minut dzisiaj! To już prawie koniec Twojego badania. Teraz przejdziesz do testu końcowego.");
-            this.next();
-        }
-        return canFinish;
+        console.log("onReached called");
     }
 
     next() {
-        if (this.#discarded) return;
-
-        this.stopCountingTime();
-
-        this.sm.advance();
-        this.breakRenderLoop();
-        nextController(this);
-        this.#discarded = true;
+        throw new Error("Method removed and should not be reachable.")
     }
 
     recalibrate() {

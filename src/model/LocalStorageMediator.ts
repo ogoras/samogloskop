@@ -156,6 +156,16 @@ export default class LocalStorageMediator extends Singleton {
                         }
                         this.timeSpentInTraining = newTimeSpent;
                     }
+                // FALL THROUGH
+                case "1.5": // 1.5 -> 1.6 conversion
+                    // if state above training, return to training
+                    if (this.state.after("TRAINING")) {
+                        this.state = State.get("TRAINING");
+                    }
+                    // if control group, set to false
+                    if (this.isControlGroup) {
+                        this.isControlGroup = false;
+                    }
                     break;
                 default:
                     if (dataConsentGiven) {
@@ -265,31 +275,11 @@ export default class LocalStorageMediator extends Singleton {
     }
 
     canFinish() {
-        const fullDays = this.howManyFullDays();
-        if (fullDays >= 9) return true;
-        else if (fullDays >= 6 || this.isControlGroup) {
-            const dateOfPreTest = this.foreignInitial.processedAt;
-            const earliestDate = new Date(dateOfPreTest.getFullYear(), dateOfPreTest.getMonth(), dateOfPreTest.getDate() + 8);
-            const today = new Date();
-            
-            return today >= earliestDate;
-        }
-        else return false;
+        return false;
     }
 
     willBeAbleToFinishToday() {
-        if (this.getTimeSpentForToday() >= DAILY_TARGET * 1000 || this.isControlGroup) return this.canFinish();
-
-        const fullDays = this.howManyFullDays();
-        if (fullDays >= 8) return true;
-        else if (fullDays >= 5) {
-            const dateOfPreTest = this.foreignInitial.processedAt;
-            const earliestDate = new Date(dateOfPreTest.getFullYear(), dateOfPreTest.getMonth(), dateOfPreTest.getDate() + 8);
-            const today = new Date();
-            
-            return today >= earliestDate;
-        }
-        else return false;
+        return false;
     }
 
     getStreak() {
@@ -380,11 +370,8 @@ const localStorageProperties : Array<{
     {
         name: "isControlGroup",
         localStorageName: "isControlGroup",
-        customGet: (string?: string) => {
-            // // the control group functionality probably deprecated
-            // return false;
-            string ??= Math.random() < 0.2 ? "true" : "false";  // roughly 20% of users are in the control group
-            return string === "true";
+        customGet: () => {
+            return false;
         }
     },
     {

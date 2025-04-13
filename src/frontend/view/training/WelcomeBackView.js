@@ -21,11 +21,6 @@ export default class WelcomeBackView extends View {
 
         const p = document.createElement("p");
         p.innerHTML = this.controller.lsm.getStreak() ? `Kontynuuj ćwiczenie, aby dodać do swojej passy 🔥🔥 <b>${this.controller.lsm.getStreakString("genitive")}</b>.` : `Super, że jesteś z powrotem! Naciśnij na przycisk poniżej, aby zacząć dzisiejsze ćwiczenie.`;
-        if (this.controller.lsm.canFinish()) {
-            p.innerHTML = `Zostało Ci jedynie zrobić test końcowy!`;
-        } else if (this.controller.lsm.willBeAbleToFinishToday()) {
-            p.innerHTML += ` Na koniec dzisiaj będziesz mógł zrobić test końcowy.`;
-        }
         if (this.controller.lsm.howManyFullDays()) {
             p.innerHTML += ` ${this.controller.lsm.getFullDaysMessage()}`;
         }

@@ -25,7 +25,7 @@ export default class TimeTableComponent extends Component {
             const dateCell = document.createElement("td");
             dateCell.innerHTML = dateString;
             const timeCell = document.createElement("td");
-            timeCell.innerHTML = `${convertSecondsToTimeString(Math.floor(time / 1000))}${time >= DAILY_TARGET * 1000 ? " ✅" : dateString === todayString ? "" : " ❌"}`;
+            timeCell.innerHTML = `${convertSecondsToTimeString(Math.floor(time / 1000))}`;
             row.appendChild(dateCell);
             row.appendChild(timeCell);
             this.appendChild(row);
