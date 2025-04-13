@@ -116,31 +116,31 @@ def calculate_distances(f, name='self', test=None):
         vowels = json.load(open(f'./data/{name}_vowels.json', 'r', encoding='utf-8'))
 
     # speaker_data
-    try:
-        response = responses.loc[int(name)]
-    except ValueError:
-        print(f"{name} could not be converted to an integer")
-        return 0, False, 0, 0, 0
-    app_speaker_result = pd.Series({
-        'no': int(name),
-        'microphoneLabel': speaker_json.get('microphoneLabel'),
-        'preset': speaker_json.get('preset').get('name'),
-        'isControlGroup': isControlGroup,
-        'timeSpent': time,
-        'version': version,
-        'speechMin': speaker_json.get('intensityStats').get('speechStats').get('min'),
-        'speechMax': speaker_json.get('intensityStats').get('speechStats').get('max'),
-        'speechMean': speaker_json.get('intensityStats').get('speechStats').get('mean'),
-        'silenceMin': speaker_json.get('intensityStats').get('silenceStats').get('min'),
-        'silenceMax': speaker_json.get('intensityStats').get('silenceStats').get('max'),
-        'silenceMean': speaker_json.get('intensityStats').get('silenceStats').get('mean'),
-        'speaker_F1_mean': speaker_json.get('nativeVowels').get('meanFormants').get('y'),
-        'speaker_F2_mean': speaker_json.get('nativeVowels').get('meanFormants').get('x'),
-        'speaker_F1_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('y'),
-        'speaker_F2_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('x')
-    })
-    if (test == 'pre'):
-        speaker_data.loc[len(speaker_data)] = pd.concat([response, app_speaker_result])
+    # try:
+    #     response = responses.loc[int(name)]
+    # except ValueError:
+    #     print(f"{name} could not be converted to an integer")
+    #     return 0, False, 0, 0, 0
+    # app_speaker_result = pd.Series({
+    #     'no': int(name),
+    #     'microphoneLabel': speaker_json.get('microphoneLabel'),
+    #     'preset': speaker_json.get('preset').get('name'),
+    #     'isControlGroup': isControlGroup,
+    #     'timeSpent': time,
+    #     'version': version,
+    #     'speechMin': speaker_json.get('intensityStats').get('speechStats').get('min'),
+    #     'speechMax': speaker_json.get('intensityStats').get('speechStats').get('max'),
+    #     'speechMean': speaker_json.get('intensityStats').get('speechStats').get('mean'),
+    #     'silenceMin': speaker_json.get('intensityStats').get('silenceStats').get('min'),
+    #     'silenceMax': speaker_json.get('intensityStats').get('silenceStats').get('max'),
+    #     'silenceMean': speaker_json.get('intensityStats').get('silenceStats').get('mean'),
+    #     'speaker_F1_mean': speaker_json.get('nativeVowels').get('meanFormants').get('y'),
+    #     'speaker_F2_mean': speaker_json.get('nativeVowels').get('meanFormants').get('x'),
+    #     'speaker_F1_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('y'),
+    #     'speaker_F2_SD': speaker_json.get('nativeVowels').get('formantsDeviation').get('x')
+    # })
+    # if (test == 'pre'):
+    #     speaker_data.loc[len(speaker_data)] = pd.concat([response, app_speaker_result])
 
     display_name = name
     if test:
@@ -247,8 +247,10 @@ def calculate_distances(f, name='self', test=None):
                 closest_phoneme = phonemes[i]
 
         if max_speaker_SD_per_vowel[phoneme] <= 1.0:
-            MD[0 if isControlGroup else 1 if time < 300_000 else 2][phoneme][0 if test == "pre" else 1] += np.sqrt(distance_to_target)
-            MD_counts[0 if isControlGroup else 1 if time < 300_000 else 2][phoneme][0 if test == "pre" else 1] += 1
+            MD[0 if isControlGroup else 1# if time < 300_000 else 2
+               ][phoneme][0 if test == "pre" else 1] += np.sqrt(distance_to_target)
+            MD_counts[0 if isControlGroup else 1 # if time < 300_000 else 2
+                      ][phoneme][0 if test == "pre" else 1] += 1
             try:
                 app__vowel_result = pd.Series({
                     'vowel': phoneme,
@@ -257,8 +259,8 @@ def calculate_distances(f, name='self', test=None):
                     'distance_to_closest': distance_to_closest,
                     'closest_phoneme': closest_phoneme
                 })
-                long_row = pd.concat([response, app_speaker_result, app__vowel_result])
-                distances_long_format.loc[len(distances_long_format)] = long_row 
+                # long_row = pd.concat([response, app_speaker_result, app__vowel_result])
+                # distances_long_format.loc[len(distances_long_format)] = long_row 
                 short_row = pd.concat([pd.Series({'no': int(name)}), app__vowel_result])
                 distances_data.loc[len(distances_data)] = short_row
                 #print(output.head())
@@ -315,9 +317,9 @@ count = np.zeros(3)
 
 total_warnings = 0
 
-for file in os.listdir('./data/results_input'):
+for file in ['./data/results_input/samogloskop_wyniki_nowe.json']:# os.listdir('./data/results_input'):
     if file.endswith('.json'):
-        number = file[:-5]
+        number = 'samogloskop_wyniki_nowe'
         with open(f'./data/results_output2/{number}.txt', 'w', encoding='utf-8') as f:
             pre_score, isControl, timeSpent, version, warning_count_pre = calculate_distances(f, number, "pre")
             post_score, _, _, _, warning_count_post = calculate_distances(f, number, "post")
@@ -325,41 +327,41 @@ for file in os.listdir('./data/results_input'):
             print("WARNINGS_PRE: ", warning_count_pre, file=f)
             print("WARNINGS_POST: ", warning_count_post, file=f)
             i = 0 if isControl else 2
-            if not isControl and timeSpent < 300_000:
-                # print(f"Warning: {number} spent less than 5 minutes in training")
-                i = 1
+            # if not isControl and timeSpent < 300_000:
+            #     # print(f"Warning: {number} spent less than 5 minutes in training")
+            #     i = 1
             avgs[0][i] += pre_score
             avgs[1][i] += post_score
             count[i] += 1
 
-print()            
-print(count)
-if (count[1] == 0):
-    count[1] = 1
-avgs /= count
-print(avgs.round(2))
-print()
+# print()            
+# print(count)
+# if (count[1] == 0):
+#     count[1] = 1
+# avgs /= count
+# print(avgs.round(2))
+# print()
 
-def print_MD(i):
-    for phoneme in MD[i]:
-        print(phoneme, sep='\t', end='\t')
-    print()
-    for j in range(2):
-        for phoneme in MD[i]:
-            print(round(MD[i][phoneme][j] / MD_counts[i][phoneme][j], 1), sep='\t', end='\t')
-        print()
+# def print_MD(i):
+#     for phoneme in MD[i]:
+#         print(phoneme, sep='\t', end='\t')
+#     print()
+#     for j in range(2):
+#         for phoneme in MD[i]:
+#             print(round(MD[i][phoneme][j] / MD_counts[i][phoneme][j], 1), sep='\t', end='\t')
+#         print()
 
-print("Control group:")
-print_MD(0)
-print()
-print("Experimental group (less than 5 minutes):")
-print_MD(1)
-print()
-print("Experimental group (5 minutes or more):")
-print_MD(2)
+# print("Control group:")
+# print_MD(0)
+# print()
+# print("Experimental group (less than 5 minutes):")
+# print_MD(1)
+# print()
+# print("Experimental group (5 minutes or more):")
+# print_MD(2)
 
-distances_long_format.to_csv('./data/results_output/distances_filtered_long_format.csv', index=False, encoding='utf-8')
-distances_data.to_csv('./data/results_output/distances_filtered.csv', index=False, encoding='utf-8')
-speaker_data.to_csv('./data/results_output2/speakers.csv', index=False, encoding='utf-8')
+# distances_long_format.to_csv('./data/results_output/distances_filtered_long_format.csv', index=False, encoding='utf-8')
+# distances_data.to_csv('./data/results_output/distances_filtered.csv', index=False, encoding='utf-8')
+# speaker_data.to_csv('./data/results_output2/speakers.csv', index=False, encoding='utf-8')
 
-print(f"Total {total_warnings} warnings out of {21 * 2 * 9} samples")
+# print(f"Total {total_warnings} warnings out of {21 * 2 * 9} samples")
