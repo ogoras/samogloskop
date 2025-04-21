@@ -75,7 +75,7 @@ export default function soundToFormant(samples, sampleRate, maximumFrequency = 5
         const frame = frameBuffer.slice(0, actualFrameLength);
         formantFrames.push(burg(frame, coefficients, maximumIntensity, 0.5 / dx, safetyMargin));
     }
-    Formant_sort (formantFrames);
+    Formant_sort(formantFrames);
     return formantFrames;
 }
 

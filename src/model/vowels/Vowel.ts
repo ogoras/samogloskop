@@ -161,7 +161,7 @@ export default class Vowel {
 
     scaleByFactor(factor: number) {
         function scaleFunction (formants: xy) {
-            formants.x *= factor;
+            // formants.x *= factor;
             formants.y *= factor;
         }
         this.formants.forEach(scaleFunction);
