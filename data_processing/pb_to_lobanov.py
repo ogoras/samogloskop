@@ -3,7 +3,7 @@ import pandas as pd, json
 phonemes = [ 'i', 'ɪ', 'ɛ', 'æ', 'ʌ', 'ɑ', 'ɔ', 'ʊ', 'u', 'ɚ' ]
 columns = ['sex', 'speaker', 'phoneme_id', 'phoneme_ascii', 'F1', 'F2']
 
-pb_data = pd.read_csv('../data/verified_pb.data', sep='\t', header=None, names=columns,
+pb_data = pd.read_csv('./data/verified_pb.data', sep='\t', header=None, names=columns,
                       usecols=[0, 1, 2, 3, 5, 6])
 pb_data['identified'] = pb_data['phoneme_ascii'].apply(lambda x: x[0] != '*')
 pb_data.drop('phoneme_ascii', axis=1, inplace=True)
@@ -15,6 +15,8 @@ for speaker in pb_data['speaker'].unique():
         mean = speaker_data[formant].mean()
         standard_deviation = speaker_data[formant].std()
         pb_data.loc[rows, formant + '_lobanov'] = (speaker_data[formant] - mean) / standard_deviation
+    # scale F1 by 0.8
+    pb_data.loc[rows, 'F1_lobanov'] = pb_data.loc[rows, 'F1_lobanov'] * 0.8
 
 # export Lobanov-scaled formants to a JSON file like this:
 # {
@@ -42,5 +44,5 @@ for phoneme_id in range(1, 11):
     phoneme_data.drop(['sex', 'speaker'], axis=1, inplace=True)
     lobanov_data_short[phoneme] = phoneme_data.to_dict(orient='records')
 
-with open('../data/peterson_barney.json', 'w', encoding="utf-8") as f:
+with open('./data/peterson_barney.json', 'w', encoding="utf-8") as f:
     json.dump(lobanov_data_full, f, ensure_ascii=False)

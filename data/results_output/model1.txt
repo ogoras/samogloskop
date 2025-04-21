@@ -1,6 +1,8 @@
 distances_data = pd.read_csv('data/results_output/distances_filtered_long_format.csv')
 model = smf.mixedlm("distance_to_target ~ isControlGroup * isPre", distances_data, groups=distances_data["no"])
 
+
+// NOT UP TO DATE (doesn't take into account adjusting F1 in PB data)
                      Mixed Linear Model Regression Results
 ===============================================================================
 Model:                 MixedLM      Dependent Variable:      distance_to_target
