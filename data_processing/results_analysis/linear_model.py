@@ -2,8 +2,10 @@ import pandas as pd, bambi as bmb, arviz as az, numpy as np
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
+FOLDER_ENDING = '_phases1&2'
+
 # load data
-distances_data = pd.read_csv('data/results_output/distances_long_format.csv')
+distances_data = pd.read_csv(f'data/results_output{FOLDER_ENDING}/distances_long_format.csv')
 print("Data loaded")
 distances_data['distance_to_target'] = np.log(distances_data['distance_to_target'])   # log-transform to make it homoscedastic
 

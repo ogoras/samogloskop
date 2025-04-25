@@ -1,6 +1,8 @@
 import json, numpy as np, sys, os, pandas as pd
 
-responses = pd.read_csv('./data/results_input/responses.txt', encoding='utf_16_le', sep='\t')
+FOLDER_ENDING = "_phases1&2"
+
+responses = pd.read_csv(f'./data/results_input{FOLDER_ENDING}/responses.txt', encoding='utf_16_le', sep='\t')
 responses_columns = responses.columns.tolist()
 speaker_columns = ['microphoneLabel', 'preset', 'isControlGroup', 'timeSpent', 'version', 'speechMin', 'speechMax', 'speechMean', 'silenceMin', 'silenceMax', 'silenceMean', 'speaker_F1_mean', 'speaker_F2_mean', 'speaker_F1_SD', 'speaker_F2_SD']
 vowel_columns = ['vowel', 'isPre', 'distance_to_target', 'distance_to_closest', 'closest_phoneme']
@@ -100,7 +102,7 @@ def calculate_distances(f, name='self', test=None):
     if use_pb:
         vowels = peterson_barney.keys()
     elif test:
-        speaker_json = vowels = json.load(open(f'./data/results_input/{name}.json', 'r', encoding='utf-8'))
+        speaker_json = vowels = json.load(open(f'./data/results_input{FOLDER_ENDING}/{name}.json', 'r', encoding='utf-8'))
         isControlGroup = vowels.get("isControlGroup") == True
         time = vowels.get("timeSpentInTraining")
         version = vowels.get("version")
@@ -316,13 +318,13 @@ count = np.zeros(2)
 
 total_warnings = 0
 
-if not os.path.exists('./data/results_output'):
-    os.mkdir('./data/results_output')
+if not os.path.exists(f'./data/results_output{FOLDER_ENDING}'):
+    os.mkdir(f'./data/results_output{FOLDER_ENDING}')
 
-for file in os.listdir('./data/results_input'):
+for file in os.listdir(f'./data/results_input{FOLDER_ENDING}'):
     if file.endswith('.json'):
         number = file[:-5]
-        with open(f'./data/results_output/{number}.txt', 'w', encoding='utf-8') as f:
+        with open(f'./data/results_output{FOLDER_ENDING}/{number}.txt', 'w', encoding='utf-8') as f:
             pre_score, isControl, timeSpent, version, warning_count_pre = calculate_distances(f, number, "pre")
             post_score, _, _, _, warning_count_post = calculate_distances(f, number, "post")
             total_warnings += warning_count_post + warning_count_pre
@@ -356,8 +358,8 @@ print()
 print("Experimental group:")
 print_MD(1)
 
-distances_long_format.to_csv('./data/results_output/distances_long_format.csv', index=False, encoding='utf-8')
-distances_data.to_csv('./data/results_output/distances.csv', index=False, encoding='utf-8')
-speaker_data.to_csv('./data/results_output/speakers.csv', index=False, encoding='utf-8')
+distances_long_format.to_csv(f'./data/results_output{FOLDER_ENDING}/distances_long_format.csv', index=False, encoding='utf-8')
+distances_data.to_csv(f'./data/results_output{FOLDER_ENDING}/distances.csv', index=False, encoding='utf-8')
+speaker_data.to_csv(f'./data/results_output{FOLDER_ENDING}/speakers.csv', index=False, encoding='utf-8')
 
 print(f"Total {total_warnings} warnings out of {14 * 2 * 9} samples")
