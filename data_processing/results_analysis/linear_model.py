@@ -47,4 +47,14 @@ def fit_data(show_residuals=False, data=distances_data, formula="distance_to_tar
 
 vowels = 'iɪɛæɑʌɔʊu'
 
-fit_data(True)
+result = fit_data(True)
+
+# get vector of random effects
+random_effects = result.random_effects
+print("Random effects:")
+print(random_effects)
+
+# get vector of error terms epsilon
+error_terms = result.resid
+print("Error terms:")
+print(error_terms)
