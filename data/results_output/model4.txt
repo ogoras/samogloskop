@@ -1,0 +1,20 @@
+fit_data(False, distances_data[distances_data['isControlGroup']], "distance_to_target ~ isPre")
+
+             Mixed Linear Model Regression Results
+================================================================ 
+Model:            MixedLM Dependent Variable: distance_to_target 
+No. Observations: 108     Method:             REML
+No. Groups:       6       Scale:              0.0534
+Min. group size:  18      Log-Likelihood:     -3.6369
+Max. group size:  18      Converged:          Yes
+Mean group size:  18.0
+-----------------------------------------------------------------
+                  Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+-----------------------------------------------------------------
+Intercept          0.687     0.059  11.584  0.000   0.571   0.803
+isPre[T.True]     -0.078     0.044  -1.749  0.080  -0.165   0.009
+Group Var          0.015     0.051
+================================================================
+
+Eta-squared:
+0.156339022461972

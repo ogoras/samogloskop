@@ -1,0 +1,233 @@
+vowels = 'iɪɛæɑʌɔʊu'
+
+for vowel in vowels:
+    fit_data(False, distances_data[distances_data['vowel'] == vowel])
+
+
+
+Libraries imported
+Data loaded
+Model created
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0353
+Min. group size:       2            Log-Likelihood:          -7.0341
+Max. group size:       2            Converged:               Yes
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.388    0.112  3.476 0.001  0.169  0.607
+isControlGroup[T.True]                0.340    0.171  1.993 0.046  0.006  0.675
+isPre[T.True]                         0.096    0.094  1.025 0.305 -0.088  0.280
+isControlGroup[T.True]:isPre[T.True] -0.110    0.144 -0.770 0.441 -0.392  0.171
+Group Var                             0.065    0.253
+===============================================================================
+
+Eta-squared:
+0.8375157264238531
+Model created
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0250
+Min. group size:       2            Log-Likelihood:          -1.9400
+Max. group size:       2            Converged:               Yes
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.492    0.088  5.581 0.000  0.319  0.664
+isControlGroup[T.True]                0.234    0.135  1.741 0.082 -0.030  0.498
+isPre[T.True]                         0.184    0.079  2.327 0.020  0.029  0.339
+isControlGroup[T.True]:isPre[T.True] -0.404    0.121 -3.342 0.001 -0.641 -0.167
+Group Var                             0.037    0.181
+===============================================================================
+
+Eta-squared:
+0.44051336569280414
+Model created
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0415
+Min. group size:       2            Log-Likelihood:          -2.4485
+Max. group size:       2            Converged:               Yes
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.554    0.082  6.791 0.000  0.394  0.714
+isControlGroup[T.True]                0.096    0.125  0.767 0.443 -0.149  0.340
+isPre[T.True]                         0.020    0.102  0.200 0.841 -0.179  0.220
+isControlGroup[T.True]:isPre[T.True] -0.121    0.156 -0.777 0.437 -0.426  0.184
+Group Var                             0.012    0.092
+===============================================================================
+
+Eta-squared:
+0.06630672907505825
+Model created
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0245
+Min. group size:       2            Log-Likelihood:          1.4142
+Max. group size:       2            Converged:               Yes
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.307    0.072  4.281 0.000  0.167  0.448
+isControlGroup[T.True]                0.311    0.110  2.838 0.005  0.096  0.526
+isPre[T.True]                         0.304    0.078  3.889 0.000  0.151  0.458
+isControlGroup[T.True]:isPre[T.True] -0.444    0.120 -3.711 0.000 -0.678 -0.209
+Group Var                             0.017    0.107
+===============================================================================
+
+Eta-squared:
+0.33091501076589963
+Model created
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:2237: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  warnings.warn(msg, ConvergenceWarning)
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0668
+Min. group size:       2            Log-Likelihood:          -6.6875
+Max. group size:       2            Converged:               Yes
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.428    0.096  4.435 0.000  0.239  0.617
+isControlGroup[T.True]                0.109    0.147  0.741 0.459 -0.180  0.398
+isPre[T.True]                         0.071    0.129  0.546 0.585 -0.183  0.324
+isControlGroup[T.True]:isPre[T.True] -0.106    0.197 -0.539 0.590 -0.493  0.280
+Group Var                             0.008    0.092
+===============================================================================
+
+Eta-squared:
+0.036879717550368736
+Model created
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:1634: UserWarning: Random effects covariance is singular
+  warnings.warn(msg)
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:1634: UserWarning: Random effects covariance is singular
+  warnings.warn(msg)
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:2237: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  warnings.warn(msg, ConvergenceWarning)
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0389
+Min. group size:       2            Log-Likelihood:          1.0365
+Max. group size:       2            Converged:               Yes
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.468    0.070  6.713 0.000  0.331  0.605
+isControlGroup[T.True]                0.153    0.107  1.434 0.151 -0.056  0.362
+isPre[T.True]                         0.143    0.099  1.446 0.148 -0.051  0.336
+isControlGroup[T.True]:isPre[T.True] -0.304    0.151 -2.019 0.044 -0.599 -0.009
+Group Var                             0.000    0.071
+===============================================================================
+
+Eta-squared:
+0.07376812166117476
+Model created
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0386
+Min. group size:       2            Log-Likelihood:          -6.9716
+Max. group size:       2            Converged:               Yes
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.381    0.108  3.522 0.000  0.169  0.594
+isControlGroup[T.True]                0.304    0.165  1.837 0.066 -0.020  0.628
+isPre[T.True]                         0.118    0.098  1.201 0.230 -0.075  0.310
+isControlGroup[T.True]:isPre[T.True] -0.182    0.150 -1.211 0.226 -0.476  0.112
+Group Var                             0.055    0.219
+===============================================================================
+
+Eta-squared:
+0.62910589316993
+Model created
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0364
+Min. group size:       2            Log-Likelihood:          -3.4923
+Max. group size:       2            Converged:               Yes
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.452    0.088  5.113 0.000  0.278  0.625
+isControlGroup[T.True]                0.457    0.135  3.386 0.001  0.192  0.721
+isPre[T.True]                         0.310    0.095  3.253 0.001  0.123  0.498
+isControlGroup[T.True]:isPre[T.True] -0.354    0.146 -2.425 0.015 -0.639 -0.068
+Group Var                             0.026    0.134
+===============================================================================
+
+Eta-squared:
+0.5986551530785501
+Model created
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\base\model.py:607: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
+  warnings.warn("Maximum Likelihood optimization failed to "
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:2200: ConvergenceWarning: Retrying MixedLM optimization with lbfgs
+  warnings.warn(
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\base\model.py:607: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
+  warnings.warn("Maximum Likelihood optimization failed to "
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:2200: ConvergenceWarning: Retrying MixedLM optimization with cg
+  warnings.warn(
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\base\model.py:607: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
+  warnings.warn("Maximum Likelihood optimization failed to "
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:2206: ConvergenceWarning: MixedLM optimization failed, trying a different optimizer may help.
+  warnings.warn(msg, ConvergenceWarning)
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:2218: ConvergenceWarning: Gradient optimization failed, |grad| = 0.998707
+  warnings.warn(msg, ConvergenceWarning)
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:2237: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  warnings.warn(msg, ConvergenceWarning)
+C:\Users\skus3\AppData\Roaming\Python\Python312\site-packages\statsmodels\regression\mixed_linear_model.py:2261: ConvergenceWarning: The Hessian matrix at the estimated parameter values is not positive definite.
+  warnings.warn(msg, ConvergenceWarning)
+Model fit
+                     Mixed Linear Model Regression Results
+===============================================================================
+Model:                 MixedLM      Dependent Variable:      distance_to_target
+No. Observations:      28           Method:                  REML
+No. Groups:            14           Scale:                   0.0494
+Min. group size:       2            Log-Likelihood:          -1.9464
+Max. group size:       2            Converged:               No
+Mean group size:       2.0
+-------------------------------------------------------------------------------
+                                     Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-------------------------------------------------------------------------------
+Intercept                             0.183    0.079  2.317 0.021  0.028  0.338
+isControlGroup[T.True]                0.523    0.121  4.339 0.000  0.287  0.760
+isPre[T.True]                         0.453    0.111  4.072 0.000  0.235  0.670
+isControlGroup[T.True]:isPre[T.True] -0.375    0.170 -2.209 0.027 -0.708 -0.042
+Group Var                             0.000
+===============================================================================
+
+Eta-squared:
+0.7446234407876279
