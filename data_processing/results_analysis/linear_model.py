@@ -7,8 +7,15 @@ FOLDER_ENDING = '' # '_phases1&2'
 
 # load data
 distances_data = pd.read_csv(f'data/results_output{FOLDER_ENDING}/distances_long_format.csv')
+
+# # append data from other phases
+# distances_data2 = pd.read_csv(f'data/results_output_phases1&2/distances_long_format.csv')
+# distances_data = pd.concat([distances_data, distances_data2], ignore_index=True)
+# distances_data = distances_data[distances_data['isPre']]
+
 print("Data loaded")
 distances_data['distance_to_target'] = np.log10(distances_data['distance_to_target']) / 2   # log-transform to make it homoscedastic
+distances_data['Q'] = 10 * (np.log10(distances_data['speechMean']) - np.log10(distances_data['silenceMax']))
 
 def fit_data(show_residuals=False, data=distances_data, formula="distance_to_target ~ isControlGroup * isPre"):
     # model = bmb.Model("distance_to_target ~ isControlGroup * isPre + (1|C(no)) + (1|vowel)", distances_data)
