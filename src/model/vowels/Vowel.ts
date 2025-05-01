@@ -18,9 +18,7 @@ export type formant = {
 type ellipse = {
     x: number,
     y: number,
-    rx: number,
-    ry?: number,
-    angle?: number,
+    getRadiiAndAngle: (transformationMatrix: number[][]) => [rx: number, ry: number, angle: number]
 }
 
 const CONFIDENCE_FACTOR = Math.sqrt(5.911); // 95% confidence interval for 2D normal distribution
@@ -79,22 +77,27 @@ export default class Vowel {
             0
         ) / this.formants.length;
         const covarianceMatrix = [[variance.x, covariance], [covariance, variance.y]];
-        const eigenvectors = math.eigs(covarianceMatrix).eigenvectors;
-        if (eigenvectors.length < 2) throw new Error("Could not calculate eigenvectors for confidence matrix");
-        const rx = Math.sqrt(Math.abs(eigenvectors[0]!.value as number)) * CONFIDENCE_FACTOR;
-        if (isNaN(rx)) {
-            console.log(this);
-            throw new Error(`rx is NaN`);
+        const getRadiiAndAngle = (transformationMatrix: number[][]) => {
+            const transformedMatrixT = math.transpose(transformationMatrix);
+            const transformedCovarianceMatrix = math.multiply(transformationMatrix, covarianceMatrix, transformedMatrixT);
+            const eigenvectors = math.eigs(transformedCovarianceMatrix).eigenvectors;
+            if (eigenvectors.length < 2) throw new Error("Could not calculate eigenvectors for confidence matrix");
+            const rx = Math.sqrt(Math.abs(eigenvectors[0]!.value as number)) * CONFIDENCE_FACTOR;
+            if (isNaN(rx)) {
+                console.log(this);
+                throw new Error(`rx is NaN`);
+            }
+            const ry = Math.sqrt(Math.abs(eigenvectors[1]!.value as number)) * CONFIDENCE_FACTOR;
+            if (isNaN(ry)) {
+                throw new Error(`ry is NaN`);
+            }
+            if (isNaN(ry)) throw new Error(`eigenvectors is ${eigenvectors}`);
+            const eigenvectorX = eigenvectors[0]!.vector as number[];
+            if (eigenvectorX.length < 2) throw new Error("Eigenvector X is not 2D");
+            const angle = Math.atan2(eigenvectorX[1]!, eigenvectorX[0]!) * 180 / Math.PI;
+            return [rx, ry, angle] as [number, number, number];
         }
-        const ry = Math.sqrt(Math.abs(eigenvectors[1]!.value as number)) * CONFIDENCE_FACTOR;
-        if (isNaN(ry)) {
-            throw new Error(`ry is NaN`);
-        }
-        if (isNaN(ry)) throw new Error(`eigenvectors is ${eigenvectors}`);
-        const eigenvectorX = eigenvectors[0]!.vector as number[];
-        if (eigenvectorX.length < 2) throw new Error("Eigenvector X is not 2D");
-        const angle = Math.atan2(eigenvectorX[1]!, eigenvectorX[0]!) * 180 / Math.PI;
-        this.#confidenceEllipse = {x: mean.x!, y: mean.y!, rx, ry, angle};
+        this.#confidenceEllipse = {x: mean.x!, y: mean.y!, getRadiiAndAngle};
         return this.#confidenceEllipse
     }
 

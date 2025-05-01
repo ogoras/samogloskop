@@ -12,10 +12,10 @@ export default class TestGroupView extends RecordingView {
 
     representationsSelected = [
         [false, false, false],
-        [false, false, true],
         [false, false, false],
-        [false, true, false],
-        [false, false, false]
+        [false, false, false],
+        [false, false, false],
+        [true, true, true]
     ]
 
     constructor(controller, recorder, prev) {

@@ -177,9 +177,16 @@ export default class ScatterPlot {
                 changed = true;
             }
             if (changed) {
-                let length = range[1] - range[0];
-                domain[0] = range[0] - length * 0.1;
-                domain[1] = range[1] + length * 0.1;
+                // let length = range[1] - range[0];
+                // domain[0] = range[0] - length * 0.1;
+                // domain[1] = range[1] + length * 0.1;
+                if (axisId) {
+                    domain[0] = -2.0
+                    domain[1] = 2.5
+                } else {
+                    domain[0] = -2.5
+                    domain[1] = 2.5
+                }
             }
         }
         else {
@@ -221,13 +228,18 @@ export default class ScatterPlot {
                     .attr("y", this.y.scale(point.y));
             }
         }
+        const transformationMatrix = [[this.x.scale(1) - this.x.scale(0), 0], [0, this.y.scale(1) - this.y.scale(0)]];
         for (let ellipse of this.allPointsGroup.getAllEllipses()) {
+            const [rx, ry, angle] = ellipse.getRadiiAndAngle(transformationMatrix);
+            const cx = this.x.scale(ellipse.x);
+            const cy = this.y.scale(ellipse.y);
+
             transitionFunction(ellipse.element)
-                .attr("cx", this.x.scale(ellipse.x))
-                .attr("cy", this.y.scale(ellipse.y))
-                .attr("rx", Math.abs(this.x.scale(ellipse.rx) - this.x.scale(0)))
-                .attr("ry", Math.abs(this.y.scale(ellipse.ry) - this.y.scale(0)))
-                .attr("transform", `rotate(${-ellipse.angle} ${this.x.scale(ellipse.x)} ${this.y.scale(ellipse.y)})`);
+                .attr("cx", cx)
+                .attr("cy", cy)
+                .attr("rx", rx)
+                .attr("ry", ry)
+                .attr("transform", `rotate(${angle} ${cx} ${cy})`);
         }
     }
 
@@ -237,10 +249,10 @@ export default class ScatterPlot {
         this.addPoint(point, group, undefined, rescale);
     }
 
-    addEllipse({x, y, rx, ry = rx, angle = 0, ellipseOpacity0, ellipseOpacity1}, ids = -1) {
+    addEllipse({x, y, getRadiiAndAngle, ellipseOpacity0, ellipseOpacity1}, ids = -1) {
         ids = this.convertToIdArray(ids);
         const group = this.allPointsGroup.navigate(ids);
-        group.addEllipse(x, y, rx, ry, angle, ellipseOpacity0, ellipseOpacity1);
+        group.addEllipse(x, y, getRadiiAndAngle, ellipseOpacity0, ellipseOpacity1);
     }
 
     clearSeries(seriesId) {
