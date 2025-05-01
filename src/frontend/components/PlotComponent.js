@@ -63,7 +63,7 @@ export default class PlotComponent extends Component {
             
             const pointCloudIds = this.scatterPlot.appendGroup({
                 formatting: {
-                    size: POINT_SIZES.USER_DATAPOINTS * 0.7,
+                    size: formatting.size ?? POINT_SIZES.USER_DATAPOINTS * 0.7,
                     text: vowel.letter,
                     opacity: pointOpacity,
                 }

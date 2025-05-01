@@ -12,10 +12,10 @@ export default class TestGroupView extends RecordingView {
 
     representationsSelected = [
         [false, false, false],
+        [false, false, true],
         [false, false, false],
-        [false, false, false],
-        [false, false, false],
-        [true, true, true]
+        [false, true, false],
+        [false, false, false]
     ]
 
     constructor(controller, recorder, prev) {
@@ -99,9 +99,9 @@ export default class TestGroupView extends RecordingView {
 
         this.plotComponent.addVowelMeasurements(myStudyPolishVowels, 3, null, {
             pointOpacity: "FF",
-            ellipseOpacity0: 0.5,
-            ellipseOpacity1: 0.5
-        }, this.representationsSelected[4], { serif: true })
+            ellipseOpacity0: 0.3,
+            ellipseOpacity1: 0.3
+        }, this.representationsSelected[4], { serif: true, /* fontWeight: 700, size: 100 */ })
 
         this.sideComponent.createVowelSelectors(this.plotComponent, false, this.twoUserForeignDatasets);
         this.sideComponent.recordingComponent.after(this.selectedVowelDisplay.element);

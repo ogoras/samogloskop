@@ -1,6 +1,8 @@
 import CREATE_MODES from "./CREATE_MODES.js";
 import NestedPointGroup from "./NestedPointGroup.js";
 
+const TICK_PADDING = [5, 10]
+
 export default class ScatterPlot {
     margin = { top: 10, right: 30, bottom: 30, left: 60 };
     domainDefined = false;
@@ -66,14 +68,14 @@ export default class ScatterPlot {
 
         this.x.g ??= this.g.append("g")
         this.x.g.attr("transform", `translate(0, ${flipY ? 0 : this.height})`)
-            .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
+            .call((flipX ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale)).tickPadding(TICK_PADDING[0]));
 
         this.y.scale ??= d3.scaleLinear().domain(this.y.domain)
         this.y.scale.range(flipY ? [0, this.height] : [this.height, 0]);
 
         this.y.g ??= this.g.append("g");
         this.y.g.attr("transform", `translate(${flipX ? this.width : 0}, 0)`)
-            .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
+            .call((flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale)).tickPadding(TICK_PADDING[1]));
 
         this.allPointsGroup ??= new NestedPointGroup({g: this.g, x: this.x, y: this.y});
 
@@ -204,9 +206,9 @@ export default class ScatterPlot {
         const [flipX, flipY] = [ this.flipX, this.flipY ];
         const t = animationMs ? d3.transition().duration(animationMs) : null;
         if (xChanged) this.x.g.transition(t)
-                .call(flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale));
+                .call((flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale)).tickPadding(TICK_PADDING[0]));
         if (yChanged) this.y.g.transition(t)
-                .call(flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale));
+                .call((flipX ? d3.axisRight(this.y.scale) : d3.axisLeft(this.y.scale)).tickPadding(TICK_PADDING[1]));
         this.rescaleAll(t);
     }
 
