@@ -179,16 +179,16 @@ export default class ScatterPlot {
                 changed = true;
             }
             if (changed) {
-                // let length = range[1] - range[0];
-                // domain[0] = range[0] - length * 0.1;
-                // domain[1] = range[1] + length * 0.1;
-                if (axisId) {
-                    domain[0] = -2.0
-                    domain[1] = 2.5
-                } else {
-                    domain[0] = -2.5
-                    domain[1] = 2.5
-                }
+                let length = range[1] - range[0];
+                domain[0] = range[0] - length * 0.1;
+                domain[1] = range[1] + length * 0.1;
+                // if (axisId) {
+                //     domain[0] = -2.0
+                //     domain[1] = 2.5
+                // } else {
+                //     domain[0] = -2.5
+                //     domain[1] = 2.5
+                // }
             }
         }
         else {
