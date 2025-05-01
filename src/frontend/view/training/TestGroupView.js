@@ -14,7 +14,8 @@ export default class TestGroupView extends RecordingView {
         [false, false, false],
         [false, false, true],
         [false, false, false],
-        [false, true, false]
+        [false, true, false],
+        [false, false, false]
     ]
 
     constructor(controller, recorder, prev) {
@@ -79,7 +80,7 @@ export default class TestGroupView extends RecordingView {
         this.#initialized = true;
     }
 
-    addDatasets(petersonBarney, politicianRecordings) {
+    addDatasets(petersonBarney, politicianRecordings, myStudyPolishVowels) {
         if (this.#datasetAdded) return;
 
         this.plotComponent.setNativeVowelsVisiblity(this.representationsSelected[0]);
@@ -95,6 +96,12 @@ export default class TestGroupView extends RecordingView {
             ellipseOpacity0: 0.4,
             ellipseOpacity1: 0.4
         }, this.representationsSelected[3], { fontWeight: 700 });
+
+        this.plotComponent.addVowelMeasurements(myStudyPolishVowels, 3, null, {
+            pointOpacity: "FF",
+            ellipseOpacity0: 0.5,
+            ellipseOpacity1: 0.5
+        }, this.representationsSelected[4], { serif: true })
 
         this.sideComponent.createVowelSelectors(this.plotComponent, false, this.twoUserForeignDatasets);
         this.sideComponent.recordingComponent.after(this.selectedVowelDisplay.element);
