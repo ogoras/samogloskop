@@ -5,19 +5,21 @@ model = smf.mixedlm("distance_to_target ~ isControlGroup * isPre", distances_dat
 ===============================================================================
 Model:                 MixedLM      Dependent Variable:      distance_to_target
 No. Observations:      252          Method:                  REML
-No. Groups:            14           Scale:                   0.0547
-Min. group size:       18           Log-Likelihood:          -10.2375
+No. Groups:            14           Scale:                   0.0746
+Min. group size:       18           Log-Likelihood:          -48.0053
 Max. group size:       18           Converged:               Yes
 Mean group size:       18.0
 -------------------------------------------------------------------------------
                                      Coef.  Std.Err.   z    P>|z| [0.025 0.975]
 -------------------------------------------------------------------------------
-Intercept                             0.406    0.051  8.015 0.000  0.307  0.505
-isControlGroup[T.True]                0.281    0.077  3.629 0.000  0.129  0.432
-isPre[T.True]                         0.189    0.039  4.846 0.000  0.112  0.265
-isControlGroup[T.True]:isPre[T.True] -0.267    0.060 -4.480 0.000 -0.383 -0.150
-Group Var                             0.014    0.031
+Intercept                             0.376    0.056  6.761 0.000  0.267  0.486
+isControlGroup[T.True]                0.284    0.085  3.337 0.001  0.117  0.451
+isPre[T.True]                         0.215    0.046  4.717 0.000  0.126  0.304
+isControlGroup[T.True]:isPre[T.True] -0.268    0.070 -3.859 0.000 -0.405 -0.132
+Group Var                             0.017    0.032
 ===============================================================================
 
+Residuals computed
+Fitted values computed
 Eta-squared:
-0.27579228562293523
+0.2369988517663621

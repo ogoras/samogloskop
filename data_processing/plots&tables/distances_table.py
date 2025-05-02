@@ -1,6 +1,6 @@
 import pandas as pd, numpy as np
 
-FOLDER_ENDING = '_phases1&2'
+FOLDER_ENDING = ''
 
 distances_data = pd.read_csv(f'./data/results_output{FOLDER_ENDING}/distances.csv')
 speaker_data = pd.read_csv(f'./data/results_output{FOLDER_ENDING}/speakers.csv')
@@ -75,20 +75,20 @@ def print_table():
 
         for isControlGroup in [1, 0]:
             group_name = 'Kontrolna' if isControlGroup == 1 else 'Badawcza'
-            f.write('\t\t\\multirow{4}{*}{\\begin{sideways}' + group_name + '\\end{sideways}} & \\multirow{2}{*}{Pre-test} & \\textbf{Średnia} ')
+            f.write('\t\t\\multirow{4}{*}{\\begin{sideways}' + group_name + '\\end{sideways}} & \\multirow{2}{*}{Pre-test} & $\\overline{\\mathbf{d_M}}$ ')
             for i in range(9):
                 f.write(f'& \\textbf{{{distance_means_per_vowel[i, isControlGroup, 1]:.2f}}} '.replace('.', ','))
             f.write(f'& \\textbf{{{distance_means[isControlGroup, 1]:.2f}}} \\\\\\cline{{3-13}}\n'.replace('.', ','))
-            f.write('\t\t& & Odch. std. ')
+            f.write('\t\t& & $\\sigma$ ')
             for i in range(9):
                 f.write(f'& {distance_stds_per_vowel[i, isControlGroup, 1]:.2f} '.replace('.', ','))
             f.write(f'& {distance_stds[isControlGroup, 1]:.2f} \\\\\\cline{{2-13}}\n'.replace('.', ','))
 
-            f.write('\t\t& \\multirow{2}{*}{Post-} & \\textbf{Średnia} ')
+            f.write('\t\t& \\multirow{2}{*}{Post-} & $\\overline{\\mathbf{d_M}}$ ')
             for i in range(9):
                 f.write(f'& \\textbf{{{distance_means_per_vowel[i, isControlGroup, 0]:.2f}}} '.replace('.', ','))
             f.write(f'& \\textbf{{{distance_means[isControlGroup, 0]:.2f}}} \\\\\\cline{{3-13}}\n'.replace('.', ','))
-            f.write('\t\t& & Odch. std. ')
+            f.write('\t\t& & $\\sigma$ ')
             for i in range(9):
                 f.write(f'& {distance_stds_per_vowel[i, isControlGroup, 0]:.2f} '.replace('.', ','))
             f.write(f'& {distance_stds[isControlGroup, 0]:.2f} '.replace('.', ','))
@@ -103,3 +103,4 @@ def print_table():
 
 print(distance_means)
 print(distance_stds)
+print_table()

@@ -243,11 +243,11 @@ def calculate_distances(f, name='self', test=None):
     total_penalty = 0
 
     for index, phoneme in enumerate(phonemes):
-        distance_to_target = avg_dist_matrix[index][index]
+        distance_to_target = dist_of_avg_matrix[index][index]
         
         distance_to_closest = float('inf')
         closest_phoneme = ''
-        for i, dist in enumerate(avg_dist_matrix[index]):
+        for i, dist in enumerate(dist_of_avg_matrix[index]):
             if i != index and dist < distance_to_closest:
                 distance_to_closest = dist
                 closest_phoneme = phonemes[i]
@@ -267,6 +267,7 @@ def calculate_distances(f, name='self', test=None):
                 'closest_phoneme': closest_phoneme
             })
 
+            # if max_speaker_SD_per_vowel[phoneme] <= 1.0:
             long_row = pd.concat([response, app_speaker_result, app__vowel_result])
             distances_long_format.loc[len(distances_long_format)] = long_row
             try:
@@ -323,65 +324,67 @@ def write_results(f):
             min_speaker = speaker_id
     print(f"Speaker {min_speaker} has the lowest score")
 
-# filename = sys.argv[1] if len(sys.argv) > 1 else None
+def calculate_self():
+    filename = sys.argv[1] if len(sys.argv) > 1 else None
 
-# if filename:
-#     with open(filename, 'w', encoding='utf-8') as f:
-#         write_results(f)
-# else:
-#     write_results(sys.stdout)
+    if filename:
+        with open(filename, 'w', encoding='utf-8') as f:
+            write_results(f)
+    else:
+        write_results(sys.stdout)
 
-# distances_data.to_csv(f'./data/distances_self.csv', index=False, encoding='utf-8')
+    distances_data.to_csv(f'./data/distances_self.csv', index=False, encoding='utf-8')
 
-# sys.exit()
+def calculate():
+    avgs = np.zeros([2, 2])
+    count = np.zeros(2)
 
-avgs = np.zeros([2, 2])
-count = np.zeros(2)
+    total_warnings = 0
 
-total_warnings = 0
+    if not os.path.exists(f'./data/results_output{FOLDER_ENDING}'):
+        os.mkdir(f'./data/results_output{FOLDER_ENDING}')
 
-if not os.path.exists(f'./data/results_output{FOLDER_ENDING}'):
-    os.mkdir(f'./data/results_output{FOLDER_ENDING}')
+    for file in os.listdir(f'./data/results_input{FOLDER_ENDING}'):
+        if file.endswith('.json'):
+            number = file[:-5]
+            with open(f'./data/results_output{FOLDER_ENDING}/{number}.txt', 'w', encoding='utf-8') as f:
+                pre_score, isControl, timeSpent, version, warning_count_pre = calculate_distances(f, number, "pre")
+                post_score, _, _, _, warning_count_post = calculate_distances(f, number, "post")
+                total_warnings += warning_count_post + warning_count_pre
+                print("WARNINGS_PRE: ", warning_count_pre, file=f)
+                print("WARNINGS_POST: ", warning_count_post, file=f)
+                i = 0 if isControl else 1
+                avgs[0][i] += pre_score
+                avgs[1][i] += post_score
+                count[i] += 1
 
-for file in os.listdir(f'./data/results_input{FOLDER_ENDING}'):
-    if file.endswith('.json'):
-        number = file[:-5]
-        with open(f'./data/results_output{FOLDER_ENDING}/{number}.txt', 'w', encoding='utf-8') as f:
-            pre_score, isControl, timeSpent, version, warning_count_pre = calculate_distances(f, number, "pre")
-            post_score, _, _, _, warning_count_post = calculate_distances(f, number, "post")
-            total_warnings += warning_count_post + warning_count_pre
-            print("WARNINGS_PRE: ", warning_count_pre, file=f)
-            print("WARNINGS_POST: ", warning_count_post, file=f)
-            i = 0 if isControl else 1
-            avgs[0][i] += pre_score
-            avgs[1][i] += post_score
-            count[i] += 1
-
-print()            
-print(count)
-if (count[1] == 0):
-    count[1] = 1
-avgs /= count
-print(avgs.round(2))
-print()
-
-def print_MD(i):
-    for phoneme in MD[i]:
-        print(phoneme, sep='\t', end='\t')
+    print()            
+    print(count)
+    if (count[1] == 0):
+        count[1] = 1
+    avgs /= count
+    print(avgs.round(2))
     print()
-    for j in range(2):
+
+    def print_MD(i):
         for phoneme in MD[i]:
-            print(round(MD[i][phoneme][j] / MD_counts[i][phoneme][j], 1), sep='\t', end='\t')
+            print(phoneme, sep='\t', end='\t')
         print()
+        for j in range(2):
+            for phoneme in MD[i]:
+                print(round(MD[i][phoneme][j] / MD_counts[i][phoneme][j], 1), sep='\t', end='\t')
+            print()
 
-print("Control group:")
-print_MD(0)
-print()
-print("Experimental group:")
-print_MD(1)
+    print("Control group:")
+    print_MD(0)
+    print()
+    print("Experimental group:")
+    print_MD(1)
 
-distances_long_format.to_csv(f'./data/results_output{FOLDER_ENDING}/distances_long_format.csv', index=False, encoding='utf-8')
-distances_data.to_csv(f'./data/results_output{FOLDER_ENDING}/distances.csv', index=False, encoding='utf-8')
-speaker_data.to_csv(f'./data/results_output{FOLDER_ENDING}/speakers.csv', index=False, encoding='utf-8')
+    distances_long_format.to_csv(f'./data/results_output{FOLDER_ENDING}/distances_long_format.csv', index=False, encoding='utf-8')
+    distances_data.to_csv(f'./data/results_output{FOLDER_ENDING}/distances.csv', index=False, encoding='utf-8')
+    speaker_data.to_csv(f'./data/results_output{FOLDER_ENDING}/speakers.csv', index=False, encoding='utf-8')
 
-print(f"Total {total_warnings} warnings out of {14 * 2 * 9} samples")
+    print(f"Total {total_warnings} warnings out of {14 * 2 * 9} samples")
+
+calculate()

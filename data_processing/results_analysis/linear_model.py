@@ -15,6 +15,7 @@ distances_data = pd.read_csv(f'data/results_output{FOLDER_ENDING}/distances_long
 
 print("Data loaded")
 distances_data['distance_to_target'] = np.log10(distances_data['distance_to_target']) / 2   # log-transform to make it homoscedastic
+# distances_data['distance_to_target'] = np.sqrt(np.sqrt(distances_data['distance_to_target'])) # sqrt-transform to make it homoscedastic?
 distances_data['Q'] = 10 * (np.log10(distances_data['speechMean']) - np.log10(distances_data['silenceMax']))
 
 def fit_data(show_residuals=False, data=distances_data, formula="distance_to_target ~ isControlGroup * isPre"):
@@ -56,12 +57,12 @@ vowels = 'iɪɛæɑʌɔʊu'
 
 result = fit_data(True)
 
-# get vector of random effects
-random_effects = result.random_effects
-print("Random effects:")
-print(random_effects)
+# # get vector of random effects
+# random_effects = result.random_effects
+# print("Random effects:")
+# print(random_effects)
 
-# get vector of error terms epsilon
-error_terms = result.resid
-print("Error terms:")
-print(error_terms)
+# # get vector of error terms epsilon
+# error_terms = result.resid
+# print("Error terms:")
+# print(error_terms)
