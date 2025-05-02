@@ -75,7 +75,7 @@ def print_table():
 
         for isControlGroup in [1, 0]:
             group_name = 'Kontrolna' if isControlGroup == 1 else 'Badawcza'
-            f.write('\t\t\\multirow{4}{*}{\\begin{sideways}' + group_name + '\\end{sideways}} & \\multirow{2}{*}{Pre-test} & $\\overline{\\mathbf{d_M}}$ ')
+            f.write('\t\t\\multirow{4}{*}{\\begin{sideways}' + group_name + '\\end{sideways}} & \\multirow{2}{*}{Pre-} & $\\overline{\\mathbf{d_M}}$ ')
             for i in range(9):
                 f.write(f'& \\textbf{{{distance_means_per_vowel[i, isControlGroup, 1]:.2f}}} '.replace('.', ','))
             f.write(f'& \\textbf{{{distance_means[isControlGroup, 1]:.2f}}} \\\\\\cline{{3-13}}\n'.replace('.', ','))
