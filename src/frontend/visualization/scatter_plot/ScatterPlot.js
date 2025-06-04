@@ -68,7 +68,7 @@ export default class ScatterPlot {
 
         this.x.g ??= this.g.append("g")
         this.x.g.attr("transform", `translate(0, ${flipY ? 0 : this.height})`)
-            .call((flipX ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale)).tickPadding(TICK_PADDING[0]));
+            .call((flipY ? d3.axisTop(this.x.scale) : d3.axisBottom(this.x.scale)).tickPadding(TICK_PADDING[0]));
 
         this.y.scale ??= d3.scaleLinear().domain(this.y.domain)
         this.y.scale.range(flipY ? [0, this.height] : [this.height, 0]);

@@ -49,4 +49,4 @@ export const VERSION_MAJOR = 1,
 // v1.5.5: Post-test now available again provided >=8 days have passed and >=6 days of training have been completed
 // v1.6.0: Study ended, control group removed, can train indefinitely now
 // v1.6.1: Fixed the wrong scaling of politicians' formants
-// v1.6.2: Can view datasets from my own study
+// v1.6.2: Can view datasets from my own study, NOT COMPATIBLE WITH MAIN 1.6.2, gotta merge the changes manually...
