@@ -46,7 +46,7 @@ export default class PlotComponent extends Component {
     }
 
     addVowelMeasurements(vowels, index, symbol, {pointOpacity = "80", ellipseOpacity0, ellipseOpacity1}, initiallyVisible = [true, true, true], formatting = {}) {
-        if (!symbol) throw new Error("Symbol must be provided.");
+        //if (!symbol) throw new Error("Symbol must be provided.");
         if (!index) throw new Error("Index must be provided.");
         const vowelInv = VOWEL_INVENTORIES[vowels.language];
         this.scatterPlot.insertGroup({
@@ -63,7 +63,7 @@ export default class PlotComponent extends Component {
             
             const pointCloudIds = this.scatterPlot.appendGroup({
                 formatting: {
-                    size: POINT_SIZES.USER_DATAPOINTS * 0.7,
+                    size: formatting.size ?? POINT_SIZES.USER_DATAPOINTS * 0.7,
                     text: vowel.letter,
                     opacity: pointOpacity,
                 }

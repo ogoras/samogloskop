@@ -1,6 +1,6 @@
 export const VERSION_MAJOR = 1,
     VERSION_MINOR = 6,  // will only change when the data format changes
-    VERSION_PATCH = 1;  // will change only with published commits, the in-beetween development versions are not counted
+    VERSION_PATCH = 2;  // will change only with published commits, the in-beetween development versions are not counted
 
 // v0.0: Introduced localStorage
 // v0.1: Added Lobanov scaling
@@ -49,3 +49,4 @@ export const VERSION_MAJOR = 1,
 // v1.5.5: Post-test now available again provided >=8 days have passed and >=6 days of training have been completed
 // v1.6.0: Study ended, control group removed, can train indefinitely now
 // v1.6.1: Fixed the wrong scaling of politicians' formants
+// v1.6.2: Fixed ellipse scaling and tick label padding, attached the thesis PDF

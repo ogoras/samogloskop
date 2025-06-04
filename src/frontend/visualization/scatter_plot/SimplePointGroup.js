@@ -87,7 +87,7 @@ export default class SimplePointGroup extends PointGroup {
         return p;
     }
 
-    addEllipse(x, y, rx, ry = rx, angle = 0, opacity0, opacity1) {
+    addEllipse(x, y, getRadiiAndAngle, opacity0, opacity1) {
         const fillGradientID = `ellipseGradient${this.id}`;
         const fillGradient = this.g.append("defs")
             .append("radialGradient")
@@ -98,15 +98,17 @@ export default class SimplePointGroup extends PointGroup {
         fillGradient.append("stop")
             .attr("offset", "100%")
             .attr("style", `stop-color:#${this.defaultFormatting.rgb}; stop-opacity:${opacity1 ?? 0}`);
+        const transformationMatrix = [[this.x.scale(1) - this.x.scale(0), 0], [0, this.y.scale(1) - this.y.scale(0)]];
+        const [rx, ry, angle] = getRadiiAndAngle(transformationMatrix);
         const ellipse = {
             element: this.g.append("ellipse")
                 .attr("cx", this.x.scale(x))
                 .attr("cy", this.y.scale(y))
-                .attr("rx", Math.abs(this.x.scale(rx) - this.x.scale(0)))
-                .attr("ry", Math.abs(this.y.scale(ry) - this.y.scale(0)))
-                .attr("transform", `rotate(${-angle} ${this.x.scale(x)} ${this.y.scale(y)})`)
+                .attr("rx", rx)
+                .attr("ry", ry)
+                .attr("transform", `rotate(${angle} ${this.x.scale(x)} ${this.y.scale(y)})`)
                 .attr("fill", `url(#${fillGradientID})`),
-            x, y, rx, ry, angle
+            x, y, getRadiiAndAngle
         };
         return this.ellipse = ellipse;
     }

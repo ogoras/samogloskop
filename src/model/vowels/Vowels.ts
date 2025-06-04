@@ -54,7 +54,7 @@ export default class Vowels {   // represents a set of vowels for a particular s
         this.vowels = VOWEL_INVENTORIES[language].map(vowel => new Vowel(vowel));
     }
 
-    static async create(language: string, dataset: string) {
+    static async create(language: string, dataset: string, scale = true) {
         this.#canCreate = true;
         const instance = new Vowels(language);
 
@@ -64,7 +64,7 @@ export default class Vowels {   // represents a set of vowels for a particular s
         for (let vowel of instance.vowels) {
             const formants = data[vowel.key()]?.map(formants => {
                 return { 
-                    y: formants.F1 * 0.8,     // TODO: implement it better
+                    y: scale ? formants.F1 * 0.8 : formants.F1,     // TODO: implement it better
                     x: formants.F2,
                     identified: formants.identified
                 }
