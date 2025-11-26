@@ -171,6 +171,15 @@ canvas {
         width: calc(16 / 9 * 60vh);
     }
 
+    iframe.third {
+        height: calc(9/16 * 33vw);
+        width: 33vw;
+    }
+
+    iframe.hasNeighbor {
+        margin-right: 2rem;
+    }
+
     .formants-container {
         height: 100%;
         aspect-ratio: 1 / 1;
